@@ -20,7 +20,8 @@
     "paths": {
       "@shared/*": ["src/shared/services/*", "src/shared/*"],
       "@posts/*": ["src/modules/posts/*"],
-      "@middlewares/*": ["src/middlewares/*"]
+      "@middlewares/*": ["src/middlewares/*"],
+      "@models/*": ["src/models/*"]
     }
   }
 }

@@ -8,6 +8,8 @@ import { PostsModule } from '@posts/posts.module';
 import { ConfigModule } from '@nestjs/config';
 import { BasicAuthMiddleware } from '@middlewares/basic-auth.middleware';
 import { SharedModule } from '@shared/shared.module';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Post } from '@models/post.model';
 
 @Module({
   imports: [
@@ -16,6 +18,16 @@ import { SharedModule } from '@shared/shared.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`
+    }),
+    SequelizeModule.forRoot({
+      dialect: 'postgres',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      models: [Post],
+      autoLoadModels: true
     })
   ]
 })
