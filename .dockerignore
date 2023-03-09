@@ -1,0 +1,5 @@
+*.md
+dist/
+.git
+/.idea
+.DS_Store
