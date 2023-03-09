@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: personal-blog-api
+    restart: always
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    env_file:
+      - .env.development
+    command: npm run start:dev
+    volumes:
+      - ./:/usr/src/cryptodistrict_api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - personal-blog-api-network
+  db:
+    image: postgres
+    container_name: personal-blog-api-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: personalblog
+    volumes:
+      - /:/data/postgres
+    networks:
+      - personal-blog-api-network
+
+networks:
+  personal-blog-api-network:
+    driver: bridge
