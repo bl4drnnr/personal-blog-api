@@ -18,7 +18,9 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@shared/*": ["src/shared/services/*", "src/shared/*"]
+      "@shared/*": ["src/shared/services/*", "src/shared/*"],
+      "@posts/*": ["src/modules/posts/*"],
+      "@middlewares/*": ["src/middlewares/*"]
     }
   }
 }
