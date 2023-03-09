@@ -13,11 +13,14 @@ import { Post } from '@models/post.model';
 import { UsersModule } from '@users/users.module';
 import { User } from '@models/user.model';
 import { AuthModule } from '@auth/auth.module';
+import { Session } from '@models/session.model';
 
 @Module({
   imports: [
     PostsModule,
     SharedModule,
+    UsersModule,
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`
@@ -29,11 +32,9 @@ import { AuthModule } from '@auth/auth.module';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [Post, User],
+      models: [Post, User, Session],
       autoLoadModels: true
-    }),
-    UsersModule,
-    AuthModule
+    })
   ]
 })
 export class AppModule implements NestModule {
