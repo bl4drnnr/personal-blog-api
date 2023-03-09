@@ -10,6 +10,8 @@ import { BasicAuthMiddleware } from '@middlewares/basic-auth.middleware';
 import { SharedModule } from '@shared/shared.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
+import { UsersModule } from '@users/users.module';
+import { User } from '@models/user.model';
 
 @Module({
   imports: [
@@ -26,9 +28,10 @@ import { Post } from '@models/post.model';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [Post],
+      models: [Post, User],
       autoLoadModels: true
-    })
+    }),
+    UsersModule
   ]
 })
 export class AppModule implements NestModule {
