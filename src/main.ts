@@ -3,8 +3,11 @@ import { AppModule } from './app.module';
 
 (async () => {
   const app = await NestFactory.create(AppModule);
+  const port = process.env.API_PORT;
 
   app.setGlobalPrefix('/api');
 
-  await app.listen(3000);
+  await app.listen(port, () => {
+    console.log(`Application has been started on port ${port}`);
+  });
 })();
