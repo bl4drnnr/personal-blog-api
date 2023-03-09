@@ -12,6 +12,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
 import { UsersModule } from '@users/users.module';
 import { User } from '@models/user.model';
+import { AuthModule } from '@auth/auth.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { User } from '@models/user.model';
       models: [Post, User],
       autoLoadModels: true
     }),
-    UsersModule
+    UsersModule,
+    AuthModule
   ]
 })
 export class AppModule implements NestModule {
