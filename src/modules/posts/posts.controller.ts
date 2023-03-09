@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PostsService } from '@posts/posts.service';
+import { CreatePostDto } from '@posts/dto/create-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -8,5 +9,10 @@ export class PostsController {
   @Get(':slug')
   getPostBySlug(@Param('slug') slug: string) {
     return this.postsService.getPostBySlug({ slug });
+  }
+
+  @Post()
+  createPost(@Body() post: CreatePostDto) {
+    return this.postsService.createPost({ post });
   }
 }
