@@ -1,12 +1,14 @@
 import {
   Column,
+  CreatedAt,
   DataType,
   Default,
   HasMany,
   HasOne,
   Model,
   PrimaryKey,
-  Table
+  Table,
+  UpdatedAt
 } from 'sequelize-typescript';
 import { Session } from '@models/session.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
@@ -16,7 +18,9 @@ interface UserCreationAttributes {
   password: string;
 }
 
-@Table
+@Table({
+  tableName: 'users'
+})
 export class User extends Model<User, UserCreationAttributes> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
@@ -30,7 +34,11 @@ export class User extends Model<User, UserCreationAttributes> {
   password: string;
 
   @Default(false)
-  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    field: 'account_confirm'
+  })
   accountConfirm: boolean;
 
   @HasOne(() => Session)
@@ -38,4 +46,12 @@ export class User extends Model<User, UserCreationAttributes> {
 
   @HasMany(() => ConfirmationHash)
   confirmationHash: ConfirmationHash[];
+
+  @CreatedAt
+  @Column({ field: 'created_at' })
+  createdAt: Date;
+
+  @UpdatedAt
+  @Column({ field: 'updated_at' })
+  updatedAt: Date;
 }

@@ -45,13 +45,5 @@ export class AppModule implements NestModule {
       path: '/api/*',
       method: RequestMethod.ALL
     });
-    consumer
-      .apply(BasicAuthMiddleware)
-      .exclude('/users/sign-up')
-      .forRoutes('*');
-    consumer.apply(SignUpMiddleware).forRoutes({
-      path: '/users/sign-up',
-      method: RequestMethod.ALL
-    });
   }
 }

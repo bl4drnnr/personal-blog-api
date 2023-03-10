@@ -4,7 +4,9 @@ import {
   DataType,
   PrimaryKey,
   Default,
-  Column
+  Column,
+  CreatedAt,
+  UpdatedAt
 } from 'sequelize-typescript';
 
 interface PostCreationAttributes {
@@ -48,7 +50,9 @@ export interface ITitle {
   content: string;
 }
 
-@Table
+@Table({
+  tableName: 'posts'
+})
 export class Post extends Model<Post, PostCreationAttributes> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
@@ -70,7 +74,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Column({ type: DataType.TEXT, allowNull: false })
   description: string;
 
-  @Column({ type: DataType.TEXT, allowNull: false })
+  @Column({ type: DataType.TEXT, allowNull: false, field: 'page_description' })
   pageDescription: string;
 
   @Column({ type: DataType.TEXT, allowNull: false })
@@ -90,4 +94,12 @@ export class Post extends Model<Post, PostCreationAttributes> {
 
   @Column({ type: DataType.JSON, allowNull: false })
   references: Array<ILink>;
+
+  @CreatedAt
+  @Column({ field: 'created_at' })
+  createdAt: Date;
+
+  @UpdatedAt
+  @Column({ field: 'updated_at' })
+  updatedAt: Date;
 }

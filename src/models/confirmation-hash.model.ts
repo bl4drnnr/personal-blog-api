@@ -1,11 +1,13 @@
 import {
   Column,
+  CreatedAt,
   DataType,
   Default,
   ForeignKey,
   Model,
   PrimaryKey,
-  Table
+  Table,
+  UpdatedAt
 } from 'sequelize-typescript';
 import { User } from '@models/user.model';
 
@@ -14,7 +16,9 @@ interface ConfirmationHashCreationAttributes {
   confirmationHash: string;
 }
 
-@Table
+@Table({
+  tableName: 'confirmation_hashes'
+})
 export class ConfirmationHash extends Model<
   ConfirmationHash,
   ConfirmationHashCreationAttributes
@@ -24,7 +28,11 @@ export class ConfirmationHash extends Model<
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'confirmation_hash'
+  })
   confirmationHash: string;
 
   @Default(false)
@@ -32,6 +40,14 @@ export class ConfirmationHash extends Model<
   confirmed: boolean;
 
   @ForeignKey(() => User)
-  @Column({ type: DataType.UUID, allowNull: false })
+  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;
+
+  @CreatedAt
+  @Column({ field: 'created_at' })
+  createdAt: Date;
+
+  @UpdatedAt
+  @Column({ field: 'updated_at' })
+  updatedAt: Date;
 }
