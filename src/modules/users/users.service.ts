@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import * as bcryptjs from 'bcryptjs';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignInRequest } from '@users/dto/sign-in/request.dto';
 import { WrongCredentialsException } from '@users/exceptions/wrong-credentials.exception';
 import { InjectModel } from '@nestjs/sequelize';
@@ -12,6 +12,7 @@ import { ValidatorService } from '@shared/validator.service';
 import { ValidationErrorException } from '@users/exceptions/validation-error.exception';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { EmailService } from '@shared/email.service';
+import { EmailAlreadyConfirmedException } from '@users/exceptions/email-already-confirmed.exception';
 
 @Injectable()
 export class UsersService {
@@ -72,5 +73,36 @@ export class UsersService {
     });
 
     return { message: 'success' };
+  }
+
+  async logout({ userId }: { userId: string }) {
+    return await this.authService.deleteRefreshToken(userId);
+  }
+
+  async accountConfirmation({
+    confirmationHash
+  }: {
+    confirmationHash: string;
+  }) {
+    const confirmHash = await this.confirmationHashRepository.findOne({
+      where: { confirmationHash },
+      include: [{ model: User }]
+    });
+
+    if (!confirmHash) throw new BadRequestException();
+    if (confirmHash.confirmed) throw new EmailAlreadyConfirmedException();
+
+    await this.confirmationHashRepository.update(
+      {
+        confirmed: true
+      },
+      { where: { id: confirmHash.id } }
+    );
+    await this.userRepository.update(
+      {
+        accountConfirm: true
+      },
+      { where: { id: confirmHash.userId } }
+    );
   }
 }

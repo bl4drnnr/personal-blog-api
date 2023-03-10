@@ -29,6 +29,10 @@ export class User extends Model<User, UserCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   password: string;
 
+  @Default(false)
+  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  accountConfirm: boolean;
+
   @HasOne(() => Session)
   session: Session;
 
