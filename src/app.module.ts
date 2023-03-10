@@ -15,6 +15,7 @@ import { User } from '@models/user.model';
 import { AuthModule } from '@auth/auth.module';
 import { Session } from '@models/session.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
+import { SignUpMiddleware } from '@middlewares/sign-up.middleware';
 
 @Module({
   imports: [
@@ -46,7 +47,11 @@ export class AppModule implements NestModule {
     });
     consumer
       .apply(BasicAuthMiddleware)
-      .exclude('/api/users/sign-up')
+      .exclude('/users/sign-up')
       .forRoutes('*');
+    consumer.apply(SignUpMiddleware).forRoutes({
+      path: '/users/sign-up',
+      method: RequestMethod.ALL
+    });
   }
 }

@@ -11,7 +11,7 @@ import { User } from '@models/user.model';
 
 interface ConfirmationHashCreationAttributes {
   userId: string;
-  confirmHash: string;
+  confirmationHash: string;
 }
 
 @Table

@@ -59,10 +59,10 @@ export class UsersService {
       password: hashedPassword
     });
 
-    const confirmHash = crypto.randomBytes(20).toString('hex');
+    const confirmationHash = crypto.randomBytes(20).toString('hex');
     await this.confirmationHashRepository.create({
       userId: createdUser.id,
-      confirmHash
+      confirmationHash
     });
     // await this.emailService.sendConfirmationEmail({
     //   target: payload.email,

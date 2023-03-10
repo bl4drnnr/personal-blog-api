@@ -39,6 +39,13 @@ export class ApiConfigService {
     };
   }
 
+  get signUpAuthConfig() {
+    return {
+      signup_username: this.getString('SIGNUP_USERNAME'),
+      signup_password: this.getString('SIGNUP_PASSWORD')
+    };
+  }
+
   get jwtAuthConfig() {
     return {
       accessExpiresIn: this.getString('JWT_ACCESS_EXPIRES_IN'),
