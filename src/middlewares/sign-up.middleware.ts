@@ -15,7 +15,7 @@ export class SignUpMiddleware implements NestMiddleware {
       const authorization = req.headers['registration-authorization'] as string;
       const basic = authorization.match(/^Basic (.+)$/);
 
-      if (!basic) return new UnauthorizedException();
+      if (!basic) throw new UnauthorizedException();
 
       const credentials = Buffer.from(basic[1], 'base64').toString('utf-8');
 
@@ -25,11 +25,11 @@ export class SignUpMiddleware implements NestMiddleware {
         this.configService.signUpAuthConfig.signup_password;
 
       if (credentials != `${signUpUsername}:${signUpPassword}`) {
-        return new UnauthorizedException();
+        throw new UnauthorizedException();
       }
 
       return next();
     }
-    return new UnauthorizedException();
+    throw new UnauthorizedException();
   }
 }

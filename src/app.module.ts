@@ -41,8 +41,12 @@ import { SignUpMiddleware } from '@middlewares/sign-up.middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SignUpMiddleware).forRoutes({
+      path: '/users/sign-up',
+      method: RequestMethod.POST
+    });
     consumer.apply(BasicAuthMiddleware).forRoutes({
-      path: '/api/*',
+      path: '(.*)',
       method: RequestMethod.ALL
     });
   }
