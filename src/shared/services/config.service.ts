@@ -26,9 +26,10 @@ export class ApiConfigService {
     return this.getString('NODE_ENV');
   }
 
-  get databaseUrl() {
+  get sendGridCredentials() {
     return {
-      url: this.getString('DATABASE_URL')
+      api_key: this.getString('SENDGRID_API_KEY'),
+      sender_email: this.getString('SENDGRID_SENDER_EMAIL')
     };
   }
 
@@ -54,7 +55,7 @@ export class ApiConfigService {
     };
   }
 
-  get frontEndUrl() {
-    return this.getString('FRONT_END_URL');
+  get adminFrontEndUrl() {
+    return this.getString('ADMIN_FRONT_END_URL');
   }
 }

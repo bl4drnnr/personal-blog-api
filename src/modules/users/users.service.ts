@@ -11,12 +11,14 @@ import { UserAlreadyExistsException } from '@users/exceptions/user-already-exist
 import { ValidatorService } from '@shared/validator.service';
 import { ValidationErrorException } from '@users/exceptions/validation-error.exception';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
+import { EmailService } from '@shared/email.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly authService: AuthService,
     private readonly validatorService: ValidatorService,
+    private readonly emailService: EmailService,
     @InjectModel(User) private userRepository: typeof User,
     @InjectModel(ConfirmationHash)
     private confirmationHashRepository: typeof ConfirmationHash
@@ -64,10 +66,10 @@ export class UsersService {
       userId: createdUser.id,
       confirmationHash
     });
-    // await this.emailService.sendConfirmationEmail({
-    //   target: payload.email,
-    //   confirmHash
-    // });
+    await this.emailService.sendConfirmationEmail({
+      target: payload.email,
+      confirmationHash
+    });
 
     return { message: 'success' };
   }
