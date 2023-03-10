@@ -1,6 +1,6 @@
 import { ICode, ILink, IList, IPicture, ITitle } from '@models/post.model';
 
-export class CreatePostDto {
+export class CreatePostRequest {
   readonly title: string;
   readonly slug: string;
   readonly tags: string;

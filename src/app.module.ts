@@ -14,6 +14,7 @@ import { UsersModule } from '@users/users.module';
 import { User } from '@models/user.model';
 import { AuthModule } from '@auth/auth.module';
 import { Session } from '@models/session.model';
+import { ConfirmationHash } from '@models/confirmation-hash.model';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { Session } from '@models/session.model';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [Post, User, Session],
+      models: [Post, User, Session, ConfirmationHash],
       autoLoadModels: true
     })
   ]
@@ -43,5 +44,9 @@ export class AppModule implements NestModule {
       path: '/api/*',
       method: RequestMethod.ALL
     });
+    consumer
+      .apply(BasicAuthMiddleware)
+      .exclude('/api/users/sign-up')
+      .forRoutes('*');
   }
 }

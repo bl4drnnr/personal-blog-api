@@ -9,20 +9,27 @@ import {
 } from 'sequelize-typescript';
 import { User } from '@models/user.model';
 
-interface SessionCreationAttributes {
-  tokenId: string;
+interface ConfirmationHashCreationAttributes {
   userId: string;
+  confirmHash: string;
 }
 
 @Table
-export class Session extends Model<Session, SessionCreationAttributes> {
+export class ConfirmationHash extends Model<
+  ConfirmationHash,
+  ConfirmationHashCreationAttributes
+> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.UUID, allowNull: false })
-  tokenId: string;
+  @Column({ type: DataType.STRING, allowNull: false })
+  confirmationHash: string;
+
+  @Default(false)
+  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  confirmed: boolean;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false })

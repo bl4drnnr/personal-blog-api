@@ -2,10 +2,14 @@ import {
   Column,
   DataType,
   Default,
+  HasMany,
+  HasOne,
   Model,
   PrimaryKey,
   Table
 } from 'sequelize-typescript';
+import { Session } from '@models/session.model';
+import { ConfirmationHash } from '@models/confirmation-hash.model';
 
 interface UserCreationAttributes {
   email: string;
@@ -24,4 +28,10 @@ export class User extends Model<User, UserCreationAttributes> {
 
   @Column({ type: DataType.STRING, allowNull: false })
   password: string;
+
+  @HasOne(() => Session)
+  session: Session;
+
+  @HasMany(() => ConfirmationHash)
+  confirmationHash: ConfirmationHash[];
 }

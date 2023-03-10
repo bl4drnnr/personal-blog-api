@@ -1,20 +1,20 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { PostsService } from '@posts/posts.service';
-import { CreatePostDto } from '@posts/dto/create-post.dto';
 import { JwtGuard } from '@guards/jwt.guard';
+import { CreatePostRequest } from '@posts/dto/create-post/request.dto';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get(':slug')
-  getPostBySlug(@Param('slug') slug: string) {
-    return this.postsService.getPostBySlug({ slug });
+  async getPostBySlug(@Param('slug') slug: string) {
+    return await this.postsService.getPostBySlug({ slug });
   }
 
   @UseGuards(JwtGuard)
   @Post()
-  createPost(@Body() post: CreatePostDto) {
-    return this.postsService.createPost({ post });
+  async createPost(@Body() post: CreatePostRequest) {
+    return await this.postsService.createPost({ post });
   }
 }
