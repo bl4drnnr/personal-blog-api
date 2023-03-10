@@ -18,7 +18,14 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@shared/*": ["src/shared/services/*", "src/shared/*"]
+      "@shared/*": ["src/shared/services/*", "src/shared/*"],
+      "@posts/*": ["src/modules/posts/*"],
+      "@users/*": ["src/modules/users/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+      "@models/*": ["src/models/*"],
+      "@guards/*": ["src/guards/*"],
+      "@decorators/*": ["src/decorators/*"],
+      "@auth/*": ["src/modules/auth/*"]
     }
   }
 }
