@@ -38,6 +38,7 @@ export interface IPicture {
 export interface IList {
   type: 'list-numeric' | 'list-bullet';
   items: Array<any>;
+  style: string;
 }
 
 export interface ICode {
@@ -108,7 +109,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Column({ type: DataType.JSON, allowNull: false })
   content: Array<string | IPicture | IList | ICode | ITitle>;
 
-  @Column({ type: DataType.JSON, allowNull: false })
+  @Column({ type: DataType.JSON, allowNull: false, field: 'references' })
   references: Array<ILink>;
 
   @CreatedAt

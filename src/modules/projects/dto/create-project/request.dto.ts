@@ -9,10 +9,11 @@ import {
 } from '@models/project.model';
 
 export interface CreateProjectRequest {
-  readonly language: LanguageType;
+  language: LanguageType;
   title: string;
   slug: string;
   brief: string;
+  tags: string;
   description: string;
   searchTags: Array<string>;
   briefDescription: string;

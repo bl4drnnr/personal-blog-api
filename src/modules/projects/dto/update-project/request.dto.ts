@@ -12,6 +12,7 @@ export interface UpdateProjectRequest {
   slug?: string;
   brief?: string;
   description?: string;
+  tags?: string;
   searchTags?: Array<string>;
   briefDescription?: string;
   license?: string;

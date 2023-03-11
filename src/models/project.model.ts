@@ -34,6 +34,7 @@ export interface IPicture {
 export interface IList {
   type: 'list-numeric' | 'list-bullet';
   items: Array<any>;
+  style: string;
 }
 
 export interface ICode {
@@ -78,21 +79,28 @@ export class Project extends Model<Project, ProjectCreationAttributes> {
   brief: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  description: string;
-
-  @Column({ type: DataType.JSON, allowNull: false })
-  searchTags: Array<string>;
+  tags: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
+  description: string;
+
+  @Column({ type: DataType.JSON, allowNull: false, field: 'search_tags' })
+  searchTags: Array<string>;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'brief_description'
+  })
   briefDescription: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
   license: string;
 
-  @Column({ type: DataType.JSON, allowNull: false })
+  @Column({ type: DataType.JSON, allowNull: false, field: 'tech_stack' })
   techStack: Array<ITechStack>;
 
-  @Column({ type: DataType.JSON, allowNull: false })
+  @Column({ type: DataType.JSON, allowNull: false, field: 'project_pages' })
   projectPages: Array<IProjectPage>;
 
   @Column({ type: DataType.JSON, allowNull: false })
