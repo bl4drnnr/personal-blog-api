@@ -12,6 +12,11 @@ export class PostsController {
     return await this.postsService.getPostBySlug({ slug });
   }
 
+  @Get('id/:id')
+  async getPostById(@Param('id') id: string) {
+    return await this.postsService.getPostById({ id });
+  }
+
   @UseGuards(JwtGuard)
   @Post()
   async createPost(@Body() post: CreatePostRequest) {

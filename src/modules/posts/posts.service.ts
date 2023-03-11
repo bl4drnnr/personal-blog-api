@@ -13,6 +13,10 @@ export class PostsService {
     });
   }
 
+  async getPostById({ id }: { id: string }) {
+    return await this.postRepository.findByPk(id);
+  }
+
   async createPost({ post }: { post: CreatePostRequest }) {
     return await this.postRepository.create(post);
   }
