@@ -17,9 +17,12 @@ import { UpdateProjectRequest } from '@projects/dto/update-project/request.dto';
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
-  @Get(':slug')
-  async getProjectBySlug(@Param('slug') slug: string) {
-    return await this.projectsService.getProjectBySlug({ slug });
+  @Get(':language/:slug')
+  async getProjectBySlug(
+    @Param('slug') slug: string,
+    @Param('language') language: string
+  ) {
+    return await this.projectsService.getProjectBySlug({ slug, language });
   }
 
   @Get('id/:id')

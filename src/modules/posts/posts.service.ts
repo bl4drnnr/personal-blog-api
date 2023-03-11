@@ -8,9 +8,9 @@ import { UpdatePostRequest } from '@posts/dto/update-post/request.dto';
 export class PostsService {
   constructor(@InjectModel(Post) private postRepository: typeof Post) {}
 
-  async getPostBySlug({ slug }: { slug: string }) {
+  async getPostBySlug({ slug, language }: { slug: string; language: string }) {
     return await this.postRepository.findOne({
-      where: { slug }
+      where: { slug, language }
     });
   }
 

@@ -51,6 +51,12 @@ export interface ITitle {
   content: string;
 }
 
+export enum LanguageType {
+  pl = 'pl',
+  ru = 'ru',
+  en = 'en'
+}
+
 @Table({
   tableName: 'posts'
 })
@@ -59,6 +65,12 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id: string;
+
+  @Column({
+    type: DataType.ENUM(...Object.values(LanguageType)),
+    allowNull: false
+  })
+  language: LanguageType;
 
   @Column({ type: DataType.STRING, allowNull: false })
   title: string;

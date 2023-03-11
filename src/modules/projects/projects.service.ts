@@ -10,9 +10,15 @@ export class ProjectsService {
     @InjectModel(Project) private projectRepository: typeof Project
   ) {}
 
-  async getProjectBySlug({ slug }: { slug: string }) {
+  async getProjectBySlug({
+    slug,
+    language
+  }: {
+    slug: string;
+    language: string;
+  }) {
     return await this.projectRepository.findOne({
-      where: { slug }
+      where: { slug, language }
     });
   }
 

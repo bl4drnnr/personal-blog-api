@@ -4,10 +4,12 @@ import {
   IPicture,
   IProjectPage,
   ITitle,
-  ITechStack
+  ITechStack,
+  LanguageType
 } from '@models/project.model';
 
 export interface CreateProjectRequest {
+  readonly language: LanguageType;
   title: string;
   slug: string;
   brief: string;

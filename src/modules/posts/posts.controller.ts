@@ -17,9 +17,12 @@ import { UpdatePostRequest } from '@posts/dto/update-post/request.dto';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Get(':slug')
-  async getPostBySlug(@Param('slug') slug: string) {
-    return await this.postsService.getPostBySlug({ slug });
+  @Get(':language/:slug')
+  async getPostBySlug(
+    @Param('slug') slug: string,
+    @Param('language') language: string
+  ) {
+    return await this.postsService.getPostBySlug({ slug, language });
   }
 
   @Get('id/:id')
