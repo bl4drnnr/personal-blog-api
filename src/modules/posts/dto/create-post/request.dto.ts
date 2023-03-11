@@ -1,12 +1,21 @@
-import { ICode, ILink, IList, IPicture, ITitle } from '@models/post.model';
+import {
+  ICode,
+  ILink,
+  IList,
+  IPicture,
+  ITitle,
+  LanguageType
+} from '@models/post.model';
 
 export class CreatePostRequest {
+  readonly language: LanguageType;
   readonly title: string;
   readonly slug: string;
   readonly tags: string;
   readonly type: Array<string>;
   readonly description: string;
   readonly pageDescription: string;
+  readonly searchTags: Array<string>;
   readonly intro: string;
   readonly timestamp: string;
   readonly footer?: string;

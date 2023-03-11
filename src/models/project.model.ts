@@ -1,32 +1,28 @@
 import {
-  Table,
-  Model,
-  DataType,
-  PrimaryKey,
-  Default,
   Column,
   CreatedAt,
+  DataType,
+  Default,
+  Model,
+  PrimaryKey,
+  Table,
   UpdatedAt
 } from 'sequelize-typescript';
 
-interface PostCreationAttributes {
+interface ProjectCreationAttributes {
   title: string;
   slug: string;
-  tags: string;
-  type: Array<string>;
-  description: string;
-  pageDescription: string;
-  searchTags: Array<string>;
-  intro: string;
-  timestamp: string;
-  toc: object;
-  content: Array<string | IPicture | IList | ICode | ITitle>;
-  references: Array<ILink>;
 }
 
-export interface ILink {
-  name: string;
+export interface ITechStack {
+  src: string;
+  width: number;
+  height: number;
+}
+
+export interface IProjectPage {
   link: string;
+  text: string;
 }
 
 export interface IPicture {
@@ -58,9 +54,9 @@ export enum LanguageType {
 }
 
 @Table({
-  tableName: 'posts'
+  tableName: 'projects'
 })
-export class Post extends Model<Post, PostCreationAttributes> {
+export class Project extends Model<Project, ProjectCreationAttributes> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
@@ -79,37 +75,31 @@ export class Post extends Model<Post, PostCreationAttributes> {
   slug: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  tags: string;
-
-  @Column({ type: DataType.JSON, allowNull: false })
-  type: Array<string>;
-
-  @Column({ type: DataType.TEXT, allowNull: false })
-  description: string;
-
-  @Column({ type: DataType.TEXT, allowNull: false, field: 'page_description' })
-  pageDescription: string;
-
-  @Column({ type: DataType.JSON, allowNull: false, field: 'search_tags' })
-  searchTags: Array<string>;
-
-  @Column({ type: DataType.TEXT, allowNull: false })
-  intro: string;
+  brief: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  timestamp: string;
+  description: string;
 
-  @Column({ type: DataType.TEXT, allowNull: true })
-  footer: string;
+  @Column({ type: DataType.JSON, allowNull: false })
+  searchTags: Array<string>;
+
+  @Column({ type: DataType.STRING, allowNull: false })
+  briefDescription: string;
+
+  @Column({ type: DataType.STRING, allowNull: false })
+  license: string;
+
+  @Column({ type: DataType.JSON, allowNull: false })
+  techStack: Array<ITechStack>;
+
+  @Column({ type: DataType.JSON, allowNull: false })
+  projectPages: Array<IProjectPage>;
 
   @Column({ type: DataType.JSON, allowNull: false })
   toc: object;
 
   @Column({ type: DataType.JSON, allowNull: false })
   content: Array<string | IPicture | IList | ICode | ITitle>;
-
-  @Column({ type: DataType.JSON, allowNull: false })
-  references: Array<ILink>;
 
   @CreatedAt
   @Column({ field: 'created_at' })
