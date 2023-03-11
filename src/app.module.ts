@@ -16,6 +16,8 @@ import { AuthModule } from '@auth/auth.module';
 import { Session } from '@models/session.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { SignUpMiddleware } from '@middlewares/sign-up.middleware';
+import { ProjectsModule } from '@projects/projects.module';
+import { Project } from '@models/project.model';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { SignUpMiddleware } from '@middlewares/sign-up.middleware';
     SharedModule,
     UsersModule,
     AuthModule,
+    ProjectsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`
@@ -34,7 +37,7 @@ import { SignUpMiddleware } from '@middlewares/sign-up.middleware';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [Post, User, Session, ConfirmationHash],
+      models: [Post, User, Session, ConfirmationHash, Project],
       autoLoadModels: true
     })
   ]

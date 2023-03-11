@@ -7,6 +7,7 @@ export class CreatePostRequest {
   readonly type: Array<string>;
   readonly description: string;
   readonly pageDescription: string;
+  readonly searchTags: Array<string>;
   readonly intro: string;
   readonly timestamp: string;
   readonly footer?: string;

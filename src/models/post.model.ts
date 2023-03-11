@@ -16,6 +16,7 @@ interface PostCreationAttributes {
   type: Array<string>;
   description: string;
   pageDescription: string;
+  searchTags: Array<string>;
   intro: string;
   timestamp: string;
   toc: object;
@@ -76,6 +77,9 @@ export class Post extends Model<Post, PostCreationAttributes> {
 
   @Column({ type: DataType.TEXT, allowNull: false, field: 'page_description' })
   pageDescription: string;
+
+  @Column({ type: DataType.JSON, allowNull: false, field: 'search_tags' })
+  searchTags: Array<string>;
 
   @Column({ type: DataType.TEXT, allowNull: false })
   intro: string;
