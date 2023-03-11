@@ -30,6 +30,20 @@ export class ProjectsController {
     return await this.projectsService.getProjectById({ id });
   }
 
+  @Get('all/:page/:pageSize/:order')
+  async getAllProjects(
+    @Param('page') page: number,
+    @Param('pageSize') pageSize: number,
+    @Param('order') order: string
+  ) {
+    return await this.projectsService.getAllProjects({ page, pageSize, order });
+  }
+
+  @Get('search/:searchString')
+  async searchProjects(@Param('searchString') searchString: string) {
+    return await this.projectsService.searchProjects({ searchString });
+  }
+
   @UseGuards(JwtGuard)
   @Post()
   async createProject(@Body() project: CreateProjectRequest) {

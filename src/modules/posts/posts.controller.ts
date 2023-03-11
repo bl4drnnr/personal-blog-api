@@ -30,6 +30,20 @@ export class PostsController {
     return await this.postsService.getPostById({ id });
   }
 
+  @Get('all/:page/:pageSize/:order')
+  async getAllPosts(
+    @Param('page') page: number,
+    @Param('pageSize') pageSize: number,
+    @Param('order') order: string
+  ) {
+    return await this.postsService.getAllPosts({ page, pageSize, order });
+  }
+
+  @Get('search/:searchString')
+  async searchPosts(@Param('searchString') searchString: string) {
+    return await this.postsService.searchPosts({ searchString });
+  }
+
   @UseGuards(JwtGuard)
   @Post()
   async createPost(@Body() post: CreatePostRequest) {

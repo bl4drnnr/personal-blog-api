@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Project } from '@models/project.model';
 import { CreateProjectRequest } from '@projects/dto/create-project/request.dto';
@@ -24,6 +24,31 @@ export class ProjectsService {
 
   async getProjectById({ id }: { id: string }) {
     return await this.projectRepository.findByPk(id);
+  }
+
+  async getAllProjects({
+    page,
+    pageSize,
+    order
+  }: {
+    page: number;
+    pageSize: number;
+    order: string;
+  }) {
+    const offset = page * pageSize;
+    const limit = pageSize;
+
+    if (!['desc', 'asc'].includes(order)) throw new BadRequestException();
+
+    return await this.projectRepository.findAndCountAll({
+      order: [['created_at', order.toUpperCase()]],
+      limit,
+      offset
+    });
+  }
+
+  async searchProjects({ searchString }: { searchString: string }) {
+    //
   }
 
   async createProject({ project }: { project: CreateProjectRequest }) {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
 import { CreatePostRequest } from '@posts/dto/create-post/request.dto';
@@ -16,6 +16,31 @@ export class PostsService {
 
   async getPostById({ id }: { id: string }) {
     return await this.postRepository.findByPk(id);
+  }
+
+  async getAllPosts({
+    page,
+    pageSize,
+    order
+  }: {
+    page: number;
+    pageSize: number;
+    order: string;
+  }) {
+    const offset = page * pageSize;
+    const limit = pageSize;
+
+    if (!['desc', 'asc'].includes(order)) throw new BadRequestException();
+
+    return await this.postRepository.findAndCountAll({
+      order: [['created_at', order.toUpperCase()]],
+      limit,
+      offset
+    });
+  }
+
+  async searchPosts({ searchString }: { searchString: string }) {
+    //
   }
 
   async createPost({ post }: { post: CreatePostRequest }) {
