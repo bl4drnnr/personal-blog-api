@@ -35,7 +35,7 @@ export class ProjectsController {
 
   @UseGuards(JwtGuard)
   @Patch(':id')
-  async updatePost(
+  async updateProject(
     @Param('id') id: string,
     @Body() project: UpdateProjectRequest
   ) {
@@ -44,7 +44,7 @@ export class ProjectsController {
 
   @UseGuards(JwtGuard)
   @Delete(':id')
-  async deletePost(@Param('id') id: string) {
+  async deleteProject(@Param('id') id: string) {
     return await this.projectsService.deleteProject({ id });
   }
 }

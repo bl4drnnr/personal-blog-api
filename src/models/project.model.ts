@@ -1,10 +1,12 @@
 import {
   Column,
+  CreatedAt,
   DataType,
   Default,
   Model,
   PrimaryKey,
-  Table
+  Table,
+  UpdatedAt
 } from 'sequelize-typescript';
 
 interface ProjectCreationAttributes {
@@ -86,4 +88,12 @@ export class Project extends Model<Project, ProjectCreationAttributes> {
 
   @Column({ type: DataType.JSON, allowNull: false })
   content: Array<string | IPicture | IList | ICode | ITitle>;
+
+  @CreatedAt
+  @Column({ field: 'created_at' })
+  createdAt: Date;
+
+  @UpdatedAt
+  @Column({ field: 'updated_at' })
+  updatedAt: Date;
 }
