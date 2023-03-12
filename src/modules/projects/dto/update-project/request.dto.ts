@@ -13,7 +13,7 @@ export interface UpdateProjectRequest {
   brief?: string;
   description?: string;
   tags?: string;
-  searchTags?: Array<string>;
+  projectTags?: Array<string>;
   briefDescription?: string;
   license?: string;
   techStack?: Array<ITechStack>;

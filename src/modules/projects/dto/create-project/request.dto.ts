@@ -15,7 +15,7 @@ export interface CreateProjectRequest {
   brief: string;
   tags: string;
   description: string;
-  searchTags: Array<string>;
+  projectTags: Array<string>;
   briefDescription: string;
   license: string;
   techStack: Array<ITechStack>;

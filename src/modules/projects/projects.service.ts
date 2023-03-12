@@ -53,20 +53,20 @@ export class ProjectsService {
 
     const where = {};
 
-    // if (searchQuery) {
-    //   where[Op.or] = [
-    //     {
-    //       title: {
-    //         [Op.iLike]: `%${searchQuery}%`
-    //       }
-    //     },
-    //     sequelize.where(
-    //       sequelize.fn('array_to_string', sequelize.col('search_tags'), ','),
-    //       'ILIKE',
-    //       `%${searchQuery}%`
-    //     )
-    //   ];
-    // }
+    if (searchQuery) {
+      where[Op.or] = [
+        {
+          title: {
+            [Op.iLike]: `%${searchQuery}%`
+          }
+        },
+        sequelize.where(
+          sequelize.fn('array_to_string', sequelize.col('project_tags'), ','),
+          'ILIKE',
+          `%${searchQuery}%`
+        )
+      ];
+    }
 
     return await this.projectRepository.findAndCountAll({
       where: { language, ...where },

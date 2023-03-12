@@ -87,9 +87,9 @@ export class Project extends Model<Project, ProjectCreationAttributes> {
   @Column({
     type: DataType.ARRAY(DataType.STRING),
     allowNull: false,
-    field: 'search_tags'
+    field: 'project_tags'
   })
-  searchTags: Array<string>;
+  projectTags: Array<string>;
 
   @Column({
     type: DataType.STRING,
