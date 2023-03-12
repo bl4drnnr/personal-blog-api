@@ -4,7 +4,8 @@ import {
   IList,
   IPicture,
   ITitle,
-  LanguageType
+  LanguageType,
+  PostType
 } from '@models/post.model';
 
 export class CreatePostRequest {
@@ -12,7 +13,7 @@ export class CreatePostRequest {
   readonly title: string;
   readonly slug: string;
   readonly tags: string;
-  readonly type: Array<string>;
+  readonly type: Array<PostType>;
   readonly description: string;
   readonly pageDescription: string;
   readonly searchTags: Array<string>;

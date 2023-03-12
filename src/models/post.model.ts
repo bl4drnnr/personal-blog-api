@@ -38,6 +38,7 @@ export interface IPicture {
 export interface IList {
   type: 'list-numeric' | 'list-bullet';
   items: Array<any>;
+  style: string;
 }
 
 export interface ICode {
@@ -55,6 +56,11 @@ export enum LanguageType {
   pl = 'pl',
   ru = 'ru',
   en = 'en'
+}
+
+export enum PostType {
+  theory = 'theory',
+  practice = 'practice'
 }
 
 @Table({
@@ -81,8 +87,11 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   tags: string;
 
-  @Column({ type: DataType.JSON, allowNull: false })
-  type: Array<string>;
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+    allowNull: false
+  })
+  type: Array<PostType>;
 
   @Column({ type: DataType.TEXT, allowNull: false })
   description: string;
@@ -90,7 +99,11 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Column({ type: DataType.TEXT, allowNull: false, field: 'page_description' })
   pageDescription: string;
 
-  @Column({ type: DataType.JSON, allowNull: false, field: 'search_tags' })
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+    allowNull: false,
+    field: 'search_tags'
+  })
   searchTags: Array<string>;
 
   @Column({ type: DataType.TEXT, allowNull: false })
@@ -108,7 +121,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Column({ type: DataType.JSON, allowNull: false })
   content: Array<string | IPicture | IList | ICode | ITitle>;
 
-  @Column({ type: DataType.JSON, allowNull: false })
+  @Column({ type: DataType.JSON, allowNull: false, field: 'references' })
   references: Array<ILink>;
 
   @CreatedAt

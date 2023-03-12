@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards
 } from '@nestjs/common';
 import { PostsService } from '@posts/posts.service';
@@ -30,7 +31,28 @@ export class PostsController {
     return await this.postsService.getPostById({ id });
   }
 
-  @UseGuards(JwtGuard)
+  @Get('all/:language/:page/:pageSize/:order/:orderBy')
+  async getAllPosts(
+    @Param('language') language: string,
+    @Param('page') page: number,
+    @Param('pageSize') pageSize: number,
+    @Param('order') order: string,
+    @Param('orderBy') orderBy: string,
+    @Query('searchQuery') searchQuery: string,
+    @Query('postTypes') postTypes: string
+  ) {
+    return await this.postsService.getAllPosts({
+      language,
+      page,
+      pageSize,
+      order,
+      orderBy,
+      searchQuery,
+      postTypes
+    });
+  }
+
+  // @UseGuards(JwtGuard)
   @Post()
   async createPost(@Body() post: CreatePostRequest) {
     return await this.postsService.createPost({ post });
