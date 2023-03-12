@@ -19,27 +19,41 @@ export class PostsService {
   }
 
   async getAllPosts({
+    language,
     page,
     pageSize,
-    order
+    order,
+    orderBy
   }: {
+    language: string;
     page: number;
     pageSize: number;
     order: string;
+    orderBy: string;
   }) {
     const offset = page * pageSize;
     const limit = pageSize;
 
     if (!['desc', 'asc'].includes(order)) throw new BadRequestException();
 
+    if (!['created_at', 'title'].includes(orderBy))
+      throw new BadRequestException();
+
     return await this.postRepository.findAndCountAll({
-      order: [['created_at', order.toUpperCase()]],
+      where: { language },
+      order: [[orderBy, order.toUpperCase()]],
       limit,
       offset
     });
   }
 
-  async searchPosts({ searchString }: { searchString: string }) {
+  async searchPosts({
+    searchString,
+    language
+  }: {
+    searchString: string;
+    language: string;
+  }) {
     //
   }
 

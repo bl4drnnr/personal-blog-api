@@ -27,27 +27,41 @@ export class ProjectsService {
   }
 
   async getAllProjects({
+    language,
     page,
     pageSize,
-    order
+    order,
+    orderBy
   }: {
+    language: string;
     page: number;
     pageSize: number;
     order: string;
+    orderBy: string;
   }) {
     const offset = page * pageSize;
     const limit = pageSize;
 
     if (!['desc', 'asc'].includes(order)) throw new BadRequestException();
 
+    if (!['created_at', 'title'].includes(orderBy))
+      throw new BadRequestException();
+
     return await this.projectRepository.findAndCountAll({
-      order: [['created_at', order.toUpperCase()]],
+      where: { language },
+      order: [[order, order.toUpperCase()]],
       limit,
       offset
     });
   }
 
-  async searchProjects({ searchString }: { searchString: string }) {
+  async searchProjects({
+    searchString,
+    language
+  }: {
+    searchString: string;
+    language: string;
+  }) {
     //
   }
 

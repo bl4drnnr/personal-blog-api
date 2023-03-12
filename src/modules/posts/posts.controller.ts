@@ -30,18 +30,29 @@ export class PostsController {
     return await this.postsService.getPostById({ id });
   }
 
-  @Get('all/:page/:pageSize/:order')
+  @Get('all/:language/:page/:pageSize/:order/:orderBy')
   async getAllPosts(
+    @Param('language') language: string,
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
-    @Param('order') order: string
+    @Param('order') order: string,
+    @Param('orderBy') orderBy: string
   ) {
-    return await this.postsService.getAllPosts({ page, pageSize, order });
+    return await this.postsService.getAllPosts({
+      language,
+      page,
+      pageSize,
+      order,
+      orderBy
+    });
   }
 
-  @Get('search/:searchString')
-  async searchPosts(@Param('searchString') searchString: string) {
-    return await this.postsService.searchPosts({ searchString });
+  @Get('search/:language/:searchString')
+  async searchPosts(
+    @Param('searchString') searchString: string,
+    @Param('language') language: string
+  ) {
+    return await this.postsService.searchPosts({ searchString, language });
   }
 
   @UseGuards(JwtGuard)

@@ -30,18 +30,32 @@ export class ProjectsController {
     return await this.projectsService.getProjectById({ id });
   }
 
-  @Get('all/:page/:pageSize/:order')
+  @Get('all/:language/:page/:pageSize/:order/:orderBy')
   async getAllProjects(
+    @Param('language') language: string,
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
-    @Param('order') order: string
+    @Param('order') order: string,
+    @Param('orderBy') orderBy: string
   ) {
-    return await this.projectsService.getAllProjects({ page, pageSize, order });
+    return await this.projectsService.getAllProjects({
+      language,
+      page,
+      pageSize,
+      order,
+      orderBy
+    });
   }
 
-  @Get('search/:searchString')
-  async searchProjects(@Param('searchString') searchString: string) {
-    return await this.projectsService.searchProjects({ searchString });
+  @Get('search/:language/:searchString')
+  async searchProjects(
+    @Param('searchString') searchString: string,
+    @Param('language') language: string
+  ) {
+    return await this.projectsService.searchProjects({
+      searchString,
+      language
+    });
   }
 
   @UseGuards(JwtGuard)
