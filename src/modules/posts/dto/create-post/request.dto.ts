@@ -18,7 +18,6 @@ export class CreatePostRequest {
   readonly pageDescription: string;
   readonly searchTags: Array<string>;
   readonly intro: string;
-  readonly timestamp: string;
   readonly footer?: string;
   readonly toc: object;
   readonly content: Array<string | IPicture | IList | ICode | ITitle>;

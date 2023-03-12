@@ -18,7 +18,6 @@ interface PostCreationAttributes {
   pageDescription: string;
   searchTags: Array<string>;
   intro: string;
-  timestamp: string;
   toc: object;
   content: Array<string | IPicture | IList | ICode | ITitle>;
   references: Array<ILink>;
@@ -108,9 +107,6 @@ export class Post extends Model<Post, PostCreationAttributes> {
 
   @Column({ type: DataType.TEXT, allowNull: false })
   intro: string;
-
-  @Column({ type: DataType.STRING, allowNull: false })
-  timestamp: string;
 
   @Column({ type: DataType.TEXT, allowNull: true })
   footer: string;

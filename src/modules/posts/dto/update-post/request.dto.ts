@@ -16,7 +16,6 @@ export interface UpdatePostRequest {
   pageDescription?: string;
   searchTags?: Array<string>;
   intro?: string;
-  timestamp?: string;
   footer?: string;
   toc?: object;
   content?: Array<string | IPicture | IList | ICode | ITitle>;
