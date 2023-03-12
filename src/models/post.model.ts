@@ -58,6 +58,11 @@ export enum LanguageType {
   en = 'en'
 }
 
+export enum PostType {
+  theory = 'theory',
+  practice = 'practice'
+}
+
 @Table({
   tableName: 'posts'
 })
@@ -82,8 +87,11 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   tags: string;
 
-  @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
-  type: Array<string>;
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+    allowNull: false
+  })
+  type: Array<PostType>;
 
   @Column({ type: DataType.TEXT, allowNull: false })
   description: string;

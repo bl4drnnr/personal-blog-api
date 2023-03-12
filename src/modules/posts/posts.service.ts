@@ -25,7 +25,8 @@ export class PostsService {
     pageSize,
     order,
     orderBy,
-    searchQuery
+    searchQuery,
+    postTypes
   }: {
     language: string;
     page: number;
@@ -33,39 +34,50 @@ export class PostsService {
     order: string;
     orderBy: string;
     searchQuery: string;
+    postTypes: string;
   }) {
     const offset = page * pageSize;
     const limit = pageSize;
 
-    if (!['DESC', 'ASC'].includes(orderBy)) throw new BadRequestException();
+    const orderByOptions = process.env.ORDER_BY_OPTIONS.split(',');
+    const orderOptions = process.env.ORDER_OPTIONS.split(',');
+    const postTypeOptions = process.env.POST_TYPE_OPTION.split(',');
 
-    if (!['created_at', 'title'].includes(order))
+    if (!orderByOptions.includes(orderBy) || !orderOptions.includes(order))
       throw new BadRequestException();
 
-    const where = searchQuery
-      ? {
-          language,
-          [Op.or]: [
-            {
-              title: {
-                [Op.iLike]: `%${searchQuery}%`
-              }
-            },
-            sequelize.where(
-              sequelize.fn(
-                'array_to_string',
-                sequelize.col('search_tags'),
-                ','
-              ),
-              'ILIKE',
-              `%${searchQuery}%`
-            )
-          ]
-        }
-      : { language };
+    const where = {};
+
+    if (searchQuery) {
+      where[Op.or] = [
+        {
+          title: {
+            [Op.iLike]: `%${searchQuery}%`
+          }
+        },
+        sequelize.where(
+          sequelize.fn('array_to_string', sequelize.col('search_tags'), ','),
+          'ILIKE',
+          `%${searchQuery}%`
+        )
+      ];
+    }
+
+    if (postTypes) {
+      const postTypesArray = postTypes.split(',');
+
+      postTypesArray.forEach((postType) => {
+        if (!postTypeOptions.includes(postType))
+          throw new BadRequestException();
+      });
+
+      where['type'] = {
+        [Op.contains]: postTypesArray
+      };
+    }
 
     return await this.postRepository.findAndCountAll({
-      where: { ...where },
+      where: { language, ...where },
       order: [[order, orderBy]],
       limit,
       offset

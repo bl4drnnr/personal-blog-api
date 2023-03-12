@@ -38,7 +38,8 @@ export class PostsController {
     @Param('pageSize') pageSize: number,
     @Param('order') order: string,
     @Param('orderBy') orderBy: string,
-    @Query('searchQuery') searchQuery: string
+    @Query('searchQuery') searchQuery: string,
+    @Query('postTypes') postTypes: string
   ) {
     return await this.postsService.getAllPosts({
       language,
@@ -46,11 +47,12 @@ export class PostsController {
       pageSize,
       order,
       orderBy,
-      searchQuery
+      searchQuery,
+      postTypes
     });
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Post()
   async createPost(@Body() post: CreatePostRequest) {
     return await this.postsService.createPost({ post });
