@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards
 } from '@nestjs/common';
 import { ProjectsService } from '@projects/projects.service';
@@ -36,25 +37,16 @@ export class ProjectsController {
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
     @Param('order') order: string,
-    @Param('orderBy') orderBy: string
+    @Param('orderBy') orderBy: string,
+    @Query('searchQuery') searchQuery: string
   ) {
     return await this.projectsService.getAllProjects({
       language,
       page,
       pageSize,
       order,
-      orderBy
-    });
-  }
-
-  @Get('search/:language/:searchString')
-  async searchProjects(
-    @Param('searchString') searchString: string,
-    @Param('language') language: string
-  ) {
-    return await this.projectsService.searchProjects({
-      searchString,
-      language
+      orderBy,
+      searchQuery
     });
   }
 

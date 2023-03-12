@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Project } from '@models/project.model';
 import { CreateProjectRequest } from '@projects/dto/create-project/request.dto';
 import { UpdateProjectRequest } from '@projects/dto/update-project/request.dto';
+import sequelize, { Op } from 'sequelize';
 
 @Injectable()
 export class ProjectsService {
@@ -31,38 +32,52 @@ export class ProjectsService {
     page,
     pageSize,
     order,
-    orderBy
+    orderBy,
+    searchQuery
   }: {
     language: string;
     page: number;
     pageSize: number;
     order: string;
     orderBy: string;
+    searchQuery: string;
   }) {
     const offset = page * pageSize;
     const limit = pageSize;
 
-    if (!['desc', 'asc'].includes(order)) throw new BadRequestException();
+    if (!['DESC', 'ASC'].includes(orderBy)) throw new BadRequestException();
 
-    if (!['created_at', 'title'].includes(orderBy))
+    if (!['created_at', 'title'].includes(order))
       throw new BadRequestException();
 
+    const where = searchQuery
+      ? {
+          language,
+          [Op.or]: [
+            {
+              title: {
+                [Op.iLike]: `%${searchQuery}%`
+              }
+            },
+            sequelize.where(
+              sequelize.fn(
+                'array_to_string',
+                sequelize.col('search_tags'),
+                ','
+              ),
+              'ILIKE',
+              `%${searchQuery}%`
+            )
+          ]
+        }
+      : { language };
+
     return await this.projectRepository.findAndCountAll({
-      where: { language },
-      order: [[order, order.toUpperCase()]],
+      where: { ...where },
+      order: [[order, orderBy]],
       limit,
       offset
     });
-  }
-
-  async searchProjects({
-    searchString,
-    language
-  }: {
-    searchString: string;
-    language: string;
-  }) {
-    //
   }
 
   async createProject({ project }: { project: CreateProjectRequest }) {

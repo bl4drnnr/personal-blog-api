@@ -82,7 +82,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   tags: string;
 
-  @Column({ type: DataType.JSON, allowNull: false })
+  @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
   type: Array<string>;
 
   @Column({ type: DataType.TEXT, allowNull: false })
@@ -91,7 +91,11 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Column({ type: DataType.TEXT, allowNull: false, field: 'page_description' })
   pageDescription: string;
 
-  @Column({ type: DataType.JSON, allowNull: false, field: 'search_tags' })
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+    allowNull: false,
+    field: 'search_tags'
+  })
   searchTags: Array<string>;
 
   @Column({ type: DataType.TEXT, allowNull: false })

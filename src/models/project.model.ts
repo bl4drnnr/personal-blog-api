@@ -84,7 +84,11 @@ export class Project extends Model<Project, ProjectCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   description: string;
 
-  @Column({ type: DataType.JSON, allowNull: false, field: 'search_tags' })
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+    allowNull: false,
+    field: 'search_tags'
+  })
   searchTags: Array<string>;
 
   @Column({

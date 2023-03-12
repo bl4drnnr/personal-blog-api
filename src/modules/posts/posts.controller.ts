@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards
 } from '@nestjs/common';
 import { PostsService } from '@posts/posts.service';
@@ -36,23 +37,17 @@ export class PostsController {
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
     @Param('order') order: string,
-    @Param('orderBy') orderBy: string
+    @Param('orderBy') orderBy: string,
+    @Query('searchQuery') searchQuery: string
   ) {
     return await this.postsService.getAllPosts({
       language,
       page,
       pageSize,
       order,
-      orderBy
+      orderBy,
+      searchQuery
     });
-  }
-
-  @Get('search/:language/:searchString')
-  async searchPosts(
-    @Param('searchString') searchString: string,
-    @Param('language') language: string
-  ) {
-    return await this.postsService.searchPosts({ searchString, language });
   }
 
   @UseGuards(JwtGuard)

@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
 import { CreatePostRequest } from '@posts/dto/create-post/request.dto';
 import { UpdatePostRequest } from '@posts/dto/update-post/request.dto';
+import sequelize, { Op } from 'sequelize';
 
 @Injectable()
 export class PostsService {
@@ -23,38 +24,52 @@ export class PostsService {
     page,
     pageSize,
     order,
-    orderBy
+    orderBy,
+    searchQuery
   }: {
     language: string;
     page: number;
     pageSize: number;
     order: string;
     orderBy: string;
+    searchQuery: string;
   }) {
     const offset = page * pageSize;
     const limit = pageSize;
 
-    if (!['desc', 'asc'].includes(order)) throw new BadRequestException();
+    if (!['DESC', 'ASC'].includes(orderBy)) throw new BadRequestException();
 
-    if (!['created_at', 'title'].includes(orderBy))
+    if (!['created_at', 'title'].includes(order))
       throw new BadRequestException();
 
+    const where = searchQuery
+      ? {
+          language,
+          [Op.or]: [
+            {
+              title: {
+                [Op.iLike]: `%${searchQuery}%`
+              }
+            },
+            sequelize.where(
+              sequelize.fn(
+                'array_to_string',
+                sequelize.col('search_tags'),
+                ','
+              ),
+              'ILIKE',
+              `%${searchQuery}%`
+            )
+          ]
+        }
+      : { language };
+
     return await this.postRepository.findAndCountAll({
-      where: { language },
-      order: [[orderBy, order.toUpperCase()]],
+      where: { ...where },
+      order: [[order, orderBy]],
       limit,
       offset
     });
-  }
-
-  async searchPosts({
-    searchString,
-    language
-  }: {
-    searchString: string;
-    language: string;
-  }) {
-    //
   }
 
   async createPost({ post }: { post: CreatePostRequest }) {
