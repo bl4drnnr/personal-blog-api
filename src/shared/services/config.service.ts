@@ -22,10 +22,6 @@ export class ApiConfigService {
     return value.replace(/\\n/g, '\n');
   }
 
-  get nodeEnv() {
-    return this.getString('NODE_ENV');
-  }
-
   get sendGridCredentials() {
     return {
       api_key: this.getString('SENDGRID_API_KEY'),
