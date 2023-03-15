@@ -49,17 +49,11 @@ export class UsersService {
     });
     if (alreadyExistingUser) throw new UserAlreadyExistsException();
 
-    if (
-      !this.validatorService.validateEmail(payload.email) ||
-      !this.validatorService.validatePassword(payload.password)
-    )
+    if (!this.validatorService.validateEmail(payload.email))
       throw new ValidationErrorException();
 
-    const hashedPassword = await bcryptjs.hash(payload.password, 10);
-
     const createdUser = await this.userRepository.create({
-      ...payload,
-      password: hashedPassword
+      ...payload
     });
 
     const confirmationHash = crypto.randomBytes(20).toString('hex');
@@ -80,9 +74,11 @@ export class UsersService {
   }
 
   async accountConfirmation({
-    confirmationHash
+    confirmationHash,
+    password
   }: {
     confirmationHash: string;
+    password: string;
   }) {
     const confirmHash = await this.confirmationHashRepository.findOne({
       where: { confirmationHash },
@@ -92,6 +88,9 @@ export class UsersService {
     if (!confirmHash) throw new BadRequestException();
     if (confirmHash.confirmed) throw new EmailAlreadyConfirmedException();
 
+    if (!this.validatorService.validatePassword(password))
+      throw new ValidationErrorException();
+
     await this.confirmationHashRepository.update(
       {
         confirmed: true
@@ -100,7 +99,8 @@ export class UsersService {
     );
     await this.userRepository.update(
       {
-        accountConfirm: true
+        accountConfirm: true,
+        password
       },
       { where: { id: confirmHash.userId } }
     );

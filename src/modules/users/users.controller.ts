@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Res,
-  UseGuards
-} from '@nestjs/common';
+import { Body, Controller, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { UsersService } from '@users/users.service';
 import { FastifyReply } from 'fastify';
 import { SignInRequest } from '@users/dto/sign-in/request.dto';
@@ -16,8 +8,8 @@ import { SignUpRequest } from '@users/dto/sign-up/request.dto';
 import { LogoutResponse } from '@users/dto/logout/response.dto';
 import { UserDecorator } from '@decorators/user.decorator';
 import { JwtGuard } from '@guards/jwt.guard';
-import { AccountConfirmationRequest } from '@users/dto/account-confirmation/request.dto';
 import { AccountConfirmationResponse } from '@users/dto/account-confirmation/response.dto';
+import { AccountConfirmationRequest } from '@users/dto/account-confirmation/request.dto';
 
 @Controller('users')
 export class UsersController {
@@ -54,11 +46,15 @@ export class UsersController {
     return new LogoutResponse();
   }
 
-  @Get('account-confirmation/:confirmationHash')
+  @Post('account-confirmation')
   async accountConfirmation(
-    @Param() { confirmationHash }: AccountConfirmationRequest
+    @Query('confirmationHash') confirmationHash: string,
+    @Body() { password }: AccountConfirmationRequest
   ) {
-    await this.usersService.accountConfirmation({ confirmationHash });
+    await this.usersService.accountConfirmation({
+      confirmationHash,
+      password
+    });
 
     return new AccountConfirmationResponse();
   }
