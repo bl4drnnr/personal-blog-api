@@ -15,7 +15,6 @@ import { ConfirmationHash } from '@models/confirmation-hash.model';
 
 interface UserCreationAttributes {
   email: string;
-  password: string;
 }
 
 @Table({
@@ -30,8 +29,8 @@ export class User extends Model<User, UserCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   email: string;
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  password: string;
+  @Column({ type: DataType.STRING, allowNull: true })
+  password?: string;
 
   @Default(false)
   @Column({
@@ -40,6 +39,9 @@ export class User extends Model<User, UserCreationAttributes> {
     field: 'account_confirm'
   })
   accountConfirm: boolean;
+
+  @HasMany(() => ConfirmationHash)
+  confirmationHashes: ConfirmationHash[];
 
   @HasOne(() => Session)
   session: Session;

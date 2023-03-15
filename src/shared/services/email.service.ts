@@ -15,7 +15,7 @@ export class EmailService {
     target: string;
     confirmationHash: string;
   }) {
-    const confirmationLink = `${this.configService.adminFrontEndUrl}/account-confirmation?confirmationHash=${confirmationHash}`;
+    const confirmationLink = `${this.configService.adminFrontEndUrl}/account-confirmation/${confirmationHash}`;
 
     const mail = {
       to: target,

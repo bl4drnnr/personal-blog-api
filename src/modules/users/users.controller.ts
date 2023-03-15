@@ -2,8 +2,8 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
+  Query,
   Res,
   UseGuards
 } from '@nestjs/common';
@@ -16,7 +16,6 @@ import { SignUpRequest } from '@users/dto/sign-up/request.dto';
 import { LogoutResponse } from '@users/dto/logout/response.dto';
 import { UserDecorator } from '@decorators/user.decorator';
 import { JwtGuard } from '@guards/jwt.guard';
-import { AccountConfirmationRequest } from '@users/dto/account-confirmation/request.dto';
 import { AccountConfirmationResponse } from '@users/dto/account-confirmation/response.dto';
 
 @Controller('users')
@@ -54,9 +53,9 @@ export class UsersController {
     return new LogoutResponse();
   }
 
-  @Get('account-confirmation/:confirmationHash')
+  @Get('account-confirmation')
   async accountConfirmation(
-    @Param() { confirmationHash }: AccountConfirmationRequest
+    @Query('confirmationHash') confirmationHash: string
   ) {
     await this.usersService.accountConfirmation({ confirmationHash });
 

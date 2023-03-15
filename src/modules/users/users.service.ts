@@ -49,17 +49,11 @@ export class UsersService {
     });
     if (alreadyExistingUser) throw new UserAlreadyExistsException();
 
-    if (
-      !this.validatorService.validateEmail(payload.email) ||
-      !this.validatorService.validatePassword(payload.password)
-    )
+    if (!this.validatorService.validateEmail(payload.email))
       throw new ValidationErrorException();
 
-    const hashedPassword = await bcryptjs.hash(payload.password, 10);
-
     const createdUser = await this.userRepository.create({
-      ...payload,
-      password: hashedPassword
+      ...payload
     });
 
     const confirmationHash = crypto.randomBytes(20).toString('hex');
