@@ -74,9 +74,11 @@ export class UsersService {
   }
 
   async accountConfirmation({
-    confirmationHash
+    confirmationHash,
+    password
   }: {
     confirmationHash: string;
+    password: string;
   }) {
     const confirmHash = await this.confirmationHashRepository.findOne({
       where: { confirmationHash },
@@ -86,6 +88,9 @@ export class UsersService {
     if (!confirmHash) throw new BadRequestException();
     if (confirmHash.confirmed) throw new EmailAlreadyConfirmedException();
 
+    if (!this.validatorService.validatePassword(password))
+      throw new ValidationErrorException();
+
     await this.confirmationHashRepository.update(
       {
         confirmed: true
@@ -94,7 +99,8 @@ export class UsersService {
     );
     await this.userRepository.update(
       {
-        accountConfirm: true
+        accountConfirm: true,
+        password
       },
       { where: { id: confirmHash.userId } }
     );
