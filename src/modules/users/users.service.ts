@@ -91,6 +91,8 @@ export class UsersService {
     if (!this.validatorService.validatePassword(password))
       throw new ValidationErrorException();
 
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
     await this.confirmationHashRepository.update(
       {
         confirmed: true
@@ -100,7 +102,7 @@ export class UsersService {
     await this.userRepository.update(
       {
         accountConfirm: true,
-        password
+        password: hashedPassword
       },
       { where: { id: confirmHash.userId } }
     );
