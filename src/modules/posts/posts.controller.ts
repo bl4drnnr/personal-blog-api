@@ -26,18 +26,18 @@ export class PostsController {
     return await this.postsService.getPostBySlug({ slug, language });
   }
 
-  @Get('get-by-id/:id')
-  async getPostById(@Param('id') id: string) {
+  @Get('get-by-id')
+  async getPostById(@Query('id') id: string) {
     return await this.postsService.getPostById({ id });
   }
 
-  @Get('all/:language/:page/:pageSize/:order/:orderBy')
+  @Get('all')
   async getAllPosts(
-    @Param('language') language: string,
-    @Param('page') page: number,
-    @Param('pageSize') pageSize: number,
-    @Param('order') order: string,
-    @Param('orderBy') orderBy: string,
+    @Query('language') language: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+    @Query('order') order: string,
+    @Query('orderBy') orderBy: string,
     @Query('searchQuery') searchQuery: string,
     @Query('postTypes') postTypes: string
   ) {
@@ -52,21 +52,21 @@ export class PostsController {
     });
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Post('create')
   async createPost(@Body() post: CreatePostRequest) {
     return await this.postsService.createPost({ post });
   }
 
   @UseGuards(JwtGuard)
-  @Patch('update/:id')
-  async updatePost(@Param('id') id: string, @Body() post: UpdatePostRequest) {
+  @Patch('update')
+  async updatePost(@Query('id') id: string, @Body() post: UpdatePostRequest) {
     return await this.postsService.updatePost({ id, post });
   }
 
   @UseGuards(JwtGuard)
-  @Delete('delete/:id')
-  async deletePost(@Param('id') id: string) {
+  @Delete('delete')
+  async deletePost(@Query('id') id: string) {
     return await this.postsService.deletePost({ id });
   }
 }
