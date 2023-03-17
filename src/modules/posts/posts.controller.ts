@@ -52,7 +52,7 @@ export class PostsController {
     });
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Post('create')
   async createPost(@Body() post: CreatePostRequest) {
     return await this.postsService.createPost({ post });
