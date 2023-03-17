@@ -26,7 +26,7 @@ export class PostsController {
     return await this.postsService.getPostBySlug({ slug, language });
   }
 
-  @Get('id/:id')
+  @Get('get-by-id/:id')
   async getPostById(@Param('id') id: string) {
     return await this.postsService.getPostById({ id });
   }
@@ -53,19 +53,19 @@ export class PostsController {
   }
 
   @UseGuards(JwtGuard)
-  @Post()
+  @Post('create')
   async createPost(@Body() post: CreatePostRequest) {
     return await this.postsService.createPost({ post });
   }
 
   @UseGuards(JwtGuard)
-  @Patch(':id')
+  @Patch('update/:id')
   async updatePost(@Param('id') id: string, @Body() post: UpdatePostRequest) {
     return await this.postsService.updatePost({ id, post });
   }
 
   @UseGuards(JwtGuard)
-  @Delete(':id')
+  @Delete('delete/:id')
   async deletePost(@Param('id') id: string) {
     return await this.postsService.deletePost({ id });
   }
