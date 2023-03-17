@@ -10,6 +10,7 @@ import {
 } from 'sequelize-typescript';
 
 interface PostCreationAttributes {
+  language: LanguageType;
   title: string;
   slug: string;
   tags: string;

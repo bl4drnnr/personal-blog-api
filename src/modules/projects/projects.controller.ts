@@ -26,18 +26,18 @@ export class ProjectsController {
     return await this.projectsService.getProjectBySlug({ slug, language });
   }
 
-  @Get('id/:id')
-  async getProjectById(@Param('id') id: string) {
+  @Get('get-by-id')
+  async getProjectById(@Query('id') id: string) {
     return await this.projectsService.getProjectById({ id });
   }
 
-  @Get('all/:language/:page/:pageSize/:order/:orderBy')
+  @Get('all')
   async getAllProjects(
-    @Param('language') language: string,
-    @Param('page') page: number,
-    @Param('pageSize') pageSize: number,
-    @Param('order') order: string,
-    @Param('orderBy') orderBy: string,
+    @Query('language') language: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+    @Query('order') order: string,
+    @Query('orderBy') orderBy: string,
     @Query('searchQuery') searchQuery: string
   ) {
     return await this.projectsService.getAllProjects({
@@ -51,23 +51,23 @@ export class ProjectsController {
   }
 
   @UseGuards(JwtGuard)
-  @Post()
+  @Post('create')
   async createProject(@Body() project: CreateProjectRequest) {
     return await this.projectsService.createProject({ project });
   }
 
   @UseGuards(JwtGuard)
-  @Patch(':id')
+  @Patch('update')
   async updateProject(
-    @Param('id') id: string,
+    @Query('id') id: string,
     @Body() project: UpdateProjectRequest
   ) {
     return await this.projectsService.updateProject({ id, project });
   }
 
   @UseGuards(JwtGuard)
-  @Delete(':id')
-  async deleteProject(@Param('id') id: string) {
+  @Delete('delete')
+  async deleteProject(@Query('id') id: string) {
     return await this.projectsService.deleteProject({ id });
   }
 }
