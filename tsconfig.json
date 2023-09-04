@@ -26,7 +26,21 @@
       "@models/*": ["src/models/*"],
       "@guards/*": ["src/guards/*"],
       "@decorators/*": ["src/decorators/*"],
-      "@auth/*": ["src/modules/auth/*"]
+      "@auth/*": ["src/modules/auth/*"],
+      "@exceptions/*": [
+        "src/exceptions/users/*",
+        "src/exceptions/auth/*",
+        "src/exceptions/posts/*"
+      ],
+      "@dto/*": [
+        "src/dto/auth/*",
+        "src/dto/posts/*",
+        "src/dto/projects/*",
+        "src/dto/users/*"
+      ],
+      "@interfaces/*": ["src/libs/interfaces/*"],
+      "@enums/*": ["src/libs/enums/*"],
+      "@regex/*": ["src/libs/regex/*"]
     }
   }
 }

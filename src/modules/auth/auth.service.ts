@@ -2,32 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as uuid from 'uuid';
 import * as jwt from 'jsonwebtoken';
-import {
-  CorruptedTokenException,
-  ExpiredTokenException,
-  InvalidTokenException,
-  SessionHasExpiredException
-} from './exceptions/auth-exceptions.export';
 import { ApiConfigService } from '@shared/config.service';
 import { InjectModel } from '@nestjs/sequelize';
 import { Session } from '@models/session.model';
 import { User } from '@models/user.model';
-
-interface IAccessToken {
-  readonly userId: string;
-  readonly email: string;
-}
-
-interface IRefreshToken {
-  readonly userId: string;
-  readonly tokenId: string;
-}
-
-interface ITokenPayload {
-  id: string;
-  type: string;
-  userId: string;
-}
+import { ExpiredTokenException } from '@exceptions/expired-token.exception';
+import { InvalidTokenException } from '@exceptions/invalid-token.exception';
+import { SessionHasExpiredException } from '@exceptions/session-expired.exception';
+import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
+import { AccessTokenDto } from '@dto/access-token.dto';
+import { RefreshTokenDto } from '@dto/refresh-token.dto';
+import { TokenPayloadDto } from '@dto/token-payload.dto';
+import { Token } from '@enums/tokens.enum';
 
 @Injectable()
 export class AuthService {
@@ -38,11 +24,11 @@ export class AuthService {
     @InjectModel(User) private userRepository: typeof User
   ) {}
 
-  private generateAccessToken(IAccessToken: IAccessToken) {
+  private generateAccessToken(accessToken: AccessTokenDto) {
     const payload = {
-      userId: IAccessToken.userId,
-      email: IAccessToken.email,
-      type: 'access'
+      userId: accessToken.userId,
+      email: accessToken.email,
+      type: Token.ACCESS
     };
     const options = {
       expiresIn: this.configService.jwtAuthConfig.accessExpiresIn,
@@ -54,7 +40,7 @@ export class AuthService {
 
   private generateRefreshToken() {
     const id = uuid.v4();
-    const payload = { id, type: 'refresh' };
+    const payload = { id, type: Token.REFRESH };
     const options = {
       expiresIn: this.configService.jwtAuthConfig.refreshExpiresIn,
       secret: this.configService.jwtAuthConfig.secret
@@ -63,7 +49,7 @@ export class AuthService {
     return { id, token: this.jwtService.sign(payload, options) };
   }
 
-  private async updateRefreshToken(refreshToken: IRefreshToken) {
+  private async updateRefreshToken(refreshToken: RefreshTokenDto) {
     const currentSession = await this.sessionRepository.findOne({
       where: { userId: refreshToken.userId }
     });
@@ -98,12 +84,12 @@ export class AuthService {
     });
   }
 
-  async updateTokens(IAccessToken: IAccessToken) {
-    const accessToken = this.generateAccessToken(IAccessToken);
+  async updateTokens(token: AccessTokenDto) {
+    const accessToken = this.generateAccessToken(token);
     const refreshToken = this.generateRefreshToken();
 
     await this.updateRefreshToken({
-      userId: IAccessToken.userId,
+      userId: token.userId,
       tokenId: refreshToken.id
     });
 
@@ -113,7 +99,7 @@ export class AuthService {
   async refreshToken(tokenRefresh: string) {
     if (!tokenRefresh) throw new CorruptedTokenException();
 
-    const payload: ITokenPayload = this.verifyToken(tokenRefresh);
+    const payload: TokenPayloadDto = this.verifyToken(tokenRefresh);
 
     const token = await this.getTokenById(payload.id);
 

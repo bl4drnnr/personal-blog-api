@@ -22,10 +22,17 @@ export class ApiConfigService {
     return value.replace(/\\n/g, '\n');
   }
 
-  get sendGridCredentials() {
+  private getArray(key: string): Array<string> {
+    const value = this.get(key);
+
+    return value.replace(/\\n/g, '\n').split(',');
+  }
+
+  get orderOptions() {
     return {
-      api_key: this.getString('SENDGRID_API_KEY'),
-      sender_email: this.getString('SENDGRID_SENDER_EMAIL')
+      orderByOptions: this.getArray('ORDER_BY_OPTIONS'),
+      orderOptions: this.getArray('ORDER_OPTIONS'),
+      postTypeOptions: this.getArray('POST_TYPE_OPTION')
     };
   }
 
@@ -33,13 +40,6 @@ export class ApiConfigService {
     return {
       username: this.getString('BASIC_AUTH_USERNAME'),
       password: this.getString('BASIC_AUTH_PASSWORD')
-    };
-  }
-
-  get signUpAuthConfig() {
-    return {
-      signup_username: this.getString('SIGNUP_USERNAME'),
-      signup_password: this.getString('SIGNUP_PASSWORD')
     };
   }
 

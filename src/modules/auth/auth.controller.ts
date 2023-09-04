@@ -3,7 +3,6 @@ import { AuthService } from '@auth/auth.service';
 import { JwtGuard } from '@guards/jwt.guard';
 import { Cookie } from '@decorators/cookie.decorator';
 import { FastifyReply } from 'fastify';
-import { RefreshTokenResponse } from '@auth/dto/refresh-token/response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,6 +18,6 @@ export class AuthController {
 
     res.cookie('_rt', _rt);
 
-    return new RefreshTokenResponse(_at);
+    return _at;
   }
 }

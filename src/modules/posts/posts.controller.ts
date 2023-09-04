@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
   Query,
@@ -11,17 +10,17 @@ import {
 } from '@nestjs/common';
 import { PostsService } from '@posts/posts.service';
 import { JwtGuard } from '@guards/jwt.guard';
-import { CreatePostRequest } from '@posts/dto/create-post/request.dto';
-import { UpdatePostRequest } from '@posts/dto/update-post/request.dto';
+import { CreatePostDto } from '@dto/create-post.dto';
+import { UpdatePostDto } from '@dto/update-post.dto';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Get(':language/:slug')
+  @Get('get-by-slug')
   async getPostBySlug(
-    @Param('slug') slug: string,
-    @Param('language') language: string
+    @Query('slug') slug: string,
+    @Query('language') language: string
   ) {
     return await this.postsService.getPostBySlug({ slug, language });
   }
@@ -34,8 +33,8 @@ export class PostsController {
   @Get('all')
   async getAllPosts(
     @Query('language') language: string,
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
+    @Query('page') page: string,
+    @Query('pageSize') pageSize: string,
     @Query('order') order: string,
     @Query('orderBy') orderBy: string,
     @Query('searchQuery') searchQuery: string,
@@ -54,13 +53,13 @@ export class PostsController {
 
   @UseGuards(JwtGuard)
   @Post('create')
-  async createPost(@Body() post: CreatePostRequest) {
-    return await this.postsService.createPost({ post });
+  async createPost(@Body() post: CreatePostDto) {
+    return await this.postsService.createPost(post);
   }
 
   @UseGuards(JwtGuard)
   @Patch('update')
-  async updatePost(@Query('id') id: string, @Body() post: UpdatePostRequest) {
+  async updatePost(@Query('id') id: string, @Body() post: UpdatePostDto) {
     return await this.postsService.updatePost({ id, post });
   }
 

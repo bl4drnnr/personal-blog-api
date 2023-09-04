@@ -7,14 +7,10 @@ import { Post } from '@models/post.model';
 import { Session } from '@models/session.model';
 import { AuthService } from '@auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfirmationHash } from '@models/confirmation-hash.model';
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService, AuthService],
-  imports: [
-    SequelizeModule.forFeature([Post, User, Session, ConfirmationHash]),
-    JwtModule
-  ]
+  imports: [SequelizeModule.forFeature([Post, User, Session]), JwtModule]
 })
 export class UsersModule {}

@@ -8,9 +8,16 @@ import {
   CreatedAt,
   UpdatedAt
 } from 'sequelize-typescript';
+import { Language } from '@enums/language.enum';
+import { IPicture } from '@interfaces/picture.interface';
+import { IList } from '@interfaces/list.interface';
+import { ICode } from '@interfaces/code.interface';
+import { ITitle } from '@interfaces/title.interface';
+import { ILink } from '@interfaces/link.interface';
+import { PostType } from '@enums/post-type.enum';
 
 interface PostCreationAttributes {
-  language: LanguageType;
+  language: Language;
   title: string;
   slug: string;
   tags: string;
@@ -24,45 +31,6 @@ interface PostCreationAttributes {
   references: Array<ILink>;
 }
 
-export interface ILink {
-  name: string;
-  link: string;
-}
-
-export interface IPicture {
-  type: 'picture';
-  width: string;
-  resource: string;
-}
-
-export interface IList {
-  type: 'list-numeric' | 'list-bullet';
-  items: Array<any>;
-  style: string;
-}
-
-export interface ICode {
-  type: 'code';
-  lang: string;
-  content: string;
-}
-
-export interface ITitle {
-  type: 'title' | 'subtitle' | 'subsubtitle';
-  content: string;
-}
-
-export enum LanguageType {
-  pl = 'pl',
-  ru = 'ru',
-  en = 'en'
-}
-
-export enum PostType {
-  theory = 'theory',
-  practice = 'practice'
-}
-
 @Table({
   tableName: 'posts'
 })
@@ -73,10 +41,10 @@ export class Post extends Model<Post, PostCreationAttributes> {
   id: string;
 
   @Column({
-    type: DataType.ENUM(...Object.values(LanguageType)),
+    type: DataType.ENUM(...Object.values(Language)),
     allowNull: false
   })
-  language: LanguageType;
+  language: Language;
 
   @Column({ type: DataType.STRING, allowNull: false })
   title: string;

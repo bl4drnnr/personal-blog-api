@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { AuthService } from '@auth/auth.service';
-import { CorruptedTokenException } from '@auth/exceptions/corrupted-token.exception';
-import { InvalidTokenException } from '@auth/exceptions/invalid-token.exception';
+import { InvalidTokenException } from '@exceptions/invalid-token.exception';
+import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
 
-interface ITokenPayload {
+interface TokenPayloadDto {
   id: string;
   type: string;
   userId: string;
@@ -36,7 +36,7 @@ export class JwtGuard implements CanActivate {
 
     if (bearer !== 'Bearer' || !token) throw new CorruptedTokenException();
 
-    const payload: ITokenPayload = this.authService.verifyToken(token);
+    const payload: TokenPayloadDto = this.authService.verifyToken(token);
 
     req.user = payload.userId;
     return true;

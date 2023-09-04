@@ -1,13 +1,18 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
-import { CreatePostRequest } from '@posts/dto/create-post/request.dto';
-import { UpdatePostRequest } from '@posts/dto/update-post/request.dto';
 import sequelize, { Op } from 'sequelize';
+import { CreatePostDto } from '@dto/create-post.dto';
+import { UpdatePostDto } from '@dto/update-post.dto';
+import { ApiConfigService } from '@shared/config.service';
+import { WrongOrderOptionException } from '@exceptions/wrong-order-option.exception';
 
 @Injectable()
 export class PostsService {
-  constructor(@InjectModel(Post) private postRepository: typeof Post) {}
+  constructor(
+    private readonly configService: ApiConfigService,
+    @InjectModel(Post) private readonly postRepository: typeof Post
+  ) {}
 
   async getPostBySlug({ slug, language }: { slug: string; language: string }) {
     return await this.postRepository.findOne({
@@ -29,22 +34,21 @@ export class PostsService {
     postTypes
   }: {
     language: string;
-    page: number;
-    pageSize: number;
+    page: string;
+    pageSize: string;
     order: string;
     orderBy: string;
     searchQuery: string;
     postTypes: string;
   }) {
-    const offset = page * pageSize;
-    const limit = pageSize;
+    const offset = Number(page) * Number(pageSize);
+    const limit = Number(pageSize);
 
-    const orderByOptions = process.env.ORDER_BY_OPTIONS.split(',');
-    const orderOptions = process.env.ORDER_OPTIONS.split(',');
-    const postTypeOptions = process.env.POST_TYPE_OPTION.split(',');
+    const { orderByOptions, orderOptions, postTypeOptions } =
+      this.configService.orderOptions;
 
     if (!orderByOptions.includes(orderBy) || !orderOptions.includes(order))
-      throw new BadRequestException();
+      throw new WrongOrderOptionException();
 
     const where = {};
 
@@ -68,7 +72,7 @@ export class PostsService {
 
       postTypesArray.forEach((postType) => {
         if (!postTypeOptions.includes(postType))
-          throw new BadRequestException();
+          throw new WrongOrderOptionException();
       });
 
       where['type'] = {
@@ -84,11 +88,11 @@ export class PostsService {
     });
   }
 
-  async createPost({ post }: { post: CreatePostRequest }) {
+  async createPost(post: CreatePostDto) {
     return await this.postRepository.create(post);
   }
 
-  async updatePost({ id, post }: { id: string; post: UpdatePostRequest }) {
+  async updatePost({ id, post }: { id: string; post: UpdatePostDto }) {
     return await this.postRepository.update({ ...post }, { where: { id } });
   }
 

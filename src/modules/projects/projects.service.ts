@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Project } from '@models/project.model';
-import { CreateProjectRequest } from '@projects/dto/create-project/request.dto';
-import { UpdateProjectRequest } from '@projects/dto/update-project/request.dto';
 import sequelize, { Op } from 'sequelize';
+import { CreateProjectDto } from '@dto/create-project.dto';
+import { UpdateProjectDto } from '@dto/update-project.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -69,6 +69,7 @@ export class ProjectsService {
     }
 
     return await this.projectRepository.findAndCountAll({
+      attributes: [''],
       where: { language, ...where },
       order: [[order, orderBy]],
       limit,
@@ -76,7 +77,7 @@ export class ProjectsService {
     });
   }
 
-  async createProject({ project }: { project: CreateProjectRequest }) {
+  async createProject(project: CreateProjectDto) {
     return await this.projectRepository.create(project);
   }
 
@@ -85,7 +86,7 @@ export class ProjectsService {
     project
   }: {
     id: string;
-    project: UpdateProjectRequest;
+    project: UpdateProjectDto;
   }) {
     return await this.projectRepository.update(
       {
