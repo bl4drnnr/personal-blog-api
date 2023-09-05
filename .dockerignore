@@ -3,3 +3,4 @@ dist/
 .git
 /.idea
 .DS_Store
+test.ts

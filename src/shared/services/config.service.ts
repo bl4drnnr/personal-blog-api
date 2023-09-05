@@ -72,6 +72,10 @@ export class ApiConfigService {
     return this.getNumber('HASH_PASSWORD_ROUNDS');
   }
 
+  get authTokenFingerprint() {
+    return this.getString('AUTH_TOKEN_FINGERPRINT');
+  }
+
   get recoveryEncryptionData() {
     return {
       iterations: this.getNumber('RECOVERY_ENCRYPTION_ITERATIONS'),

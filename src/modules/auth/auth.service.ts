@@ -31,6 +31,7 @@ import { RegistrationInterface } from '@interfaces/registration.interface';
 import { CryptographicService } from '@shared/cryptographic.service';
 import { UserCreatedDto } from '@dto/user-created.dto';
 import { EmailService } from '@shared/email.service';
+import { WrongAuthToken } from '@exceptions/wrong-auth-token';
 
 @Injectable()
 export class AuthService {
@@ -90,7 +91,16 @@ export class AuthService {
   }
 
   async registration({ payload, trx }: RegistrationInterface) {
-    const { email, password } = payload;
+    const { email, password, authToken } = payload;
+
+    const authTokenFingerprint = this.cryptographicService.hash({
+      data: authToken,
+      algorithm: 'SHA512'
+    });
+
+    const authTokenVar = this.configService.authTokenFingerprint;
+
+    if (authTokenFingerprint !== authTokenVar) throw new WrongAuthToken();
 
     const existingUser = await this.usersService.getUserByEmail({
       email,
