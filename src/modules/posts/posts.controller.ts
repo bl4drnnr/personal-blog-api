@@ -9,9 +9,9 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { PostsService } from '@posts/posts.service';
-import { JwtGuard } from '@guards/jwt.guard';
 import { CreatePostDto } from '@dto/create-post.dto';
 import { UpdatePostDto } from '@dto/update-post.dto';
+import { AuthGuard } from '@guards/jwt.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -51,19 +51,19 @@ export class PostsController {
     });
   }
 
-  @UseGuards(JwtGuard)
+  @UseGuards(AuthGuard)
   @Post('create')
   async createPost(@Body() post: CreatePostDto) {
     return await this.postsService.createPost(post);
   }
 
-  @UseGuards(JwtGuard)
+  @UseGuards(AuthGuard)
   @Patch('update')
   async updatePost(@Query('id') id: string, @Body() post: UpdatePostDto) {
     return await this.postsService.updatePost({ id, post });
   }
 
-  @UseGuards(JwtGuard)
+  @UseGuards(AuthGuard)
   @Delete('delete')
   async deletePost(@Query('id') id: string) {
     return await this.postsService.deletePost({ id });

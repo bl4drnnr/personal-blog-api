@@ -1,40 +1,50 @@
-import * as bcryptjs from 'bcryptjs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from '@models/user.model';
-import { AuthService } from '@auth/auth.service';
 import { WrongCredentialsException } from '@exceptions/wrong-credentials.exception';
-import { UserTokensDto } from '@dto/user-tokens.dto';
-import { SignInDto } from '@dto/sign-in.dto';
+import { GetUserByIdInterface } from '@interfaces/get-user-by-id.interface';
+import { GetUserByEmailInterface } from '@interfaces/get-user-by-email.interface';
+import { VerifyUserCredentialsInterface } from '@interfaces/verify-user-credentials.interface';
+import { CryptographicService } from '@shared/cryptographic.service';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly authService: AuthService,
+    private readonly cryptographicService: CryptographicService,
     @InjectModel(User) private userRepository: typeof User
   ) {}
 
-  async singIn(payload: SignInDto) {
-    const user = await this.userRepository.findOne({
-      where: { email: payload.email }
+  async getUserById({ id, trx: transaction }: GetUserByIdInterface) {
+    return await this.userRepository.findByPk(id, {
+      include: { all: true },
+      transaction
     });
-    if (!user) throw new WrongCredentialsException();
-
-    const passwordEquality = await bcryptjs.compare(
-      payload.password,
-      user.password
-    );
-    if (!passwordEquality) throw new WrongCredentialsException();
-
-    const { _at, _rt } = await this.authService.updateTokens({
-      userId: user.id,
-      email: user.email
-    });
-
-    return new UserTokensDto({ _at, _rt });
   }
 
-  async logout({ userId }: { userId: string }) {
-    return await this.authService.deleteRefreshToken(userId);
+  async getUserByEmail({ email, trx: transaction }: GetUserByEmailInterface) {
+    return await this.userRepository.findOne({
+      rejectOnEmpty: undefined,
+      where: { email },
+      include: [{ all: true }],
+      transaction
+    });
+  }
+
+  async verifyUserCredentials({
+    email,
+    password,
+    trx
+  }: VerifyUserCredentialsInterface) {
+    const user = await this.getUserByEmail({ email, trx });
+
+    if (!user || !user.password) throw new WrongCredentialsException();
+
+    const passwordEquals = await this.cryptographicService.comparePasswords({
+      dataToCompare: password,
+      hash: user.password
+    });
+    if (!passwordEquals) throw new WrongCredentialsException();
+
+    return user;
   }
 }

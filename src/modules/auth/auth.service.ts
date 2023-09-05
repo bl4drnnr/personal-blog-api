@@ -1,35 +1,145 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import * as node2fa from 'node-2fa';
 import * as uuid from 'uuid';
 import * as jwt from 'jsonwebtoken';
+import { HttpException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { ApiConfigService } from '@shared/config.service';
 import { InjectModel } from '@nestjs/sequelize';
 import { Session } from '@models/session.model';
-import { User } from '@models/user.model';
 import { ExpiredTokenException } from '@exceptions/expired-token.exception';
 import { InvalidTokenException } from '@exceptions/invalid-token.exception';
-import { SessionHasExpiredException } from '@exceptions/session-expired.exception';
 import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
-import { AccessTokenDto } from '@dto/access-token.dto';
-import { RefreshTokenDto } from '@dto/refresh-token.dto';
-import { TokenPayloadDto } from '@dto/token-payload.dto';
-import { Token } from '@enums/tokens.enum';
+import { LoginInterface } from '@interfaces/login.interface';
+import { Confirmation } from '@enums/confirmation-type.enum';
+import { UsersService } from '@users/users.service';
+import { AccountNotConfirmedException } from '@exceptions/account-not-confirmed.exception';
+import { MfaNotSetDto } from '@dto/mfa-not-set.dto';
+import { GetTokenInterface } from '@interfaces/get-token.interface';
+import { GenerateTokensInterface } from '@interfaces/generate-tokens.interface';
+import { UpdateRefreshTokenInterface } from '@interfaces/update-refresh-token.interface';
+import { GenerateAccessTokenInterface } from '@interfaces/generate-access-token.interface';
+import { VerifyTokenInterface } from '@interfaces/verify-token.interface';
+import { RefreshTokenInterface } from '@interfaces/refresh-token.interface';
+import { LogoutInterface } from '@interfaces/logout.interface';
+import { RecoveryKeysNotSetDto } from '@dto/recovery-keys-not-set.dto';
+import { LoggedOutDto } from '@dto/logged-out.dto';
+import { CheckMfaStatusInterface } from '@interfaces/check-mfa-status.interface';
+import { TokenTwoFaRequiredDto } from '@dto/token-two-fa-required.dto';
+import { WrongCodeException } from '@exceptions/wrong-code.exception';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ApiConfigService,
-    @InjectModel(Session) private sessionRepository: typeof Session,
-    @InjectModel(User) private userRepository: typeof User
+    private readonly usersService: UsersService,
+    @InjectModel(Session) private sessionRepository: typeof Session
   ) {}
 
-  private generateAccessToken(accessToken: AccessTokenDto) {
-    const payload = {
-      userId: accessToken.userId,
-      email: accessToken.email,
-      type: Token.ACCESS
-    };
+  async login({ payload, trx }: LoginInterface) {
+    const { email, password, mfaCode } = payload;
+
+    const {
+      id: userId,
+      confirmationHashes,
+      isMfaSet,
+      userSettings
+    } = await this.usersService.verifyUserCredentials({
+      email,
+      password,
+      trx
+    });
+
+    const registrationHashes = [Confirmation.REGISTRATION];
+
+    const registrationHash = confirmationHashes.find((hash) =>
+      registrationHashes.includes(hash.confirmationType)
+    );
+
+    const isAccConfirmed = registrationHash.confirmed;
+    const isRecoverySetUp = userSettings.recoveryKeysFingerprint;
+
+    if (!isAccConfirmed) throw new AccountNotConfirmedException();
+
+    if (!isMfaSet) return new MfaNotSetDto();
+
+    if (!isRecoverySetUp) return new RecoveryKeysNotSetDto();
+
+    try {
+      const mfaStatusResponse = await this.checkUserMfaStatus({
+        mfaCode,
+        userSettings
+      });
+
+      if (mfaStatusResponse) return mfaStatusResponse;
+    } catch (e: any) {
+      throw new HttpException(e.response.message, e.status);
+    }
+
+    const { _rt, _at } = await this.generateTokens({ userId, trx });
+
+    return { _rt, _at };
+  }
+
+  async logout({ userId, trx }: LogoutInterface) {
+    await this.sessionRepository.destroy({
+      where: { userId },
+      transaction: trx
+    });
+
+    return new LoggedOutDto();
+  }
+
+  async refreshToken({ refreshToken, trx }: RefreshTokenInterface) {
+    if (!refreshToken) throw new CorruptedTokenException();
+
+    const { id: tokenId } = this.verifyToken({
+      token: refreshToken
+    });
+
+    const token = await this.getTokenById({ tokenId, trx });
+
+    if (!token) throw new InvalidTokenException();
+
+    const { id: userId } = await this.usersService.getUserById({
+      id: token.userId,
+      trx
+    });
+
+    const { _at, _rt } = await this.generateTokens({ userId, trx });
+
+    return { _at, _rt };
+  }
+
+  async checkUserMfaStatus({ mfaCode, userSettings }: CheckMfaStatusInterface) {
+    const { twoFaToken: userTwoFaToken } = userSettings;
+
+    if (!mfaCode && userTwoFaToken) return new TokenTwoFaRequiredDto();
+
+    if (mfaCode && userTwoFaToken) {
+      const delta = node2fa.verifyToken(userTwoFaToken, mfaCode);
+
+      if (!delta || (delta && delta.delta !== 0))
+        throw new WrongCodeException();
+    }
+  }
+
+  private verifyToken({ token }: VerifyTokenInterface) {
+    try {
+      return this.jwtService.verify(token, {
+        secret: this.configService.jwtAuthConfig.secret
+      });
+    } catch (error: any) {
+      if (error instanceof jwt.TokenExpiredError)
+        throw new ExpiredTokenException();
+      else if (error instanceof jwt.JsonWebTokenError)
+        throw new InvalidTokenException();
+    }
+  }
+
+  private generateAccessToken({ userId }: GenerateAccessTokenInterface) {
+    const payload = { userId, type: 'access' };
+
     const options = {
       expiresIn: this.configService.jwtAuthConfig.accessExpiresIn,
       secret: this.configService.jwtAuthConfig.secret
@@ -40,7 +150,7 @@ export class AuthService {
 
   private generateRefreshToken() {
     const id = uuid.v4();
-    const payload = { id, type: Token.REFRESH };
+    const payload = { id, type: 'refresh' };
     const options = {
       expiresIn: this.configService.jwtAuthConfig.refreshExpiresIn,
       secret: this.configService.jwtAuthConfig.secret
@@ -49,73 +159,51 @@ export class AuthService {
     return { id, token: this.jwtService.sign(payload, options) };
   }
 
-  private async updateRefreshToken(refreshToken: RefreshTokenDto) {
+  private async updateRefreshToken({
+    userId,
+    tokenId,
+    trx: transaction
+  }: UpdateRefreshTokenInterface) {
     const currentSession = await this.sessionRepository.findOne({
-      where: { userId: refreshToken.userId }
+      rejectOnEmpty: undefined,
+      where: { userId },
+      transaction
     });
+
     if (currentSession) {
       await this.sessionRepository.destroy({
-        where: { id: currentSession.id }
+        where: { id: currentSession.id },
+        transaction
       });
     }
 
-    return await this.sessionRepository.create({
-      ...refreshToken
-    });
+    await this.sessionRepository.create(
+      {
+        userId,
+        tokenId
+      },
+      { transaction }
+    );
   }
 
-  verifyToken(token: string) {
-    try {
-      return this.jwtService.verify(token, {
-        secret: this.configService.jwtAuthConfig.secret
-      });
-    } catch (error: any) {
-      if (error instanceof jwt.TokenExpiredError)
-        throw new ExpiredTokenException();
-      else if (error instanceof jwt.JsonWebTokenError)
-        throw new InvalidTokenException();
-      else throw new SessionHasExpiredException();
-    }
-  }
-
-  async getTokenById(tokenId: string) {
-    return this.sessionRepository.findOne({
-      where: { tokenId }
-    });
-  }
-
-  async updateTokens(token: AccessTokenDto) {
-    const accessToken = this.generateAccessToken(token);
-    const refreshToken = this.generateRefreshToken();
+  private async generateTokens({ userId, trx }: GenerateTokensInterface) {
+    const _at = this.generateAccessToken({ userId });
+    const { id: tokenId, token: _rt } = this.generateRefreshToken();
 
     await this.updateRefreshToken({
-      userId: token.userId,
-      tokenId: refreshToken.id
-    });
-
-    return { _at: accessToken, _rt: refreshToken.token };
-  }
-
-  async refreshToken(tokenRefresh: string) {
-    if (!tokenRefresh) throw new CorruptedTokenException();
-
-    const payload: TokenPayloadDto = this.verifyToken(tokenRefresh);
-
-    const token = await this.getTokenById(payload.id);
-
-    const user = await this.userRepository.findOne({
-      where: { id: token.userId }
-    });
-
-    const { _at, _rt } = await this.updateTokens({
-      userId: user.id,
-      email: user.email
+      userId,
+      tokenId,
+      trx
     });
 
     return { _at, _rt };
   }
 
-  async deleteRefreshToken(userId: string) {
-    return await this.sessionRepository.destroy({ where: { userId } });
+  private async getTokenById({ tokenId, trx: transaction }: GetTokenInterface) {
+    return this.sessionRepository.findOne({
+      rejectOnEmpty: undefined,
+      where: { tokenId },
+      transaction
+    });
   }
 }

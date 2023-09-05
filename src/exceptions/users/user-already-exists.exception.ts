@@ -2,15 +2,15 @@ import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { DocsProperty } from '@enums/docs-property.enum';
 
-export class WrongCredentialsException extends BadRequestException {
+export class UserAlreadyExistsException extends BadRequestException {
   @ApiProperty({
     type: String,
-    description: DocsProperty.WRONG_CRED_DESC,
-    example: DocsProperty.WRONG_CRED_EXAMPLE
+    description: DocsProperty.USER_ALREADY_EXISTS_DESC,
+    example: DocsProperty.USER_ALREADY_EXISTS_EXAMPLE
   })
   readonly message: string;
 
-  constructor(message = 'wrong-credentials') {
+  constructor(message = 'user-already-exists') {
     super(message);
     this.message = message;
   }

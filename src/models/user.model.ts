@@ -3,6 +3,7 @@ import {
   CreatedAt,
   DataType,
   Default,
+  HasMany,
   HasOne,
   Model,
   PrimaryKey,
@@ -10,6 +11,8 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { Session } from '@models/session.model';
+import { UserSettings } from '@models/user-settings.model';
+import { ConfirmationHash } from '@models/confirmation-hash.model';
 
 interface UserCreationAttributes {
   email: string;
@@ -28,10 +31,24 @@ export class User extends Model<User, UserCreationAttributes> {
   email: string;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  password?: string;
+  password: string;
+
+  @Default(false)
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    field: 'is_mfa_set'
+  })
+  isMfaSet: boolean;
 
   @HasOne(() => Session)
   session: Session;
+
+  @HasOne(() => UserSettings)
+  userSettings: UserSettings;
+
+  @HasMany(() => ConfirmationHash)
+  confirmationHashes: Array<ConfirmationHash>;
 
   @CreatedAt
   @Column({ field: 'created_at' })

@@ -28,6 +28,12 @@ export class ApiConfigService {
     return value.replace(/\\n/g, '\n').split(',');
   }
 
+  private getNumber(key: string): number {
+    const value = this.get(key);
+
+    return Number(value);
+  }
+
   get orderOptions() {
     return {
       orderByOptions: this.getArray('ORDER_BY_OPTIONS'),
@@ -53,5 +59,18 @@ export class ApiConfigService {
 
   get adminFrontEndUrl() {
     return this.getString('ADMIN_FRONT_END_URL');
+  }
+
+  get hashPasswordRounds() {
+    return this.getNumber('HASH_PASSWORD_ROUNDS');
+  }
+
+  get recoveryEncryptionData() {
+    return {
+      iterations: this.getNumber('RECOVERY_ENCRYPTION_ITERATIONS'),
+      recoveryKeySize: this.getNumber('RECOVERY_ENCRYPTION_KEY_SIZE'),
+      salt: this.getString('RECOVERY_ENCRYPTION_SALT'),
+      iv: this.getString('RECOVERY_ENCRYPTION_IV')
+    };
   }
 }

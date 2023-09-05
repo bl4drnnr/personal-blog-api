@@ -1,33 +1,17 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  forwardRef,
-  Inject,
-  Injectable
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { AuthService } from '@auth/auth.service';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InvalidTokenException } from '@exceptions/invalid-token.exception';
 import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
-
-interface TokenPayloadDto {
-  id: string;
-  type: string;
-  userId: string;
-}
+import { ExpiredTokenException } from '@exceptions/expired-token.exception';
+import { AuthError } from '@enums/auth-error.enum';
 
 @Injectable()
-export class JwtGuard implements CanActivate {
-  constructor(
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService
-  ) {}
+export class AuthGuard implements CanActivate {
+  constructor(private readonly jwtService: JwtService) {}
 
-  canActivate(
-    context: ExecutionContext
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
-    const authHeader = req.headers['application-authorization'];
+    const authHeader = req.headers['x-access-token'];
 
     if (!authHeader) throw new InvalidTokenException();
 
@@ -36,9 +20,20 @@ export class JwtGuard implements CanActivate {
 
     if (bearer !== 'Bearer' || !token) throw new CorruptedTokenException();
 
-    const payload: TokenPayloadDto = this.authService.verifyToken(token);
-
-    req.user = payload.userId;
-    return true;
+    try {
+      const tokenData = this.jwtService.verify(token);
+      req.user = tokenData.userId;
+      return true;
+    } catch (error: any) {
+      const errorName = error.name as AuthError;
+      switch (errorName) {
+        case AuthError.TOKEN_EXPIRED_ERROR:
+          throw new ExpiredTokenException();
+        case AuthError.JSON_WEB_TOKEN_ERROR:
+          throw new InvalidTokenException();
+        default:
+          throw new InvalidTokenException();
+      }
+    }
   }
 }

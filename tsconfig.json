@@ -30,17 +30,27 @@
       "@exceptions/*": [
         "src/exceptions/users/*",
         "src/exceptions/auth/*",
-        "src/exceptions/posts/*"
+        "src/exceptions/posts/*",
+        "src/exceptions/projects/*",
+        "src/exceptions/recovery/*",
+        "src/exceptions/validation/*"
       ],
       "@dto/*": [
         "src/dto/auth/*",
         "src/dto/posts/*",
         "src/dto/projects/*",
-        "src/dto/users/*"
+        "src/dto/users/*",
+        "src/dto/recovery/*"
       ],
-      "@interfaces/*": ["src/libs/interfaces/*"],
+      "@interfaces/*": [
+        "src/libs/interfaces/*",
+        "src/libs/interfaces/auth/*",
+        "src/libs/interfaces/users/*",
+        "src/libs/interfaces/cryptography/*"
+      ],
       "@enums/*": ["src/libs/enums/*"],
-      "@regex/*": ["src/libs/regex/*"]
-    }
+      "@regex/*": ["src/libs/regex/*"],
+      "@pipes/*": ["src/pipes/*"],
+      "@interceptors/*": ["src/interceptors/*"]}
   }
 }
