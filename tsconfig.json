@@ -21,12 +21,44 @@
       "@shared/*": ["src/shared/services/*", "src/shared/*"],
       "@posts/*": ["src/modules/posts/*"],
       "@users/*": ["src/modules/users/*"],
+      "@confirmation-hash/*": ["src/modules/confirmation-hash/*"],
       "@projects/*": ["src/modules/projects/*"],
       "@middlewares/*": ["src/middlewares/*"],
       "@models/*": ["src/models/*"],
       "@guards/*": ["src/guards/*"],
       "@decorators/*": ["src/decorators/*"],
-      "@auth/*": ["src/modules/auth/*"]
+      "@auth/*": ["src/modules/auth/*"],
+      "@exceptions/*": [
+        "src/exceptions/users/*",
+        "src/exceptions/auth/*",
+        "src/exceptions/posts/*",
+        "src/exceptions/projects/*",
+        "src/exceptions/recovery/*",
+        "src/exceptions/validation/*"
+      ],
+      "@dto/*": [
+        "src/dto/auth/*",
+        "src/dto/posts/*",
+        "src/dto/projects/*",
+        "src/dto/users/*",
+        "src/dto/recovery/*"
+      ],
+      "@interfaces/*": [
+        "src/libs/interfaces/*",
+        "src/libs/interfaces/auth/*",
+        "src/libs/interfaces/users/*",
+        "src/libs/interfaces/cryptography/*",
+        "src/libs/interfaces/email/*",
+        "src/libs/interfaces/confirmation-hash/*"
+      ],
+      "@enums/*": ["src/libs/enums/*"],
+      "@regex/*": ["src/libs/regex/*"],
+      "@pipes/*": ["src/pipes/*"],
+      "@interceptors/*": ["src/interceptors/*"],
+      "@email-templates/*": [
+        "src/libs/email-templates/*",
+        "src/libs/email-templates/security/*"
+      ]
     }
   }
 }

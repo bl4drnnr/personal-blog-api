@@ -22,10 +22,23 @@ export class ApiConfigService {
     return value.replace(/\\n/g, '\n');
   }
 
-  get sendGridCredentials() {
+  private getArray(key: string): Array<string> {
+    const value = this.get(key);
+
+    return value.replace(/\\n/g, '\n').split(',');
+  }
+
+  private getNumber(key: string): number {
+    const value = this.get(key);
+
+    return Number(value);
+  }
+
+  get orderOptions() {
     return {
-      api_key: this.getString('SENDGRID_API_KEY'),
-      sender_email: this.getString('SENDGRID_SENDER_EMAIL')
+      orderByOptions: this.getArray('ORDER_BY_OPTIONS'),
+      orderOptions: this.getArray('ORDER_OPTIONS'),
+      postTypeOptions: this.getArray('POST_TYPE_OPTION')
     };
   }
 
@@ -33,13 +46,6 @@ export class ApiConfigService {
     return {
       username: this.getString('BASIC_AUTH_USERNAME'),
       password: this.getString('BASIC_AUTH_PASSWORD')
-    };
-  }
-
-  get signUpAuthConfig() {
-    return {
-      signup_username: this.getString('SIGNUP_USERNAME'),
-      signup_password: this.getString('SIGNUP_PASSWORD')
     };
   }
 
@@ -51,7 +57,31 @@ export class ApiConfigService {
     };
   }
 
+  get sendGridCredentials() {
+    return {
+      apiKey: this.getString('SENDGRID_API_KEY'),
+      senderEmail: this.getString('SENDGRID_SENDER_EMAIL')
+    };
+  }
+
   get adminFrontEndUrl() {
     return this.getString('ADMIN_FRONT_END_URL');
+  }
+
+  get hashPasswordRounds() {
+    return this.getNumber('HASH_PASSWORD_ROUNDS');
+  }
+
+  get authTokenFingerprint() {
+    return this.getString('AUTH_TOKEN_FINGERPRINT');
+  }
+
+  get recoveryEncryptionData() {
+    return {
+      iterations: this.getNumber('RECOVERY_ENCRYPTION_ITERATIONS'),
+      recoveryKeySize: this.getNumber('RECOVERY_ENCRYPTION_KEY_SIZE'),
+      salt: this.getString('RECOVERY_ENCRYPTION_SALT'),
+      iv: this.getString('RECOVERY_ENCRYPTION_IV')
+    };
   }
 }

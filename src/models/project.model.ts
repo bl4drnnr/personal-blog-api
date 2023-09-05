@@ -8,9 +8,16 @@ import {
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
+import { IPicture } from '@interfaces/picture.interface';
+import { IList } from '@interfaces/list.interface';
+import { ICode } from '@interfaces/code.interface';
+import { ITitle } from '@interfaces/title.interface';
+import { Language } from '@enums/language.enum';
+import { ITechStack } from '@interfaces/tech-stack.interface';
+import { IProjectPage } from '@interfaces/project-page.interface';
 
 interface ProjectCreationAttributes {
-  language: LanguageType;
+  language: Language;
   title: string;
   slug: string;
   brief: string;
@@ -25,46 +32,6 @@ interface ProjectCreationAttributes {
   content: Array<string | IPicture | IList | ICode | ITitle>;
 }
 
-export interface ITechStack {
-  src: string;
-  width: number;
-  height: number;
-}
-
-export interface IProjectPage {
-  link: string;
-  text: string;
-}
-
-export interface IPicture {
-  type: 'picture';
-  width: string;
-  resource: string;
-}
-
-export interface IList {
-  type: 'list-numeric' | 'list-bullet';
-  items: Array<any>;
-  style: string;
-}
-
-export interface ICode {
-  type: 'code';
-  lang: string;
-  content: string;
-}
-
-export interface ITitle {
-  type: 'title' | 'subtitle' | 'subsubtitle';
-  content: string;
-}
-
-export enum LanguageType {
-  pl = 'pl',
-  ru = 'ru',
-  en = 'en'
-}
-
 @Table({
   tableName: 'projects'
 })
@@ -75,10 +42,10 @@ export class Project extends Model<Project, ProjectCreationAttributes> {
   id: string;
 
   @Column({
-    type: DataType.ENUM(...Object.values(LanguageType)),
+    type: DataType.ENUM(...Object.values(Language)),
     allowNull: false
   })
-  language: LanguageType;
+  language: Language;
 
   @Column({ type: DataType.STRING, allowNull: false })
   title: string;

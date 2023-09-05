@@ -11,10 +11,15 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { User } from '@models/user.model';
+import { Confirmation } from '@enums/confirmation-type.enum';
+
+const confirmationTypes = [Confirmation.REGISTRATION];
 
 interface ConfirmationHashCreationAttributes {
   userId: string;
   confirmationHash: string;
+  confirmationType: Confirmation;
+  changingEmail?: string;
 }
 
 @Table({
@@ -39,6 +44,13 @@ export class ConfirmationHash extends Model<
   @Default(false)
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   confirmed: boolean;
+
+  @Column({
+    type: DataType.ENUM(...confirmationTypes),
+    allowNull: false,
+    field: 'confirmation'
+  })
+  confirmationType: Confirmation;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
