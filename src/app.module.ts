@@ -17,6 +17,7 @@ import { Transaction } from 'sequelize';
 import TYPES = Transaction.TYPES;
 import { UserSettings } from '@models/user-settings.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
+import { ConfirmationHashModule } from '@confirmation-hash/confirmation-hash.module';
 
 @Module({
   imports: [
@@ -39,7 +40,8 @@ import { ConfirmationHash } from '@models/confirmation-hash.model';
       models: [Post, User, Session, Project, UserSettings, ConfirmationHash],
       autoLoadModels: true,
       transactionType: TYPES.EXCLUSIVE
-    })
+    }),
+    ConfirmationHashModule
   ],
   providers: [
     {

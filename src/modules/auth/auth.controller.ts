@@ -28,14 +28,14 @@ export class AuthController {
     return this.authService.login({ payload, trx });
   }
 
-  // @UsePipes(ValidationPipe)
-  // @Post('registration')
-  // registration(
-  //   @Body() payload: RegistrationDto,
-  //   @TransactionParam() trx: Transaction
-  // ) {
-  //   return this.authService.registration({ payload, trx });
-  // }
+  @UsePipes(ValidationPipe)
+  @Post('registration')
+  registration(
+    @Body() payload: RegistrationDto,
+    @TransactionParam() trx: Transaction
+  ) {
+    return this.authService.registration({ payload, trx });
+  }
 
   @UseGuards(AuthGuard)
   @Get('logout')

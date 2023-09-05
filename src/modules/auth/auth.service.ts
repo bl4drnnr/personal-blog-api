@@ -1,7 +1,7 @@
 import * as node2fa from 'node-2fa';
 import * as uuid from 'uuid';
 import * as jwt from 'jsonwebtoken';
-import { HttpException, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ApiConfigService } from '@shared/config.service';
 import { InjectModel } from '@nestjs/sequelize';
@@ -26,12 +26,20 @@ import { LoggedOutDto } from '@dto/logged-out.dto';
 import { CheckMfaStatusInterface } from '@interfaces/check-mfa-status.interface';
 import { TokenTwoFaRequiredDto } from '@dto/token-two-fa-required.dto';
 import { WrongCodeException } from '@exceptions/wrong-code.exception';
+import { UserAlreadyExistsException } from '@exceptions/user-already-exists.exception';
+import { RegistrationInterface } from '@interfaces/registration.interface';
+import { CryptographicService } from '@shared/cryptographic.service';
+import { UserCreatedDto } from '@dto/user-created.dto';
+import { EmailService } from '@shared/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ApiConfigService,
+    private readonly cryptographicService: CryptographicService,
+    private readonly emailService: EmailService,
+    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
     @InjectModel(Session) private sessionRepository: typeof Session
   ) {}
@@ -79,6 +87,40 @@ export class AuthService {
     const { _rt, _at } = await this.generateTokens({ userId, trx });
 
     return { _rt, _at };
+  }
+
+  async registration({ payload, trx }: RegistrationInterface) {
+    const { email, password } = payload;
+
+    const existingUser = await this.usersService.getUserByEmail({
+      email,
+      trx
+    });
+
+    if (existingUser) throw new UserAlreadyExistsException();
+
+    const hashedPassword = await this.cryptographicService.hashPassword({
+      password
+    });
+
+    const { id: userId } = await this.usersService.createUser({
+      payload: {
+        ...payload,
+        password: hashedPassword
+      },
+      trx
+    });
+
+    await this.emailService.sendRegistrationConfirmationEmail({
+      payload: {
+        to: email,
+        confirmationType: Confirmation.REGISTRATION,
+        userId
+      },
+      trx
+    });
+
+    return new UserCreatedDto();
   }
 
   async logout({ userId, trx }: LogoutInterface) {

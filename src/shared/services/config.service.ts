@@ -57,6 +57,13 @@ export class ApiConfigService {
     };
   }
 
+  get sendGridCredentials() {
+    return {
+      apiKey: this.getString('SENDGRID_API_KEY'),
+      senderEmail: this.getString('SENDGRID_SENDER_EMAIL')
+    };
+  }
+
   get adminFrontEndUrl() {
     return this.getString('ADMIN_FRONT_END_URL');
   }

@@ -6,12 +6,17 @@ import { GetUserByIdInterface } from '@interfaces/get-user-by-id.interface';
 import { GetUserByEmailInterface } from '@interfaces/get-user-by-email.interface';
 import { VerifyUserCredentialsInterface } from '@interfaces/verify-user-credentials.interface';
 import { CryptographicService } from '@shared/cryptographic.service';
+import { UserSettings } from '@models/user-settings.model';
+import { CreateUserSettingsInterface } from '@interfaces/create-user-settings.interface';
+import { CreateUserInterface } from '@interfaces/create-user.interface';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly cryptographicService: CryptographicService,
-    @InjectModel(User) private userRepository: typeof User
+    @InjectModel(User) private readonly userRepository: typeof User,
+    @InjectModel(UserSettings)
+    private readonly userSettingsRepository: typeof UserSettings
   ) {}
 
   async getUserById({ id, trx: transaction }: GetUserByIdInterface) {
@@ -46,5 +51,21 @@ export class UsersService {
     if (!passwordEquals) throw new WrongCredentialsException();
 
     return user;
+  }
+
+  async createUser({ payload, trx: transaction }: CreateUserInterface) {
+    const user = await this.userRepository.create(payload, { transaction });
+    await this.createUserSettings({ userId: user.id, trx: transaction });
+    return user;
+  }
+
+  private async createUserSettings({
+    userId,
+    trx: transaction
+  }: CreateUserSettingsInterface) {
+    return await this.userSettingsRepository.create(
+      { userId },
+      { transaction }
+    );
   }
 }

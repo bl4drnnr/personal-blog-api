@@ -21,6 +21,7 @@
       "@shared/*": ["src/shared/services/*", "src/shared/*"],
       "@posts/*": ["src/modules/posts/*"],
       "@users/*": ["src/modules/users/*"],
+      "@confirmation-hash/*": ["src/modules/confirmation-hash/*"],
       "@projects/*": ["src/modules/projects/*"],
       "@middlewares/*": ["src/middlewares/*"],
       "@models/*": ["src/models/*"],
@@ -46,11 +47,18 @@
         "src/libs/interfaces/*",
         "src/libs/interfaces/auth/*",
         "src/libs/interfaces/users/*",
-        "src/libs/interfaces/cryptography/*"
+        "src/libs/interfaces/cryptography/*",
+        "src/libs/interfaces/email/*",
+        "src/libs/interfaces/confirmation-hash/*"
       ],
       "@enums/*": ["src/libs/enums/*"],
       "@regex/*": ["src/libs/regex/*"],
       "@pipes/*": ["src/pipes/*"],
-      "@interceptors/*": ["src/interceptors/*"]}
+      "@interceptors/*": ["src/interceptors/*"],
+      "@email-templates/*": [
+        "src/libs/email-templates/*",
+        "src/libs/email-templates/security/*"
+      ]
+    }
   }
 }

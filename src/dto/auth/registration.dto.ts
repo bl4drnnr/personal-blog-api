@@ -1,4 +1,4 @@
-import { Matches } from 'class-validator';
+import { IsString, Matches } from 'class-validator';
 import { EmailRegex } from '@regex/email.regex';
 import { PasswordRegex } from '@regex/password.regex';
 import { ValidationError } from '@enums/validation-error.enum';
@@ -23,4 +23,12 @@ export class RegistrationDto {
     message: ValidationError.WRONG_PASSWORD_FORMAT
   })
   readonly password: string;
+
+  @ApiProperty({
+    type: String,
+    description: DocsProperty.AUTH_TOKEN_DESC,
+    example: DocsProperty.AUTH_TOKEN_EXAMPLE
+  })
+  @IsString({ message: ValidationError.WRONG_AUTH_TOKEN })
+  readonly authToken: string;
 }
