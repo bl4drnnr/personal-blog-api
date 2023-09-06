@@ -4,6 +4,7 @@ import { ICode } from '@interfaces/code.interface';
 import { ITitle } from '@interfaces/title.interface';
 import { ITechStack } from '@interfaces/tech-stack.interface';
 import { IProjectPage } from '@interfaces/project-page.interface';
+import { IParagraph } from '@interfaces/paragraph.interface';
 
 export class UpdateProjectDto {
   readonly title?: string;
@@ -17,5 +18,5 @@ export class UpdateProjectDto {
   readonly techStack?: Array<ITechStack>;
   readonly projectPages?: Array<IProjectPage>;
   readonly toc?: object;
-  readonly content?: Array<string | IPicture | IList | ICode | ITitle>;
+  readonly content?: Array<IParagraph | IPicture | IList | ICode | ITitle>;
 }

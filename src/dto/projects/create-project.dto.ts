@@ -5,6 +5,7 @@ import { ITitle } from '@interfaces/title.interface';
 import { Language } from '@enums/language.enum';
 import { ITechStack } from '@interfaces/tech-stack.interface';
 import { IProjectPage } from '@interfaces/project-page.interface';
+import { IParagraph } from '@interfaces/paragraph.interface';
 
 export class CreateProjectDto {
   readonly language: Language;
@@ -19,5 +20,5 @@ export class CreateProjectDto {
   readonly techStack: Array<ITechStack>;
   readonly projectPages: Array<IProjectPage>;
   readonly toc: object;
-  readonly content: Array<string | IPicture | IList | ICode | ITitle>;
+  readonly content: Array<IParagraph | IPicture | IList | ICode | ITitle>;
 }

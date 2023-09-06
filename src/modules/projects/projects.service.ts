@@ -77,6 +77,13 @@ export class ProjectsService {
     });
   }
 
+  async getAllSlugs() {
+    const allSlugs = await this.projectRepository.findAll({
+      attributes: ['slug']
+    });
+    return allSlugs.map(({ slug }) => slug);
+  }
+
   async createProject(project: CreateProjectDto) {
     return await this.projectRepository.create(project);
   }

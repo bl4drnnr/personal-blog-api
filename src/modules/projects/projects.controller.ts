@@ -49,6 +49,11 @@ export class ProjectsController {
     });
   }
 
+  @Get('get-all-slugs')
+  getAllSlugs() {
+    return this.projectsService.getAllSlugs();
+  }
+
   @UseGuards(AuthGuard)
   @Post('create')
   async createProject(@Body() project: CreateProjectDto) {
