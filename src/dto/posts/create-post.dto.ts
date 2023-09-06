@@ -17,7 +17,7 @@ export class CreatePostDto {
   readonly pageDescription: string;
   readonly searchTags: Array<string>;
   readonly intro: string;
-  readonly footer?: string;
+  readonly footer: string;
   readonly toc: object;
   readonly content: Array<IParagraph | IPicture | IList | ICode | ITitle>;
   readonly references: Array<ILink>;

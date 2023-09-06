@@ -57,7 +57,8 @@
         "src/libs/interfaces/email/*",
         "src/libs/interfaces/confirmation-hash/*",
         "src/libs/interfaces/security/*",
-        "src/libs/interfaces/recovery/*"
+        "src/libs/interfaces/recovery/*",
+        "src/libs/interfaces/common/*"
       ],
       "@enums/*": ["src/libs/enums/*"],
       "@regex/*": ["src/libs/regex/*"],
