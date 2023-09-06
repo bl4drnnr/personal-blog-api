@@ -33,7 +33,7 @@ export class LogInUserDto {
   @ApiPropertyOptional()
   @IsOptional()
   @Matches(MfaCodeRegex, {
-    message: ValidationError.WRONG_PHONE_CODE_FORMAT
+    message: ValidationError.WRONG_MFA_CODE_FORMAT
   })
   readonly mfaCode?: string;
 }
