@@ -4,10 +4,12 @@ import { Project } from '@models/project.model';
 import sequelize, { Op } from 'sequelize';
 import { CreateProjectDto } from '@dto/create-project.dto';
 import { UpdateProjectDto } from '@dto/update-project.dto';
+import { ApiConfigService } from '@shared/config.service';
 
 @Injectable()
 export class ProjectsService {
   constructor(
+    private readonly configService: ApiConfigService,
     @InjectModel(Project) private projectRepository: typeof Project
   ) {}
 
@@ -77,6 +79,13 @@ export class ProjectsService {
     });
   }
 
+  async getAllSlugs() {
+    const allSlugs = await this.projectRepository.findAll({
+      attributes: ['slug']
+    });
+    return allSlugs.map(({ slug }) => slug);
+  }
+
   async createProject(project: CreateProjectDto) {
     return await this.projectRepository.create(project);
   }
@@ -98,5 +107,9 @@ export class ProjectsService {
 
   async deleteProject({ id }: { id: string }) {
     return await this.projectRepository.destroy({ where: { id } });
+  }
+
+  async getAvailableLanguages() {
+    return this.configService.getAvailableLanguages;
   }
 }

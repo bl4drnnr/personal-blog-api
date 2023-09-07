@@ -18,20 +18,20 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get('get-by-slug')
-  async getPostBySlug(
+  getPostBySlug(
     @Query('slug') slug: string,
     @Query('language') language: string
   ) {
-    return await this.postsService.getPostBySlug({ slug, language });
+    return this.postsService.getPostBySlug({ slug, language });
   }
 
   @Get('get-by-id')
-  async getPostById(@Query('id') id: string) {
-    return await this.postsService.getPostById({ id });
+  getPostById(@Query('id') id: string) {
+    return this.postsService.getPostById({ id });
   }
 
   @Get('all')
-  async getAllPosts(
+  getAllPosts(
     @Query('language') language: string,
     @Query('page') page: string,
     @Query('pageSize') pageSize: string,
@@ -40,7 +40,7 @@ export class PostsController {
     @Query('searchQuery') searchQuery: string,
     @Query('postTypes') postTypes: string
   ) {
-    return await this.postsService.getAllPosts({
+    return this.postsService.getAllPosts({
       language,
       page,
       pageSize,
@@ -51,21 +51,31 @@ export class PostsController {
     });
   }
 
+  @Get('get-all-slugs')
+  getAllSlugs() {
+    return this.postsService.getAllSlugs();
+  }
+
   @UseGuards(AuthGuard)
   @Post('create')
-  async createPost(@Body() post: CreatePostDto) {
-    return await this.postsService.createPost(post);
+  createPost(@Body() post: CreatePostDto) {
+    return this.postsService.createPost(post);
   }
 
   @UseGuards(AuthGuard)
   @Patch('update')
-  async updatePost(@Query('id') id: string, @Body() post: UpdatePostDto) {
-    return await this.postsService.updatePost({ id, post });
+  updatePost(@Query('id') id: string, @Body() post: UpdatePostDto) {
+    return this.postsService.updatePost({ id, post });
   }
 
   @UseGuards(AuthGuard)
   @Delete('delete')
-  async deletePost(@Query('id') id: string) {
-    return await this.postsService.deletePost({ id });
+  deletePost(@Query('id') id: string) {
+    return this.postsService.deletePost({ id });
+  }
+
+  @Get('get-available-languages')
+  getAvailableLanguages() {
+    return this.postsService.getAvailableLanguages();
   }
 }

@@ -15,6 +15,7 @@ import { ICode } from '@interfaces/code.interface';
 import { ITitle } from '@interfaces/title.interface';
 import { ILink } from '@interfaces/link.interface';
 import { PostType } from '@enums/post-type.enum';
+import { IParagraph } from '@interfaces/paragraph.interface';
 
 interface PostCreationAttributes {
   language: Language;
@@ -27,7 +28,7 @@ interface PostCreationAttributes {
   searchTags: Array<string>;
   intro: string;
   toc: object;
-  content: Array<string | IPicture | IList | ICode | ITitle>;
+  content: Array<IParagraph | IPicture | IList | ICode | ITitle>;
   references: Array<ILink>;
 }
 
@@ -84,7 +85,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   toc: object;
 
   @Column({ type: DataType.JSON, allowNull: false })
-  content: Array<string | IPicture | IList | ICode | ITitle>;
+  content: Array<IParagraph | IPicture | IList | ICode | ITitle>;
 
   @Column({ type: DataType.JSON, allowNull: false, field: 'references' })
   references: Array<ILink>;

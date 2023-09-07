@@ -84,4 +84,8 @@ export class ApiConfigService {
       iv: this.getString('RECOVERY_ENCRYPTION_IV')
     };
   }
+
+  get getAvailableLanguages() {
+    return this.getArray('AVAILABLE_LANGUAGES');
+  }
 }

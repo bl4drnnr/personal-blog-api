@@ -9,6 +9,10 @@ import { CryptographicService } from '@shared/cryptographic.service';
 import { UserSettings } from '@models/user-settings.model';
 import { CreateUserSettingsInterface } from '@interfaces/create-user-settings.interface';
 import { CreateUserInterface } from '@interfaces/create-user.interface';
+import { UpdateUserInterface } from '@interfaces/update-user.interface';
+import { UpdateUserSettingsInterface } from '@interfaces/update-user-settings.interface';
+import { WrongRecoveryKeysException } from '@exceptions/wrong-recovery-keys.exception';
+import { GetUserByRecoveryKeysInterface } from '@interfaces/get-user-by-recovery-keys.interface';
 
 @Injectable()
 export class UsersService {
@@ -57,6 +61,43 @@ export class UsersService {
     const user = await this.userRepository.create(payload, { transaction });
     await this.createUserSettings({ userId: user.id, trx: transaction });
     return user;
+  }
+
+  async updateUser({ payload, userId, trx: transaction }: UpdateUserInterface) {
+    await this.userRepository.update(
+      {
+        ...payload
+      },
+      { returning: undefined, where: { id: userId }, transaction }
+    );
+  }
+
+  async updateUserSettings({
+    payload,
+    userId,
+    trx: transaction
+  }: UpdateUserSettingsInterface) {
+    await this.userSettingsRepository.update(
+      {
+        ...payload
+      },
+      { returning: undefined, where: { userId }, transaction }
+    );
+  }
+
+  async getUserByRecoveryKeysFingerprint({
+    recoveryKeysFingerprint,
+    trx: transaction
+  }: GetUserByRecoveryKeysInterface) {
+    const userSettings = await this.userSettingsRepository.findOne({
+      rejectOnEmpty: undefined,
+      where: { recoveryKeysFingerprint },
+      transaction
+    });
+
+    if (!userSettings) throw new WrongRecoveryKeysException();
+
+    return this.getUserById({ id: userSettings.userId, trx: transaction });
   }
 
   private async createUserSettings({

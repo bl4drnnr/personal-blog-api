@@ -22,6 +22,8 @@
       "@posts/*": ["src/modules/posts/*"],
       "@users/*": ["src/modules/users/*"],
       "@confirmation-hash/*": ["src/modules/confirmation-hash/*"],
+      "@security/*": ["src/modules/security/*"],
+      "@recovery/*": ["src/modules/recovery/*"],
       "@projects/*": ["src/modules/projects/*"],
       "@middlewares/*": ["src/middlewares/*"],
       "@models/*": ["src/models/*"],
@@ -34,14 +36,18 @@
         "src/exceptions/posts/*",
         "src/exceptions/projects/*",
         "src/exceptions/recovery/*",
-        "src/exceptions/validation/*"
+        "src/exceptions/validation/*",
+        "src/exceptions/security/*",
+        "src/exceptions/confirmation-hash/*"
       ],
       "@dto/*": [
         "src/dto/auth/*",
         "src/dto/posts/*",
         "src/dto/projects/*",
         "src/dto/users/*",
-        "src/dto/recovery/*"
+        "src/dto/recovery/*",
+        "src/dto/confirmation-hash/*",
+        "src/dto/security/*"
       ],
       "@interfaces/*": [
         "src/libs/interfaces/*",
@@ -49,7 +55,10 @@
         "src/libs/interfaces/users/*",
         "src/libs/interfaces/cryptography/*",
         "src/libs/interfaces/email/*",
-        "src/libs/interfaces/confirmation-hash/*"
+        "src/libs/interfaces/confirmation-hash/*",
+        "src/libs/interfaces/security/*",
+        "src/libs/interfaces/recovery/*",
+        "src/libs/interfaces/common/*"
       ],
       "@enums/*": ["src/libs/enums/*"],
       "@regex/*": ["src/libs/regex/*"],

@@ -18,6 +18,8 @@ import TYPES = Transaction.TYPES;
 import { UserSettings } from '@models/user-settings.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { ConfirmationHashModule } from '@confirmation-hash/confirmation-hash.module';
+import { SecurityModule } from '@security/security.module';
+import { RecoveryModule } from '@recovery/recovery.module';
 
 @Module({
   imports: [
@@ -41,7 +43,9 @@ import { ConfirmationHashModule } from '@confirmation-hash/confirmation-hash.mod
       autoLoadModels: true,
       transactionType: TYPES.EXCLUSIVE
     }),
-    ConfirmationHashModule
+    ConfirmationHashModule,
+    SecurityModule,
+    RecoveryModule
   ],
   providers: [
     {

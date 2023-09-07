@@ -15,6 +15,7 @@ import { ITitle } from '@interfaces/title.interface';
 import { Language } from '@enums/language.enum';
 import { ITechStack } from '@interfaces/tech-stack.interface';
 import { IProjectPage } from '@interfaces/project-page.interface';
+import { IParagraph } from '@interfaces/paragraph.interface';
 
 interface ProjectCreationAttributes {
   language: Language;
@@ -23,13 +24,13 @@ interface ProjectCreationAttributes {
   brief: string;
   tags: string;
   description: string;
-  projectTags: Array<string>;
+  searchTags: Array<string>;
   briefDescription: string;
   license: string;
   techStack: Array<ITechStack>;
   projectPages: Array<IProjectPage>;
   toc: object;
-  content: Array<string | IPicture | IList | ICode | ITitle>;
+  content: Array<IParagraph | IPicture | IList | ICode | ITitle>;
 }
 
 @Table({
@@ -65,9 +66,9 @@ export class Project extends Model<Project, ProjectCreationAttributes> {
   @Column({
     type: DataType.ARRAY(DataType.STRING),
     allowNull: false,
-    field: 'project_tags'
+    field: 'search_tags'
   })
-  projectTags: Array<string>;
+  searchTags: Array<string>;
 
   @Column({
     type: DataType.STRING,
@@ -89,7 +90,7 @@ export class Project extends Model<Project, ProjectCreationAttributes> {
   toc: object;
 
   @Column({ type: DataType.JSON, allowNull: false })
-  content: Array<string | IPicture | IList | ICode | ITitle>;
+  content: Array<IParagraph | IPicture | IList | ICode | ITitle>;
 
   @CreatedAt
   @Column({ field: 'created_at' })

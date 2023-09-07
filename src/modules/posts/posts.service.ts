@@ -88,6 +88,13 @@ export class PostsService {
     });
   }
 
+  async getAllSlugs() {
+    const allSlugs = await this.postRepository.findAll({
+      attributes: ['slug']
+    });
+    return allSlugs.map(({ slug }) => slug);
+  }
+
   async createPost(post: CreatePostDto) {
     return await this.postRepository.create(post);
   }
@@ -98,5 +105,9 @@ export class PostsService {
 
   async deletePost({ id }: { id: string }) {
     return await this.postRepository.destroy({ where: { id } });
+  }
+
+  async getAvailableLanguages() {
+    return this.configService.getAvailableLanguages;
   }
 }

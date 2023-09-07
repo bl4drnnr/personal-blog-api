@@ -4,6 +4,7 @@ import { IList } from '@interfaces/list.interface';
 import { ICode } from '@interfaces/code.interface';
 import { ITitle } from '@interfaces/title.interface';
 import { ILink } from '@interfaces/link.interface';
+import { IParagraph } from '@interfaces/paragraph.interface';
 
 export class UpdatePostDto {
   readonly title?: string;
@@ -16,6 +17,6 @@ export class UpdatePostDto {
   readonly intro?: string;
   readonly footer?: string;
   readonly toc?: object;
-  readonly content?: Array<string | IPicture | IList | ICode | ITitle>;
+  readonly content?: Array<IParagraph | IPicture | IList | ICode | ITitle>;
   readonly references?: Array<ILink>;
 }

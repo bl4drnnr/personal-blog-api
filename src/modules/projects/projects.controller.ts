@@ -49,6 +49,11 @@ export class ProjectsController {
     });
   }
 
+  @Get('get-all-slugs')
+  getAllSlugs() {
+    return this.projectsService.getAllSlugs();
+  }
+
   @UseGuards(AuthGuard)
   @Post('create')
   async createProject(@Body() project: CreateProjectDto) {
@@ -68,5 +73,10 @@ export class ProjectsController {
   @Delete('delete')
   async deleteProject(@Query('id') id: string) {
     return await this.projectsService.deleteProject({ id });
+  }
+
+  @Get('get-available-languages')
+  getAvailableLanguages() {
+    return this.projectsService.getAvailableLanguages();
   }
 }
