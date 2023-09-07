@@ -74,4 +74,9 @@ export class ProjectsController {
   async deleteProject(@Query('id') id: string) {
     return await this.projectsService.deleteProject({ id });
   }
+
+  @Get('get-available-languages')
+  getAvailableLanguages() {
+    return this.projectsService.getAvailableLanguages();
+  }
 }

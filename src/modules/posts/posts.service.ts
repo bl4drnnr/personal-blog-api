@@ -106,4 +106,8 @@ export class PostsService {
   async deletePost({ id }: { id: string }) {
     return await this.postRepository.destroy({ where: { id } });
   }
+
+  async getAvailableLanguages() {
+    return this.configService.getAvailableLanguages;
+  }
 }

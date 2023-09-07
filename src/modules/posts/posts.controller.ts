@@ -73,4 +73,9 @@ export class PostsController {
   deletePost(@Query('id') id: string) {
     return this.postsService.deletePost({ id });
   }
+
+  @Get('get-available-languages')
+  getAvailableLanguages() {
+    return this.postsService.getAvailableLanguages();
+  }
 }
