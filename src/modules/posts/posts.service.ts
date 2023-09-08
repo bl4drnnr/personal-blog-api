@@ -80,9 +80,19 @@ export class PostsService {
       };
     }
 
+    const attributes = [
+      'slug',
+      'title',
+      'description',
+      'type',
+      'searchTags',
+      'createdAt'
+    ];
+
     return await this.postRepository.findAndCountAll({
       where: { language, ...where },
       order: [[order, orderBy]],
+      attributes,
       limit,
       offset
     });

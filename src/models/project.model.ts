@@ -29,6 +29,7 @@ interface ProjectCreationAttributes {
   license: string;
   techStack: Array<ITechStack>;
   projectPages: Array<IProjectPage>;
+  projectTags: Array<string>;
   toc: object;
   content: Array<IParagraph | IPicture | IList | ICode | ITitle>;
 }
@@ -85,6 +86,13 @@ export class Project extends Model<Project, ProjectCreationAttributes> {
 
   @Column({ type: DataType.JSON, allowNull: false, field: 'project_pages' })
   projectPages: Array<IProjectPage>;
+
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+    allowNull: false,
+    field: 'project_tags'
+  })
+  projectTags: Array<string>;
 
   @Column({ type: DataType.JSON, allowNull: false })
   toc: object;

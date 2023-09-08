@@ -47,8 +47,7 @@ export class ProjectsService {
     const offset = page * pageSize;
     const limit = pageSize;
 
-    const orderByOptions = process.env.ORDER_BY_OPTIONS.split(',');
-    const orderOptions = process.env.ORDER_OPTIONS.split(',');
+    const { orderByOptions, orderOptions } = this.configService.orderOptions;
 
     if (!orderByOptions.includes(orderBy) || !orderOptions.includes(order))
       throw new BadRequestException();
@@ -70,10 +69,12 @@ export class ProjectsService {
       ];
     }
 
+    const attributes = ['title', 'brief', 'description', 'projectTags', 'slug'];
+
     return await this.projectRepository.findAndCountAll({
-      attributes: [''],
       where: { language, ...where },
       order: [[order, orderBy]],
+      attributes,
       limit,
       offset
     });
