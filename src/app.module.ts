@@ -9,8 +9,6 @@ import { UsersModule } from '@users/users.module';
 import { User } from '@models/user.model';
 import { AuthModule } from '@auth/auth.module';
 import { Session } from '@models/session.model';
-import { ProjectsModule } from '@projects/projects.module';
-import { Project } from '@models/project.model';
 import { TransactionInterceptor } from '@interceptors/transaction.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Transaction } from 'sequelize';
@@ -27,7 +25,6 @@ import { RecoveryModule } from '@recovery/recovery.module';
     SharedModule,
     UsersModule,
     AuthModule,
-    ProjectsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`
@@ -39,7 +36,7 @@ import { RecoveryModule } from '@recovery/recovery.module';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [Post, User, Session, Project, UserSettings, ConfirmationHash],
+      models: [Post, User, Session, UserSettings, ConfirmationHash],
       autoLoadModels: true,
       transactionType: TYPES.EXCLUSIVE
     }),
