@@ -6,6 +6,7 @@ import { CreatePostDto } from '@dto/create-post.dto';
 import { UpdatePostDto } from '@dto/update-post.dto';
 import { ApiConfigService } from '@shared/config.service';
 import { WrongOrderOptionException } from '@exceptions/wrong-order-option.exception';
+import {PostUpdatedDto} from "@dto/post-updated.dto";
 
 @Injectable()
 export class PostsService {
@@ -110,7 +111,9 @@ export class PostsService {
   }
 
   async updatePost({ id, post }: { id: string; post: UpdatePostDto }) {
-    return await this.postRepository.update({ ...post }, { where: { id } });
+    await this.postRepository.update({ ...post }, { where: { id } });
+
+    return new PostUpdatedDto()
   }
 
   async deletePost({ id }: { id: string }) {
