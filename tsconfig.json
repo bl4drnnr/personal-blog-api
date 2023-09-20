@@ -24,7 +24,6 @@
       "@confirmation-hash/*": ["src/modules/confirmation-hash/*"],
       "@security/*": ["src/modules/security/*"],
       "@recovery/*": ["src/modules/recovery/*"],
-      "@projects/*": ["src/modules/projects/*"],
       "@middlewares/*": ["src/middlewares/*"],
       "@models/*": ["src/models/*"],
       "@guards/*": ["src/guards/*"],
@@ -34,7 +33,6 @@
         "src/exceptions/users/*",
         "src/exceptions/auth/*",
         "src/exceptions/posts/*",
-        "src/exceptions/projects/*",
         "src/exceptions/recovery/*",
         "src/exceptions/validation/*",
         "src/exceptions/security/*",
@@ -43,7 +41,6 @@
       "@dto/*": [
         "src/dto/auth/*",
         "src/dto/posts/*",
-        "src/dto/projects/*",
         "src/dto/users/*",
         "src/dto/recovery/*",
         "src/dto/confirmation-hash/*",
