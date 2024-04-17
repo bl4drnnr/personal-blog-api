@@ -1,25 +1,25 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import {
-  FastifyAdapter,
-  NestFastifyApplication
-} from '@nestjs/platform-fastify';
-import fastifyCookie from '@fastify/cookie';
+import { json, urlencoded } from 'express';
 
 (async () => {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter()
-  );
-  const port = process.env.API_PORT;
+  const whitelist = [];
 
-  await app.register(fastifyCookie, {
-    secret: process.env.COOKIE_SECRET
-  });
+  const app = await NestFactory.create(AppModule);
+  const port = process.env.API_PORT || 4201;
 
   app.setGlobalPrefix('/api');
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
 
-  await app.listen(port, '0.0.0.0', () => {
-    console.log(`Application has been started on port ${port}`);
+  app.enableCors({
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Access-Token'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+    origin: whitelist,
+    credentials: true
+  });
+
+  await app.listen(port, () => {
+    console.log(`Personal blog server started on port ${port}`);
   });
 })();

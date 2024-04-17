@@ -16,6 +16,12 @@ export class ApiConfigService {
     return value;
   }
 
+  private getNumber(key: string): number {
+    const value = this.get(key);
+
+    return Number(value);
+  }
+
   private getString(key: string): string {
     const value = this.get(key);
 
@@ -23,30 +29,9 @@ export class ApiConfigService {
   }
 
   private getArray(key: string): Array<string> {
-    const value = this.get(key);
+    const value = this.getString(key);
 
-    return value.replace(/\\n/g, '\n').split(',');
-  }
-
-  private getNumber(key: string): number {
-    const value = this.get(key);
-
-    return Number(value);
-  }
-
-  get orderOptions() {
-    return {
-      orderByOptions: this.getArray('ORDER_BY_OPTIONS'),
-      orderOptions: this.getArray('ORDER_OPTIONS'),
-      postTypeOptions: this.getArray('POST_TYPE_OPTION')
-    };
-  }
-
-  get basicAuthConfig() {
-    return {
-      username: this.getString('BASIC_AUTH_USERNAME'),
-      password: this.getString('BASIC_AUTH_PASSWORD')
-    };
+    return value.split(',');
   }
 
   get jwtAuthConfig() {
@@ -57,6 +42,10 @@ export class ApiConfigService {
     };
   }
 
+  get hashPasswordRounds() {
+    return this.getNumber('HASH_PASSWORD_ROUNDS');
+  }
+
   get sendGridCredentials() {
     return {
       apiKey: this.getString('SENDGRID_API_KEY'),
@@ -64,16 +53,16 @@ export class ApiConfigService {
     };
   }
 
-  get adminFrontEndUrl() {
-    return this.getString('ADMIN_FRONT_END_URL');
+  get frontEndUrl() {
+    return this.getString('FRONT_END_URL');
   }
 
-  get hashPasswordRounds() {
-    return this.getNumber('HASH_PASSWORD_ROUNDS');
-  }
-
-  get authTokenFingerprint() {
-    return this.getString('AUTH_TOKEN_FINGERPRINT');
+  get awsSdkCredentials() {
+    return {
+      accessKeyId: this.getString('AWS_ACCESS_KEY_ID'),
+      secretAccessKey: this.getString('AWS_SECRET_ACCESS_KEY'),
+      bucketName: this.getString('AWS_S3_NAME')
+    };
   }
 
   get recoveryEncryptionData() {
@@ -83,9 +72,5 @@ export class ApiConfigService {
       salt: this.getString('RECOVERY_ENCRYPTION_SALT'),
       iv: this.getString('RECOVERY_ENCRYPTION_IV')
     };
-  }
-
-  get getAvailableLanguages() {
-    return this.getArray('AVAILABLE_LANGUAGES');
   }
 }

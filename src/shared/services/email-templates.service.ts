@@ -1,19 +1,32 @@
-import { Injectable } from '@nestjs/common';
-import { registrationTemplate } from '@email-templates/registration.template';
 import { SecurityPayloadInterface } from '@interfaces/security-payload.interface';
+import { registrationTemplate } from '@email-templates/registration.template';
 import { EmailTemplateInterface } from '@interfaces/email-template.interface';
+import { forgotPasswordTemplate } from '@email-templates/forgot-password.template';
 
-@Injectable()
 export class EmailTemplatesService {
   registrationEmailTemplate({
-    link,
-    language
+    userInfo,
+    link
   }: SecurityPayloadInterface): EmailTemplateInterface {
-    const subject = 'MBB - Registration confirmation';
+    const subject = 'MBPB - Registration confirmation';
 
     const html = registrationTemplate({
-      link,
-      language
+      userInfo,
+      link
+    });
+
+    return { html, subject };
+  }
+
+  forgotPasswordEmailTemplate({
+    userInfo,
+    link
+  }: SecurityPayloadInterface): EmailTemplateInterface {
+    const subject = 'MBPB - Password reset';
+
+    const html = forgotPasswordTemplate({
+      userInfo,
+      link
     });
 
     return { html, subject };

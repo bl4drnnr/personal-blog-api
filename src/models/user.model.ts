@@ -11,16 +11,14 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { Session } from '@models/session.model';
-import { UserSettings } from '@models/user-settings.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
+import { UserSettings } from './user-settings.model';
 
 interface UserCreationAttributes {
   email: string;
 }
 
-@Table({
-  tableName: 'users'
-})
+@Table({ tableName: 'users' })
 export class User extends Model<User, UserCreationAttributes> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
@@ -33,6 +31,12 @@ export class User extends Model<User, UserCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: true })
   password: string;
 
+  @Column({ type: DataType.STRING, allowNull: true, field: 'first_name' })
+  firstName: string;
+
+  @Column({ type: DataType.STRING, allowNull: true, field: 'last_name' })
+  lastName: string;
+
   @Default(false)
   @Column({
     type: DataType.BOOLEAN,
@@ -41,14 +45,22 @@ export class User extends Model<User, UserCreationAttributes> {
   })
   isMfaSet: boolean;
 
+  @Default(false)
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    field: 'tac'
+  })
+  tac: boolean;
+
+  @HasMany(() => ConfirmationHash)
+  confirmationHashes: Array<ConfirmationHash>;
+
   @HasOne(() => Session)
   session: Session;
 
   @HasOne(() => UserSettings)
   userSettings: UserSettings;
-
-  @HasMany(() => ConfirmationHash)
-  confirmationHashes: Array<ConfirmationHash>;
 
   @CreatedAt
   @Column({ field: 'created_at' })

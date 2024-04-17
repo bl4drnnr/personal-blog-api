@@ -1,8 +1,8 @@
-import { RegistrationDto } from '@dto/registration.dto';
+import { CreateUserDto } from '@dto/create-user.dto';
 import { Transaction } from 'sequelize';
 import { User } from '@models/user.model';
 
 export interface CreateUserInterface {
-  payload: RegistrationDto | Partial<User>;
+  payload: CreateUserDto | Partial<User>;
   trx?: Transaction;
 }

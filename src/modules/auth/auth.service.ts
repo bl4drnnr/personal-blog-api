@@ -1,48 +1,50 @@
-import * as node2fa from 'node-2fa';
 import * as uuid from 'uuid';
 import * as jwt from 'jsonwebtoken';
 import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ApiConfigService } from '@shared/config.service';
-import { InjectModel } from '@nestjs/sequelize';
 import { Session } from '@models/session.model';
-import { ExpiredTokenException } from '@exceptions/expired-token.exception';
-import { InvalidTokenException } from '@exceptions/invalid-token.exception';
-import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
+import { InjectModel } from '@nestjs/sequelize';
+import { Confirmation } from '@interfaces/confirmation-type.enum';
+import { LogInUserResponseDto } from '@dto/log-in-user.dto';
+import { JwtService } from '@nestjs/jwt';
+import { CryptographicService } from '@shared/cryptographic.service';
+import { ApiConfigService } from '@shared/config.service';
+import { UsersService } from '@modules/users.service';
+import { EmailService } from '@shared/email.service';
 import { LoginInterface } from '@interfaces/login.interface';
-import { Confirmation } from '@enums/confirmation-type.enum';
-import { UsersService } from '@users/users.service';
 import { AccountNotConfirmedException } from '@exceptions/account-not-confirmed.exception';
 import { MfaNotSetDto } from '@dto/mfa-not-set.dto';
-import { GetTokenInterface } from '@interfaces/get-token.interface';
-import { GenerateTokensInterface } from '@interfaces/generate-tokens.interface';
-import { UpdateRefreshTokenInterface } from '@interfaces/update-refresh-token.interface';
-import { GenerateAccessTokenInterface } from '@interfaces/generate-access-token.interface';
-import { VerifyTokenInterface } from '@interfaces/verify-token.interface';
-import { RefreshTokenInterface } from '@interfaces/refresh-token.interface';
-import { LogoutInterface } from '@interfaces/logout.interface';
 import { RecoveryKeysNotSetDto } from '@dto/recovery-keys-not-set.dto';
+import { GenerateTokensInterface } from '@interfaces/generate-tokens.interface';
+import { RegistrationInterface } from '@interfaces/registration.interface';
+import { UserAlreadyExistsException } from '@exceptions/user-already-exists.exception';
+import { TacNotAcceptedException } from '@exceptions/tac-not-accepted.exception';
+import { UserCreatedDto } from '@dto/user-created.dto';
+import { LogoutInterface } from '@interfaces/logout.interface';
+import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
 import { LoggedOutDto } from '@dto/logged-out.dto';
+import { InvalidTokenException } from '@exceptions/invalid-token.exception';
+import { RefreshTokenInterface } from '@interfaces/refresh-token.interface';
 import { CheckMfaStatusInterface } from '@interfaces/check-mfa-status.interface';
+import { ExpiredTokenException } from '@exceptions/expired-token.exception';
 import { TokenTwoFaRequiredDto } from '@dto/token-two-fa-required.dto';
 import { WrongCodeException } from '@exceptions/wrong-code.exception';
-import { UserAlreadyExistsException } from '@exceptions/user-already-exists.exception';
-import { RegistrationInterface } from '@interfaces/registration.interface';
-import { CryptographicService } from '@shared/cryptographic.service';
-import { UserCreatedDto } from '@dto/user-created.dto';
-import { EmailService } from '@shared/email.service';
-import { WrongAuthToken } from '@exceptions/wrong-auth-token';
+import { VerifyTokenInterface } from '@interfaces/verify-token.interface';
+import { GenerateAccessTokenInterface } from '@interfaces/generate-access-token.interface';
+import { UpdateRefreshTokenInterface } from '@interfaces/update-refresh-token.interface';
+import { GetTokenInterface } from '@interfaces/get-token.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly cryptographicService: CryptographicService,
     private readonly jwtService: JwtService,
     private readonly configService: ApiConfigService,
-    private readonly cryptographicService: CryptographicService,
+    @Inject(forwardRef(() => EmailService))
     private readonly emailService: EmailService,
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
-    @InjectModel(Session) private sessionRepository: typeof Session
+    @InjectModel(Session)
+    private readonly sessionRepository: typeof Session
   ) {}
 
   async login({ payload, trx }: LoginInterface) {
@@ -77,7 +79,9 @@ export class AuthService {
     try {
       const mfaStatusResponse = await this.checkUserMfaStatus({
         mfaCode,
-        userSettings
+        userSettings,
+        userId,
+        trx
       });
 
       if (mfaStatusResponse) return mfaStatusResponse;
@@ -85,22 +89,18 @@ export class AuthService {
       throw new HttpException(e.response.message, e.status);
     }
 
-    const { _rt, _at } = await this.generateTokens({ userId, trx });
+    const generateTokensPayload: GenerateTokensInterface = {
+      userId,
+      trx
+    };
 
-    return { _rt, _at };
+    const { _rt, _at } = await this.generateTokens(generateTokensPayload);
+
+    return new LogInUserResponseDto({ _rt, _at });
   }
 
   async registration({ payload, trx }: RegistrationInterface) {
-    const { email, password, authToken } = payload;
-
-    const authTokenFingerprint = this.cryptographicService.hash({
-      data: authToken,
-      algorithm: 'SHA512'
-    });
-
-    const authTokenVar = this.configService.authTokenFingerprint;
-
-    if (authTokenFingerprint !== authTokenVar) throw new WrongAuthToken();
+    const { email, password, firstName, lastName, tac } = payload;
 
     const existingUser = await this.usersService.getUserByEmail({
       email,
@@ -108,6 +108,7 @@ export class AuthService {
     });
 
     if (existingUser) throw new UserAlreadyExistsException();
+    if (!tac) throw new TacNotAcceptedException();
 
     const hashedPassword = await this.cryptographicService.hashPassword({
       password
@@ -126,6 +127,10 @@ export class AuthService {
         to: email,
         confirmationType: Confirmation.REGISTRATION,
         userId
+      },
+      userInfo: {
+        firstName,
+        lastName
       },
       trx
     });
@@ -158,18 +163,30 @@ export class AuthService {
       trx
     });
 
-    const { _at, _rt } = await this.generateTokens({ userId, trx });
+    const generateTokensPayload: GenerateTokensInterface = {
+      userId,
+      trx
+    };
+
+    const { _at, _rt } = await this.generateTokens(generateTokensPayload);
 
     return { _at, _rt };
   }
 
-  async checkUserMfaStatus({ mfaCode, userSettings }: CheckMfaStatusInterface) {
+  async checkUserMfaStatus({
+    mfaCode,
+    userSettings,
+    userId,
+    trx
+  }: CheckMfaStatusInterface) {
     const { twoFaToken: userTwoFaToken } = userSettings;
 
     if (!mfaCode && userTwoFaToken) return new TokenTwoFaRequiredDto();
 
     if (mfaCode && userTwoFaToken) {
-      const delta = node2fa.verifyToken(userTwoFaToken, mfaCode);
+      // @TODO Continue here
+      // const delta = node2fa.verifyToken(userTwoFaToken, mfaCode);
+      const delta = { delta: 0 };
 
       if (!delta || (delta && delta.delta !== 0))
         throw new WrongCodeException();
@@ -238,8 +255,11 @@ export class AuthService {
     );
   }
 
-  private async generateTokens({ userId, trx }: GenerateTokensInterface) {
-    const _at = this.generateAccessToken({ userId });
+  async generateTokens({ userId, trx }: GenerateTokensInterface) {
+    const _at = this.generateAccessToken({
+      userId
+    });
+
     const { id: tokenId, token: _rt } = this.generateRefreshToken();
 
     await this.updateRefreshToken({

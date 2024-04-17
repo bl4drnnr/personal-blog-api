@@ -11,15 +11,17 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { User } from '@models/user.model';
-import { Confirmation } from '@enums/confirmation-type.enum';
+import { Confirmation } from '@interfaces/confirmation-type.enum';
 
-const confirmationTypes = [Confirmation.REGISTRATION];
+const confirmationTypes = [
+  Confirmation.REGISTRATION,
+  Confirmation.FORGOT_PASSWORD
+];
 
 interface ConfirmationHashCreationAttributes {
   userId: string;
   confirmationHash: string;
   confirmationType: Confirmation;
-  changingEmail?: string;
 }
 
 @Table({

@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -19,52 +19,63 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@shared/*": ["src/shared/services/*", "src/shared/*"],
-      "@posts/*": ["src/modules/posts/*"],
-      "@users/*": ["src/modules/users/*"],
-      "@confirmation-hash/*": ["src/modules/confirmation-hash/*"],
-      "@security/*": ["src/modules/security/*"],
-      "@recovery/*": ["src/modules/recovery/*"],
-      "@middlewares/*": ["src/middlewares/*"],
       "@models/*": ["src/models/*"],
-      "@guards/*": ["src/guards/*"],
-      "@decorators/*": ["src/decorators/*"],
-      "@auth/*": ["src/modules/auth/*"],
+      "@pipes/*": ["src/pipes/*"],
       "@exceptions/*": [
-        "src/exceptions/users/*",
+        "src/exceptions/*",
+        "src/exceptions/user/*",
         "src/exceptions/auth/*",
-        "src/exceptions/posts/*",
-        "src/exceptions/recovery/*",
-        "src/exceptions/validation/*",
+        "src/exceptions/confirmation-hash/*",
         "src/exceptions/security/*",
-        "src/exceptions/confirmation-hash/*"
+        "src/exceptions/validation/*",
+        "src/exceptions/recovery/*"
       ],
       "@dto/*": [
-        "src/dto/auth/*",
-        "src/dto/posts/*",
-        "src/dto/users/*",
-        "src/dto/recovery/*",
-        "src/dto/confirmation-hash/*",
-        "src/dto/security/*"
+        "src/dto/*",
+        "src/dto/user/requests/*",
+        "src/dto/user/responses/*",
+        "src/dto/security/requests/*",
+        "src/dto/security/responses/*",
+        "src/dto/confirmation-hash/requests/*",
+        "src/dto/confirmation-hash/responses/*",
+        "src/dto/auth/requests/*",
+        "src/dto/auth/responses/*",
+        "src/dto/recovery/requests/*",
+        "src/dto/recovery/responses/*"
+      ],
+      "@events/*": ["src/events/*"],
+      "@guards/*": ["src/guards/*"],
+      "@decorators/*": ["src/decorators/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+      "@modules/*": [
+        "src/modules/*",
+        "src/modules/users/*",
+        "src/modules/auth/*",
+        "src/modules/confirmation-hash/*",
+        "src/modules/recovery/*",
+        "src/modules/security/*"
       ],
       "@interfaces/*": [
-        "src/libs/interfaces/*",
+        "src/libs/enums/*",
         "src/libs/interfaces/auth/*",
+        "src/libs/interfaces/confirmation-hash/*",
+        "src/libs/interfaces/email/*",
+        "src/libs/interfaces/email/common/*",
+        "src/libs/interfaces/email/private/*",
+        "src/libs/interfaces/recovery/*",
+        "src/libs/interfaces/security/*",
         "src/libs/interfaces/users/*",
         "src/libs/interfaces/cryptography/*",
-        "src/libs/interfaces/email/*",
-        "src/libs/interfaces/confirmation-hash/*",
-        "src/libs/interfaces/security/*",
-        "src/libs/interfaces/recovery/*",
-        "src/libs/interfaces/common/*"
+        "src/libs/interfaces/phone/*",
+        "src/libs/interfaces/time/*"
       ],
-      "@enums/*": ["src/libs/enums/*"],
-      "@regex/*": ["src/libs/regex/*"],
-      "@pipes/*": ["src/pipes/*"],
-      "@interceptors/*": ["src/interceptors/*"],
+      "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [
         "src/libs/email-templates/*",
         "src/libs/email-templates/security/*"
-      ]
+      ],
+      "@interceptors/*": ["src/interceptors/*"],
+      "@regex/*": ["src/libs/regex/*"]
     }
   }
 }

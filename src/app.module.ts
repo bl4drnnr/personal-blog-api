@@ -1,30 +1,21 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { PostsModule } from '@posts/posts.module';
+import { Module } from '@nestjs/common';
+import { AuthModule } from '@modules/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { BasicAuthMiddleware } from '@middlewares/basic-auth.middleware';
-import { SharedModule } from '@shared/shared.module';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { Post } from '@models/post.model';
-import { UsersModule } from '@users/users.module';
-import { User } from '@models/user.model';
-import { AuthModule } from '@auth/auth.module';
-import { Session } from '@models/session.model';
-import { TransactionInterceptor } from '@interceptors/transaction.interceptor';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Transaction } from 'sequelize';
-import TYPES = Transaction.TYPES;
+import { SequelizeModule } from '@nestjs/sequelize';
+import { User } from '@models/user.model';
+import { Session } from '@models/session.model';
 import { UserSettings } from '@models/user-settings.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
-import { ConfirmationHashModule } from '@confirmation-hash/confirmation-hash.module';
-import { SecurityModule } from '@security/security.module';
-import { RecoveryModule } from '@recovery/recovery.module';
+import { TransactionInterceptor } from '@interceptors/transaction.interceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { UsersModule } from '@modules/users/users.module';
+import { ConfirmationHashModule } from '@modules/confirmation-hash/confirmation-hash.module';
+import TYPES = Transaction.TYPES;
+import { SharedModule } from '@shared/shared.module';
 
 @Module({
   imports: [
-    PostsModule,
-    SharedModule,
-    UsersModule,
-    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`
@@ -36,13 +27,20 @@ import { RecoveryModule } from '@recovery/recovery.module';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [Post, User, Session, UserSettings, ConfirmationHash],
-      autoLoadModels: true,
-      transactionType: TYPES.EXCLUSIVE
+      // dialectOptions: {
+      //   ssl: {
+      //     require: true,
+      //     rejectUnauthorized: false
+      //   }
+      // },
+      transactionType: TYPES.EXCLUSIVE,
+      models: [User, Session, UserSettings, ConfirmationHash],
+      autoLoadModels: true
     }),
+    AuthModule,
+    UsersModule,
     ConfirmationHashModule,
-    SecurityModule,
-    RecoveryModule
+    SharedModule
   ],
   providers: [
     {
@@ -51,8 +49,4 @@ import { RecoveryModule } from '@recovery/recovery.module';
     }
   ]
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(BasicAuthMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}

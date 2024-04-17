@@ -1,7 +1,10 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 
-export class InvalidTokenException extends UnauthorizedException {
-  constructor() {
-    super('invalid-token');
+export class InvalidTokenException extends BadRequestException {
+  readonly message: string;
+
+  constructor(message = 'invalid-token') {
+    super(message);
+    this.message = message;
   }
 }

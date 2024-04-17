@@ -1,8 +1,9 @@
-FROM node:18.3.0 as development
+FROM node:latest
 
 WORKDIR /usr/src/personal-blog-api
 
 RUN npm i -g nest
+RUN npm i -g @nestjs/cli
 
 COPY package*.json ./
 

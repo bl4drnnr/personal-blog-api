@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   CreatedAt,
   DataType,
@@ -31,6 +32,9 @@ export class Session extends Model<Session, SessionCreationAttributes> {
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;
+
+  @BelongsTo(() => User)
+  user: User;
 
   @CreatedAt
   @Column({ field: 'created_at' })

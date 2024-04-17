@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import * as CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';
 import * as bcryptjs from 'bcryptjs';
 import { Injectable } from '@nestjs/common';
 import { ApiConfigService } from '@shared/config.service';

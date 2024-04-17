@@ -8,15 +8,15 @@ import {
   UseGuards,
   UsePipes
 } from '@nestjs/common';
-import { AuthService } from '@auth/auth.service';
+import { AuthService } from '@modules/auth.service';
 import { Transaction } from 'sequelize';
+import { AuthGuard } from '@guards/auth.guard';
 import { ValidationPipe } from '@pipes/validation.pipe';
-import { TransactionParam } from '@decorators/transaction.decorator';
+import { TrxDecorator } from '@decorators/transaction.decorator';
+import { UserId } from '@decorators/user-id.decorator';
 import { CookieRefreshToken } from '@decorators/cookie-refresh-token.decorator';
-import { UserId } from '@decorators/user.decorator';
-import { AuthGuard } from '@guards/jwt.guard';
 import { LogInUserDto } from '@dto/log-in-user.dto';
-import { RegistrationDto } from '@dto/registration.dto';
+import { CreateUserDto } from '@dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,15 +24,15 @@ export class AuthController {
 
   @UsePipes(ValidationPipe)
   @Post('login')
-  login(@Body() payload: LogInUserDto, @TransactionParam() trx: Transaction) {
+  login(@Body() payload: LogInUserDto, @TrxDecorator() trx: Transaction) {
     return this.authService.login({ payload, trx });
   }
 
   @UsePipes(ValidationPipe)
   @Post('registration')
   registration(
-    @Body() payload: RegistrationDto,
-    @TransactionParam() trx: Transaction
+    @Body() payload: CreateUserDto,
+    @TrxDecorator() trx: Transaction
   ) {
     return this.authService.registration({ payload, trx });
   }
@@ -42,7 +42,7 @@ export class AuthController {
   async logout(
     @UserId() userId: string,
     @Res() res: any,
-    @TransactionParam() trx: Transaction
+    @TrxDecorator() trx: Transaction
   ) {
     res.clearCookie('_rt');
 
@@ -52,9 +52,9 @@ export class AuthController {
   }
 
   @Get('refresh')
-  refreshTokens(
+  refreshToken(
     @CookieRefreshToken() refreshToken: string,
-    @TransactionParam() trx: Transaction
+    @TrxDecorator() trx: Transaction
   ) {
     return this.authService.refreshToken({
       refreshToken,

@@ -1,14 +1,17 @@
 import { Global, Module } from '@nestjs/common';
 import { ApiConfigService } from '@shared/config.service';
-import { CryptographicService } from '@shared/cryptographic.service';
 import { EmailService } from '@shared/email.service';
+import { ConfirmationHashModule } from '@modules/confirmation-hash/confirmation-hash.module';
+import { UsersModule } from '@modules/users.module';
+import { CryptographicService } from '@shared/cryptographic.service';
+import { TimeService } from '@shared/time.service';
 import { EmailTemplatesService } from '@shared/email-templates.service';
-import { ConfirmationHashModule } from '@confirmation-hash/confirmation-hash.module';
 
 const providers = [
   ApiConfigService,
-  CryptographicService,
   EmailService,
+  CryptographicService,
+  TimeService,
   EmailTemplatesService
 ];
 
@@ -16,6 +19,6 @@ const providers = [
 @Module({
   providers,
   exports: [...providers],
-  imports: [ConfirmationHashModule]
+  imports: [ConfirmationHashModule, UsersModule]
 })
 export class SharedModule {}
