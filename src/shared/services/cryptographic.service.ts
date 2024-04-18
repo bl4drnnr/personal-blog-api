@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 import * as bcryptjs from 'bcryptjs';
 import { Injectable } from '@nestjs/common';
 import { ApiConfigService } from '@shared/config.service';
@@ -8,7 +8,6 @@ import { HashPassphraseInterface } from '@interfaces/hash-passphrase.interface';
 import { EncryptInterface } from '@interfaces/encrypt.interface';
 import { DecryptInterface } from '@interfaces/decrypt.interface';
 import { EncryptRecoveryKeysInterface } from '@interfaces/encrypt-recovery-keys.interface';
-import { DecryptRecoveryKeysInterface } from '@interfaces/decrypt-recovery-keys.interface';
 import { HashPasswordInterface } from '@interfaces/hash-password.interface';
 import { ComparePasswordsInterface } from '@interfaces/compare-passwords.interface';
 
@@ -83,16 +82,6 @@ export class CryptographicService {
     const recoveryKeysStr = recoveryKeys.join(',');
     return this.encrypt({
       data: recoveryKeysStr,
-      passphrase: hashedPassphrase
-    });
-  }
-
-  decryptRecoveryKeys({
-    encryptedRecoveryKeys,
-    hashedPassphrase
-  }: DecryptRecoveryKeysInterface) {
-    return this.decrypt({
-      ciphertext: encryptedRecoveryKeys,
       passphrase: hashedPassphrase
     });
   }

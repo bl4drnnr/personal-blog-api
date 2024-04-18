@@ -2,7 +2,9 @@ import { SecurityPayloadInterface } from '@interfaces/security-payload.interface
 import { registrationTemplate } from '@email-templates/registration.template';
 import { EmailTemplateInterface } from '@interfaces/email-template.interface';
 import { forgotPasswordTemplate } from '@email-templates/forgot-password.template';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class EmailTemplatesService {
   registrationEmailTemplate({
     userInfo,

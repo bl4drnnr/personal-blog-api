@@ -13,6 +13,8 @@ import { UsersModule } from '@modules/users/users.module';
 import { ConfirmationHashModule } from '@modules/confirmation-hash/confirmation-hash.module';
 import TYPES = Transaction.TYPES;
 import { SharedModule } from '@shared/shared.module';
+import { SecurityModule } from './modules/security/security.module';
+import { RecoveryModule } from './modules/recovery/recovery.module';
 
 @Module({
   imports: [
@@ -40,7 +42,9 @@ import { SharedModule } from '@shared/shared.module';
     AuthModule,
     UsersModule,
     ConfirmationHashModule,
-    SharedModule
+    SharedModule,
+    SecurityModule,
+    RecoveryModule
   ],
   providers: [
     {

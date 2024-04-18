@@ -9,12 +9,15 @@ import { Routes } from '@interfaces/routes.enum';
 import { GetConfirmLinkInterface } from '@interfaces/get-confirm-link.interface';
 import { SendEmailInterface } from '@interfaces/send-email.interface';
 import { EmailConfirmHashInterface } from '@interfaces/email-confirm-hash.interface';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
+@Injectable()
 export class EmailService {
   constructor(
     private readonly configService: ApiConfigService,
     private readonly cryptographicService: CryptographicService,
     private readonly emailTemplatesService: EmailTemplatesService,
+    @Inject(forwardRef(() => ConfirmationHashService))
     private readonly confirmationHashService: ConfirmationHashService
   ) {
     SendGrid.setApiKey(this.configService.sendGridCredentials.apiKey);

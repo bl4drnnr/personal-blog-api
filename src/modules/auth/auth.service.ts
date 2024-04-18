@@ -1,3 +1,4 @@
+import * as speakeasy from 'speakeasy';
 import * as uuid from 'uuid';
 import * as jwt from 'jsonwebtoken';
 import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
@@ -79,9 +80,7 @@ export class AuthService {
     try {
       const mfaStatusResponse = await this.checkUserMfaStatus({
         mfaCode,
-        userSettings,
-        userId,
-        trx
+        userSettings
       });
 
       if (mfaStatusResponse) return mfaStatusResponse;
@@ -173,20 +172,17 @@ export class AuthService {
     return { _at, _rt };
   }
 
-  async checkUserMfaStatus({
-    mfaCode,
-    userSettings,
-    userId,
-    trx
-  }: CheckMfaStatusInterface) {
+  async checkUserMfaStatus({ mfaCode, userSettings }: CheckMfaStatusInterface) {
     const { twoFaToken: userTwoFaToken } = userSettings;
 
     if (!mfaCode && userTwoFaToken) return new TokenTwoFaRequiredDto();
 
     if (mfaCode && userTwoFaToken) {
-      // @TODO Continue here
-      // const delta = node2fa.verifyToken(userTwoFaToken, mfaCode);
-      const delta = { delta: 0 };
+      const delta = speakeasy.totp.verifyDelta({
+        secret: userTwoFaToken,
+        encoding: 'base32',
+        token: mfaCode
+      });
 
       if (!delta || (delta && delta.delta !== 0))
         throw new WrongCodeException();

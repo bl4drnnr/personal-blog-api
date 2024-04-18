@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { json, urlencoded } from 'express';
 
 (async () => {
-  const whitelist = [];
+  const whitelist = ['http://localhost:4200'];
 
   const app = await NestFactory.create(AppModule);
   const port = process.env.API_PORT || 4201;

@@ -17,7 +17,7 @@ const providers = [
 
 @Global()
 @Module({
-  providers,
+  providers: [...providers],
   exports: [...providers],
   imports: [ConfirmationHashModule, UsersModule]
 })

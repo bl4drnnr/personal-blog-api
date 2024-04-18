@@ -15,7 +15,7 @@ import { ValidationPipe } from '@pipes/validation.pipe';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { UserId } from '@decorators/user-id.decorator';
 import { CookieRefreshToken } from '@decorators/cookie-refresh-token.decorator';
-import { LogInUserDto } from '@dto/log-in-user.dto';
+import { LogInUserDto, LogInUserResponseDto } from '@dto/log-in-user.dto';
 import { CreateUserDto } from '@dto/create-user.dto';
 
 @Controller('auth')
@@ -24,8 +24,19 @@ export class AuthController {
 
   @UsePipes(ValidationPipe)
   @Post('login')
-  login(@Body() payload: LogInUserDto, @TrxDecorator() trx: Transaction) {
-    return this.authService.login({ payload, trx });
+  async login(
+    @Body() payload: LogInUserDto,
+    @Res({ passthrough: true }) res: any,
+    @TrxDecorator() trx: Transaction
+  ) {
+    const response = await this.authService.login({ payload, trx });
+
+    if (response instanceof LogInUserResponseDto) {
+      res.cookie('_rt', response._rt, { httpOnly: true });
+      return { _at: response._at };
+    } else {
+      return response;
+    }
   }
 
   @UsePipes(ValidationPipe)
