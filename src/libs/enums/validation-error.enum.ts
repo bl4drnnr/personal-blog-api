@@ -12,5 +12,9 @@ export enum ValidationError {
   WRONG_LAST_NAME_LENGTH = 'wrong-last-name-length',
   WRONG_PASSPHRASE_FORMAT = 'wrong-passphrase-format',
   WRONG_PASSPHRASE_LENGTH = 'wrong-passphrase-length',
-  WRONG_REC_KEYS = 'corrupted-recovery-keys'
+  WRONG_REC_KEYS = 'corrupted-recovery-keys',
+  WRONG_POST_NAME_FORMAT = 'wrong-post-name-format',
+  WRONG_POST_NAME_LENGTH = 'wrong-post-name-length',
+  WRONG_POST_DESC_FORMAT = 'wrong-post-description-format',
+  WRONG_POST_DESC_LENGTH = 'wrong-post-description-length'
 }

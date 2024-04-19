@@ -4,7 +4,6 @@ export const CookieRefreshToken = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const cookies = request.headers.cookie;
-    console.log('cookies', cookies);
     const refreshToken = cookies
       .split(';')
       .find((cookie) => cookie.trim().startsWith('_rt='))

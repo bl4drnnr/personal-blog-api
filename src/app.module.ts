@@ -13,8 +13,10 @@ import { UsersModule } from '@modules/users/users.module';
 import { ConfirmationHashModule } from '@modules/confirmation-hash/confirmation-hash.module';
 import TYPES = Transaction.TYPES;
 import { SharedModule } from '@shared/shared.module';
-import { SecurityModule } from './modules/security/security.module';
-import { RecoveryModule } from './modules/recovery/recovery.module';
+import { SecurityModule } from '@modules/security.module';
+import { RecoveryModule } from '@modules/recovery.module';
+import { PostsModule } from '@modules/posts/posts.module';
+import { PostModel } from '@models/post.model';
 
 @Module({
   imports: [
@@ -36,7 +38,7 @@ import { RecoveryModule } from './modules/recovery/recovery.module';
       //   }
       // },
       transactionType: TYPES.EXCLUSIVE,
-      models: [User, Session, UserSettings, ConfirmationHash],
+      models: [User, Session, UserSettings, ConfirmationHash, PostModel],
       autoLoadModels: true
     }),
     AuthModule,
@@ -44,7 +46,8 @@ import { RecoveryModule } from './modules/recovery/recovery.module';
     ConfirmationHashModule,
     SharedModule,
     SecurityModule,
-    RecoveryModule
+    RecoveryModule,
+    PostsModule
   ],
   providers: [
     {

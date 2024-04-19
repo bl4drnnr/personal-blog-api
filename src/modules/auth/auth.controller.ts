@@ -63,13 +63,16 @@ export class AuthController {
   }
 
   @Get('refresh')
-  refreshToken(
+  async refreshToken(
     @CookieRefreshToken() refreshToken: string,
+    @Res({ passthrough: true }) res: any,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.authService.refreshToken({
+    const response = await this.authService.refreshToken({
       refreshToken,
       trx
     });
+    res.cookie('_rt', response._rt, { httpOnly: true });
+    return { _at: response._at };
   }
 }

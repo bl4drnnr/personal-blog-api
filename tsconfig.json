@@ -38,6 +38,8 @@
         "src/dto/security/responses/*",
         "src/dto/confirmation-hash/requests/*",
         "src/dto/confirmation-hash/responses/*",
+        "src/dto/posts/requests/*",
+        "src/dto/posts/responses/*",
         "src/dto/auth/requests/*",
         "src/dto/auth/responses/*",
         "src/dto/recovery/requests/*",
@@ -67,7 +69,8 @@
         "src/libs/interfaces/users/*",
         "src/libs/interfaces/cryptography/*",
         "src/libs/interfaces/phone/*",
-        "src/libs/interfaces/time/*"
+        "src/libs/interfaces/time/*",
+        "src/libs/interfaces/posts/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [
