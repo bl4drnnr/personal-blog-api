@@ -12,8 +12,8 @@ import {
 } from 'sequelize-typescript';
 import { Session } from '@models/session.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
-import { UserSettings } from './user-settings.model';
-import { PostModel } from '@models/post.model';
+import { ArticleModel } from '@models/article.model';
+import { UserSettings } from '@models/user-settings.model';
 
 interface UserCreationAttributes {
   email: string;
@@ -57,8 +57,8 @@ export class User extends Model<User, UserCreationAttributes> {
   @HasMany(() => ConfirmationHash)
   confirmationHashes: Array<ConfirmationHash>;
 
-  @HasMany(() => PostModel)
-  posts: Array<PostModel>;
+  @HasMany(() => ArticleModel)
+  articles: Array<ArticleModel>;
 
   @HasOne(() => Session)
   session: Session;

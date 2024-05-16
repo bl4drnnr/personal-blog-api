@@ -15,8 +15,9 @@ import TYPES = Transaction.TYPES;
 import { SharedModule } from '@shared/shared.module';
 import { SecurityModule } from '@modules/security.module';
 import { RecoveryModule } from '@modules/recovery.module';
-import { PostsModule } from '@modules/posts/posts.module';
-import { PostModel } from '@models/post.model';
+import { ArticlesModule } from '@modules/articles.module';
+import { ArticleModel } from '@models/article.model';
+import { CategoryModel } from '@models/category.model';
 
 @Module({
   imports: [
@@ -38,7 +39,14 @@ import { PostModel } from '@models/post.model';
       //   }
       // },
       transactionType: TYPES.EXCLUSIVE,
-      models: [User, Session, UserSettings, ConfirmationHash, PostModel],
+      models: [
+        User,
+        Session,
+        UserSettings,
+        ConfirmationHash,
+        ArticleModel,
+        CategoryModel
+      ],
       autoLoadModels: true
     }),
     AuthModule,
@@ -47,7 +55,7 @@ import { PostModel } from '@models/post.model';
     SharedModule,
     SecurityModule,
     RecoveryModule,
-    PostsModule
+    ArticlesModule
   ],
   providers: [
     {

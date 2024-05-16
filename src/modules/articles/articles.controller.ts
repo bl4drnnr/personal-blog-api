@@ -1,22 +1,22 @@
 import { Body, Controller, Post, UseGuards, UsePipes } from '@nestjs/common';
-import { PostsService } from '@modules/posts/posts.service';
+import { ArticlesService } from '@modules/articles.service';
 import { AuthGuard } from '@guards/auth.guard';
 import { UserId } from '@decorators/user-id.decorator';
 import { Transaction } from 'sequelize';
 import { TrxDecorator } from '@decorators/transaction.decorator';
-import { CreatePostDto } from '@dto/create-post.dto';
+import { CreateArticleDto } from '@dto/create-article.dto';
 import { ValidationPipe } from '@pipes/validation.pipe';
 
-@Controller('posts')
-export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+@Controller('articles')
+export class ArticlesController {
+  constructor(private readonly postsService: ArticlesService) {}
 
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   @Post('create')
   createPost(
     @UserId() userId: string,
-    @Body() payload: CreatePostDto,
+    @Body() payload: CreateArticleDto,
     @TrxDecorator() trx: Transaction
   ) {
     return this.postsService.createPost({
