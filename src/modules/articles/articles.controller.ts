@@ -9,7 +9,7 @@ import { ValidationPipe } from '@pipes/validation.pipe';
 
 @Controller('articles')
 export class ArticlesController {
-  constructor(private readonly postsService: ArticlesService) {}
+  constructor(private readonly articlesService: ArticlesService) {}
 
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
@@ -19,7 +19,7 @@ export class ArticlesController {
     @Body() payload: CreateArticleDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.postsService.createPost({
+    return this.articlesService.createArticle({
       userId,
       payload,
       trx

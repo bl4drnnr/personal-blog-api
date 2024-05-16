@@ -28,6 +28,7 @@
         "src/exceptions/confirmation-hash/*",
         "src/exceptions/security/*",
         "src/exceptions/validation/*",
+        "src/exceptions/categories/*",
         "src/exceptions/recovery/*"
       ],
       "@dto/*": [
@@ -40,6 +41,8 @@
         "src/dto/confirmation-hash/responses/*",
         "src/dto/articles/requests/*",
         "src/dto/articles/responses/*",
+        "src/dto/categories/requests/*",
+        "src/dto/categories/responses/*",
         "src/dto/auth/requests/*",
         "src/dto/auth/responses/*",
         "src/dto/recovery/requests/*",
@@ -56,7 +59,8 @@
         "src/modules/confirmation-hash/*",
         "src/modules/recovery/*",
         "src/modules/security/*",
-        "src/modules/articles/*"
+        "src/modules/articles/*",
+        "src/modules/categories/*"
       ],
       "@interfaces/*": [
         "src/libs/enums/*",
@@ -71,7 +75,8 @@
         "src/libs/interfaces/cryptography/*",
         "src/libs/interfaces/phone/*",
         "src/libs/interfaces/time/*",
-        "src/libs/interfaces/articles/*"
+        "src/libs/interfaces/articles/*",
+        "src/libs/interfaces/categories/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [

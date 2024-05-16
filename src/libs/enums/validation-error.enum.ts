@@ -13,8 +13,15 @@ export enum ValidationError {
   WRONG_PASSPHRASE_FORMAT = 'wrong-passphrase-format',
   WRONG_PASSPHRASE_LENGTH = 'wrong-passphrase-length',
   WRONG_REC_KEYS = 'corrupted-recovery-keys',
-  WRONG_POST_NAME_FORMAT = 'wrong-post-name-format',
-  WRONG_POST_NAME_LENGTH = 'wrong-post-name-length',
-  WRONG_POST_DESC_FORMAT = 'wrong-post-description-format',
-  WRONG_POST_DESC_LENGTH = 'wrong-post-description-length'
+  WRONG_ARTICLE_NAME_FORMAT = 'wrong-article-name-format',
+  WRONG_ARTICLE_NAME_LENGTH = 'wrong-article-name-length',
+  WRONG_ARTICLE_DESC_FORMAT = 'wrong-article-description-format',
+  WRONG_ARTICLE_DESC_LENGTH = 'wrong-article-description-length',
+  WRONG_CATEGORY_NAME_FORMAT = 'wrong-category-name-format',
+  WRONG_CATEGORY_NAME_LENGTH = 'wrong-category-name-length',
+  WRONG_CATEGORY_DESC_FORMAT = 'wrong-category-description-format',
+  WRONG_CATEGORY_DESC_LENGTH = 'wrong-category-description-length',
+  WRONG_ARTICLE_CONTENT_FORMAT = 'wrong-category-content-format',
+  WRONG_ARTICLE_CONTENT_LENGTH = 'wrong-category-content-length',
+  WRONG_CATEGORY_ID_FORMAT = 'wrong-category-id-format'
 }

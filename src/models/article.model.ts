@@ -18,6 +18,8 @@ interface ArticleCreationAttributes {
   articleSlug: string;
   articleDescription: string;
   articleTags: Array<string>;
+  articleContent: string;
+  articleImage: string;
   userId: string;
   categoryId: string;
 }
@@ -56,6 +58,20 @@ export class ArticleModel extends Model<
     field: 'article_tags'
   })
   articleTags: Array<string>;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+    field: 'article_content'
+  })
+  articleContent: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'article_image'
+  })
+  articleImage: string;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })

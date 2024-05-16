@@ -18,6 +18,7 @@ import { RecoveryModule } from '@modules/recovery.module';
 import { ArticlesModule } from '@modules/articles.module';
 import { ArticleModel } from '@models/article.model';
 import { CategoryModel } from '@models/category.model';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
   imports: [
@@ -55,7 +56,8 @@ import { CategoryModel } from '@models/category.model';
     SharedModule,
     SecurityModule,
     RecoveryModule,
-    ArticlesModule
+    ArticlesModule,
+    CategoriesModule
   ],
   providers: [
     {
