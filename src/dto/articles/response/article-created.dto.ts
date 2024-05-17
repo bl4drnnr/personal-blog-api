@@ -1,7 +1,9 @@
 export class ArticleCreatedDto {
+  readonly link: string;
   readonly message: string;
 
-  constructor(message = 'article-created') {
+  constructor(link: string, message = 'article-created') {
+    this.link = link;
     this.message = message;
   }
 }

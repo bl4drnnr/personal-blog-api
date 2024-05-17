@@ -3,9 +3,11 @@ import {
   IsArray,
   IsString,
   IsUUID,
+  Matches,
   MinLength
 } from 'class-validator';
 import { ValidationError } from '@interfaces/validation-error.enum';
+import { ImageRegex } from '@regex/image.regex';
 
 export class CreateArticleDto {
   @IsString({ message: ValidationError.WRONG_ARTICLE_NAME_FORMAT })
@@ -23,6 +25,9 @@ export class CreateArticleDto {
   @IsArray()
   @ArrayMinSize(1)
   readonly articleTags: Array<string>;
+
+  @Matches(ImageRegex, { message: ValidationError.WRONG_IMAGE_FORMAT })
+  readonly articlePicture: string;
 
   @IsUUID('4', { message: ValidationError.WRONG_CATEGORY_ID_FORMAT })
   readonly categoryId: string;

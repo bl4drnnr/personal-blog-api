@@ -50,7 +50,6 @@ export class CategoriesController {
     return this.categoriesService.editCategory({ payload, trx });
   }
 
-  @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   @Delete('delete')
   deleteCategory(
