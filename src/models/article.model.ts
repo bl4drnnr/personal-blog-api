@@ -81,6 +81,9 @@ export class ArticleModel extends Model<
   @Column({ type: DataType.UUID, allowNull: false, field: 'category_id' })
   categoryId: string;
 
+  @BelongsTo(() => CategoryModel)
+  category: CategoryModel;
+
   @BelongsTo(() => User)
   user: User;
 

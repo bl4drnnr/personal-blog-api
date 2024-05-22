@@ -54,4 +54,24 @@ export class ArticlesController {
       trx
     });
   }
+
+  @UseGuards(AuthGuard)
+  @Get('list')
+  listArticles(
+    @Query('query') query: string,
+    @Query('page') page: string,
+    @Query('pageSize') pageSize: string,
+    @Query('order') order: string,
+    @Query('orderBy') orderBy: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.articlesService.listArticles({
+      query,
+      page,
+      pageSize,
+      order,
+      orderBy,
+      trx
+    });
+  }
 }

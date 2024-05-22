@@ -15,6 +15,11 @@ import { ArticleNotFoundException } from '@exceptions/articles/article-not-found
 import { DeleteArticleInterface } from '@interfaces/delete-article.interface';
 import { GetArticleByIdInterface } from '@interfaces/get-article-by-id.interface';
 import { ArticleDeletedDto } from '@dto/articles/response/article-deleted.dto';
+import { ListArticlesInterface } from '@interfaces/list-articles.interface';
+import { ParseException } from '@exceptions/parse.exception';
+import { Op } from 'sequelize';
+import { ListArticlesDto } from '@dto/articles/response/list-articles.dto';
+import { CategoryModel } from '@models/category.model';
 
 @Injectable()
 export class ArticlesService {
@@ -98,6 +103,54 @@ export class ArticlesService {
     return new ArticleDeletedDto();
   }
 
+  async listArticles({
+    query,
+    page,
+    pageSize,
+    order,
+    orderBy,
+    trx
+  }: ListArticlesInterface) {
+    const offset = Number(page) * Number(pageSize);
+    const limit = Number(pageSize);
+
+    const paginationParseError =
+      isNaN(offset) || isNaN(limit) || offset < 0 || limit < 0;
+
+    if (paginationParseError) throw new ParseException();
+
+    const attributes = [
+      'id',
+      'articleName',
+      'articleSlug',
+      'articleDescription',
+      'articleTags',
+      'articleImage'
+    ];
+
+    const where = {};
+
+    if (query) {
+      where[Op.or] = [
+        { articleName: { [Op.iLike]: `%${query}%` } },
+        { articleSlug: { [Op.iLike]: `%${query}%` } },
+        { articleDescription: { [Op.iLike]: `%${query}%` } }
+      ];
+    }
+
+    const { rows, count } = await this.articleRepository.findAndCountAll({
+      where,
+      attributes,
+      limit,
+      offset,
+      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
+      order: [[order, orderBy]],
+      transaction: trx
+    });
+
+    return new ListArticlesDto(rows, count);
+  }
+
   private async uploadArticlePicture(picture: string) {
     const { accessKeyId, secretAccessKey, bucketName } =
       this.configService.awsSdkCredentials;
@@ -119,9 +172,11 @@ export class ArticlesService {
       algorithm: CryptoHashAlgorithm.MD5
     });
 
+    const pictureName = `${pictureHash}.${type}`;
+
     const params = {
       Bucket: bucketName,
-      Key: `articles-main-pictures/${pictureHash}.${type}`,
+      Key: `articles-main-pictures/${pictureName}`,
       Body: base64Data,
       ContentEncoding: 'base64',
       ContentType: `image/${type}`
@@ -129,7 +184,7 @@ export class ArticlesService {
 
     await s3.upload(params).promise();
 
-    return `${pictureHash}.${type}`;
+    return pictureName;
   }
 
   private generateArticleSlug(articleName: string) {
