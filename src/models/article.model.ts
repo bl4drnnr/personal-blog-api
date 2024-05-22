@@ -73,6 +73,14 @@ export class ArticleModel extends Model<
   })
   articleImage: string;
 
+  @Default(false)
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    field: 'article_posted'
+  })
+  articlePosted: boolean;
+
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;

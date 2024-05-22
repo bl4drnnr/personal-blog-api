@@ -23,5 +23,6 @@ export enum ValidationError {
   WRONG_CATEGORY_DESC_LENGTH = 'wrong-category-description-length',
   WRONG_ARTICLE_CONTENT_FORMAT = 'wrong-category-content-format',
   WRONG_ARTICLE_CONTENT_LENGTH = 'wrong-category-content-length',
-  WRONG_CATEGORY_ID_FORMAT = 'wrong-category-id-format'
+  WRONG_CATEGORY_ID_FORMAT = 'wrong-category-id-format',
+  WRONG_ARTICLE_ID_FORMAT = 'wrong-article-id-format'
 }

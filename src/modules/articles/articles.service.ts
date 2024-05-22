@@ -20,6 +20,11 @@ import { ParseException } from '@exceptions/parse.exception';
 import { Op } from 'sequelize';
 import { ListArticlesDto } from '@dto/articles/response/list-articles.dto';
 import { CategoryModel } from '@models/category.model';
+import { GetAllPostedArticlesInterface } from '@interfaces/get-all-posted-articles.interface';
+import { EditArticleInterface } from '@interfaces/edit-article.interface';
+import { ArticleEditedDto } from '@dto/articles/response/article-edited.dto';
+import { PublishArticleInterface } from '@interfaces/publish-article.interface';
+import { ArticlePublishStatusDto } from '@dto/articles/response/article-published.dto';
 
 @Injectable()
 export class ArticlesService {
@@ -31,8 +36,37 @@ export class ArticlesService {
     private readonly cryptographicService: CryptographicService
   ) {}
 
+  async getAllPostedArticles({ trx }: GetAllPostedArticlesInterface) {
+    const attributes = [
+      'articleName',
+      'articleSlug',
+      'articleDescription',
+      'articleTags',
+      'articleContent',
+      'articleImage',
+      'articlePosted'
+    ];
+
+    return this.articleRepository.findAll({
+      attributes,
+      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
+      transaction: trx
+    });
+  }
+
   async getArticleById({ articleId, trx }: GetArticleByIdInterface) {
     const article = await this.articleRepository.findByPk(articleId, {
+      transaction: trx
+    });
+
+    if (!article) throw new ArticleNotFoundException();
+
+    return article;
+  }
+
+  async getPostedArticleBySlug({ slug, trx }: GetArticleBySlugInterface) {
+    const article = await this.articleRepository.findOne({
+      where: { articleSlug: slug, articlePosted: true },
       transaction: trx
     });
 
@@ -44,6 +78,7 @@ export class ArticlesService {
   async getArticleBySlug({ slug, trx }: GetArticleBySlugInterface) {
     const article = await this.articleRepository.findOne({
       where: { articleSlug: slug },
+      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
       transaction: trx
     });
 
@@ -92,6 +127,20 @@ export class ArticlesService {
     return new ArticleCreatedDto(articleLink);
   }
 
+  async changePublishArticleStatus({
+    articleId,
+    trx
+  }: PublishArticleInterface) {
+    const existingArticle = await this.getArticleById({ articleId, trx });
+
+    await this.articleRepository.update(
+      { articlePosted: !existingArticle.articlePosted },
+      { where: { id: existingArticle.id }, transaction: trx }
+    );
+
+    return new ArticlePublishStatusDto();
+  }
+
   async deleteArticle({ articleId, trx }: DeleteArticleInterface) {
     await this.getArticleById({ articleId, trx });
 
@@ -101,6 +150,54 @@ export class ArticlesService {
     });
 
     return new ArticleDeletedDto();
+  }
+
+  async editArticle({ payload, trx }: EditArticleInterface) {
+    const {
+      articleId,
+      articleName,
+      articleDescription,
+      articlePicture,
+      articleTags,
+      articleContent,
+      categoryId
+    } = payload;
+
+    const existingArticle = await this.getArticleById({ articleId, trx });
+
+    if (!existingArticle) throw new ArticleNotFoundException();
+
+    const articleUpdatedFields: Partial<ArticleModel> = {};
+
+    if (articleName) articleUpdatedFields.articleName = articleName;
+    if (articleDescription)
+      articleUpdatedFields.articleDescription = articleDescription;
+    if (articleContent) articleUpdatedFields.articleContent = articleContent;
+    if (articleTags) articleUpdatedFields.articleTags = articleTags;
+
+    if (categoryId) {
+      const category = await this.categoryService.getCategoryById({
+        categoryId,
+        trx
+      });
+
+      if (!category) throw new CategoryNotFoundException();
+
+      articleUpdatedFields.categoryId = category.id;
+    }
+
+    if (articlePicture) {
+      await this.deleteArticlePicture(existingArticle.articleImage);
+      articleUpdatedFields.articleImage =
+        await this.uploadArticlePicture(articlePicture);
+    }
+
+    await this.articleRepository.update(
+      { ...articleUpdatedFields },
+      { where: { id: articleId }, transaction: trx }
+    );
+
+    return new ArticleEditedDto();
   }
 
   async listArticles({
@@ -125,7 +222,8 @@ export class ArticlesService {
       'articleSlug',
       'articleDescription',
       'articleTags',
-      'articleImage'
+      'articleImage',
+      'articlePosted'
     ];
 
     const where = {};
@@ -185,6 +283,21 @@ export class ArticlesService {
     await s3.upload(params).promise();
 
     return pictureName;
+  }
+
+  private async deleteArticlePicture(picture: string) {
+    const { accessKeyId, secretAccessKey, bucketName } =
+      this.configService.awsSdkCredentials;
+
+    const s3 = new S3({ accessKeyId, secretAccessKey });
+
+    const params = {
+      Bucket: bucketName,
+      Key: `articles-main-pictures/${picture}`
+    };
+    console.log('params', params);
+
+    await s3.deleteObject(params).promise();
   }
 
   private generateArticleSlug(articleName: string) {

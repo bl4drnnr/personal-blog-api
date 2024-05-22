@@ -6,5 +6,5 @@ export interface ListArticlesInterface {
   pageSize: string;
   order: string;
   orderBy: string;
-  trx: Transaction;
+  trx?: Transaction;
 }

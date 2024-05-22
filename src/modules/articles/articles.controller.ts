@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -15,11 +16,26 @@ import { Transaction } from 'sequelize';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { CreateArticleDto } from '@dto/create-article.dto';
 import { ValidationPipe } from '@pipes/validation.pipe';
+import { EditArticleDto } from '@dto/edit-article.dto';
 
 @Controller('articles')
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
+  @Get('all-posted-articles')
+  getAllPostedArticles(@TrxDecorator() trx: Transaction) {
+    return this.articlesService.getAllPostedArticles({ trx });
+  }
+
+  @Get('get-posted-by-slug')
+  getPostedArticleBySlug(
+    @Query('slug') slug: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.articlesService.getPostedArticleBySlug({ slug, trx });
+  }
+
+  @UseGuards(AuthGuard)
   @Get('get-by-slug')
   getArticleBySlug(
     @Query('slug') slug: string,
@@ -44,6 +60,15 @@ export class ArticlesController {
   }
 
   @UseGuards(AuthGuard)
+  @Patch('change-publish')
+  changePublishArticleStatus(
+    @Query('articleId') articleId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.articlesService.changePublishArticleStatus({ articleId, trx });
+  }
+
+  @UseGuards(AuthGuard)
   @Delete('delete')
   deleteArticle(
     @Query('articleId') articleId: string,
@@ -53,6 +78,16 @@ export class ArticlesController {
       articleId,
       trx
     });
+  }
+
+  @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
+  @Patch('edit')
+  editArticle(
+    @Body() payload: EditArticleDto,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.articlesService.editArticle({ payload, trx });
   }
 
   @UseGuards(AuthGuard)
