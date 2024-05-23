@@ -17,6 +17,7 @@ import { TrxDecorator } from '@decorators/transaction.decorator';
 import { CreateArticleDto } from '@dto/create-article.dto';
 import { ValidationPipe } from '@pipes/validation.pipe';
 import { EditArticleDto } from '@dto/edit-article.dto';
+import { Language } from '@interfaces/language.enum';
 
 @Controller('articles')
 export class ArticlesController {
@@ -30,18 +31,20 @@ export class ArticlesController {
   @Get('get-posted-by-slug')
   getPostedArticleBySlug(
     @Query('slug') slug: string,
+    @Query('language') language: Language,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.articlesService.getPostedArticleBySlug({ slug, trx });
+    return this.articlesService.getPostedArticleBySlug({ slug, language, trx });
   }
 
   @UseGuards(AuthGuard)
   @Get('get-by-slug')
   getArticleBySlug(
     @Query('slug') slug: string,
+    @Query('language') language: Language,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.articlesService.getArticleBySlug({ slug, trx });
+    return this.articlesService.getArticleBySlug({ slug, language, trx });
   }
 
   @UsePipes(ValidationPipe)

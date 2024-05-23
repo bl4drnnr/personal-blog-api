@@ -56,7 +56,11 @@ export class ArticlesService {
     return articlesSlugs.map(({ articleSlug }) => articleSlug);
   }
 
-  async getPostedArticleBySlug({ slug, trx }: GetArticleBySlugInterface) {
+  async getPostedArticleBySlug({
+    slug,
+    language,
+    trx
+  }: GetArticleBySlugInterface) {
     const attributes = [
       'articleName',
       'articleSlug',
@@ -69,7 +73,11 @@ export class ArticlesService {
 
     const article = await this.articleRepository.findOne({
       attributes,
-      where: { articleSlug: slug, articlePosted: true },
+      where: {
+        articleSlug: slug,
+        articleLanguage: language,
+        articlePosted: true
+      },
       include: [{ model: CategoryModel, attributes: ['categoryName'] }],
       transaction: trx
     });
@@ -79,9 +87,9 @@ export class ArticlesService {
     return article;
   }
 
-  async getArticleBySlug({ slug, trx }: GetArticleBySlugInterface) {
+  async getArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
     const article = await this.articleRepository.findOne({
-      where: { articleSlug: slug },
+      where: { articleSlug: slug, articlePosted: language },
       include: [{ model: CategoryModel, attributes: ['categoryName'] }],
       transaction: trx
     });
@@ -98,7 +106,8 @@ export class ArticlesService {
       articleContent,
       categoryId,
       articleTags,
-      articlePicture
+      articlePicture,
+      articleLanguage
     } = payload;
 
     const articleSlug = this.generateArticleSlug(articleName);
@@ -120,6 +129,7 @@ export class ArticlesService {
         articleTags,
         articleContent,
         articleImage,
+        articleLanguage,
         userId,
         categoryId
       },
@@ -227,7 +237,8 @@ export class ArticlesService {
       'articleDescription',
       'articleTags',
       'articleImage',
-      'articlePosted'
+      'articlePosted',
+      'articleLanguage'
     ];
 
     const where = {};

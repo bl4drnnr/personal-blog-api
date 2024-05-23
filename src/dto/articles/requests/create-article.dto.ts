@@ -1,6 +1,7 @@
 import {
   ArrayMinSize,
   IsArray,
+  IsEnum,
   IsString,
   IsUUID,
   Matches,
@@ -8,6 +9,7 @@ import {
 } from 'class-validator';
 import { ValidationError } from '@interfaces/validation-error.enum';
 import { ImageRegex } from '@regex/image.regex';
+import { Language } from '@interfaces/language.enum';
 
 export class CreateArticleDto {
   @IsString({ message: ValidationError.WRONG_ARTICLE_NAME_FORMAT })
@@ -31,4 +33,7 @@ export class CreateArticleDto {
 
   @IsUUID('4', { message: ValidationError.WRONG_CATEGORY_ID_FORMAT })
   readonly categoryId: string;
+
+  @IsEnum(Language)
+  readonly articleLanguage: Language;
 }
