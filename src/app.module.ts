@@ -18,7 +18,7 @@ import { RecoveryModule } from '@modules/recovery.module';
 import { ArticlesModule } from '@modules/articles.module';
 import { ArticleModel } from '@models/article.model';
 import { CategoryModel } from '@models/category.model';
-import { CategoriesModule } from './modules/categories/categories.module';
+import { CategoriesModule } from '@modules/categories.module';
 
 @Module({
   imports: [

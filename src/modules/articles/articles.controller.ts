@@ -22,9 +22,9 @@ import { EditArticleDto } from '@dto/edit-article.dto';
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
-  @Get('all-posted-articles')
-  getAllPostedArticles(@TrxDecorator() trx: Transaction) {
-    return this.articlesService.getAllPostedArticles({ trx });
+  @Get('get-all-posted-articles-slugs')
+  getAllPostedArticlesSlugs(@TrxDecorator() trx: Transaction) {
+    return this.articlesService.getAllPostedArticlesSlugs({ trx });
   }
 
   @Get('get-posted-by-slug')
