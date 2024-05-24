@@ -1,5 +1,5 @@
 import { Transaction } from 'sequelize';
 
-export interface GetAllPostedArticlesInterface {
+export interface GetAllPostedArticlesSlugs {
   trx?: Transaction;
 }

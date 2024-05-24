@@ -12,6 +12,9 @@ import {
 } from 'sequelize-typescript';
 import { User } from '@models/user.model';
 import { CategoryModel } from '@models/category.model';
+import { Language } from '@interfaces/language.enum';
+
+const languageTypes = [Language.PL, Language.EN, Language.RU];
 
 interface ArticleCreationAttributes {
   articleName: string;
@@ -20,6 +23,7 @@ interface ArticleCreationAttributes {
   articleTags: Array<string>;
   articleContent: string;
   articleImage: string;
+  articleLanguage: Language;
   userId: string;
   categoryId: string;
 }
@@ -72,6 +76,13 @@ export class ArticleModel extends Model<
     field: 'article_image'
   })
   articleImage: string;
+
+  @Column({
+    type: DataType.ENUM(...languageTypes),
+    allowNull: false,
+    field: 'article_language'
+  })
+  articleLanguage: Language;
 
   @Default(false)
   @Column({

@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { S3 } from 'aws-sdk';
 import { Injectable } from '@nestjs/common';
 import { ArticleModel } from '@models/article.model';
@@ -17,14 +18,13 @@ import { GetArticleByIdInterface } from '@interfaces/get-article-by-id.interface
 import { ArticleDeletedDto } from '@dto/articles/response/article-deleted.dto';
 import { ListArticlesInterface } from '@interfaces/list-articles.interface';
 import { ParseException } from '@exceptions/parse.exception';
-import { Op } from 'sequelize';
 import { ListArticlesDto } from '@dto/articles/response/list-articles.dto';
 import { CategoryModel } from '@models/category.model';
-import { GetAllPostedArticlesInterface } from '@interfaces/get-all-posted-articles.interface';
 import { EditArticleInterface } from '@interfaces/edit-article.interface';
 import { ArticleEditedDto } from '@dto/articles/response/article-edited.dto';
 import { PublishArticleInterface } from '@interfaces/publish-article.interface';
 import { ArticlePublishStatusDto } from '@dto/articles/response/article-published.dto';
+import { GetAllPostedArticlesSlugs } from '@interfaces/get-all-posted-articles-slugs.interface';
 
 @Injectable()
 export class ArticlesService {
@@ -36,24 +36,6 @@ export class ArticlesService {
     private readonly cryptographicService: CryptographicService
   ) {}
 
-  async getAllPostedArticles({ trx }: GetAllPostedArticlesInterface) {
-    const attributes = [
-      'articleName',
-      'articleSlug',
-      'articleDescription',
-      'articleTags',
-      'articleContent',
-      'articleImage',
-      'articlePosted'
-    ];
-
-    return this.articleRepository.findAll({
-      attributes,
-      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
-      transaction: trx
-    });
-  }
-
   async getArticleById({ articleId, trx }: GetArticleByIdInterface) {
     const article = await this.articleRepository.findByPk(articleId, {
       transaction: trx
@@ -64,9 +46,39 @@ export class ArticlesService {
     return article;
   }
 
-  async getPostedArticleBySlug({ slug, trx }: GetArticleBySlugInterface) {
+  async getAllPostedArticlesSlugs({ trx }: GetAllPostedArticlesSlugs) {
+    const articlesSlugs = await this.articleRepository.findAll({
+      attributes: ['articleSlug'],
+      where: { articlePosted: true },
+      transaction: trx
+    });
+
+    return articlesSlugs.map(({ articleSlug }) => articleSlug);
+  }
+
+  async getPostedArticleBySlug({
+    slug,
+    language,
+    trx
+  }: GetArticleBySlugInterface) {
+    const attributes = [
+      'articleName',
+      'articleSlug',
+      'articleDescription',
+      'articleTags',
+      'articleContent',
+      'articleImage',
+      'createdAt'
+    ];
+
     const article = await this.articleRepository.findOne({
-      where: { articleSlug: slug, articlePosted: true },
+      attributes,
+      where: {
+        articleSlug: slug,
+        articleLanguage: language,
+        articlePosted: true
+      },
+      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
       transaction: trx
     });
 
@@ -75,9 +87,9 @@ export class ArticlesService {
     return article;
   }
 
-  async getArticleBySlug({ slug, trx }: GetArticleBySlugInterface) {
+  async getArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
     const article = await this.articleRepository.findOne({
-      where: { articleSlug: slug },
+      where: { articleSlug: slug, articlePosted: language },
       include: [{ model: CategoryModel, attributes: ['categoryName'] }],
       transaction: trx
     });
@@ -94,7 +106,8 @@ export class ArticlesService {
       articleContent,
       categoryId,
       articleTags,
-      articlePicture
+      articlePicture,
+      articleLanguage
     } = payload;
 
     const articleSlug = this.generateArticleSlug(articleName);
@@ -116,6 +129,7 @@ export class ArticlesService {
         articleTags,
         articleContent,
         articleImage,
+        articleLanguage,
         userId,
         categoryId
       },
@@ -223,7 +237,8 @@ export class ArticlesService {
       'articleDescription',
       'articleTags',
       'articleImage',
-      'articlePosted'
+      'articlePosted',
+      'articleLanguage'
     ];
 
     const where = {};
