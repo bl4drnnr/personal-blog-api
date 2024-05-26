@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { UsersService } from '@modules/users.service';
@@ -16,10 +16,16 @@ import { ConfirmHashInterface } from '@interfaces/confirm-hash.interface';
 import { GetByHashInterface } from '@interfaces/get-by-hash.interface';
 import { HashNotFoundException } from '@exceptions/hash-not-found.exception';
 import { AccountConfirmedDto } from '@dto/account-confirmed.dto';
+import { ConfirmPasswordResetInterface } from '@interfaces/confirm-password-reset.interface';
+import { TimeService } from '@shared/time.service';
+import { LinkExpiredException } from '@exceptions/link-expired.exception';
+import { PreviousPasswordException } from '@exceptions/previous-password.exception';
+import { PasswordResetDto } from '@dto/password-reset.dto';
 
 @Injectable()
 export class ConfirmationHashService {
   constructor(
+    private readonly timeService: TimeService,
     private readonly cryptographicService: CryptographicService,
     @Inject(forwardRef(() => EmailService))
     private readonly emailService: EmailService,
@@ -56,6 +62,88 @@ export class ConfirmationHashService {
     });
 
     return new AccountConfirmedDto();
+  }
+
+  async confirmResetUserPassword({
+    hash,
+    payload,
+    trx
+  }: ConfirmPasswordResetInterface) {
+    const { password, mfaCode, language } = payload;
+
+    const { foundHash: forgotPasswordHash, user } =
+      await this.getUserByConfirmationHash({
+        confirmationHash: hash,
+        confirmationType: Confirmation.FORGOT_PASSWORD,
+        trx
+      });
+
+    if (!forgotPasswordHash) throw new HashNotFoundException();
+
+    const {
+      id: userId,
+      userSettings,
+      password: currentUserPassword,
+      email,
+      firstName,
+      lastName
+    } = user;
+
+    const isWithinDay = this.timeService.isWithinTimeframe({
+      time: forgotPasswordHash.createdAt,
+      seconds: 86400
+    });
+
+    if (!isWithinDay) throw new LinkExpiredException();
+
+    try {
+      const mfaStatusResponse = await this.authService.checkUserMfaStatus({
+        mfaCode,
+        userSettings
+      });
+
+      if (mfaStatusResponse) return mfaStatusResponse;
+    } catch (e: any) {
+      throw new HttpException(e.response.message, e.status);
+    }
+
+    const hashedPassword = await this.cryptographicService.hashPassword({
+      password
+    });
+
+    const isPreviousPassword = await this.cryptographicService.comparePasswords(
+      {
+        dataToCompare: hashedPassword,
+        hash: currentUserPassword
+      }
+    );
+
+    if (isPreviousPassword) throw new PreviousPasswordException();
+
+    await this.usersService.updateUser({
+      payload: { password: hashedPassword },
+      userId,
+      trx
+    });
+
+    await this.usersService.updateUserSettings({
+      payload: { passwordChanged: new Date() },
+      userId,
+      trx
+    });
+
+    await this.emailService.sendResetPasswordCompleteEmail({
+      userInfo: { firstName, lastName },
+      to: email,
+      language
+    });
+
+    await this.confirmHash({
+      hashId: forgotPasswordHash.id,
+      trx
+    });
+
+    return new PasswordResetDto();
   }
 
   async createConfirmationHash({

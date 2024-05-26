@@ -10,6 +10,7 @@ import { GetConfirmLinkInterface } from '@interfaces/get-confirm-link.interface'
 import { SendEmailInterface } from '@interfaces/send-email.interface';
 import { EmailConfirmHashInterface } from '@interfaces/email-confirm-hash.interface';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { CompletedSecurityEmailInterface } from '@interfaces/completed-security-email.interface';
 
 @Injectable()
 export class EmailService {
@@ -26,6 +27,7 @@ export class EmailService {
   async sendRegistrationConfirmationEmail({
     payload,
     userInfo,
+    language,
     trx
   }: SecurityInitEmailInterface) {
     const confirmationHash =
@@ -49,7 +51,8 @@ export class EmailService {
     const { html, subject } =
       this.emailTemplatesService.registrationEmailTemplate({
         userInfo,
-        link
+        link,
+        language
       });
 
     await this.sendEmail({ to, html, subject });
@@ -58,6 +61,7 @@ export class EmailService {
   async sendForgotPasswordEmail({
     payload,
     userInfo,
+    language,
     trx
   }: SecurityInitEmailInterface) {
     const confirmationHash =
@@ -81,8 +85,27 @@ export class EmailService {
     const { html, subject } =
       this.emailTemplatesService.forgotPasswordEmailTemplate({
         userInfo,
-        link
+        link,
+        language
       });
+
+    await this.sendEmail({ to, html, subject });
+  }
+
+  async sendResetPasswordCompleteEmail({
+    to,
+    userInfo,
+    language
+  }: CompletedSecurityEmailInterface) {
+    const link = this.getConfirmationLink({
+      route: Routes.LOGIN
+    });
+
+    const { html, subject } = this.emailTemplatesService.resetPasswordComplete({
+      userInfo,
+      language,
+      link
+    });
 
     await this.sendEmail({ to, html, subject });
   }

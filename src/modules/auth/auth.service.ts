@@ -99,7 +99,7 @@ export class AuthService {
   }
 
   async registration({ payload, trx }: RegistrationInterface) {
-    const { email, password, firstName, lastName, tac } = payload;
+    const { email, password, firstName, lastName, tac, language } = payload;
 
     const existingUser = await this.usersService.getUserByEmail({
       email,
@@ -131,6 +131,7 @@ export class AuthService {
         firstName,
         lastName
       },
+      language,
       trx
     });
 
