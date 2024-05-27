@@ -100,45 +100,37 @@ export class ArticlesService {
   }
 
   async createArticle({ userId, payload, trx }: CreateArticleInterface) {
-    const {
-      articleName,
-      articleDescription,
-      articleContent,
-      categoryId,
-      articleTags,
-      articlePicture,
-      articleLanguage
-    } = payload;
+    const { articles } = payload;
 
-    const articleSlug = this.generateArticleSlug(articleName);
-
-    const category = await this.categoryService.getCategoryById({
-      categoryId,
-      trx
-    });
-
-    if (!category) throw new CategoryNotFoundException();
-
-    const articleImage = await this.uploadArticlePicture(articlePicture);
-
-    await this.articleRepository.create(
-      {
-        articleName,
-        articleSlug,
-        articleDescription,
-        articleTags,
-        articleContent,
-        articleImage,
-        articleLanguage,
-        userId,
-        categoryId
-      },
-      { transaction: trx }
-    );
-
-    const articleLink = `account/article/${articleSlug}`;
-
-    return new ArticleCreatedDto(articleLink);
+    // const articleSlug = this.generateArticleSlug(articleName);
+    //
+    // const category = await this.categoryService.getCategoryById({
+    //   categoryId,
+    //   trx
+    // });
+    //
+    // if (!category) throw new CategoryNotFoundException();
+    //
+    // const articleImage = await this.uploadArticlePicture(articlePicture);
+    //
+    // await this.articleRepository.create(
+    //   {
+    //     articleName,
+    //     articleSlug,
+    //     articleDescription,
+    //     articleTags,
+    //     articleContent,
+    //     articleImage,
+    //     articleLanguage,
+    //     userId,
+    //     categoryId
+    //   },
+    //   { transaction: trx }
+    // );
+    //
+    // const articleLink = `account/article/${articleSlug}`;
+    //
+    // return new ArticleCreatedDto(articleLink);
   }
 
   async changePublishArticleStatus({

@@ -1,17 +1,20 @@
 import {
+  ArrayMaxSize,
   ArrayMinSize,
   IsArray,
   IsEnum,
   IsString,
   IsUUID,
   Matches,
-  MinLength
+  MinLength,
+  ValidateNested
 } from 'class-validator';
 import { ValidationError } from '@interfaces/validation-error.enum';
 import { ImageRegex } from '@regex/image.regex';
 import { Language } from '@interfaces/language.enum';
+import { Type } from 'class-transformer';
 
-export class CreateArticleDto {
+class ArticleDto {
   @IsString({ message: ValidationError.WRONG_ARTICLE_NAME_FORMAT })
   @MinLength(1, { message: ValidationError.WRONG_ARTICLE_NAME_LENGTH })
   readonly articleName: string;
@@ -36,4 +39,13 @@ export class CreateArticleDto {
 
   @IsEnum(Language)
   readonly articleLanguage: Language;
+}
+
+export class CreateArticleDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ArrayMinSize(3, { message: '' })
+  @ArrayMaxSize(3, { message: '' })
+  @Type(() => ArticleDto)
+  readonly articles: Array<ArticleDto>;
 }
