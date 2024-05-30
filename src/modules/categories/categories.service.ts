@@ -12,6 +12,7 @@ import { CategoryNotFoundException } from '@exceptions/category-not-found.except
 import { DeleteCategoryInterface } from '@interfaces/delete-category.interface';
 import { CategoryDeletedDto } from '@dto/category-deleted.dto';
 import { CategoryCannotBeDeletedException } from '@exceptions/category-cannot-be-deleted.exception';
+import { Language } from '@interfaces/language.enum';
 
 @Injectable()
 export class CategoriesService {
@@ -21,22 +22,42 @@ export class CategoriesService {
   ) {}
 
   async createCategory({ payload, trx }: CreateCategoryInterface) {
-    const { categoryDescription, categoryName } = payload;
+    const { categories } = payload;
 
-    const existingCategory = await this.getCategoryByName({
-      categoryName,
+    const ruCategory = categories.find(
+      (c) => c.categoryLanguage === Language.RU
+    );
+    const plCategory = categories.find(
+      (c) => c.categoryLanguage === Language.PL
+    );
+    const enCategory = categories.find(
+      (c) => c.categoryLanguage === Language.EN
+    );
+
+    const existingRuCategory = await this.getCategoryByName({
+      categoryName: ruCategory.categoryName,
       trx
     });
 
-    if (existingCategory) throw new CategoryExistsException();
+    if (existingRuCategory) throw new CategoryExistsException();
 
-    await this.categoryRepository.create(
-      {
-        categoryName,
-        categoryDescription
-      },
-      { transaction: trx }
-    );
+    const existingPlCategory = await this.getCategoryByName({
+      categoryName: plCategory.categoryName,
+      trx
+    });
+
+    if (existingPlCategory) throw new CategoryExistsException();
+
+    const existingEnCategory = await this.getCategoryByName({
+      categoryName: enCategory.categoryName,
+      trx
+    });
+
+    if (existingEnCategory) throw new CategoryExistsException();
+
+    await this.categoryRepository.bulkCreate([...categories], {
+      transaction: trx
+    });
 
     return new CategoryCreatedDto();
   }

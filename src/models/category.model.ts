@@ -10,11 +10,15 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { ArticleModel } from '@models/article.model';
+import { Language } from '@interfaces/language.enum';
 
 interface CategoryCreationAttributes {
   categoryName: string;
   categoryDescription: string;
+  categoryLanguage: Language;
 }
+
+const languageTypes = [Language.PL, Language.EN, Language.RU];
 
 @Table({ tableName: 'categories' })
 export class CategoryModel extends Model<
@@ -35,6 +39,13 @@ export class CategoryModel extends Model<
     field: 'category_description'
   })
   categoryDescription: string;
+
+  @Column({
+    type: DataType.ENUM(...languageTypes),
+    allowNull: false,
+    field: 'category_language'
+  })
+  categoryLanguage: Language;
 
   @HasMany(() => ArticleModel)
   articles: Array<ArticleModel>;

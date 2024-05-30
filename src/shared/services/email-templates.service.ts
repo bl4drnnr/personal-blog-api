@@ -3,18 +3,37 @@ import { registrationTemplate } from '@email-templates/registration.template';
 import { EmailTemplateInterface } from '@interfaces/email-template.interface';
 import { forgotPasswordTemplate } from '@email-templates/forgot-password.template';
 import { Injectable } from '@nestjs/common';
+import { Language } from '@interfaces/language.enum';
+import { resetPassCompletedTemplate } from '@email-templates/reset-pass-completed.template';
 
 @Injectable()
 export class EmailTemplatesService {
   registrationEmailTemplate({
     userInfo,
-    link
+    link,
+    language
   }: SecurityPayloadInterface): EmailTemplateInterface {
-    const subject = 'MBPB - Registration confirmation';
+    let subject: string;
+
+    switch (language) {
+      case Language.EN:
+        subject = 'MBPB - Registration confirmation';
+        break;
+      case Language.RU:
+        subject = 'MBPB - Подтверждение регистрации';
+        break;
+      case Language.PL:
+        subject = 'MBPB - Potwierdzenie rejestracji';
+        break;
+      default:
+        subject = 'MBPB - Registration confirmation';
+        break;
+    }
 
     const html = registrationTemplate({
       userInfo,
-      link
+      link,
+      language
     });
 
     return { html, subject };
@@ -22,13 +41,61 @@ export class EmailTemplatesService {
 
   forgotPasswordEmailTemplate({
     userInfo,
-    link
+    link,
+    language
   }: SecurityPayloadInterface): EmailTemplateInterface {
-    const subject = 'MBPB - Password reset';
+    let subject: string;
+
+    switch (language) {
+      case Language.EN:
+        subject = 'MBPB - Password reset';
+        break;
+      case Language.RU:
+        subject = 'MBPB - Восстановление пароля';
+        break;
+      case Language.PL:
+        subject = 'MBPB - Przypomnienie hasła';
+        break;
+      default:
+        subject = 'MBPB - Password reset';
+        break;
+    }
 
     const html = forgotPasswordTemplate({
       userInfo,
-      link
+      link,
+      language
+    });
+
+    return { html, subject };
+  }
+
+  resetPasswordComplete({
+    userInfo,
+    link,
+    language
+  }: SecurityPayloadInterface): EmailTemplateInterface {
+    let subject: string;
+
+    switch (language) {
+      case Language.EN:
+        subject = 'MBPB - Password successfully reset';
+        break;
+      case Language.RU:
+        subject = 'MBPB - Пароль сброшен';
+        break;
+      case Language.PL:
+        subject = 'MBPB - Hasło zresetowane';
+        break;
+      default:
+        subject = 'MBPB - Password successfully reset';
+        break;
+    }
+
+    const html = resetPassCompletedTemplate({
+      userInfo,
+      link,
+      language
     });
 
     return { html, subject };

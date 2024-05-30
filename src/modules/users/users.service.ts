@@ -119,6 +119,8 @@ export class UsersService {
   }
 
   async forgotPassword({ payload, trx }: ForgotPasswordInterface) {
+    const { language } = payload;
+
     const user = await this.getUserByEmail({
       email: payload.email,
       trx
@@ -160,6 +162,7 @@ export class UsersService {
         firstName,
         lastName
       },
+      language,
       trx
     });
 

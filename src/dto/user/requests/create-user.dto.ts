@@ -1,7 +1,15 @@
-import { IsBoolean, IsString, Length, Matches } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  IsString,
+  Length,
+  Matches
+} from 'class-validator';
 import { EmailRegex } from '@regex/email.regex';
 import { PasswordRegex } from '@regex/password.regex';
 import { ValidationError } from '@interfaces/validation-error.enum';
+import { Language } from '@interfaces/language.enum';
 
 export class CreateUserDto {
   @Matches(EmailRegex, { message: ValidationError.WRONG_EMAIL_FORMAT })
@@ -22,4 +30,8 @@ export class CreateUserDto {
 
   @IsBoolean()
   readonly tac: boolean;
+
+  @IsOptional()
+  @IsEnum(Language)
+  readonly language?: Language;
 }
