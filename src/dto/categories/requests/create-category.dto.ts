@@ -27,8 +27,8 @@ class CategoryDto {
 export class CreateCategoryDto {
   @IsArray()
   @ValidateNested({ each: true })
-  @ArrayMinSize(3, { message: '' })
-  @ArrayMaxSize(3, { message: '' })
+  @ArrayMinSize(3, { message: ValidationError.WRONG_CATEGORIES_LENGTH })
+  @ArrayMaxSize(3, { message: ValidationError.WRONG_CATEGORIES_LENGTH })
   @Type(() => CategoryDto)
   readonly categories: Array<CategoryDto>;
 }

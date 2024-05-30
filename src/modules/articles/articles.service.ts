@@ -89,7 +89,7 @@ export class ArticlesService {
 
   async getArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
     const article = await this.articleRepository.findOne({
-      where: { articleSlug: slug, articlePosted: language },
+      where: { articleSlug: slug, articleLanguage: language },
       include: [{ model: CategoryModel, attributes: ['categoryName'] }],
       transaction: trx
     });
@@ -102,35 +102,37 @@ export class ArticlesService {
   async createArticle({ userId, payload, trx }: CreateArticleInterface) {
     const { articles } = payload;
 
-    // const articleSlug = this.generateArticleSlug(articleName);
-    //
-    // const category = await this.categoryService.getCategoryById({
-    //   categoryId,
-    //   trx
-    // });
-    //
-    // if (!category) throw new CategoryNotFoundException();
-    //
-    // const articleImage = await this.uploadArticlePicture(articlePicture);
-    //
-    // await this.articleRepository.create(
-    //   {
-    //     articleName,
-    //     articleSlug,
-    //     articleDescription,
-    //     articleTags,
-    //     articleContent,
-    //     articleImage,
-    //     articleLanguage,
-    //     userId,
-    //     categoryId
-    //   },
-    //   { transaction: trx }
-    // );
-    //
-    // const articleLink = `account/article/${articleSlug}`;
-    //
-    // return new ArticleCreatedDto(articleLink);
+    for (const article of articles) {
+      const articleSlug = this.generateArticleSlug(article.articleName);
+
+      const category = await this.categoryService.getCategoryById({
+        categoryId: article.categoryId,
+        trx
+      });
+
+      if (!category) throw new CategoryNotFoundException();
+
+      const articleImage = await this.uploadArticlePicture(
+        article.articlePicture
+      );
+
+      await this.articleRepository.create(
+        {
+          articleName: article.articleName,
+          articleSlug,
+          articleDescription: article.articleDescription,
+          articleTags: article.articleTags,
+          articleContent: article.articleContent,
+          articleImage,
+          articleLanguage: article.articleLanguage,
+          userId,
+          categoryId: article.categoryId
+        },
+        { transaction: trx }
+      );
+    }
+
+    return new ArticleCreatedDto();
   }
 
   async changePublishArticleStatus({
@@ -230,7 +232,9 @@ export class ArticlesService {
       'articleTags',
       'articleImage',
       'articlePosted',
-      'articleLanguage'
+      'articleLanguage',
+      'createdAt',
+      'updatedAt'
     ];
 
     const where = {};
@@ -302,7 +306,6 @@ export class ArticlesService {
       Bucket: bucketName,
       Key: `articles-main-pictures/${picture}`
     };
-    console.log('params', params);
 
     await s3.deleteObject(params).promise();
   }

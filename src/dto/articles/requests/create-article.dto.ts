@@ -44,8 +44,8 @@ class ArticleDto {
 export class CreateArticleDto {
   @IsArray()
   @ValidateNested({ each: true })
-  @ArrayMinSize(3, { message: '' })
-  @ArrayMaxSize(3, { message: '' })
+  @ArrayMinSize(3, { message: ValidationError.WRONG_ARTICLES_LENGTH })
+  @ArrayMaxSize(3, { message: ValidationError.WRONG_ARTICLES_LENGTH })
   @Type(() => ArticleDto)
   readonly articles: Array<ArticleDto>;
 }
