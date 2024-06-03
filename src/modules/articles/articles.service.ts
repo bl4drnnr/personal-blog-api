@@ -25,6 +25,7 @@ import { ArticleEditedDto } from '@dto/articles/response/article-edited.dto';
 import { PublishArticleInterface } from '@interfaces/publish-article.interface';
 import { ArticlePublishStatusDto } from '@dto/articles/response/article-published.dto';
 import { GetAllPostedArticlesSlugs } from '@interfaces/get-all-posted-articles-slugs.interface';
+import { Language } from '@interfaces/language.enum';
 
 @Injectable()
 export class ArticlesService {
@@ -48,12 +49,12 @@ export class ArticlesService {
 
   async getAllPostedArticlesSlugs({ trx }: GetAllPostedArticlesSlugs) {
     const articlesSlugs = await this.articleRepository.findAll({
-      attributes: ['articleSlug'],
+      attributes: ['articleSlug', 'articleLanguage'],
       where: { articlePosted: true },
       transaction: trx
     });
 
-    return articlesSlugs.map(({ articleSlug }) => articleSlug);
+    return articlesSlugs.map(({ articleSlug, articleLanguage }) => ({ articleLanguage, articleSlug }));
   }
 
   async getPostedArticleBySlug({
@@ -102,9 +103,10 @@ export class ArticlesService {
   async createArticle({ userId, payload, trx }: CreateArticleInterface) {
     const { articles } = payload;
 
-    for (const article of articles) {
-      const articleSlug = this.generateArticleSlug(article.articleName);
+    const enArticle = articles.find((article) => article.articleLanguage === Language.EN);
+    const articleSlug = this.generateArticleSlug(enArticle.articleName);
 
+    for (const article of articles) {
       const category = await this.categoryService.getCategoryById({
         categoryId: article.categoryId,
         trx

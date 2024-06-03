@@ -50,7 +50,7 @@ export class ArticlesController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   @Post('create')
-  createPost(
+  createArticle(
     @UserId() userId: string,
     @Body() payload: CreateArticleDto,
     @TrxDecorator() trx: Transaction
