@@ -54,7 +54,10 @@ export class ArticlesService {
       transaction: trx
     });
 
-    return articlesSlugs.map(({ articleSlug, articleLanguage }) => ({ articleLanguage, articleSlug }));
+    return articlesSlugs.map(({ articleSlug, articleLanguage }) => ({
+      articleLanguage,
+      articleSlug
+    }));
   }
 
   async getPostedArticleBySlug({
@@ -103,7 +106,9 @@ export class ArticlesService {
   async createArticle({ userId, payload, trx }: CreateArticleInterface) {
     const { articles } = payload;
 
-    const enArticle = articles.find((article) => article.articleLanguage === Language.EN);
+    const enArticle = articles.find(
+      (article) => article.articleLanguage === Language.EN
+    );
     const articleSlug = this.generateArticleSlug(enArticle.articleName);
 
     for (const article of articles) {
