@@ -65,6 +65,8 @@ export class ArticlesService {
     language,
     trx
   }: GetArticleBySlugInterface) {
+    if (!slug || !language) throw new ArticleNotFoundException();
+
     const attributes = [
       'articleName',
       'articleSlug',
@@ -92,6 +94,8 @@ export class ArticlesService {
   }
 
   async getArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
+    if (!slug || !language) throw new ArticleNotFoundException();
+
     const article = await this.articleRepository.findOne({
       where: { articleSlug: slug, articleLanguage: language },
       include: [{ model: CategoryModel, attributes: ['categoryName'] }],

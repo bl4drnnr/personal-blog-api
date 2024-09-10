@@ -46,7 +46,11 @@
         "src/dto/auth/requests/*",
         "src/dto/auth/responses/*",
         "src/dto/recovery/requests/*",
-        "src/dto/recovery/responses/*"
+        "src/dto/recovery/responses/*",
+        "src/dto/newsletters/requests/*",
+        "src/dto/newsletters/responses/*",
+        "src/dto/end-user/requests/*",
+        "src/dto/end-user/responses/*"
       ],
       "@events/*": ["src/events/*"],
       "@guards/*": ["src/guards/*"],
@@ -60,7 +64,9 @@
         "src/modules/recovery/*",
         "src/modules/security/*",
         "src/modules/articles/*",
-        "src/modules/categories/*"
+        "src/modules/categories/*",
+        "src/modules/newsletters/*",
+        "src/modules/end-user/*"
       ],
       "@interfaces/*": [
         "src/libs/enums/*",
@@ -76,7 +82,9 @@
         "src/libs/interfaces/phone/*",
         "src/libs/interfaces/time/*",
         "src/libs/interfaces/articles/*",
-        "src/libs/interfaces/categories/*"
+        "src/libs/interfaces/categories/*",
+        "src/libs/interfaces/newsletters/*",
+        "src/libs/interfaces/end-user/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [

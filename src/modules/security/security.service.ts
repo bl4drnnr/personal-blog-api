@@ -122,7 +122,7 @@ export class SecurityService {
   private async generateQrCode({ email }: GenerateQrCodeInterface) {
     const secret = speakeasy.generateSecret({
       length: 20,
-      name: `MBPB - ${email}`
+      name: `Bahdashych on Security - ${email}`
     });
 
     const qrUrl = await qrcode.toDataURL(secret.otpauth_url);

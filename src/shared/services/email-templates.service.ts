@@ -5,6 +5,8 @@ import { forgotPasswordTemplate } from '@email-templates/forgot-password.templat
 import { Injectable } from '@nestjs/common';
 import { Language } from '@interfaces/language.enum';
 import { resetPassCompletedTemplate } from '@email-templates/reset-pass-completed.template';
+import { NewslettersSubscriptionPayloadInterface } from '@interfaces/newsletters-subscription-payload.interface';
+import { subscriptionTemplate } from '@email-templates/subscription.template';
 
 @Injectable()
 export class EmailTemplatesService {
@@ -17,16 +19,16 @@ export class EmailTemplatesService {
 
     switch (language) {
       case Language.EN:
-        subject = 'MBPB - Registration confirmation';
+        subject = 'Bahdashych on Security - Registration confirmation';
         break;
       case Language.RU:
-        subject = 'MBPB - Подтверждение регистрации';
+        subject = 'Bahdashych on Security - Подтверждение регистрации';
         break;
       case Language.PL:
-        subject = 'MBPB - Potwierdzenie rejestracji';
+        subject = 'Bahdashych on Security - Potwierdzenie rejestracji';
         break;
       default:
-        subject = 'MBPB - Registration confirmation';
+        subject = 'Bahdashych on Security - Registration confirmation';
         break;
     }
 
@@ -48,16 +50,16 @@ export class EmailTemplatesService {
 
     switch (language) {
       case Language.EN:
-        subject = 'MBPB - Password reset';
+        subject = 'Bahdashych on Security - Password reset';
         break;
       case Language.RU:
-        subject = 'MBPB - Восстановление пароля';
+        subject = 'Bahdashych on Security - Восстановление пароля';
         break;
       case Language.PL:
-        subject = 'MBPB - Przypomnienie hasła';
+        subject = 'Bahdashych on Security - Przypomnienie hasła';
         break;
       default:
-        subject = 'MBPB - Password reset';
+        subject = 'Bahdashych on Security - Password reset';
         break;
     }
 
@@ -79,21 +81,50 @@ export class EmailTemplatesService {
 
     switch (language) {
       case Language.EN:
-        subject = 'MBPB - Password successfully reset';
+        subject = 'Bahdashych on Security - Password successfully reset';
         break;
       case Language.RU:
-        subject = 'MBPB - Пароль сброшен';
+        subject = 'Bahdashych on Security - Пароль сброшен';
         break;
       case Language.PL:
-        subject = 'MBPB - Hasło zresetowane';
+        subject = 'Bahdashych on Security - Hasło zresetowane';
         break;
       default:
-        subject = 'MBPB - Password successfully reset';
+        subject = 'Bahdashych on Security - Password successfully reset';
         break;
     }
 
     const html = resetPassCompletedTemplate({
       userInfo,
+      link,
+      language
+    });
+
+    return { html, subject };
+  }
+
+  subscriptionConfirmation({
+    language,
+    link
+  }: NewslettersSubscriptionPayloadInterface): EmailTemplateInterface {
+    let subject: string;
+
+    switch (language) {
+      case Language.EN:
+        subject = 'Bahdashych on Security - Subscription Confirmation';
+        break;
+      case Language.RU:
+        subject = 'Bahdashych on Security - Подтверждение подписки';
+        break;
+      case Language.PL:
+        subject = 'Bahdashych on Security - Potwierdzenie subskrypcji';
+        break;
+      default:
+        subject = 'Bahdashych on Security - Subscription Confirmation';
+        break;
+    }
+
+    const html = subscriptionTemplate({
       link,
       language
     });

@@ -1,11 +1,11 @@
-import { PrivateSecTemplateInterface } from '@interfaces/private-sec-template.interface';
+import { SubscriptionTemplate } from '@interfaces/subscription/subscription-template.interface';
 
-export const defaultSecurityTemplate = ({
+export const defaultSubscriptionTemplate = ({
   title,
   content,
   button,
   link
-}: PrivateSecTemplateInterface) => {
+}: SubscriptionTemplate) => {
   return `
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html data-editor-version="2" class="sg-campaigns" xmlns="http://www.w3.org/1999/xhtml">

@@ -19,6 +19,10 @@ import { ArticlesModule } from '@modules/articles.module';
 import { ArticleModel } from '@models/article.model';
 import { CategoryModel } from '@models/category.model';
 import { CategoriesModule } from '@modules/categories.module';
+import { EndUser } from '@models/end-user.model';
+import { Newsletter } from '@models/newsletters.model';
+import { NewslettersModule } from '@modules/newsletters.module';
+import { EndUserModule } from '@modules/end-user.module';
 
 @Module({
   imports: [
@@ -46,7 +50,9 @@ import { CategoriesModule } from '@modules/categories.module';
         UserSettings,
         ConfirmationHash,
         ArticleModel,
-        CategoryModel
+        CategoryModel,
+        EndUser,
+        Newsletter
       ],
       autoLoadModels: true
     }),
@@ -57,7 +63,9 @@ import { CategoriesModule } from '@modules/categories.module';
     SecurityModule,
     RecoveryModule,
     ArticlesModule,
-    CategoriesModule
+    CategoriesModule,
+    NewslettersModule,
+    EndUserModule
   ],
   providers: [
     {
