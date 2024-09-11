@@ -24,7 +24,7 @@ export class NewslettersController {
     });
   }
 
-  @Post('confirm-newsletter-subscription')
+  @Post('confirm-newsletters-subscription')
   confirmNewslettersSubscription(
     @Query('newslettersId') newslettersId: string,
     @TrxDecorator() trx: Transaction
