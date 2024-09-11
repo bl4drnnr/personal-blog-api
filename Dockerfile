@@ -1,6 +1,6 @@
 FROM node:latest
 
-WORKDIR /usr/src/personal-blog-api
+WORKDIR /usr/src/bahdashych-on-security-api
 
 RUN npm i -g nest
 RUN npm i -g @nestjs/cli

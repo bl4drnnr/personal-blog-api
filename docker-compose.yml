@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   api:
-    container_name: personal-blog-api
+    container_name: bahdashych-on-security-api
     restart: always
     env_file:
       - ./.env.${NODE_ENV}
@@ -11,16 +9,16 @@ services:
       dockerfile: ./Dockerfile
     command: npm run start:dev
     volumes:
-      - ./:/usr/src/personal-blog-api
+      - ./:/usr/src/bahdashych-on-security-api
     ports:
       - ${API_PORT}:${API_PORT}
     depends_on:
       - db
     networks:
-      - personal-blog-api-network
+      - bahdashych-on-security-api-network
   db:
     image: postgres
-    container_name: personal-blog-api-db
+    container_name: bahdashych-on-security-api-db
     restart: always
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
@@ -30,8 +28,8 @@ services:
     volumes:
       - /:/data/postgres
     networks:
-      - personal-blog-api-network
+      - bahdashych-on-security-api-network
 
 networks:
-  personal-blog-api-network:
+  bahdashych-on-security-api-network:
     driver: bridge

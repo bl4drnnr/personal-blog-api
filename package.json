@@ -1,5 +1,5 @@
 {
-  "name": "personal-blog-api",
+  "name": "bahdashych-on-security-api",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -9,7 +9,7 @@
     "api:dev:build": "NODE_ENV=development docker compose --env-file .env.development up --build",
     "api:dev:down": "NODE_ENV=development docker compose --env-file .env.development down",
     "api:dev": "NODE_ENV=development docker compose --env-file .env.development up",
-    "api:rmi": "docker rmi personal-blog-api-api",
+    "api:rmi": "docker rmi bahdashych-on-security-api-api",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" && eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "start": "nest start",
