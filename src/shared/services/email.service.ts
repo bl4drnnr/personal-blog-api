@@ -11,6 +11,7 @@ import { SendEmailInterface } from '@interfaces/send-email.interface';
 import { EmailConfirmHashInterface } from '@interfaces/email-confirm-hash.interface';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CompletedSecurityEmailInterface } from '@interfaces/completed-security-email.interface';
+import { SubscriptionConfirmationEmail } from '@interfaces/subscription-confirmation-email.interface';
 
 @Injectable()
 export class EmailService {
@@ -106,6 +107,25 @@ export class EmailService {
       language,
       link
     });
+
+    await this.sendEmail({ to, html, subject });
+  }
+
+  async sendSubscriptionConfirmationEmail({
+    to,
+    newslettersId,
+    language
+  }: SubscriptionConfirmationEmail) {
+    const link = this.getConfirmationLink({
+      route: `${Routes.NEWSLETTERS_CONFIRMATION}/confirmation`,
+      hash: newslettersId
+    });
+
+    const { html, subject } =
+      this.emailTemplatesService.subscriptionConfirmation({
+        language,
+        link
+      });
 
     await this.sendEmail({ to, html, subject });
   }

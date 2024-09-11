@@ -54,7 +54,10 @@ export class ArticlesService {
       transaction: trx
     });
 
-    return articlesSlugs.map(({ articleSlug, articleLanguage }) => ({ articleLanguage, articleSlug }));
+    return articlesSlugs.map(({ articleSlug, articleLanguage }) => ({
+      articleLanguage,
+      articleSlug
+    }));
   }
 
   async getPostedArticleBySlug({
@@ -62,6 +65,8 @@ export class ArticlesService {
     language,
     trx
   }: GetArticleBySlugInterface) {
+    if (!slug || !language) throw new ArticleNotFoundException();
+
     const attributes = [
       'articleName',
       'articleSlug',
@@ -89,6 +94,8 @@ export class ArticlesService {
   }
 
   async getArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
+    if (!slug || !language) throw new ArticleNotFoundException();
+
     const article = await this.articleRepository.findOne({
       where: { articleSlug: slug, articleLanguage: language },
       include: [{ model: CategoryModel, attributes: ['categoryName'] }],
@@ -103,7 +110,9 @@ export class ArticlesService {
   async createArticle({ userId, payload, trx }: CreateArticleInterface) {
     const { articles } = payload;
 
-    const enArticle = articles.find((article) => article.articleLanguage === Language.EN);
+    const enArticle = articles.find(
+      (article) => article.articleLanguage === Language.EN
+    );
     const articleSlug = this.generateArticleSlug(enArticle.articleName);
 
     for (const article of articles) {
