@@ -14,6 +14,10 @@ import { Session } from '@models/session.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { ArticleModel } from '@models/article.model';
 import { UserSettings } from '@models/user-settings.model';
+import { Author } from '@models/author.model';
+import { Cert } from '@models/cert.model';
+import { Social } from '@models/social.model';
+import { Experience } from '@models/experience.model';
 
 interface UserCreationAttributes {
   email: string;
@@ -54,6 +58,9 @@ export class User extends Model<User, UserCreationAttributes> {
   })
   tac: boolean;
 
+  @Column({ type: DataType.STRING, allowNull: true, field: 'profile_picture' })
+  profilePicture: string;
+
   @HasMany(() => ConfirmationHash)
   confirmationHashes: Array<ConfirmationHash>;
 
@@ -65,6 +72,18 @@ export class User extends Model<User, UserCreationAttributes> {
 
   @HasOne(() => UserSettings)
   userSettings: UserSettings;
+
+  @HasOne(() => Author)
+  author: Author;
+
+  @HasMany(() => Cert)
+  certs: Array<Cert>;
+
+  @HasMany(() => Social)
+  socials: Array<Social>;
+
+  @HasMany(() => Experience)
+  experiences: Array<Experience>;
 
   @CreatedAt
   @Column({ field: 'created_at' })
