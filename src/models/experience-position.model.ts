@@ -17,6 +17,7 @@ interface ExperiencePositionCreationAttributes {
   positionDescription: string;
   positionStartDate: Date;
   positionEndDate: Date;
+  experienceId: string;
 }
 
 @Table({ tableName: 'experience_positions' })

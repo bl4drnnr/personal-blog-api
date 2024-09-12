@@ -58,6 +58,10 @@ export class Cert extends Model<Cert, CertCreationAttributes> {
   })
   obtainedSkills: Array<string>;
 
+  @Default(false)
+  @Column({ type: DataType.BOOLEAN, allowNull: false, field: 'is_selected' })
+  isSelected: boolean;
+
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;

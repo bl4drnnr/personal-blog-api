@@ -14,26 +14,6 @@ import {
 import { User } from '@models/user.model';
 import { ExperiencePosition } from '@models/experience-position.model';
 
-// {
-//   companyName: 'Cryptovoucher / P100',
-//     companyDescription:
-//   'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
-//     companyLink: 'https://cryptovoucher.io',
-//   companyLinkTitle: 'Cryptovoucher Official Website',
-//   companyPicture: 'cv.jpeg',
-//   startDate: new Date(),
-//   endDate: new Date(),
-//   companyPositions: [
-//   {
-//     positionTitle: 'Full-Stack Web Developer',
-//     positionDescription:
-//       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
-//     positionStartDate: new Date(),
-//     positionEndDate: new Date()
-//   }
-// ]
-// },
-
 interface ExperienceCreationAttributes {
   companyName: string;
   companyDescription: string;
@@ -85,6 +65,10 @@ export class Experience extends Model<
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;
+
+  @Default(false)
+  @Column({ type: DataType.BOOLEAN, allowNull: false, field: 'is_selected' })
+  isSelected: boolean;
 
   @BelongsTo(() => User)
   user: User;

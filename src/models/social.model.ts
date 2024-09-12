@@ -10,12 +10,12 @@ import {
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
-import { User } from '@models/user.model';
+import { Author } from '@models/author.model';
 
 interface SocialCreationAttributes {
   link: string;
   title: string;
-  userId: string;
+  authorId: string;
 }
 
 @Table({ tableName: 'socials' })
@@ -31,12 +31,12 @@ export class Social extends Model<Social, SocialCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   title: string;
 
-  @ForeignKey(() => User)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
-  userId: string;
+  @ForeignKey(() => Author)
+  @Column({ type: DataType.UUID, allowNull: false, field: 'author_id' })
+  authorId: string;
 
-  @BelongsTo(() => User)
-  user: User;
+  @BelongsTo(() => Author)
+  author: Author;
 
   @CreatedAt
   @Column({ field: 'created_at' })

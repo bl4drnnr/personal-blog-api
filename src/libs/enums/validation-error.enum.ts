@@ -26,5 +26,10 @@ export enum ValidationError {
   WRONG_CATEGORY_ID_FORMAT = 'wrong-category-id-format',
   WRONG_ARTICLE_ID_FORMAT = 'wrong-article-id-format',
   WRONG_CATEGORIES_LENGTH = 'wrong-categories-length',
-  WRONG_ARTICLES_LENGTH = 'wrong-articles-length'
+  WRONG_ARTICLES_LENGTH = 'wrong-articles-length',
+  WRONG_AUTHOR_FIRST_NAME_FORMAT = 'wrong-author-first-format',
+  WRONG_AUTHOR_FIRST_NAME_LENGTH = 'wrong-author-first-length',
+  WRONG_AUTHOR_LAST_NAME_FORMAT = 'wrong-author-last-format',
+  WRONG_AUTHOR_LAST_NAME_LENGTH = 'wrong-author-last-length',
+  WRONG_AUTHOR_ID_FORMAT = 'wrong-author-id-format'
 }
