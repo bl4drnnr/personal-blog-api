@@ -1,6 +1,8 @@
 export enum ValidationError {
   WRONG_EMAIL_FORMAT = 'wrong-email-format',
   WRONG_IMAGE_FORMAT = 'user-photo-must-be-base64',
+  WRONG_LINK_FORMAT = 'wrong-link-format',
+  WRONG_DATE_FORMAT = 'wrong-date-format',
   WRONG_MFA_CODE_FORMAT = 'mfa-code-should-be-6-digit-code',
   WRONG_PHONE_CODE_FORMAT = 'phone-code-should-be-6-digit-code',
   WRONG_PASSWORD_FORMAT = 'wrong-password-format',
@@ -31,5 +33,12 @@ export enum ValidationError {
   WRONG_AUTHOR_FIRST_NAME_LENGTH = 'wrong-author-first-length',
   WRONG_AUTHOR_LAST_NAME_FORMAT = 'wrong-author-last-format',
   WRONG_AUTHOR_LAST_NAME_LENGTH = 'wrong-author-last-length',
-  WRONG_AUTHOR_ID_FORMAT = 'wrong-author-id-format'
+  WRONG_COMPANY_NAME_FORMAT = 'wrong-company-name-format',
+  WRONG_COMPANY_NAME_LENGTH = 'wrong-company-name-length',
+  WRONG_COMPANY_DESC_FORMAT = 'wrong-company-desc-format',
+  WRONG_COMPANY_DESC_LENGTH = 'wrong-company-desc-length',
+  WRONG_COMPANY_LINK_TITLE_FORMAT = 'wrong-company-link-title-format',
+  WRONG_COMPANY_LINK_TITLE_LENGTH = 'wrong-company-link-title-length',
+  WRONG_AUTHOR_ID_FORMAT = 'wrong-author-id-format',
+  WRONG_EXPERIENCE_ID_FORMAT = 'wrong-experience-id-format'
 }

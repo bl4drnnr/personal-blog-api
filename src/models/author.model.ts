@@ -13,6 +13,8 @@ import {
 } from 'sequelize-typescript';
 import { User } from '@models/user.model';
 import { Social } from '@models/social.model';
+import { Experience } from '@models/experience.model';
+import { Cert } from '@models/cert.model';
 
 interface AuthorCreationAttributes {
   firstName: string;
@@ -54,6 +56,12 @@ export class Author extends Model<Author, AuthorCreationAttributes> {
 
   @HasMany(() => Social)
   socials: Array<Social>;
+
+  @HasMany(() => Experience)
+  experiences: Array<Experience>;
+
+  @HasMany(() => Cert)
+  certs: Array<Cert>;
 
   @CreatedAt
   @Column({ field: 'created_at' })

@@ -7,11 +7,13 @@ import { Experience } from '@models/experience.model';
 import { ExperiencePosition } from '@models/experience-position.model';
 import { Cert } from '@models/cert.model';
 import { Social } from '@models/social.model';
+import { AuthModule } from '@modules/auth.module';
 
 @Module({
   controllers: [AboutBlogController],
   providers: [AboutBlogService],
   imports: [
+    AuthModule,
     SequelizeModule.forFeature([
       Author,
       Experience,

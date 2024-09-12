@@ -11,8 +11,8 @@ import {
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
-import { User } from '@models/user.model';
 import { ExperiencePosition } from '@models/experience-position.model';
+import { Author } from '@models/author.model';
 
 interface ExperienceCreationAttributes {
   companyName: string;
@@ -21,6 +21,8 @@ interface ExperienceCreationAttributes {
   companyLinkTitle: string;
   companyPicture: string;
   startDate: Date;
+  endDate?: Date;
+  authorId: string;
 }
 
 @Table({ tableName: 'experiences' })
@@ -62,16 +64,16 @@ export class Experience extends Model<
   @Column({ type: DataType.DATE, allowNull: false, field: 'end_date' })
   endDate: Date;
 
-  @ForeignKey(() => User)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
-  userId: string;
-
   @Default(false)
   @Column({ type: DataType.BOOLEAN, allowNull: false, field: 'is_selected' })
   isSelected: boolean;
 
-  @BelongsTo(() => User)
-  user: User;
+  @ForeignKey(() => Author)
+  @Column({ type: DataType.UUID, allowNull: false, field: 'author_id' })
+  authorId: string;
+
+  @BelongsTo(() => Author)
+  author: Author;
 
   @HasMany(() => ExperiencePosition)
   experiencePositions: Array<ExperiencePosition>;

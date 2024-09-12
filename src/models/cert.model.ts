@@ -10,7 +10,7 @@ import {
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
-import { User } from '@models/user.model';
+import { Author } from '@models/author.model';
 
 interface CertCreationAttributes {
   certName: string;
@@ -19,7 +19,7 @@ interface CertCreationAttributes {
   certDocs: string;
   obtainingDate: Date;
   obtainedSkills: Array<string>;
-  userId: string;
+  authorId: string;
 }
 
 @Table({ tableName: 'certificates' })
@@ -62,12 +62,12 @@ export class Cert extends Model<Cert, CertCreationAttributes> {
   @Column({ type: DataType.BOOLEAN, allowNull: false, field: 'is_selected' })
   isSelected: boolean;
 
-  @ForeignKey(() => User)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
-  userId: string;
+  @ForeignKey(() => Author)
+  @Column({ type: DataType.UUID, allowNull: false, field: 'author_id' })
+  authorId: string;
 
-  @BelongsTo(() => User)
-  user: User;
+  @BelongsTo(() => Author)
+  author: Author;
 
   @CreatedAt
   @Column({ field: 'created_at' })

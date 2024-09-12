@@ -23,6 +23,15 @@ import { GetAuthorByIdInterface } from '@interfaces/get-author-by-id.interface';
 import { AuthorUpdatedDto } from '@dto/author-updated.dto';
 import { DeleteAuthorInterface } from '@interfaces/delete-author.interface';
 import { AuthorDeletedDto } from '@dto/author-deleted.dto';
+import { GetExperienceByIdInterface } from '@interfaces/get-experience-by-id.interface';
+import { CreateExperienceInterface } from '@interfaces/create-experience.interface';
+import { StaticStorages } from '@interfaces/static-storages.enum';
+import { ExperienceCreatedDto } from '@dto/experience-created.dto';
+import { UpdateExperienceInterface } from '@interfaces/update-experience.interface';
+import { ExperienceNotFoundException } from '@exceptions/experience-not-found.exception';
+import { ExperienceUpdatedDto } from '@dto/experience-updated.dto';
+import { DeleteExperienceInterface } from '@interfaces/delete-experience.interface';
+import { ExperienceDeletedDto } from '@dto/experience-deleted.dto';
 
 @Injectable()
 export class AboutBlogService {
@@ -40,10 +49,6 @@ export class AboutBlogService {
     private readonly configService: ApiConfigService,
     private readonly cryptographicService: CryptographicService
   ) {}
-
-  getAuthorById({ authorId, trx }: GetAuthorByIdInterface) {
-    return this.authorsRepository.findByPk(authorId, { transaction: trx });
-  }
 
   getSelectedAuthor({ trx }: GetSelectedAuthorInterface) {
     return this.authorsRepository.findOne({
@@ -67,10 +72,39 @@ export class AboutBlogService {
     });
   }
 
+  getAuthorById({ authorId, trx }: GetAuthorByIdInterface) {
+    return this.authorsRepository.findByPk(authorId, {
+      include: [{ model: Social, attributes: ['id', 'link', 'title'] }],
+      transaction: trx
+    });
+  }
+
+  getExperienceById({ experienceId, trx }: GetExperienceByIdInterface) {
+    const experiencePositionAttributes = [
+      'id',
+      'positionTitle',
+      'positionDescription',
+      'positionStartDate',
+      'positionEndDate',
+      'createdAt',
+      'updatedAt'
+    ];
+
+    return this.experiencesRepository.findByPk(experienceId, {
+      include: [
+        { model: ExperiencePosition, attributes: experiencePositionAttributes }
+      ],
+      transaction: trx
+    });
+  }
+
   async createAuthor({ userId, payload, trx }: CreateAuthorInterface) {
     const { firstName, lastName, profilePicture, description } = payload;
 
-    const authorPicture = await this.uploadAuthorPicture(profilePicture);
+    const authorPicture = await this.uploadPicture(
+      profilePicture,
+      StaticStorages.AUTHORS_PICTURES
+    );
 
     const createdAuthor = await this.authorsRepository.create(
       {
@@ -84,6 +118,85 @@ export class AboutBlogService {
     );
 
     return new AuthorCreatedDto(createdAuthor.id);
+  }
+
+  async createExperience({ payload, trx }: CreateExperienceInterface) {
+    const {
+      companyName,
+      companyDescription,
+      companyLink,
+      companyLinkTitle,
+      companyPicture,
+      startDate,
+      endDate,
+      authorId
+    } = payload;
+
+    const experiencePicture = await this.uploadPicture(
+      companyPicture,
+      StaticStorages.EXPERIENCES_PICTURES
+    );
+
+    const createdExperience = await this.experiencesRepository.create(
+      {
+        companyName,
+        companyDescription,
+        companyLink,
+        companyLinkTitle,
+        companyPicture: experiencePicture,
+        startDate,
+        endDate,
+        authorId
+      },
+      { transaction: trx }
+    );
+
+    return new ExperienceCreatedDto(createdExperience.id);
+  }
+
+  async updateExperience({ payload, trx }: UpdateExperienceInterface) {
+    const {
+      experienceId,
+      companyDescription,
+      companyLink,
+      companyLinkTitle,
+      companyPicture,
+      companyName,
+      startDate,
+      endDate
+    } = payload;
+
+    const experience = await this.getExperienceById({ experienceId, trx });
+
+    if (!experience) throw new ExperienceNotFoundException();
+
+    const experienceUpdatedFields: Partial<Experience> = {};
+
+    if (companyName) experienceUpdatedFields.companyName = companyName;
+    if (companyDescription)
+      experienceUpdatedFields.companyDescription = companyDescription;
+    if (companyLink) experienceUpdatedFields.companyLink = companyLink;
+    if (companyLinkTitle)
+      experienceUpdatedFields.companyLinkTitle = companyLinkTitle;
+    if (startDate) experienceUpdatedFields.startDate = startDate;
+    if (endDate) experienceUpdatedFields.endDate = endDate;
+    if (companyPicture) {
+      await this.deletePicture(
+        experience.companyPicture,
+        StaticStorages.AUTHORS_PICTURES
+      );
+      experienceUpdatedFields.companyPicture = await this.uploadPicture(
+        companyPicture,
+        StaticStorages.AUTHORS_PICTURES
+      );
+    }
+
+    await this.experiencesRepository.update(
+      { ...experienceUpdatedFields },
+      { where: { id: experienceId }, transaction: trx }
+    );
+
+    return new ExperienceUpdatedDto();
   }
 
   async updateAuthor({ payload, trx }: UpdateAuthorInterface) {
@@ -101,9 +214,14 @@ export class AboutBlogService {
     if (description) authorUpdatedFields.description = description;
 
     if (profilePicture) {
-      await this.deleteAuthorPicture(author.profilePicture);
-      authorUpdatedFields.profilePicture =
-        await this.uploadAuthorPicture(profilePicture);
+      await this.deletePicture(
+        author.profilePicture,
+        StaticStorages.AUTHORS_PICTURES
+      );
+      authorUpdatedFields.profilePicture = await this.uploadPicture(
+        profilePicture,
+        StaticStorages.AUTHORS_PICTURES
+      );
     }
 
     await this.authorsRepository.update(
@@ -112,6 +230,19 @@ export class AboutBlogService {
     );
 
     return new AuthorUpdatedDto();
+  }
+
+  async deleteExperience({ experienceId, trx }: DeleteExperienceInterface) {
+    const experience = await this.getExperienceById({ experienceId, trx });
+
+    if (!experience) throw new ExperienceNotFoundException();
+
+    await this.experiencesRepository.destroy({
+      where: { id: experience.id },
+      transaction: trx
+    });
+
+    return new ExperienceDeletedDto();
   }
 
   async deleteAuthor({ authorId, trx }: DeleteAuthorInterface) {
@@ -149,7 +280,7 @@ export class AboutBlogService {
     return new AuthorSelectionStatusUpdatedDto(authorUpdatedStatus);
   }
 
-  private async uploadAuthorPicture(picture: string) {
+  private async uploadPicture(picture: string, folderName: string) {
     const { accessKeyId, secretAccessKey, bucketName } =
       this.configService.awsSdkCredentials;
 
@@ -174,7 +305,7 @@ export class AboutBlogService {
 
     const params = {
       Bucket: bucketName,
-      Key: `authors-pictures/${pictureName}`,
+      Key: `${folderName}/${pictureName}`,
       Body: base64Data,
       ContentEncoding: 'base64',
       ContentType: `image/${type}`
@@ -185,7 +316,7 @@ export class AboutBlogService {
     return pictureName;
   }
 
-  private async deleteAuthorPicture(picture: string) {
+  private async deletePicture(picture: string, folderName: string) {
     const { accessKeyId, secretAccessKey, bucketName } =
       this.configService.awsSdkCredentials;
 
@@ -193,7 +324,7 @@ export class AboutBlogService {
 
     const params = {
       Bucket: bucketName,
-      Key: `authors-pictures/${picture}`
+      Key: `${folderName}/${picture}`
     };
 
     await s3.deleteObject(params).promise();

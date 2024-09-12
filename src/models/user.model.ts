@@ -16,7 +16,6 @@ import { ArticleModel } from '@models/article.model';
 import { UserSettings } from '@models/user-settings.model';
 import { Author } from '@models/author.model';
 import { Cert } from '@models/cert.model';
-import { Experience } from '@models/experience.model';
 
 interface UserCreationAttributes {
   email: string;
@@ -74,9 +73,6 @@ export class User extends Model<User, UserCreationAttributes> {
 
   @HasMany(() => Cert)
   certs: Array<Cert>;
-
-  @HasMany(() => Experience)
-  experiences: Array<Experience>;
 
   @CreatedAt
   @Column({ field: 'created_at' })
