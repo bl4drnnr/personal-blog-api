@@ -72,7 +72,6 @@ export class AboutBlogService {
 
   getAuthorById({ authorId, trx }: GetAuthorByIdInterface) {
     return this.authorsRepository.findByPk(authorId, {
-      include: [{ model: Social, attributes: ['id', 'link', 'title'] }],
       transaction: trx
     });
   }
@@ -287,6 +286,37 @@ export class AboutBlogService {
     });
 
     return new ListCertificationsDto(rows, count);
+  }
+
+  async authorById({ authorId, trx }: GetAuthorByIdInterface) {
+    const socialsAttributes = [];
+    const certsAttributes = [
+      'id',
+      'certName',
+      'certDescription',
+      'certPicture',
+      'certDocs',
+      'obtainingDate',
+      'expirationDate',
+      'obtainedSkills',
+      'isSelected',
+      'createdAt',
+      'updatedAt'
+    ];
+    const experiencesAttributes = [];
+
+    const author = await this.authorsRepository.findByPk(authorId, {
+      include: [
+        { model: Social, attributes: socialsAttributes },
+        { model: Cert, attributes: certsAttributes },
+        { model: Experience, attributes: experiencesAttributes }
+      ],
+      transaction: trx
+    });
+
+    if (!author) throw new AuthorNotFoundException();
+
+    return author;
   }
 
   async createAuthor({ userId, payload, trx }: CreateAuthorInterface) {

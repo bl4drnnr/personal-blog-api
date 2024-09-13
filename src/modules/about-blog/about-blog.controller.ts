@@ -110,7 +110,7 @@ export class AboutBlogController {
     @Query('authorId') authorId: string,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.getAuthorById({ authorId, trx });
+    return this.aboutBlogService.authorById({ authorId, trx });
   }
 
   @UseGuards(AuthGuard)

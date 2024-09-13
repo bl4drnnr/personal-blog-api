@@ -15,7 +15,6 @@ import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { ArticleModel } from '@models/article.model';
 import { UserSettings } from '@models/user-settings.model';
 import { Author } from '@models/author.model';
-import { Cert } from '@models/cert.model';
 
 interface UserCreationAttributes {
   email: string;
@@ -70,9 +69,6 @@ export class User extends Model<User, UserCreationAttributes> {
 
   @HasOne(() => Author)
   author: Author;
-
-  @HasMany(() => Cert)
-  certs: Array<Cert>;
 
   @CreatedAt
   @Column({ field: 'created_at' })
