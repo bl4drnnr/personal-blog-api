@@ -6,7 +6,7 @@ import { ExperiencePosition } from '@models/experience-position.model';
 import { Cert } from '@models/cert.model';
 import { Social } from '@models/social.model';
 import { GetSelectedAuthorInterface } from '@interfaces/get-selected-author.interface';
-import { GetSelectedExperiencesInterface } from '@interfaces/get-selected-experiences.interface';
+import { ListExperiencesInterface } from '@interfaces/list-experiences.interface';
 import { GetSelectedCertificationsInterface } from '@interfaces/get-selected-certifications.interface';
 import { CreateAuthorInterface } from '@interfaces/create-author.interface';
 import { ApiConfigService } from '@shared/config.service';
@@ -15,7 +15,7 @@ import { WrongPictureException } from '@exceptions/wrong-picture.exception';
 import { CryptoHashAlgorithm } from '@interfaces/crypto-hash-algorithm.enum';
 import { CryptographicService } from '@shared/cryptographic.service';
 import { AuthorCreatedDto } from '@dto/author-created.dto';
-import { UpdateAuthorSelectionStatusInterface } from '@interfaces/update-author-selection-status.interface';
+import { ChangeAuthorSelectionStatusInterface } from '@interfaces/change-author-selection-status.interface';
 import { AuthorNotFoundException } from '@exceptions/author-not-found.exception';
 import { AuthorSelectionStatusUpdatedDto } from '@dto/author-selection-status-updated.dto';
 import { UpdateAuthorInterface } from '@interfaces/update-author.interface';
@@ -32,6 +32,26 @@ import { ExperienceNotFoundException } from '@exceptions/experience-not-found.ex
 import { ExperienceUpdatedDto } from '@dto/experience-updated.dto';
 import { DeleteExperienceInterface } from '@interfaces/delete-experience.interface';
 import { ExperienceDeletedDto } from '@dto/experience-deleted.dto';
+import { ParseException } from '@exceptions/parse.exception';
+import { Op } from 'sequelize';
+import { ListExperiencesDto } from '@dto/list-experiences.dto';
+import { ListCertifications } from '@interfaces/list-certifications.interface';
+import { ListCertificationsDto } from '@dto/list-certifications.dto';
+import { GetSelectedExperience } from '@interfaces/get-selected-experience';
+import { ListAuthorsInterface } from '@interfaces/list-authors.interface';
+import { ListAuthorsDto } from '@dto/list-authors.dto';
+import { GetCertificationById } from '@interfaces/get-certification-by-id.interface';
+import { CreateCertificationInterface } from '@interfaces/create-certification.interface';
+import { CertificationCreatedDto } from '@dto/certification-created.dto';
+import { UpdateCertificationInterface } from '@interfaces/update-certification.interface';
+import { CertificationNotFoundException } from '@exceptions/certification-not-found.exception';
+import { CertificationUpdatedDto } from '@dto/certification-updated.dto';
+import { DeleteCertificationInterface } from '@interfaces/delete-certification.interface';
+import { CertificationDeletedDto } from '@dto/certification-deleted.dto';
+import { ChangeExperienceSelectionStatusInterface } from '@interfaces/change-experience-selection-status.interface';
+import { ExperienceSelectionStatusUpdatedDto } from '@dto/experience-selection-status-updated.dto';
+import { ChangeCertificationSelectionStatusInterface } from '@interfaces/change-certification-selection-status.interface';
+import { CertificationSelectionStatusUpdatedDto } from '@dto/certification-selection-status-updated.dto';
 
 @Injectable()
 export class AboutBlogService {
@@ -49,28 +69,6 @@ export class AboutBlogService {
     private readonly configService: ApiConfigService,
     private readonly cryptographicService: CryptographicService
   ) {}
-
-  getSelectedAuthor({ trx }: GetSelectedAuthorInterface) {
-    return this.authorsRepository.findOne({
-      where: { isSelected: true },
-      include: [{ model: Social, attributes: ['link', 'title'] }],
-      transaction: trx
-    });
-  }
-
-  getSelectedExperiences({ trx }: GetSelectedExperiencesInterface) {
-    return this.experiencesRepository.findAll({
-      where: { isSelected: true },
-      transaction: trx
-    });
-  }
-
-  getSelectedCertifications({ trx }: GetSelectedCertificationsInterface) {
-    return this.certsRepository.findAll({
-      where: { isSelected: true },
-      transaction: trx
-    });
-  }
 
   getAuthorById({ authorId, trx }: GetAuthorByIdInterface) {
     return this.authorsRepository.findByPk(authorId, {
@@ -96,6 +94,199 @@ export class AboutBlogService {
       ],
       transaction: trx
     });
+  }
+
+  getCertificationById({ certificationId, trx }: GetCertificationById) {
+    return this.certsRepository.findByPk(certificationId, {
+      transaction: trx
+    });
+  }
+
+  getSelectedAuthor({ trx }: GetSelectedAuthorInterface) {
+    return this.authorsRepository.findOne({
+      where: { isSelected: true },
+      include: [{ model: Social, attributes: ['link', 'title'] }],
+      transaction: trx
+    });
+  }
+
+  getSelectedExperience({ trx }: GetSelectedExperience) {
+    return this.experiencesRepository.findAll({
+      where: { isSelected: true },
+      transaction: trx
+    });
+  }
+
+  getSelectedCertifications({ trx }: GetSelectedCertificationsInterface) {
+    return this.certsRepository.findAll({
+      where: { isSelected: true },
+      transaction: trx
+    });
+  }
+
+  async listAuthors({
+    query,
+    page,
+    pageSize,
+    order,
+    orderBy,
+    trx
+  }: ListAuthorsInterface) {
+    const offset = Number(page) * Number(pageSize);
+    const limit = Number(pageSize);
+
+    const paginationParseError =
+      isNaN(offset) || isNaN(limit) || offset < 0 || limit < 0;
+
+    if (paginationParseError) throw new ParseException();
+
+    const attributes = [
+      'id',
+      'firstName',
+      'lastName',
+      'description',
+      'profilePicture',
+      'isSelected',
+      'createdAt',
+      'updatedAt'
+    ];
+
+    const where = {};
+
+    if (query) {
+      where[Op.or] = [
+        { firstName: { [Op.iLike]: `%${query}%` } },
+        { lastName: { [Op.iLike]: `%${query}%` } },
+        { description: { [Op.iLike]: `%${query}%` } }
+      ];
+    }
+
+    const { rows, count } = await this.authorsRepository.findAndCountAll({
+      where,
+      attributes,
+      limit,
+      offset,
+      order: [[order, orderBy]],
+      transaction: trx
+    });
+
+    return new ListAuthorsDto(rows, count);
+  }
+
+  async listExperiences({
+    query,
+    page,
+    pageSize,
+    order,
+    orderBy,
+    trx
+  }: ListExperiencesInterface) {
+    const offset = Number(page) * Number(pageSize);
+    const limit = Number(pageSize);
+
+    const paginationParseError =
+      isNaN(offset) || isNaN(limit) || offset < 0 || limit < 0;
+
+    if (paginationParseError) throw new ParseException();
+
+    const attributes = [
+      'id',
+      'companyName',
+      'companyDescription',
+      'companyLink',
+      'companyLinkTitle',
+      'companyPicture',
+      'startDate',
+      'endDate',
+      'isSelected',
+      'experiencePositions',
+      'createdAt',
+      'updatedAt'
+    ];
+
+    const experiencePositionsAttributes = [
+      'id',
+      'positionTitle',
+      'positionDescription',
+      'positionStartDate',
+      'positionEndDate',
+      'createdAt',
+      'updatedAt'
+    ];
+
+    const where = {};
+
+    if (query) {
+      where[Op.or] = [
+        { companyName: { [Op.iLike]: `%${query}%` } },
+        { companyDescription: { [Op.iLike]: `%${query}%` } }
+      ];
+    }
+
+    const { rows, count } = await this.experiencesRepository.findAndCountAll({
+      where,
+      attributes,
+      limit,
+      offset,
+      include: [
+        { model: ExperiencePosition, attributes: experiencePositionsAttributes }
+      ],
+      order: [[order, orderBy]],
+      transaction: trx
+    });
+
+    return new ListExperiencesDto(rows, count);
+  }
+
+  async listCertifications({
+    query,
+    page,
+    pageSize,
+    order,
+    orderBy,
+    trx
+  }: ListCertifications) {
+    const offset = Number(page) * Number(pageSize);
+    const limit = Number(pageSize);
+
+    const paginationParseError =
+      isNaN(offset) || isNaN(limit) || offset < 0 || limit < 0;
+
+    if (paginationParseError) throw new ParseException();
+
+    const attributes = [
+      'id',
+      'certName',
+      'certDescription',
+      'certPicture',
+      'certDocs',
+      'obtainingDate',
+      'expirationDate',
+      'obtainedSkills',
+      'isSelected',
+      'createdAt',
+      'updatedAt'
+    ];
+
+    const where = {};
+
+    if (query) {
+      where[Op.or] = [
+        { certName: { [Op.iLike]: `%${query}%` } },
+        { certDescription: { [Op.iLike]: `%${query}%` } }
+      ];
+    }
+
+    const { rows, count } = await this.certsRepository.findAndCountAll({
+      where,
+      attributes,
+      limit,
+      offset,
+      order: [[order, orderBy]],
+      transaction: trx
+    });
+
+    return new ListCertificationsDto(rows, count);
   }
 
   async createAuthor({ userId, payload, trx }: CreateAuthorInterface) {
@@ -154,6 +345,73 @@ export class AboutBlogService {
     return new ExperienceCreatedDto(createdExperience.id);
   }
 
+  async createCertification({ payload, trx }: CreateCertificationInterface) {
+    const {
+      certName,
+      certDescription,
+      certPicture,
+      certDocs,
+      obtainingDate,
+      expirationDate,
+      obtainedSkills,
+      authorId
+    } = payload;
+
+    const certificationPicture = await this.uploadPicture(
+      certPicture,
+      StaticStorages.CERTS_PICTURES
+    );
+
+    const createdCert = await this.certsRepository.create(
+      {
+        certName,
+        certDescription,
+        certPicture: certificationPicture,
+        certDocs,
+        obtainingDate,
+        expirationDate,
+        obtainedSkills,
+        authorId
+      },
+      { transaction: trx }
+    );
+
+    return new CertificationCreatedDto(createdCert.id);
+  }
+
+  async updateAuthor({ payload, trx }: UpdateAuthorInterface) {
+    const { authorId, firstName, lastName, profilePicture, description } =
+      payload;
+
+    const author = await this.getAuthorById({ authorId, trx });
+
+    if (!author) throw new AuthorNotFoundException();
+
+    const authorUpdatedFields: Partial<Author> = {};
+
+    if (firstName) authorUpdatedFields.firstName = firstName;
+    if (lastName) authorUpdatedFields.lastName = lastName;
+    if (description) authorUpdatedFields.description = description;
+
+    if (profilePicture) {
+      await this.deletePicture(
+        author.profilePicture,
+        StaticStorages.AUTHORS_PICTURES
+      );
+      authorUpdatedFields.profilePicture = await this.uploadPicture(
+        profilePicture,
+        StaticStorages.AUTHORS_PICTURES
+      );
+    }
+
+    await this.authorsRepository.update(
+      { ...authorUpdatedFields },
+      { where: { id: authorId }, transaction: trx }
+    );
+
+    return new AuthorUpdatedDto();
+  }
+
   async updateExperience({ payload, trx }: UpdateExperienceInterface) {
     const {
       experienceId,
@@ -199,50 +457,54 @@ export class AboutBlogService {
     return new ExperienceUpdatedDto();
   }
 
-  async updateAuthor({ payload, trx }: UpdateAuthorInterface) {
-    const { authorId, firstName, lastName, profilePicture, description } =
-      payload;
+  async updateCertification({ payload, trx }: UpdateCertificationInterface) {
+    const {
+      certificationId,
+      certName,
+      certDescription,
+      certPicture,
+      certDocs,
+      obtainingDate,
+      expirationDate,
+      obtainedSkills
+    } = payload;
 
-    const author = await this.getAuthorById({ authorId, trx });
+    const certificate = await this.getCertificationById({
+      certificationId,
+      trx
+    });
 
-    if (!author) throw new AuthorNotFoundException();
+    if (!certificate) throw new CertificationNotFoundException();
 
-    const authorUpdatedFields: Partial<Author> = {};
+    const certificateUpdatedFields: Partial<Cert> = {};
 
-    if (firstName) authorUpdatedFields.firstName = firstName;
-    if (lastName) authorUpdatedFields.lastName = lastName;
-    if (description) authorUpdatedFields.description = description;
+    if (certName) certificateUpdatedFields.certName = certName;
+    if (certDescription)
+      certificateUpdatedFields.certDescription = certDescription;
+    if (certDocs) certificateUpdatedFields.certDocs = certDocs;
+    if (obtainingDate) certificateUpdatedFields.obtainingDate = obtainingDate;
+    if (expirationDate)
+      certificateUpdatedFields.expirationDate = expirationDate;
+    if (obtainedSkills)
+      certificateUpdatedFields.obtainedSkills = obtainedSkills;
 
-    if (profilePicture) {
+    if (certPicture) {
       await this.deletePicture(
-        author.profilePicture,
-        StaticStorages.AUTHORS_PICTURES
+        certificate.certPicture,
+        StaticStorages.CERTS_PICTURES
       );
-      authorUpdatedFields.profilePicture = await this.uploadPicture(
-        profilePicture,
-        StaticStorages.AUTHORS_PICTURES
+      certificateUpdatedFields.certPicture = await this.uploadPicture(
+        certPicture,
+        StaticStorages.CERTS_PICTURES
       );
     }
 
-    await this.authorsRepository.update(
-      { ...authorUpdatedFields },
-      { where: { id: authorId }, transaction: trx }
+    await this.certsRepository.update(
+      { ...certificateUpdatedFields },
+      { where: { id: certificationId }, transaction: trx }
     );
 
-    return new AuthorUpdatedDto();
-  }
-
-  async deleteExperience({ experienceId, trx }: DeleteExperienceInterface) {
-    const experience = await this.getExperienceById({ experienceId, trx });
-
-    if (!experience) throw new ExperienceNotFoundException();
-
-    await this.experiencesRepository.destroy({
-      where: { id: experience.id },
-      transaction: trx
-    });
-
-    return new ExperienceDeletedDto();
+    return new CertificationUpdatedDto();
   }
 
   async deleteAuthor({ authorId, trx }: DeleteAuthorInterface) {
@@ -258,10 +520,42 @@ export class AboutBlogService {
     return new AuthorDeletedDto();
   }
 
+  async deleteExperience({ experienceId, trx }: DeleteExperienceInterface) {
+    const experience = await this.getExperienceById({ experienceId, trx });
+
+    if (!experience) throw new ExperienceNotFoundException();
+
+    await this.experiencesRepository.destroy({
+      where: { id: experience.id },
+      transaction: trx
+    });
+
+    return new ExperienceDeletedDto();
+  }
+
+  async deleteCertification({
+    certificationId,
+    trx
+  }: DeleteCertificationInterface) {
+    const certification = await this.getCertificationById({
+      certificationId,
+      trx
+    });
+
+    if (!certification) throw new CertificationNotFoundException();
+
+    await this.certsRepository.destroy({
+      where: { id: certification.id },
+      transaction: trx
+    });
+
+    return new CertificationDeletedDto();
+  }
+
   async changeAuthorSelectionStatus({
     payload,
     trx
-  }: UpdateAuthorSelectionStatusInterface) {
+  }: ChangeAuthorSelectionStatusInterface) {
     const { authorId } = payload;
 
     const author = await this.getAuthorById({ authorId, trx });
@@ -278,6 +572,55 @@ export class AboutBlogService {
     );
 
     return new AuthorSelectionStatusUpdatedDto(authorUpdatedStatus);
+  }
+
+  async changeExperienceSelectionStatus({
+    payload,
+    trx
+  }: ChangeExperienceSelectionStatusInterface) {
+    const { experienceId } = payload;
+
+    const experience = await this.getExperienceById({ experienceId, trx });
+
+    if (!experience) throw new ExperienceNotFoundException();
+
+    const experienceUpdatedStatus = !experience.isSelected;
+
+    await this.experiencesRepository.update(
+      {
+        isSelected: !experienceUpdatedStatus
+      },
+      { where: { id: experienceId }, transaction: trx }
+    );
+
+    return new ExperienceSelectionStatusUpdatedDto(experienceUpdatedStatus);
+  }
+
+  async changeCertificationSelectionStatus({
+    payload,
+    trx
+  }: ChangeCertificationSelectionStatusInterface) {
+    const { certificationId } = payload;
+
+    const certification = await this.getCertificationById({
+      certificationId,
+      trx
+    });
+
+    if (!certification) throw new CertificationNotFoundException();
+
+    const certificationUpdatedStatus = !certification.isSelected;
+
+    await this.certsRepository.update(
+      {
+        isSelected: !certificationUpdatedStatus
+      },
+      { where: { id: certificationId }, transaction: trx }
+    );
+
+    return new CertificationSelectionStatusUpdatedDto(
+      certificationUpdatedStatus
+    );
   }
 
   private async uploadPicture(picture: string, folderName: string) {

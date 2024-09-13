@@ -37,8 +37,13 @@ export enum ValidationError {
   WRONG_COMPANY_NAME_LENGTH = 'wrong-company-name-length',
   WRONG_COMPANY_DESC_FORMAT = 'wrong-company-desc-format',
   WRONG_COMPANY_DESC_LENGTH = 'wrong-company-desc-length',
+  WRONG_CERT_NAME_FORMAT = 'wrong-cert-name-format',
+  WRONG_CERT_NAME_LENGTH = 'wrong-cert-name-length',
+  WRONG_CERT_DESC_FORMAT = 'wrong-cert-desc-format',
+  WRONG_CERT_DESC_LENGTH = 'wrong-cert-desc-length',
   WRONG_COMPANY_LINK_TITLE_FORMAT = 'wrong-company-link-title-format',
   WRONG_COMPANY_LINK_TITLE_LENGTH = 'wrong-company-link-title-length',
   WRONG_AUTHOR_ID_FORMAT = 'wrong-author-id-format',
-  WRONG_EXPERIENCE_ID_FORMAT = 'wrong-experience-id-format'
+  WRONG_EXPERIENCE_ID_FORMAT = 'wrong-experience-id-format',
+  WRONG_CERTIFICATION_ID_FORMAT = 'wrong-certification-id-format'
 }

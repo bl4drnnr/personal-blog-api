@@ -1,5 +1,5 @@
 import { Transaction } from 'sequelize';
 
-export interface GetSelectedExperiencesInterface {
+export interface GetSelectedExperience {
   trx?: Transaction;
 }
