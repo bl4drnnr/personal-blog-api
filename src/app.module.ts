@@ -29,6 +29,7 @@ import { ExperiencePosition } from '@models/experience-position.model';
 import { Cert } from '@models/cert.model';
 import { Experience } from '@models/experience.model';
 import { Social } from '@models/social.model';
+import { ContactModule } from './modules/contact/contact.module';
 
 @Module({
   imports: [
@@ -77,7 +78,8 @@ import { Social } from '@models/social.model';
     CategoriesModule,
     NewslettersModule,
     EndUserModule,
-    AboutBlogModule
+    AboutBlogModule,
+    ContactModule
   ],
   providers: [
     {

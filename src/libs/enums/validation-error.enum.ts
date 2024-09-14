@@ -45,5 +45,9 @@ export enum ValidationError {
   WRONG_COMPANY_LINK_TITLE_LENGTH = 'wrong-company-link-title-length',
   WRONG_AUTHOR_ID_FORMAT = 'wrong-author-id-format',
   WRONG_EXPERIENCE_ID_FORMAT = 'wrong-experience-id-format',
-  WRONG_CERTIFICATION_ID_FORMAT = 'wrong-certification-id-format'
+  WRONG_CERTIFICATION_ID_FORMAT = 'wrong-certification-id-format',
+  WRONG_CONTACT_NAME_FORMAT = 'wrong-contact-name-format',
+  WRONG_CONTACT_NAME_LENGTH = 'wrong-contact-name-length',
+  WRONG_CONTACT_MESSAGE_FORMAT = 'wrong-contact-message-format',
+  WRONG_CONTACT_MESSAGE_LENGTH = 'wrong-contact-message-length'
 }

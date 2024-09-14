@@ -7,6 +7,8 @@ import { Language } from '@interfaces/language.enum';
 import { resetPassCompletedTemplate } from '@email-templates/reset-pass-completed.template';
 import { NewslettersSubscriptionPayloadInterface } from '@interfaces/newsletters-subscription-payload.interface';
 import { subscriptionTemplate } from '@email-templates/subscription.template';
+import { ContactEmailInterface } from '@interfaces/contact-email.interface';
+import { contactTemplate } from '@email-templates/contact/contact.template';
 
 @Injectable()
 export class EmailTemplatesService {
@@ -127,6 +129,22 @@ export class EmailTemplatesService {
     const html = subscriptionTemplate({
       link,
       language
+    });
+
+    return { html, subject };
+  }
+
+  contactEmailTemplate({
+    message,
+    email,
+    name
+  }: ContactEmailInterface): EmailTemplateInterface {
+    const subject = `Bahdashych on Security - ${name} / ${email} has send you a message!`;
+
+    const html = contactTemplate({
+      message,
+      email,
+      name
     });
 
     return { html, subject };
