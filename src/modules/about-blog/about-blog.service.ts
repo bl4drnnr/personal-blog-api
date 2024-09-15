@@ -543,6 +543,11 @@ export class AboutBlogService {
 
     if (!author) throw new AuthorNotFoundException();
 
+    await this.deletePicture(
+      author.profilePicture,
+      StaticStorages.AUTHORS_PICTURES
+    );
+
     await this.authorsRepository.destroy({
       where: { id: authorId },
       transaction: trx
