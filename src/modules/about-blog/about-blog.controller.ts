@@ -6,7 +6,9 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
   UsePipes
 } from '@nestjs/common';
 import { AboutBlogService } from '@modules/about-blog.service';
@@ -24,6 +26,7 @@ import { CreateCertificationDto } from '@dto/create-certification.dto';
 import { UpdateCertificationDto } from '@dto/update-certification.dto';
 import { ChangeExperienceSelectionStatusDto } from '@dto/change-experience-selection-status.dto';
 import { ChangeCertificationSelectionStatusDto } from '@dto/change-certification-selection-status.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('about-blog')
 export class AboutBlogController {
@@ -256,5 +259,22 @@ export class AboutBlogController {
       payload,
       trx
     });
+  }
+
+  @UseGuards(AuthGuard)
+  @UseInterceptors(
+    FileInterceptor('certificateFile', {
+      limits: { fileSize: 5 * 1024 * 1024 },
+      fileFilter: (req, file, callback) => {
+        if (!file.mimetype.match(/\/(pdf)$/)) {
+          return callback(new Error('Only PDF files are allowed!'), false);
+        }
+        callback(null, true);
+      }
+    })
+  )
+  @Post('certification-file-upload')
+  certificationFileUpload(@UploadedFile() payload: Express.Multer.File) {
+    return this.aboutBlogService.certificationFileUpload(payload);
   }
 }

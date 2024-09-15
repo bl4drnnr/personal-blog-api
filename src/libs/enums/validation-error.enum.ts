@@ -49,5 +49,6 @@ export enum ValidationError {
   WRONG_CONTACT_NAME_FORMAT = 'wrong-contact-name-format',
   WRONG_CONTACT_NAME_LENGTH = 'wrong-contact-name-length',
   WRONG_CONTACT_MESSAGE_FORMAT = 'wrong-contact-message-format',
-  WRONG_CONTACT_MESSAGE_LENGTH = 'wrong-contact-message-length'
+  WRONG_CONTACT_MESSAGE_LENGTH = 'wrong-contact-message-length',
+  WRONG_PDF_NAME_FORMAT = 'wrong-pdf-name-format'
 }

@@ -26,6 +26,7 @@ import { PublishArticleInterface } from '@interfaces/publish-article.interface';
 import { ArticlePublishStatusDto } from '@dto/articles/response/article-published.dto';
 import { GetAllPostedArticlesSlugs } from '@interfaces/get-all-posted-articles-slugs.interface';
 import { Language } from '@interfaces/language.enum';
+import { StaticStorages } from '@interfaces/static-storages.enum';
 
 @Injectable()
 export class ArticlesService {
@@ -296,7 +297,7 @@ export class ArticlesService {
 
     const params = {
       Bucket: bucketName,
-      Key: `articles-main-pictures/${pictureName}`,
+      Key: `${StaticStorages.ARTICLES_MAIN_PICTURES}/${pictureName}`,
       Body: base64Data,
       ContentEncoding: 'base64',
       ContentType: `image/${type}`
@@ -315,7 +316,7 @@ export class ArticlesService {
 
     const params = {
       Bucket: bucketName,
-      Key: `articles-main-pictures/${picture}`
+      Key: `${StaticStorages.ARTICLES_MAIN_PICTURES}/${picture}`
     };
 
     await s3.deleteObject(params).promise();

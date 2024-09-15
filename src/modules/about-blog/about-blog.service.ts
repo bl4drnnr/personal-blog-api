@@ -52,6 +52,7 @@ import { ChangeExperienceSelectionStatusInterface } from '@interfaces/change-exp
 import { ExperienceSelectionStatusUpdatedDto } from '@dto/experience-selection-status-updated.dto';
 import { ChangeCertificationSelectionStatusInterface } from '@interfaces/change-certification-selection-status.interface';
 import { CertificationSelectionStatusUpdatedDto } from '@dto/certification-selection-status-updated.dto';
+import { CertificationFileUploadedDto } from '@dto/certification-file-uploaded.dto';
 
 @Injectable()
 export class AboutBlogService {
@@ -596,7 +597,7 @@ export class AboutBlogService {
 
     await this.authorsRepository.update(
       {
-        isSelected: !authorUpdatedStatus
+        isSelected: authorUpdatedStatus
       },
       { where: { id: authorId }, transaction: trx }
     );
@@ -618,7 +619,7 @@ export class AboutBlogService {
 
     await this.experiencesRepository.update(
       {
-        isSelected: !experienceUpdatedStatus
+        isSelected: experienceUpdatedStatus
       },
       { where: { id: experienceId }, transaction: trx }
     );
@@ -643,7 +644,7 @@ export class AboutBlogService {
 
     await this.certsRepository.update(
       {
-        isSelected: !certificationUpdatedStatus
+        isSelected: certificationUpdatedStatus
       },
       { where: { id: certificationId }, transaction: trx }
     );
@@ -651,6 +652,31 @@ export class AboutBlogService {
     return new CertificationSelectionStatusUpdatedDto(
       certificationUpdatedStatus
     );
+  }
+
+  async certificationFileUpload(payload: Express.Multer.File) {
+    const { accessKeyId, secretAccessKey, bucketName } =
+      this.configService.awsSdkCredentials;
+
+    const s3 = new S3({ accessKeyId, secretAccessKey });
+
+    const certificationNameHash = this.cryptographicService.hash({
+      data: payload.originalname + Date.now().toString(),
+      algorithm: CryptoHashAlgorithm.MD5
+    });
+
+    const certificationFileName = `${certificationNameHash}.pdf`;
+
+    const params = {
+      Bucket: bucketName,
+      Key: `${StaticStorages.CERTS_FILES}/${certificationFileName}`,
+      Body: payload.buffer,
+      ContentType: payload.mimetype
+    };
+
+    await s3.upload(params).promise();
+
+    return new CertificationFileUploadedDto(certificationFileName);
   }
 
   private async uploadPicture(picture: string, folderName: string) {
