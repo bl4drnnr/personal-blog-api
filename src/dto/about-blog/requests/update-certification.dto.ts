@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { ValidationError } from '@interfaces/validation-error.enum';
 import { ImageRegex } from '@regex/image.regex';
-import { LinkRegex } from '@regex/link.regex';
+import { PdfRegex } from '@regex/pdf.regex';
 
 export class UpdateCertificationDto {
   @IsUUID('4', { message: ValidationError.WRONG_CERTIFICATION_ID_FORMAT })
@@ -31,7 +31,7 @@ export class UpdateCertificationDto {
   certPicture?: string;
 
   @IsOptional()
-  @Matches(LinkRegex, { message: ValidationError.WRONG_LINK_FORMAT })
+  @Matches(PdfRegex, { message: ValidationError.WRONG_PDF_NAME_FORMAT })
   certDocs?: string;
 
   @IsOptional()

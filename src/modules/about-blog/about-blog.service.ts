@@ -425,7 +425,7 @@ export class AboutBlogService {
     if (description) authorUpdatedFields.description = description;
 
     if (profilePicture) {
-      await this.deletePicture(
+      await this.deleteFile(
         author.profilePicture,
         StaticStorages.AUTHORS_PICTURES
       );
@@ -470,7 +470,7 @@ export class AboutBlogService {
     if (startDate) experienceUpdatedFields.startDate = startDate;
     if (endDate) experienceUpdatedFields.endDate = endDate;
     if (companyPicture) {
-      await this.deletePicture(
+      await this.deleteFile(
         experience.companyPicture,
         StaticStorages.AUTHORS_PICTURES
       );
@@ -512,15 +512,19 @@ export class AboutBlogService {
     if (certName) certificateUpdatedFields.certName = certName;
     if (certDescription)
       certificateUpdatedFields.certDescription = certDescription;
-    if (certDocs) certificateUpdatedFields.certDocs = certDocs;
     if (obtainingDate) certificateUpdatedFields.obtainingDate = obtainingDate;
     if (expirationDate)
       certificateUpdatedFields.expirationDate = expirationDate;
     if (obtainedSkills)
       certificateUpdatedFields.obtainedSkills = obtainedSkills;
 
+    if (certDocs) {
+      certificateUpdatedFields.certDocs = certDocs;
+      await this.deleteFile(certificate.certDocs, StaticStorages.CERTS_FILES);
+    }
+
     if (certPicture) {
-      await this.deletePicture(
+      await this.deleteFile(
         certificate.certPicture,
         StaticStorages.CERTS_PICTURES
       );
@@ -543,7 +547,7 @@ export class AboutBlogService {
 
     if (!author) throw new AuthorNotFoundException();
 
-    await this.deletePicture(
+    await this.deleteFile(
       author.profilePicture,
       StaticStorages.AUTHORS_PICTURES
     );
@@ -720,7 +724,7 @@ export class AboutBlogService {
     return pictureName;
   }
 
-  private async deletePicture(picture: string, folderName: string) {
+  private async deleteFile(fileName: string, folderName: string) {
     const { accessKeyId, secretAccessKey, bucketName } =
       this.configService.awsSdkCredentials;
 
@@ -728,7 +732,7 @@ export class AboutBlogService {
 
     const params = {
       Bucket: bucketName,
-      Key: `${folderName}/${picture}`
+      Key: `${folderName}/${fileName}`
     };
 
     await s3.deleteObject(params).promise();
