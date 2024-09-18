@@ -27,6 +27,8 @@ import { UpdateCertificationDto } from '@dto/update-certification.dto';
 import { ChangeExperienceSelectionStatusDto } from '@dto/change-experience-selection-status.dto';
 import { ChangeCertificationSelectionStatusDto } from '@dto/change-certification-selection-status.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CreateExperiencePositionDto } from '@dto/create-experience-position.dto';
+import { UpdateExperiencePositionDto } from '@dto/update-experience-position.dto';
 
 @Controller('about-blog')
 export class AboutBlogController {
@@ -157,6 +159,16 @@ export class AboutBlogController {
 
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
+  @Post('create-experience-position')
+  createExperiencePosition(
+    @Body() payload: CreateExperiencePositionDto,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.aboutBlogService.createExperiencePosition({ payload, trx });
+  }
+
+  @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
   @Post('create-certification')
   createCertification(
     @Body() payload: CreateCertificationDto,
@@ -187,6 +199,16 @@ export class AboutBlogController {
 
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
+  @Patch('update-experience-position')
+  updateExperiencePosition(
+    @Body() payload: UpdateExperiencePositionDto,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.aboutBlogService.updateExperiencePosition({ payload, trx });
+  }
+
+  @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
   @Patch('update-certification')
   updateCertification(
     @Body() payload: UpdateCertificationDto,
@@ -211,6 +233,18 @@ export class AboutBlogController {
     @TrxDecorator() trx: Transaction
   ) {
     return this.aboutBlogService.deleteExperience({ experienceId, trx });
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('delete-experience-position')
+  deleteExperiencePosition(
+    @Query('experiencePositionId') experiencePositionId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.aboutBlogService.deleteExperiencePosition({
+      experiencePositionId,
+      trx
+    });
   }
 
   @UseGuards(AuthGuard)

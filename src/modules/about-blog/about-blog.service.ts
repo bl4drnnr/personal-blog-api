@@ -53,6 +53,13 @@ import { ExperienceSelectionStatusUpdatedDto } from '@dto/experience-selection-s
 import { ChangeCertificationSelectionStatusInterface } from '@interfaces/change-certification-selection-status.interface';
 import { CertificationSelectionStatusUpdatedDto } from '@dto/certification-selection-status-updated.dto';
 import { CertificationFileUploadedDto } from '@dto/certification-file-uploaded.dto';
+import { CreateCertificationPosition } from '@interfaces/create-certification-position.interace';
+import { ExperiencePositionCreatedDto } from '@dto/experience-position-created.dto';
+import { UpdateExperiencePositionInterface } from '@interfaces/update-experience-position.interface';
+import { ExperiencePositionUpdatedDto } from '@dto/experience-position-updated.dto';
+import { GetExperiencePositionByIdInterface } from '@interfaces/get-experience-position-by-id.interface';
+import { ExperiencePositionNotFoundException } from '@exceptions/experience-position-not-found.exception';
+import { ExperiencePositionDeletedDto } from '@dto/experience-position-deleted.dto';
 
 @Injectable()
 export class AboutBlogService {
@@ -92,6 +99,26 @@ export class AboutBlogService {
       include: [
         { model: ExperiencePosition, attributes: experiencePositionAttributes }
       ],
+      transaction: trx
+    });
+  }
+
+  getExperiencePositionById({
+    experiencePositionId,
+    trx
+  }: GetExperiencePositionByIdInterface) {
+    const experiencePositionAttributes = [
+      'id',
+      'positionTitle',
+      'positionDescription',
+      'positionStartDate',
+      'positionEndDate',
+      'createdAt',
+      'updatedAt'
+    ];
+
+    return this.experiencePositionsRepository.findByPk(experiencePositionId, {
+      attributes: experiencePositionAttributes,
       transaction: trx
     });
   }
@@ -376,6 +403,36 @@ export class AboutBlogService {
     return new ExperienceCreatedDto(createdExperience.id);
   }
 
+  async createExperiencePosition({
+    payload,
+    trx
+  }: CreateCertificationPosition) {
+    const {
+      experienceId,
+      positionStartDate,
+      positionEndDate,
+      positionTitle,
+      positionDescription
+    } = payload;
+
+    const experience = await this.getExperienceById({ experienceId, trx });
+
+    if (!experience) throw new ExperienceNotFoundException();
+
+    await this.experiencePositionsRepository.create(
+      {
+        experienceId,
+        positionStartDate,
+        positionEndDate,
+        positionTitle,
+        positionDescription
+      },
+      { transaction: trx }
+    );
+
+    return new ExperiencePositionCreatedDto();
+  }
+
   async createCertification({ payload, trx }: CreateCertificationInterface) {
     const {
       certName,
@@ -488,6 +545,43 @@ export class AboutBlogService {
     return new ExperienceUpdatedDto();
   }
 
+  async updateExperiencePosition({
+    payload,
+    trx
+  }: UpdateExperiencePositionInterface) {
+    const {
+      experiencePositionId,
+      positionStartDate,
+      positionEndDate,
+      positionTitle,
+      positionDescription
+    } = payload;
+
+    const experiencePosition = await this.getExperiencePositionById({
+      experiencePositionId,
+      trx
+    });
+
+    if (!experiencePosition) throw new ExperiencePositionNotFoundException();
+
+    const experienceUpdatedFields: Partial<ExperiencePosition> = {};
+
+    if (positionStartDate)
+      experienceUpdatedFields.positionStartDate = positionStartDate;
+    if (positionEndDate)
+      experienceUpdatedFields.positionEndDate = positionEndDate;
+    if (positionTitle) experienceUpdatedFields.positionTitle = positionTitle;
+    if (positionDescription)
+      experienceUpdatedFields.positionDescription = positionDescription;
+
+    await this.experiencePositionsRepository.update(
+      { ...experienceUpdatedFields },
+      { where: { id: experiencePositionId }, transaction: trx }
+    );
+
+    return new ExperiencePositionUpdatedDto();
+  }
+
   async updateCertification({ payload, trx }: UpdateCertificationInterface) {
     const {
       certificationId,
@@ -571,6 +665,22 @@ export class AboutBlogService {
     });
 
     return new ExperienceDeletedDto();
+  }
+
+  async deleteExperiencePosition({ experiencePositionId, trx }) {
+    const experiencePosition = await this.getExperiencePositionById({
+      experiencePositionId,
+      trx
+    });
+
+    if (!experiencePosition) throw new ExperiencePositionNotFoundException();
+
+    await this.experiencesRepository.destroy({
+      where: { id: experiencePositionId },
+      transaction: trx
+    });
+
+    return new ExperiencePositionDeletedDto();
   }
 
   async deleteCertification({
