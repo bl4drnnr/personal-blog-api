@@ -1,4 +1,6 @@
 import {
+  ArrayMinSize,
+  IsArray,
   IsDateString,
   IsOptional,
   IsString,
@@ -28,6 +30,10 @@ export class CreateExperienceDto {
 
   @Matches(ImageRegex, { message: ValidationError.WRONG_IMAGE_FORMAT })
   companyPicture: string;
+
+  @IsArray()
+  @ArrayMinSize(1)
+  obtainedSkills: Array<string>;
 
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
   startDate: Date;

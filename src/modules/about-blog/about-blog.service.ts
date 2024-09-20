@@ -226,17 +226,6 @@ export class AboutBlogService {
       'startDate',
       'endDate',
       'isSelected',
-      'experiencePositions',
-      'createdAt',
-      'updatedAt'
-    ];
-
-    const experiencePositionsAttributes = [
-      'id',
-      'positionTitle',
-      'positionDescription',
-      'positionStartDate',
-      'positionEndDate',
       'createdAt',
       'updatedAt'
     ];
@@ -255,9 +244,6 @@ export class AboutBlogService {
       attributes,
       limit,
       offset,
-      include: [
-        { model: ExperiencePosition, attributes: experiencePositionsAttributes }
-      ],
       order: [[order, orderBy]],
       transaction: trx
     });
@@ -376,6 +362,7 @@ export class AboutBlogService {
       companyLink,
       companyLinkTitle,
       companyPicture,
+      obtainedSkills,
       startDate,
       endDate,
       authorId
@@ -393,8 +380,9 @@ export class AboutBlogService {
         companyLink,
         companyLinkTitle,
         companyPicture: experiencePicture,
+        obtainedSkills,
         startDate,
-        endDate,
+        endDate: endDate ? endDate : null,
         authorId
       },
       { transaction: trx }
@@ -508,6 +496,7 @@ export class AboutBlogService {
       companyLinkTitle,
       companyPicture,
       companyName,
+      obtainedSkills,
       startDate,
       endDate
     } = payload;
@@ -526,6 +515,7 @@ export class AboutBlogService {
       experienceUpdatedFields.companyLinkTitle = companyLinkTitle;
     if (startDate) experienceUpdatedFields.startDate = startDate;
     if (endDate) experienceUpdatedFields.endDate = endDate;
+    if (obtainedSkills) experienceUpdatedFields.obtainedSkills = obtainedSkills;
     if (companyPicture) {
       await this.deleteFile(
         experience.companyPicture,

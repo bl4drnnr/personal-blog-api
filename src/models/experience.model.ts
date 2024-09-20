@@ -20,6 +20,7 @@ interface ExperienceCreationAttributes {
   companyLink: string;
   companyLinkTitle: string;
   companyPicture: string;
+  obtainedSkills: Array<string>;
   startDate: Date;
   endDate?: Date;
   authorId: string;
@@ -58,10 +59,17 @@ export class Experience extends Model<
   @Column({ type: DataType.STRING, allowNull: false, field: 'company_picture' })
   companyPicture: string;
 
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+    allowNull: false,
+    field: 'obtained_skills'
+  })
+  obtainedSkills: Array<string>;
+
   @Column({ type: DataType.DATE, allowNull: false, field: 'start_date' })
   startDate: Date;
 
-  @Column({ type: DataType.DATE, allowNull: false, field: 'end_date' })
+  @Column({ type: DataType.DATE, allowNull: true, field: 'end_date' })
   endDate: Date;
 
   @Default(false)
