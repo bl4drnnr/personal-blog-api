@@ -1,4 +1,4 @@
-name: Build and deployment
+name: API build and deployment
 
 on:
   push:
@@ -9,4 +9,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
+      - name: Get Github action IP
+        id: ip
+        uses: haythem/public-ip@v1.2
+
+      - name: Configure AWS Credentials
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }};
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }};
+          aws configure set region eu-central-1;
+
+      - name: Setting environment variables
+        run: |
+          echo "AWS_DEFAULT_REGION=eu-central-1" >> $GITHUB_ENV
+          echo "AWS_API_SG_NAME=bahdashych-on-security-api" >> $GITHUB_ENV
+
+      - name: Get API Security Group ID
+        id: get_api_sg_id
+        run: |
+          SG_ID=$(aws ec2 describe-security-groups --group-names ${{ env.AWS_API_SG_NAME }} --query 'SecurityGroups[0].GroupId' --output text)
+          echo "::set-output name=api_security_group_id::$SG_ID"
+
+      - name: Add Github Actions IP to Security group
+        run: |
+          aws ec2 authorize-security-group-ingress --group-name ${{ env.AWS_API_SG_NAME }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32;
+          aws ec2 authorize-security-group-ingress --group-name ${{ env.AWS_API_SG_NAME }} --protocol all --cidr 0.0.0.0/0;
+          aws ec2 authorize-security-group-egress --group-id ${{ steps.get_api_sg_id.outputs.api_security_group_id }} --protocol all --cidr 0.0.0.0/0;
+
+      - name: Create the .ssh directory
+        run: mkdir ~/.ssh && chmod 700 ~/.ssh
+      - name: Install the deploy key for the back-end
+        run: echo "${{ secrets.API_DEPLOY_KEY }}" >> ~/.ssh/api_deploy && chmod 600 ~/.ssh/api_deploy
+      - name: Create the known hosts file
+        run: echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+      - name: Remotely trigger building and deployment script for the back-end
+        run: ssh -i ~/.ssh/api_deploy deployer@${{ secrets.API_DEPLOY_KEY }}
