@@ -334,7 +334,13 @@ export class AboutBlogService {
   }
 
   async authorById({ authorId, trx }: GetAuthorByIdInterface) {
-    const socialsAttributes = [];
+    const socialsAttributes = [
+      'id',
+      'link',
+      'title',
+      'createdAt',
+      'updatedAt'
+    ];
     const certsAttributes = [
       'id',
       'certName',
