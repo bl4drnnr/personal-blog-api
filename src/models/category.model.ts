@@ -30,7 +30,11 @@ export class CategoryModel extends Model<
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'category_name' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'category_name'
+  })
   categoryName: string;
 
   @Column({

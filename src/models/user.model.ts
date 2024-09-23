@@ -33,10 +33,18 @@ export class User extends Model<User, UserCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: true })
   password: string;
 
-  @Column({ type: DataType.STRING, allowNull: true, field: 'first_name' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'first_name'
+  })
   firstName: string;
 
-  @Column({ type: DataType.STRING, allowNull: true, field: 'last_name' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'last_name'
+  })
   lastName: string;
 
   @Default(false)

@@ -4,7 +4,9 @@ import { ValidationError } from '@interfaces/validation-error.enum';
 import { Language } from '@interfaces/language.enum';
 
 export class ForgotPasswordDto {
-  @Matches(EmailRegex, { message: ValidationError.WRONG_EMAIL_FORMAT })
+  @Matches(EmailRegex, {
+    message: ValidationError.WRONG_EMAIL_FORMAT
+  })
   readonly email: string;
 
   @IsOptional()

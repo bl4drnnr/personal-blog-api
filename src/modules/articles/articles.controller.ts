@@ -34,7 +34,11 @@ export class ArticlesController {
     @Query('language') language: Language,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.articlesService.getPostedArticleBySlug({ slug, language, trx });
+    return this.articlesService.getPostedArticleBySlug({
+      slug,
+      language,
+      trx
+    });
   }
 
   @UseGuards(AuthGuard)
@@ -44,7 +48,11 @@ export class ArticlesController {
     @Query('language') language: Language,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.articlesService.getArticleBySlug({ slug, language, trx });
+    return this.articlesService.getArticleBySlug({
+      slug,
+      language,
+      trx
+    });
   }
 
   @UsePipes(ValidationPipe)
@@ -68,7 +76,10 @@ export class ArticlesController {
     @Query('articleId') articleId: string,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.articlesService.changePublishArticleStatus({ articleId, trx });
+    return this.articlesService.changePublishArticleStatus({
+      articleId,
+      trx
+    });
   }
 
   @UseGuards(AuthGuard)

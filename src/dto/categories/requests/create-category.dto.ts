@@ -13,11 +13,15 @@ import { Type } from 'class-transformer';
 
 class CategoryDto {
   @IsString({ message: ValidationError.WRONG_CATEGORY_NAME_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_CATEGORY_NAME_LENGTH })
+  @MinLength(1, {
+    message: ValidationError.WRONG_CATEGORY_NAME_LENGTH
+  })
   readonly categoryName: string;
 
   @IsString({ message: ValidationError.WRONG_CATEGORY_DESC_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_CATEGORY_DESC_LENGTH })
+  @MinLength(1, {
+    message: ValidationError.WRONG_CATEGORY_DESC_LENGTH
+  })
   readonly categoryDescription: string;
 
   @IsEnum(Language)
@@ -27,8 +31,12 @@ class CategoryDto {
 export class CreateCategoryDto {
   @IsArray()
   @ValidateNested({ each: true })
-  @ArrayMinSize(3, { message: ValidationError.WRONG_CATEGORIES_LENGTH })
-  @ArrayMaxSize(3, { message: ValidationError.WRONG_CATEGORIES_LENGTH })
+  @ArrayMinSize(3, {
+    message: ValidationError.WRONG_CATEGORIES_LENGTH
+  })
+  @ArrayMaxSize(3, {
+    message: ValidationError.WRONG_CATEGORIES_LENGTH
+  })
   @Type(() => CategoryDto)
   readonly categories: Array<CategoryDto>;
 }

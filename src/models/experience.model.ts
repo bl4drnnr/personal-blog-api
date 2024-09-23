@@ -36,7 +36,11 @@ export class Experience extends Model<
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'company_name' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'company_name'
+  })
   companyName: string;
 
   @Column({
@@ -46,7 +50,11 @@ export class Experience extends Model<
   })
   companyDescription: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'company_link' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'company_link'
+  })
   companyLink: string;
 
   @Column({
@@ -56,7 +64,11 @@ export class Experience extends Model<
   })
   companyLinkTitle: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'company_picture' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'company_picture'
+  })
   companyPicture: string;
 
   @Column({
@@ -66,18 +78,30 @@ export class Experience extends Model<
   })
   obtainedSkills: Array<string>;
 
-  @Column({ type: DataType.DATE, allowNull: false, field: 'start_date' })
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    field: 'start_date'
+  })
   startDate: Date;
 
   @Column({ type: DataType.DATE, allowNull: true, field: 'end_date' })
   endDate: Date;
 
   @Default(false)
-  @Column({ type: DataType.BOOLEAN, allowNull: false, field: 'is_selected' })
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    field: 'is_selected'
+  })
   isSelected: boolean;
 
   @ForeignKey(() => Author)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'author_id' })
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'author_id'
+  })
   authorId: string;
 
   @BelongsTo(() => Author)

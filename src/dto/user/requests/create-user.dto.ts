@@ -12,7 +12,9 @@ import { ValidationError } from '@interfaces/validation-error.enum';
 import { Language } from '@interfaces/language.enum';
 
 export class CreateUserDto {
-  @Matches(EmailRegex, { message: ValidationError.WRONG_EMAIL_FORMAT })
+  @Matches(EmailRegex, {
+    message: ValidationError.WRONG_EMAIL_FORMAT
+  })
   readonly email: string;
 
   @Matches(PasswordRegex, {

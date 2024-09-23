@@ -31,20 +31,36 @@ export class Author extends Model<Author, AuthorCreationAttributes> {
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'first_name' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'first_name'
+  })
   firstName: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'last_name' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'last_name'
+  })
   lastName: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
   description: string;
 
-  @Column({ type: DataType.STRING, allowNull: true, field: 'profile_picture' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'profile_picture'
+  })
   profilePicture: string;
 
   @Default(false)
-  @Column({ type: DataType.BOOLEAN, allowNull: false, field: 'is_selected' })
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    field: 'is_selected'
+  })
   isSelected: boolean;
 
   @ForeignKey(() => User)

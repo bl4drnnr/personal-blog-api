@@ -60,6 +60,14 @@ import { ExperiencePositionUpdatedDto } from '@dto/experience-position-updated.d
 import { GetExperiencePositionByIdInterface } from '@interfaces/get-experience-position-by-id.interface';
 import { ExperiencePositionNotFoundException } from '@exceptions/experience-position-not-found.exception';
 import { ExperiencePositionDeletedDto } from '@dto/experience-position-deleted.dto';
+import { CreateSocialInterface } from '@interfaces/create-social.interface';
+import { SocialCreatedDto } from '@dto/social-created.dto';
+import { UpdateSocialInterface } from '@interfaces/update-social.interface';
+import { GetSocialByIdInterface } from '@interfaces/get-social-by-id.interface';
+import { SocialNotFoundException } from '@exceptions/social-not-found.exception';
+import { SocialUpdatedDto } from '@dto/social-updated.dto';
+import { DeleteSocialInterface } from '@interfaces/delete-social.interface';
+import { SocialDeletedDto } from '@dto/social-deleted.dto';
 
 @Injectable()
 export class AboutBlogService {
@@ -84,7 +92,16 @@ export class AboutBlogService {
     });
   }
 
-  getExperienceById({ experienceId, trx }: GetExperienceByIdInterface) {
+  getSocialById({ socialId, trx }: GetSocialByIdInterface) {
+    return this.authorsRepository.findByPk(socialId, {
+      transaction: trx
+    });
+  }
+
+  getExperienceById({
+    experienceId,
+    trx
+  }: GetExperienceByIdInterface) {
     const experiencePositionAttributes = [
       'id',
       'positionTitle',
@@ -97,7 +114,10 @@ export class AboutBlogService {
 
     return this.experiencesRepository.findByPk(experienceId, {
       include: [
-        { model: ExperiencePosition, attributes: experiencePositionAttributes }
+        {
+          model: ExperiencePosition,
+          attributes: experiencePositionAttributes
+        }
       ],
       transaction: trx
     });
@@ -117,13 +137,19 @@ export class AboutBlogService {
       'updatedAt'
     ];
 
-    return this.experiencePositionsRepository.findByPk(experiencePositionId, {
-      attributes: experiencePositionAttributes,
-      transaction: trx
-    });
+    return this.experiencePositionsRepository.findByPk(
+      experiencePositionId,
+      {
+        attributes: experiencePositionAttributes,
+        transaction: trx
+      }
+    );
   }
 
-  getCertificationById({ certificationId, trx }: GetCertificationById) {
+  getCertificationById({
+    certificationId,
+    trx
+  }: GetCertificationById) {
     return this.certsRepository.findByPk(certificationId, {
       transaction: trx
     });
@@ -144,7 +170,9 @@ export class AboutBlogService {
     });
   }
 
-  getSelectedCertifications({ trx }: GetSelectedCertificationsInterface) {
+  getSelectedCertifications({
+    trx
+  }: GetSelectedCertificationsInterface) {
     return this.certsRepository.findAll({
       where: { isSelected: true },
       transaction: trx
@@ -188,14 +216,15 @@ export class AboutBlogService {
       ];
     }
 
-    const { rows, count } = await this.authorsRepository.findAndCountAll({
-      where,
-      attributes,
-      limit,
-      offset,
-      order: [[order, orderBy]],
-      transaction: trx
-    });
+    const { rows, count } =
+      await this.authorsRepository.findAndCountAll({
+        where,
+        attributes,
+        limit,
+        offset,
+        order: [[order, orderBy]],
+        transaction: trx
+      });
 
     return new ListAuthorsDto(rows, count);
   }
@@ -239,14 +268,15 @@ export class AboutBlogService {
       ];
     }
 
-    const { rows, count } = await this.experiencesRepository.findAndCountAll({
-      where,
-      attributes,
-      limit,
-      offset,
-      order: [[order, orderBy]],
-      transaction: trx
-    });
+    const { rows, count } =
+      await this.experiencesRepository.findAndCountAll({
+        where,
+        attributes,
+        limit,
+        offset,
+        order: [[order, orderBy]],
+        transaction: trx
+      });
 
     return new ListExperiencesDto(rows, count);
   }
@@ -290,14 +320,15 @@ export class AboutBlogService {
       ];
     }
 
-    const { rows, count } = await this.certsRepository.findAndCountAll({
-      where,
-      attributes,
-      limit,
-      offset,
-      order: [[order, orderBy]],
-      transaction: trx
-    });
+    const { rows, count } =
+      await this.certsRepository.findAndCountAll({
+        where,
+        attributes,
+        limit,
+        offset,
+        order: [[order, orderBy]],
+        transaction: trx
+      });
 
     return new ListCertificationsDto(rows, count);
   }
@@ -333,8 +364,13 @@ export class AboutBlogService {
     return author;
   }
 
-  async createAuthor({ userId, payload, trx }: CreateAuthorInterface) {
-    const { firstName, lastName, profilePicture, description } = payload;
+  async createAuthor({
+    userId,
+    payload,
+    trx
+  }: CreateAuthorInterface) {
+    const { firstName, lastName, profilePicture, description } =
+      payload;
 
     const authorPicture = await this.uploadPicture(
       profilePicture,
@@ -355,7 +391,29 @@ export class AboutBlogService {
     return new AuthorCreatedDto(createdAuthor.id);
   }
 
-  async createExperience({ payload, trx }: CreateExperienceInterface) {
+  async createSocial({ payload, trx }: CreateSocialInterface) {
+    const { authorId, title, link } = payload;
+
+    const author = await this.getAuthorById({ authorId, trx });
+
+    if (!author) throw new AuthorNotFoundException();
+
+    await this.socialsRepository.create(
+      {
+        authorId,
+        title,
+        link
+      },
+      { transaction: trx }
+    );
+
+    return new SocialCreatedDto();
+  }
+
+  async createExperience({
+    payload,
+    trx
+  }: CreateExperienceInterface) {
     const {
       companyName,
       companyDescription,
@@ -403,7 +461,10 @@ export class AboutBlogService {
       positionDescription
     } = payload;
 
-    const experience = await this.getExperienceById({ experienceId, trx });
+    const experience = await this.getExperienceById({
+      experienceId,
+      trx
+    });
 
     if (!experience) throw new ExperienceNotFoundException();
 
@@ -421,7 +482,10 @@ export class AboutBlogService {
     return new ExperiencePositionCreatedDto();
   }
 
-  async createCertification({ payload, trx }: CreateCertificationInterface) {
+  async createCertification({
+    payload,
+    trx
+  }: CreateCertificationInterface) {
     const {
       certName,
       certDescription,
@@ -456,8 +520,13 @@ export class AboutBlogService {
   }
 
   async updateAuthor({ payload, trx }: UpdateAuthorInterface) {
-    const { authorId, firstName, lastName, profilePicture, description } =
-      payload;
+    const {
+      authorId,
+      firstName,
+      lastName,
+      profilePicture,
+      description
+    } = payload;
 
     const author = await this.getAuthorById({ authorId, trx });
 
@@ -488,7 +557,30 @@ export class AboutBlogService {
     return new AuthorUpdatedDto();
   }
 
-  async updateExperience({ payload, trx }: UpdateExperienceInterface) {
+  async updateSocial({ payload, trx }: UpdateSocialInterface) {
+    const { socialId, link, title } = payload;
+
+    const social = await this.getSocialById({ socialId, trx });
+
+    if (!social) throw new SocialNotFoundException();
+
+    const socialUpdatedFields: Partial<Social> = {};
+
+    if (link) socialUpdatedFields.link = link;
+    if (title) socialUpdatedFields.title = title;
+
+    await this.socialsRepository.update(
+      { ...socialUpdatedFields },
+      { where: { id: socialId }, transaction: trx }
+    );
+
+    return new SocialUpdatedDto();
+  }
+
+  async updateExperience({
+    payload,
+    trx
+  }: UpdateExperienceInterface) {
     const {
       experienceId,
       companyDescription,
@@ -501,30 +593,38 @@ export class AboutBlogService {
       endDate
     } = payload;
 
-    const experience = await this.getExperienceById({ experienceId, trx });
+    const experience = await this.getExperienceById({
+      experienceId,
+      trx
+    });
 
     if (!experience) throw new ExperienceNotFoundException();
 
     const experienceUpdatedFields: Partial<Experience> = {};
 
-    if (companyName) experienceUpdatedFields.companyName = companyName;
+    if (companyName)
+      experienceUpdatedFields.companyName = companyName;
     if (companyDescription)
       experienceUpdatedFields.companyDescription = companyDescription;
-    if (companyLink) experienceUpdatedFields.companyLink = companyLink;
+    if (companyLink)
+      experienceUpdatedFields.companyLink = companyLink;
     if (companyLinkTitle)
       experienceUpdatedFields.companyLinkTitle = companyLinkTitle;
     if (startDate) experienceUpdatedFields.startDate = startDate;
-    if (endDate) experienceUpdatedFields.endDate = endDate;
-    if (obtainedSkills) experienceUpdatedFields.obtainedSkills = obtainedSkills;
+    if (endDate || endDate === null)
+      experienceUpdatedFields.endDate = endDate;
+    if (obtainedSkills)
+      experienceUpdatedFields.obtainedSkills = obtainedSkills;
     if (companyPicture) {
       await this.deleteFile(
         experience.companyPicture,
         StaticStorages.AUTHORS_PICTURES
       );
-      experienceUpdatedFields.companyPicture = await this.uploadPicture(
-        companyPicture,
-        StaticStorages.AUTHORS_PICTURES
-      );
+      experienceUpdatedFields.companyPicture =
+        await this.uploadPicture(
+          companyPicture,
+          StaticStorages.AUTHORS_PICTURES
+        );
     }
 
     await this.experiencesRepository.update(
@@ -552,7 +652,8 @@ export class AboutBlogService {
       trx
     });
 
-    if (!experiencePosition) throw new ExperiencePositionNotFoundException();
+    if (!experiencePosition)
+      throw new ExperiencePositionNotFoundException();
 
     const experienceUpdatedFields: Partial<ExperiencePosition> = {};
 
@@ -560,9 +661,11 @@ export class AboutBlogService {
       experienceUpdatedFields.positionStartDate = positionStartDate;
     if (positionEndDate)
       experienceUpdatedFields.positionEndDate = positionEndDate;
-    if (positionTitle) experienceUpdatedFields.positionTitle = positionTitle;
+    if (positionTitle)
+      experienceUpdatedFields.positionTitle = positionTitle;
     if (positionDescription)
-      experienceUpdatedFields.positionDescription = positionDescription;
+      experienceUpdatedFields.positionDescription =
+        positionDescription;
 
     await this.experiencePositionsRepository.update(
       { ...experienceUpdatedFields },
@@ -572,7 +675,10 @@ export class AboutBlogService {
     return new ExperiencePositionUpdatedDto();
   }
 
-  async updateCertification({ payload, trx }: UpdateCertificationInterface) {
+  async updateCertification({
+    payload,
+    trx
+  }: UpdateCertificationInterface) {
     const {
       certificationId,
       certName,
@@ -596,15 +702,19 @@ export class AboutBlogService {
     if (certName) certificateUpdatedFields.certName = certName;
     if (certDescription)
       certificateUpdatedFields.certDescription = certDescription;
-    if (obtainingDate) certificateUpdatedFields.obtainingDate = obtainingDate;
-    if (expirationDate)
+    if (obtainingDate)
+      certificateUpdatedFields.obtainingDate = obtainingDate;
+    if (expirationDate || expirationDate === null)
       certificateUpdatedFields.expirationDate = expirationDate;
     if (obtainedSkills)
       certificateUpdatedFields.obtainedSkills = obtainedSkills;
 
     if (certDocs) {
       certificateUpdatedFields.certDocs = certDocs;
-      await this.deleteFile(certificate.certDocs, StaticStorages.CERTS_FILES);
+      await this.deleteFile(
+        certificate.certDocs,
+        StaticStorages.CERTS_FILES
+      );
     }
 
     if (certPicture) {
@@ -644,8 +754,27 @@ export class AboutBlogService {
     return new AuthorDeletedDto();
   }
 
-  async deleteExperience({ experienceId, trx }: DeleteExperienceInterface) {
-    const experience = await this.getExperienceById({ experienceId, trx });
+  async deleteSocial({ socialId, trx }: DeleteSocialInterface) {
+    const social = await this.getSocialById({ socialId, trx });
+
+    if (!social) throw new SocialNotFoundException();
+
+    await this.socialsRepository.destroy({
+      where: { id: socialId },
+      transaction: trx
+    });
+
+    return new SocialDeletedDto();
+  }
+
+  async deleteExperience({
+    experienceId,
+    trx
+  }: DeleteExperienceInterface) {
+    const experience = await this.getExperienceById({
+      experienceId,
+      trx
+    });
 
     if (!experience) throw new ExperienceNotFoundException();
 
@@ -663,7 +792,8 @@ export class AboutBlogService {
       trx
     });
 
-    if (!experiencePosition) throw new ExperiencePositionNotFoundException();
+    if (!experiencePosition)
+      throw new ExperiencePositionNotFoundException();
 
     await this.experiencesRepository.destroy({
       where: { id: experiencePositionId },
@@ -720,7 +850,10 @@ export class AboutBlogService {
   }: ChangeExperienceSelectionStatusInterface) {
     const { experienceId } = payload;
 
-    const experience = await this.getExperienceById({ experienceId, trx });
+    const experience = await this.getExperienceById({
+      experienceId,
+      trx
+    });
 
     if (!experience) throw new ExperienceNotFoundException();
 
@@ -733,7 +866,9 @@ export class AboutBlogService {
       { where: { id: experienceId }, transaction: trx }
     );
 
-    return new ExperienceSelectionStatusUpdatedDto(experienceUpdatedStatus);
+    return new ExperienceSelectionStatusUpdatedDto(
+      experienceUpdatedStatus
+    );
   }
 
   async changeCertificationSelectionStatus({

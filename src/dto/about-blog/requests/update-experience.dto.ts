@@ -13,17 +13,23 @@ import { LinkRegex } from '@regex/link.regex';
 import { ImageRegex } from '@regex/image.regex';
 
 export class UpdateExperienceDto {
-  @IsUUID('4', { message: ValidationError.WRONG_EXPERIENCE_ID_FORMAT })
+  @IsUUID('4', {
+    message: ValidationError.WRONG_EXPERIENCE_ID_FORMAT
+  })
   experienceId: string;
 
   @IsOptional()
   @IsString({ message: ValidationError.WRONG_COMPANY_NAME_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_COMPANY_NAME_LENGTH })
+  @MinLength(1, {
+    message: ValidationError.WRONG_COMPANY_NAME_LENGTH
+  })
   companyName?: string;
 
   @IsOptional()
   @IsString({ message: ValidationError.WRONG_COMPANY_DESC_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_COMPANY_DESC_LENGTH })
+  @MinLength(1, {
+    message: ValidationError.WRONG_COMPANY_DESC_LENGTH
+  })
   companyDescription?: string;
 
   @IsOptional()
@@ -31,12 +37,18 @@ export class UpdateExperienceDto {
   companyLink?: string;
 
   @IsOptional()
-  @IsString({ message: ValidationError.WRONG_COMPANY_LINK_TITLE_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_COMPANY_LINK_TITLE_LENGTH })
+  @IsString({
+    message: ValidationError.WRONG_COMPANY_LINK_TITLE_FORMAT
+  })
+  @MinLength(1, {
+    message: ValidationError.WRONG_COMPANY_LINK_TITLE_LENGTH
+  })
   companyLinkTitle?: string;
 
   @IsOptional()
-  @Matches(ImageRegex, { message: ValidationError.WRONG_IMAGE_FORMAT })
+  @Matches(ImageRegex, {
+    message: ValidationError.WRONG_IMAGE_FORMAT
+  })
   companyPicture?: string;
 
   @IsOptional()

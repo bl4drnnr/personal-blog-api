@@ -69,7 +69,10 @@ export class CategoriesService {
   async editCategory({ payload, trx }: EditCategoryInterface) {
     const { categoryDescription, categoryName, categoryId } = payload;
 
-    const existingCategory = await this.getCategoryById({ categoryId, trx });
+    const existingCategory = await this.getCategoryById({
+      categoryId,
+      trx
+    });
 
     if (!existingCategory) throw new CategoryNotFoundException();
 
@@ -85,7 +88,10 @@ export class CategoriesService {
   }
 
   async deleteCategory({ categoryId, trx }: DeleteCategoryInterface) {
-    const existingCategory = await this.getCategoryById({ categoryId, trx });
+    const existingCategory = await this.getCategoryById({
+      categoryId,
+      trx
+    });
 
     if (!existingCategory) throw new CategoryNotFoundException();
 
@@ -100,7 +106,10 @@ export class CategoriesService {
     return new CategoryDeletedDto();
   }
 
-  async getCategoryByName({ categoryName, trx }: GetCategoryByNameInterface) {
+  async getCategoryByName({
+    categoryName,
+    trx
+  }: GetCategoryByNameInterface) {
     return this.categoryRepository.findOne({
       where: { categoryName },
       include: { all: true },
@@ -108,7 +117,10 @@ export class CategoriesService {
     });
   }
 
-  async getCategoryById({ categoryId, trx }: GetCategoryByIdInterface) {
+  async getCategoryById({
+    categoryId,
+    trx
+  }: GetCategoryByIdInterface) {
     return this.categoryRepository.findByPk(categoryId, {
       include: { all: true },
       transaction: trx

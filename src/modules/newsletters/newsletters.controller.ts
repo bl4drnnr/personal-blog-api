@@ -1,4 +1,10 @@
-import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Query,
+  UsePipes
+} from '@nestjs/common';
 import { NewslettersService } from '@modules/newsletters/newsletters.service';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { Transaction } from 'sequelize';
@@ -8,7 +14,9 @@ import { Language } from '@interfaces/language.enum';
 
 @Controller('newsletters')
 export class NewslettersController {
-  constructor(private readonly newslettersService: NewslettersService) {}
+  constructor(
+    private readonly newslettersService: NewslettersService
+  ) {}
 
   @UsePipes(ValidationPipe)
   @Post('subscribe')

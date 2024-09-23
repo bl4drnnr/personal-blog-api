@@ -13,21 +13,33 @@ export class UpdateAuthorDto {
   authorId: string;
 
   @IsOptional()
-  @IsString({ message: ValidationError.WRONG_AUTHOR_FIRST_NAME_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_AUTHOR_FIRST_NAME_LENGTH })
+  @IsString({
+    message: ValidationError.WRONG_AUTHOR_FIRST_NAME_FORMAT
+  })
+  @MinLength(1, {
+    message: ValidationError.WRONG_AUTHOR_FIRST_NAME_LENGTH
+  })
   firstName?: string;
 
   @IsOptional()
-  @IsString({ message: ValidationError.WRONG_AUTHOR_LAST_NAME_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_AUTHOR_LAST_NAME_LENGTH })
+  @IsString({
+    message: ValidationError.WRONG_AUTHOR_LAST_NAME_FORMAT
+  })
+  @MinLength(1, {
+    message: ValidationError.WRONG_AUTHOR_LAST_NAME_LENGTH
+  })
   lastName?: string;
 
   @IsOptional()
   @IsString({ message: ValidationError.WRONG_ARTICLE_NAME_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_ARTICLE_NAME_LENGTH })
+  @MinLength(1, {
+    message: ValidationError.WRONG_ARTICLE_NAME_LENGTH
+  })
   description?: string;
 
   @IsOptional()
-  @Matches(ImageRegex, { message: ValidationError.WRONG_IMAGE_FORMAT })
+  @Matches(ImageRegex, {
+    message: ValidationError.WRONG_IMAGE_FORMAT
+  })
   profilePicture?: string;
 }

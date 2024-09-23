@@ -38,7 +38,11 @@ export class ArticleModel extends Model<
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'article_name' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'article_name'
+  })
   articleName: string;
 
   @Column({
@@ -97,7 +101,11 @@ export class ArticleModel extends Model<
   userId: string;
 
   @ForeignKey(() => CategoryModel)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'category_id' })
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'category_id'
+  })
   categoryId: string;
 
   @BelongsTo(() => CategoryModel)

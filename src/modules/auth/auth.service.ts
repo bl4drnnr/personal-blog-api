@@ -1,7 +1,12 @@
 import * as speakeasy from 'speakeasy';
 import * as uuid from 'uuid';
 import * as jwt from 'jsonwebtoken';
-import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  Inject,
+  Injectable
+} from '@nestjs/common';
 import { Session } from '@models/session.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { Confirmation } from '@interfaces/confirmation-type.enum';
@@ -93,13 +98,16 @@ export class AuthService {
       trx
     };
 
-    const { _rt, _at } = await this.generateTokens(generateTokensPayload);
+    const { _rt, _at } = await this.generateTokens(
+      generateTokensPayload
+    );
 
     return new LogInUserResponseDto({ _rt, _at });
   }
 
   async registration({ payload, trx }: RegistrationInterface) {
-    const { email, password, firstName, lastName, tac, language } = payload;
+    const { email, password, firstName, lastName, tac, language } =
+      payload;
 
     const existingUser = await this.usersService.getUserByEmail({
       email,
@@ -109,9 +117,10 @@ export class AuthService {
     if (existingUser) throw new UserAlreadyExistsException();
     if (!tac) throw new TacNotAcceptedException();
 
-    const hashedPassword = await this.cryptographicService.hashPassword({
-      password
-    });
+    const hashedPassword =
+      await this.cryptographicService.hashPassword({
+        password
+      });
 
     const { id: userId } = await this.usersService.createUser({
       payload: {
@@ -168,15 +177,21 @@ export class AuthService {
       trx
     };
 
-    const { _at, _rt } = await this.generateTokens(generateTokensPayload);
+    const { _at, _rt } = await this.generateTokens(
+      generateTokensPayload
+    );
 
     return { _at, _rt };
   }
 
-  async checkUserMfaStatus({ mfaCode, userSettings }: CheckMfaStatusInterface) {
+  async checkUserMfaStatus({
+    mfaCode,
+    userSettings
+  }: CheckMfaStatusInterface) {
     const { twoFaToken: userTwoFaToken } = userSettings;
 
-    if (!mfaCode && userTwoFaToken) return new TokenTwoFaRequiredDto();
+    if (!mfaCode && userTwoFaToken)
+      return new TokenTwoFaRequiredDto();
 
     if (mfaCode && userTwoFaToken) {
       const delta = speakeasy.totp.verifyDelta({
@@ -203,7 +218,9 @@ export class AuthService {
     }
   }
 
-  private generateAccessToken({ userId }: GenerateAccessTokenInterface) {
+  private generateAccessToken({
+    userId
+  }: GenerateAccessTokenInterface) {
     const payload = { userId, type: 'access' };
 
     const options = {
@@ -268,7 +285,10 @@ export class AuthService {
     return { _at, _rt };
   }
 
-  private async getTokenById({ tokenId, trx: transaction }: GetTokenInterface) {
+  private async getTokenById({
+    tokenId,
+    trx: transaction
+  }: GetTokenInterface) {
     return this.sessionRepository.findOne({
       rejectOnEmpty: undefined,
       where: { tokenId },

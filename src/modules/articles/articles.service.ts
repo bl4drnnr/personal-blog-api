@@ -48,7 +48,9 @@ export class ArticlesService {
     return article;
   }
 
-  async getAllPostedArticlesSlugs({ trx }: GetAllPostedArticlesSlugs) {
+  async getAllPostedArticlesSlugs({
+    trx
+  }: GetAllPostedArticlesSlugs) {
     const articlesSlugs = await this.articleRepository.findAll({
       attributes: ['articleSlug', 'articleLanguage'],
       where: { articlePosted: true },
@@ -85,7 +87,9 @@ export class ArticlesService {
         articleLanguage: language,
         articlePosted: true
       },
-      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
+      include: [
+        { model: CategoryModel, attributes: ['categoryName'] }
+      ],
       transaction: trx
     });
 
@@ -94,12 +98,18 @@ export class ArticlesService {
     return article;
   }
 
-  async getArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
+  async getArticleBySlug({
+    slug,
+    language,
+    trx
+  }: GetArticleBySlugInterface) {
     if (!slug || !language) throw new ArticleNotFoundException();
 
     const article = await this.articleRepository.findOne({
       where: { articleSlug: slug, articleLanguage: language },
-      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
+      include: [
+        { model: CategoryModel, attributes: ['categoryName'] }
+      ],
       transaction: trx
     });
 
@@ -108,13 +118,19 @@ export class ArticlesService {
     return article;
   }
 
-  async createArticle({ userId, payload, trx }: CreateArticleInterface) {
+  async createArticle({
+    userId,
+    payload,
+    trx
+  }: CreateArticleInterface) {
     const { articles } = payload;
 
     const enArticle = articles.find(
       (article) => article.articleLanguage === Language.EN
     );
-    const articleSlug = this.generateArticleSlug(enArticle.articleName);
+    const articleSlug = this.generateArticleSlug(
+      enArticle.articleName
+    );
 
     for (const article of articles) {
       const category = await this.categoryService.getCategoryById({
@@ -151,7 +167,10 @@ export class ArticlesService {
     articleId,
     trx
   }: PublishArticleInterface) {
-    const existingArticle = await this.getArticleById({ articleId, trx });
+    const existingArticle = await this.getArticleById({
+      articleId,
+      trx
+    });
 
     await this.articleRepository.update(
       { articlePosted: !existingArticle.articlePosted },
@@ -183,7 +202,10 @@ export class ArticlesService {
       categoryId
     } = payload;
 
-    const existingArticle = await this.getArticleById({ articleId, trx });
+    const existingArticle = await this.getArticleById({
+      articleId,
+      trx
+    });
 
     if (!existingArticle) throw new ArticleNotFoundException();
 
@@ -192,7 +214,8 @@ export class ArticlesService {
     if (articleName) articleUpdatedFields.articleName = articleName;
     if (articleDescription)
       articleUpdatedFields.articleDescription = articleDescription;
-    if (articleContent) articleUpdatedFields.articleContent = articleContent;
+    if (articleContent)
+      articleUpdatedFields.articleContent = articleContent;
     if (articleTags) articleUpdatedFields.articleTags = articleTags;
 
     if (categoryId) {
@@ -259,15 +282,18 @@ export class ArticlesService {
       ];
     }
 
-    const { rows, count } = await this.articleRepository.findAndCountAll({
-      where,
-      attributes,
-      limit,
-      offset,
-      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
-      order: [[order, orderBy]],
-      transaction: trx
-    });
+    const { rows, count } =
+      await this.articleRepository.findAndCountAll({
+        where,
+        attributes,
+        limit,
+        offset,
+        include: [
+          { model: CategoryModel, attributes: ['categoryName'] }
+        ],
+        order: [[order, orderBy]],
+        transaction: trx
+      });
 
     return new ListArticlesDto(rows, count);
   }

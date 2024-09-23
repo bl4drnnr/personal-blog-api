@@ -12,7 +12,9 @@ export class ResetUserPasswordDto {
   readonly password?: string;
 
   @IsOptional()
-  @Matches(MfaCodeRegex, { message: ValidationError.WRONG_MFA_CODE_FORMAT })
+  @Matches(MfaCodeRegex, {
+    message: ValidationError.WRONG_MFA_CODE_FORMAT
+  })
   readonly mfaCode?: string;
 
   @IsOptional()

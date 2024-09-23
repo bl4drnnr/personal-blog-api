@@ -20,7 +20,10 @@ export class UsersController {
 
   @UseGuards(AuthGuard)
   @Get('user-info')
-  getUserInfo(@UserId() userId: string, @TrxDecorator() trx: Transaction) {
+  getUserInfo(
+    @UserId() userId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
     return this.usersService.getUserInfo({ userId, trx });
   }
 

@@ -28,13 +28,25 @@ export class UserSettings extends Model<
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.DATE, allowNull: true, field: 'code_sent_at' })
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    field: 'code_sent_at'
+  })
   codeSentAt: Date;
 
-  @Column({ type: DataType.STRING, allowNull: true, field: 'two_fa_token' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'two_fa_token'
+  })
   twoFaToken: string;
 
-  @Column({ type: DataType.DATE, allowNull: true, field: 'password_changed' })
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    field: 'password_changed'
+  })
   passwordChanged: Date;
 
   @Column({

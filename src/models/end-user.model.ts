@@ -16,7 +16,10 @@ interface EndUserCreationAttributes {
 }
 
 @Table({ tableName: 'end_users' })
-export class EndUser extends Model<EndUser, EndUserCreationAttributes> {
+export class EndUser extends Model<
+  EndUser,
+  EndUserCreationAttributes
+> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)

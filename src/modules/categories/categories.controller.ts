@@ -19,7 +19,9 @@ import { EditCategoryDto } from '@dto/edit-category.dto';
 
 @Controller('categories')
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(
+    private readonly categoriesService: CategoriesService
+  ) {}
 
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)

@@ -1,4 +1,8 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InvalidTokenException } from '@exceptions/invalid-token.exception';
 import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
@@ -18,7 +22,8 @@ export class AuthGuard implements CanActivate {
     const bearer = authHeader.split(' ')[0];
     const token = authHeader.split(' ')[1];
 
-    if (bearer !== 'Bearer' || !token) throw new CorruptedTokenException();
+    if (bearer !== 'Bearer' || !token)
+      throw new CorruptedTokenException();
 
     try {
       const tokenData = this.jwtService.verify(token);

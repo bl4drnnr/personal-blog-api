@@ -14,21 +14,31 @@ import { LinkRegex } from '@regex/link.regex';
 
 export class CreateExperienceDto {
   @IsString({ message: ValidationError.WRONG_COMPANY_NAME_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_COMPANY_NAME_LENGTH })
+  @MinLength(1, {
+    message: ValidationError.WRONG_COMPANY_NAME_LENGTH
+  })
   companyName: string;
 
   @IsString({ message: ValidationError.WRONG_COMPANY_DESC_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_COMPANY_DESC_LENGTH })
+  @MinLength(1, {
+    message: ValidationError.WRONG_COMPANY_DESC_LENGTH
+  })
   companyDescription: string;
 
   @Matches(LinkRegex, { message: ValidationError.WRONG_LINK_FORMAT })
   companyLink: string;
 
-  @IsString({ message: ValidationError.WRONG_COMPANY_LINK_TITLE_FORMAT })
-  @MinLength(1, { message: ValidationError.WRONG_COMPANY_LINK_TITLE_LENGTH })
+  @IsString({
+    message: ValidationError.WRONG_COMPANY_LINK_TITLE_FORMAT
+  })
+  @MinLength(1, {
+    message: ValidationError.WRONG_COMPANY_LINK_TITLE_LENGTH
+  })
   companyLinkTitle: string;
 
-  @Matches(ImageRegex, { message: ValidationError.WRONG_IMAGE_FORMAT })
+  @Matches(ImageRegex, {
+    message: ValidationError.WRONG_IMAGE_FORMAT
+  })
   companyPicture: string;
 
   @IsArray()

@@ -103,11 +103,12 @@ export class EmailService {
       route: Routes.LOGIN
     });
 
-    const { html, subject } = this.emailTemplatesService.resetPasswordComplete({
-      userInfo,
-      language,
-      link
-    });
+    const { html, subject } =
+      this.emailTemplatesService.resetPasswordComplete({
+        userInfo,
+        language,
+        link
+      });
 
     await this.sendEmail({ to, html, subject });
   }
@@ -132,13 +133,15 @@ export class EmailService {
   }
 
   async contact({ name, message, email }: ContactEmailInterface) {
-    const contactEmailAddress = this.configService.contactEmailAddress;
+    const contactEmailAddress =
+      this.configService.contactEmailAddress;
 
-    const { html, subject } = this.emailTemplatesService.contactEmailTemplate({
-      name,
-      message,
-      email
-    });
+    const { html, subject } =
+      this.emailTemplatesService.contactEmailTemplate({
+        name,
+        message,
+        email
+      });
 
     await this.sendEmail({
       to: contactEmailAddress,
@@ -147,10 +150,11 @@ export class EmailService {
     });
   }
 
-  private getConfirmationLink({ hash, route }: GetConfirmLinkInterface) {
-    return `${this.configService.frontEndUrl}/${route}${
-      hash ? `/${hash}` : ''
-    }`;
+  private getConfirmationLink({
+    hash,
+    route
+  }: GetConfirmLinkInterface) {
+    return `${this.configService.frontEndUrl}/${route}${hash ? `/${hash}` : ''}`;
   }
 
   private async sendEmail({ to, subject, html }: SendEmailInterface) {

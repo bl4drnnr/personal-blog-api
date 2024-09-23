@@ -30,7 +30,11 @@ export class Cert extends Model<Cert, CertCreationAttributes> {
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'cert_name' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'cert_name'
+  })
   certName: string;
 
   @Column({
@@ -40,16 +44,32 @@ export class Cert extends Model<Cert, CertCreationAttributes> {
   })
   certDescription: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'cert_picture' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'cert_picture'
+  })
   certPicture: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'cert_docs' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'cert_docs'
+  })
   certDocs: string;
 
-  @Column({ type: DataType.DATE, allowNull: false, field: 'obtaining_date' })
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    field: 'obtaining_date'
+  })
   obtainingDate: Date;
 
-  @Column({ type: DataType.DATE, allowNull: true, field: 'expiration_date' })
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    field: 'expiration_date'
+  })
   expirationDate: Date;
 
   @Column({
@@ -60,11 +80,19 @@ export class Cert extends Model<Cert, CertCreationAttributes> {
   obtainedSkills: Array<string>;
 
   @Default(false)
-  @Column({ type: DataType.BOOLEAN, allowNull: false, field: 'is_selected' })
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    field: 'is_selected'
+  })
   isSelected: boolean;
 
   @ForeignKey(() => Author)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'author_id' })
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'author_id'
+  })
   authorId: string;
 
   @BelongsTo(() => Author)

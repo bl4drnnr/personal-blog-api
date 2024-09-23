@@ -13,7 +13,9 @@ import { ImageRegex } from '@regex/image.regex';
 import { PdfRegex } from '@regex/pdf.regex';
 
 export class UpdateCertificationDto {
-  @IsUUID('4', { message: ValidationError.WRONG_CERTIFICATION_ID_FORMAT })
+  @IsUUID('4', {
+    message: ValidationError.WRONG_CERTIFICATION_ID_FORMAT
+  })
   certificationId: string;
 
   @IsOptional()
@@ -27,11 +29,15 @@ export class UpdateCertificationDto {
   certDescription?: string;
 
   @IsOptional()
-  @Matches(ImageRegex, { message: ValidationError.WRONG_IMAGE_FORMAT })
+  @Matches(ImageRegex, {
+    message: ValidationError.WRONG_IMAGE_FORMAT
+  })
   certPicture?: string;
 
   @IsOptional()
-  @Matches(PdfRegex, { message: ValidationError.WRONG_PDF_NAME_FORMAT })
+  @Matches(PdfRegex, {
+    message: ValidationError.WRONG_PDF_NAME_FORMAT
+  })
   certDocs?: string;
 
   @IsOptional()

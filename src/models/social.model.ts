@@ -32,7 +32,11 @@ export class Social extends Model<Social, SocialCreationAttributes> {
   title: string;
 
   @ForeignKey(() => Author)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'author_id' })
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'author_id'
+  })
   authorId: string;
 
   @BelongsTo(() => Author)

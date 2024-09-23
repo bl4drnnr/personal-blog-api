@@ -5,7 +5,9 @@ import { ValidationError } from '@interfaces/validation-error.enum';
 import { MfaCodeRegex } from '@regex/mfa-code.regex';
 
 export class LogInUserDto {
-  @Matches(EmailRegex, { message: ValidationError.WRONG_EMAIL_FORMAT })
+  @Matches(EmailRegex, {
+    message: ValidationError.WRONG_EMAIL_FORMAT
+  })
   readonly email: string;
 
   @Matches(PasswordRegex, {

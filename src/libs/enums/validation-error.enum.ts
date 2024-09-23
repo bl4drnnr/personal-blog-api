@@ -55,5 +55,10 @@ export enum ValidationError {
   WRONG_POSITION_TITLE_FORMAT = 'wrong-position-title-format',
   WRONG_POSITION_TITLE_LENGTH = 'wrong-position-title-length',
   WRONG_POSITION_DESC_FORMAT = 'wrong-position-desc-format',
-  WRONG_POSITION_DESC_LENGTH = 'wrong-position-desc-length'
+  WRONG_POSITION_DESC_LENGTH = 'wrong-position-desc-length',
+  WRONG_SOCIAL_TITLE_FORMAT = 'wrong-social-title-format',
+  WRONG_SOCIAL_TITLE_LENGTH = 'wrong-social-title-length',
+  WRONG_SOCIAL_LINK_FORMAT = 'wrong-social-link-format',
+  WRONG_SOCIAL_LINK_LENGTH = 'wrong-social-link-length',
+  WRONG_SOCIAL_ID_FORMAT = 'wrong-social-id-format'
 }

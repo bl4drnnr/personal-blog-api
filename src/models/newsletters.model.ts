@@ -31,11 +31,19 @@ export class Newsletter extends Model<
   id: string;
 
   @ForeignKey(() => EndUser)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'end_user_id' })
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'end_user_id'
+  })
   endUserId: string;
 
   @Default(false)
-  @Column({ type: DataType.BOOLEAN, allowNull: false, field: 'is_confirmed' })
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    field: 'is_confirmed'
+  })
   isConfirmed: boolean;
 
   @Column({

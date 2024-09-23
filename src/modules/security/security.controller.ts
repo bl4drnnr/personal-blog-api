@@ -37,7 +37,10 @@ export class SecurityController {
     @Body() payload: LoginGenerate2faQrDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.securityService.loginGenerateTwoFaQrCode({ payload, trx });
+    return this.securityService.loginGenerateTwoFaQrCode({
+      payload,
+      trx
+    });
   }
 
   @UseGuards(AuthGuard)
@@ -69,7 +72,10 @@ export class SecurityController {
     @Body() payload: VerifyTwoFaDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.securityService.loginVerifyTwoFaQrCode({ payload, trx });
+    return this.securityService.loginVerifyTwoFaQrCode({
+      payload,
+      trx
+    });
   }
 
   @UsePipes(ValidationPipe)
@@ -80,6 +86,10 @@ export class SecurityController {
     @UserId() userId: string,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.securityService.verifyTwoFaQrCode({ payload, userId, trx });
+    return this.securityService.verifyTwoFaQrCode({
+      payload,
+      userId,
+      trx
+    });
   }
 }

@@ -94,7 +94,10 @@ export class NewslettersService {
     });
 
     if (!existingUser) {
-      existingUser = await this.endUserService.createEndUser({ email, trx });
+      existingUser = await this.endUserService.createEndUser({
+        email,
+        trx
+      });
 
       const newsletters = await this.createNewslettersSubscription({
         endUserId: existingUser.id,
@@ -142,12 +145,16 @@ export class NewslettersService {
       trx
     });
 
-    if (!existingNewsletters) throw new NewslettersNotFoundException();
+    if (!existingNewsletters)
+      throw new NewslettersNotFoundException();
 
     if (existingNewsletters && existingNewsletters.isConfirmed)
       throw new SubscriptionAlreadyConfirmedException();
 
-    await this.confirmNewslettersSubscriptionById({ newslettersId, trx });
+    await this.confirmNewslettersSubscriptionById({
+      newslettersId,
+      trx
+    });
 
     return new SubscriptionConfirmedDto();
   }
@@ -161,9 +168,13 @@ export class NewslettersService {
       trx
     });
 
-    if (!existingNewsletters) throw new NewslettersNotFoundException();
+    if (!existingNewsletters)
+      throw new NewslettersNotFoundException();
 
-    await this.deleteNewslettersSubscriptionById({ newslettersId, trx });
+    await this.deleteNewslettersSubscriptionById({
+      newslettersId,
+      trx
+    });
 
     return new UnsubscriptionConfirmedDto();
   }

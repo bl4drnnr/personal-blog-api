@@ -3,6 +3,8 @@ import { EmailRegex } from '@regex/email.regex';
 import { ValidationError } from '@interfaces/validation-error.enum';
 
 export class SubscribeToNewslettersDto {
-  @Matches(EmailRegex, { message: ValidationError.WRONG_EMAIL_FORMAT })
+  @Matches(EmailRegex, {
+    message: ValidationError.WRONG_EMAIL_FORMAT
+  })
   readonly email: string;
 }

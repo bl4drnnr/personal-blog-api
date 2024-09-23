@@ -30,7 +30,11 @@ export class ExperiencePosition extends Model<
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.STRING, allowNull: false, field: 'position_title' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'position_title'
+  })
   positionTitle: string;
 
   @Column({
@@ -47,11 +51,19 @@ export class ExperiencePosition extends Model<
   })
   positionStartDate: Date;
 
-  @Column({ type: DataType.DATE, allowNull: false, field: 'position_end_date' })
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    field: 'position_end_date'
+  })
   positionEndDate: Date;
 
   @ForeignKey(() => Experience)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'experience_id' })
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'experience_id'
+  })
   experienceId: string;
 
   @BelongsTo(() => Experience)

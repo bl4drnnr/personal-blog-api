@@ -15,7 +15,10 @@ import { ValidationPipe } from '@pipes/validation.pipe';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { UserId } from '@decorators/user-id.decorator';
 import { CookieRefreshToken } from '@decorators/cookie-refresh-token.decorator';
-import { LogInUserDto, LogInUserResponseDto } from '@dto/log-in-user.dto';
+import {
+  LogInUserDto,
+  LogInUserResponseDto
+} from '@dto/log-in-user.dto';
 import { CreateUserDto } from '@dto/create-user.dto';
 
 @Controller('auth')

@@ -29,6 +29,8 @@ import { ChangeCertificationSelectionStatusDto } from '@dto/change-certification
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateExperiencePositionDto } from '@dto/create-experience-position.dto';
 import { UpdateExperiencePositionDto } from '@dto/update-experience-position.dto';
+import { CreateSocialDto } from '@dto/create-social.dto';
+import { UpdateSocialDto } from '@dto/update-social.dto';
 
 @Controller('about-blog')
 export class AboutBlogController {
@@ -124,7 +126,10 @@ export class AboutBlogController {
     @Query('experienceId') experienceId: string,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.getExperienceById({ experienceId, trx });
+    return this.aboutBlogService.getExperienceById({
+      experienceId,
+      trx
+    });
   }
 
   @UseGuards(AuthGuard)
@@ -133,7 +138,10 @@ export class AboutBlogController {
     @Query('certificationId') certificationId: string,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.getCertificationById({ certificationId, trx });
+    return this.aboutBlogService.getCertificationById({
+      certificationId,
+      trx
+    });
   }
 
   @UsePipes(ValidationPipe)
@@ -144,7 +152,21 @@ export class AboutBlogController {
     @Body() payload: CreateAuthorDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.createAuthor({ userId, payload, trx });
+    return this.aboutBlogService.createAuthor({
+      userId,
+      payload,
+      trx
+    });
+  }
+
+  @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
+  @Post('create-social')
+  createSocial(
+    @Body() payload: CreateSocialDto,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.aboutBlogService.createSocial({ payload, trx });
   }
 
   @UsePipes(ValidationPipe)
@@ -164,7 +186,10 @@ export class AboutBlogController {
     @Body() payload: CreateExperiencePositionDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.createExperiencePosition({ payload, trx });
+    return this.aboutBlogService.createExperiencePosition({
+      payload,
+      trx
+    });
   }
 
   @UsePipes(ValidationPipe)
@@ -174,7 +199,10 @@ export class AboutBlogController {
     @Body() payload: CreateCertificationDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.createCertification({ payload, trx });
+    return this.aboutBlogService.createCertification({
+      payload,
+      trx
+    });
   }
 
   @UsePipes(ValidationPipe)
@@ -185,6 +213,16 @@ export class AboutBlogController {
     @TrxDecorator() trx: Transaction
   ) {
     return this.aboutBlogService.updateAuthor({ payload, trx });
+  }
+
+  @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
+  @Patch('update-social')
+  updateSocial(
+    @Body() payload: UpdateSocialDto,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.aboutBlogService.updateSocial({ payload, trx });
   }
 
   @UsePipes(ValidationPipe)
@@ -204,7 +242,10 @@ export class AboutBlogController {
     @Body() payload: UpdateExperiencePositionDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.updateExperiencePosition({ payload, trx });
+    return this.aboutBlogService.updateExperiencePosition({
+      payload,
+      trx
+    });
   }
 
   @UsePipes(ValidationPipe)
@@ -214,7 +255,10 @@ export class AboutBlogController {
     @Body() payload: UpdateCertificationDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.updateCertification({ payload, trx });
+    return this.aboutBlogService.updateCertification({
+      payload,
+      trx
+    });
   }
 
   @UseGuards(AuthGuard)
@@ -227,12 +271,24 @@ export class AboutBlogController {
   }
 
   @UseGuards(AuthGuard)
+  @Delete('delete-social')
+  deleteSocial(
+    @Query('socialId') socialId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.aboutBlogService.deleteSocial({ socialId, trx });
+  }
+
+  @UseGuards(AuthGuard)
   @Delete('delete-experience')
   deleteExperience(
     @Query('experienceId') experienceId: string,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.deleteExperience({ experienceId, trx });
+    return this.aboutBlogService.deleteExperience({
+      experienceId,
+      trx
+    });
   }
 
   @UseGuards(AuthGuard)
@@ -253,7 +309,10 @@ export class AboutBlogController {
     @Query('certificationId') certificationId: string,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.deleteCertification({ certificationId, trx });
+    return this.aboutBlogService.deleteCertification({
+      certificationId,
+      trx
+    });
   }
 
   @UsePipes(ValidationPipe)
@@ -299,16 +358,21 @@ export class AboutBlogController {
   @UseInterceptors(
     FileInterceptor('certificateFile', {
       limits: { fileSize: 5 * 1024 * 1024 },
-      fileFilter: (req, file, callback) => {
+      fileFilter: (_req, file, callback) => {
         if (!file.mimetype.match(/\/(pdf)$/)) {
-          return callback(new Error('Only PDF files are allowed!'), false);
+          return callback(
+            new Error('Only PDF files are allowed!'),
+            false
+          );
         }
         callback(null, true);
       }
     })
   )
   @Post('certification-file-upload')
-  certificationFileUpload(@UploadedFile() payload: Express.Multer.File) {
+  certificationFileUpload(
+    @UploadedFile() payload: Express.Multer.File
+  ) {
     return this.aboutBlogService.certificationFileUpload(payload);
   }
 }
