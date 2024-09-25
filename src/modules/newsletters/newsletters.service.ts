@@ -27,10 +27,7 @@ export class NewslettersService {
     private readonly emailService: EmailService
   ) {}
 
-  async getNewslettersById({
-    newslettersId,
-    trx
-  }: GetNewslettersByIdInterface) {
+  async getNewslettersById({ newslettersId, trx }: GetNewslettersByIdInterface) {
     return this.newsletterRepository.findByPk(newslettersId, {
       transaction: trx
     });
@@ -145,8 +142,7 @@ export class NewslettersService {
       trx
     });
 
-    if (!existingNewsletters)
-      throw new NewslettersNotFoundException();
+    if (!existingNewsletters) throw new NewslettersNotFoundException();
 
     if (existingNewsletters && existingNewsletters.isConfirmed)
       throw new SubscriptionAlreadyConfirmedException();
@@ -168,8 +164,7 @@ export class NewslettersService {
       trx
     });
 
-    if (!existingNewsletters)
-      throw new NewslettersNotFoundException();
+    if (!existingNewsletters) throw new NewslettersNotFoundException();
 
     await this.deleteNewslettersSubscriptionById({
       newslettersId,

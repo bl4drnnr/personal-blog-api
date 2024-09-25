@@ -27,10 +27,7 @@ interface ExperienceCreationAttributes {
 }
 
 @Table({ tableName: 'experiences' })
-export class Experience extends Model<
-  Experience,
-  ExperienceCreationAttributes
-> {
+export class Experience extends Model<Experience, ExperienceCreationAttributes> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)

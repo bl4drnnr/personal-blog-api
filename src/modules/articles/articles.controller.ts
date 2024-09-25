@@ -97,10 +97,7 @@ export class ArticlesController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   @Patch('edit')
-  editArticle(
-    @Body() payload: EditArticleDto,
-    @TrxDecorator() trx: Transaction
-  ) {
+  editArticle(@Body() payload: EditArticleDto, @TrxDecorator() trx: Transaction) {
     return this.articlesService.editArticle({ payload, trx });
   }
 

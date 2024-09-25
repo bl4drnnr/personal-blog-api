@@ -1,9 +1,4 @@
-import {
-  IsOptional,
-  IsString,
-  Length,
-  Matches
-} from 'class-validator';
+import { IsOptional, IsString, Length, Matches } from 'class-validator';
 import { EmailRegex } from '@regex/email.regex';
 import { PasswordRegex } from '@regex/password.regex';
 import { MfaCodeRegex } from '@regex/mfa-code.regex';

@@ -21,10 +21,7 @@ interface NewslettersCreationAttributes {
 }
 
 @Table({ tableName: 'newsletters' })
-export class Newsletter extends Model<
-  Newsletter,
-  NewslettersCreationAttributes
-> {
+export class Newsletter extends Model<Newsletter, NewslettersCreationAttributes> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)

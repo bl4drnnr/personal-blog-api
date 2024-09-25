@@ -13,8 +13,7 @@ import { ComparePasswordsInterface } from '@interfaces/compare-passwords.interfa
 
 @Injectable()
 export class CryptographicService {
-  recoveryKeySize =
-    this.configService.recoveryEncryptionData.recoveryKeySize;
+  recoveryKeySize = this.configService.recoveryEncryptionData.recoveryKeySize;
   iterations = this.configService.recoveryEncryptionData.iterations;
   salt = this.configService.recoveryEncryptionData.salt;
   iv = this.configService.recoveryEncryptionData.iv;
@@ -42,16 +41,10 @@ export class CryptographicService {
   }
 
   async hashPassword({ password }: HashPasswordInterface) {
-    return await bcryptjs.hash(
-      password,
-      this.configService.hashPasswordRounds
-    );
+    return await bcryptjs.hash(password, this.configService.hashPasswordRounds);
   }
 
-  async comparePasswords({
-    dataToCompare,
-    hash
-  }: ComparePasswordsInterface) {
+  async comparePasswords({ dataToCompare, hash }: ComparePasswordsInterface) {
     return await bcryptjs.compare(dataToCompare, hash);
   }
 
@@ -66,18 +59,14 @@ export class CryptographicService {
     const key = CryptoJS.enc.Base64.parse(passphrase);
     const iv = CryptoJS.enc.Base64.parse(this.iv);
 
-    return CryptoJS.AES.decrypt(ciphertext, key, { iv }).toString(
-      CryptoJS.enc.Utf8
-    );
+    return CryptoJS.AES.decrypt(ciphertext, key, { iv }).toString(CryptoJS.enc.Utf8);
   }
 
   generateRecoveryKey() {
     const recoveryKeys: Array<string> = [];
 
     [...Array(5)].forEach(() => {
-      const randomBytes = CryptoJS.lib.WordArray.random(
-        this.recoveryKeySize
-      );
+      const randomBytes = CryptoJS.lib.WordArray.random(this.recoveryKeySize);
       recoveryKeys.push(randomBytes.toString());
     });
 

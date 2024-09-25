@@ -32,8 +32,7 @@ export class EmailService {
     language,
     trx
   }: SecurityInitEmailInterface) {
-    const confirmationHash =
-      this.cryptographicService.generateConfirmationHash();
+    const confirmationHash = this.cryptographicService.generateConfirmationHash();
 
     const { confirmationType, userId, to } = payload;
 
@@ -50,12 +49,11 @@ export class EmailService {
       route: Routes.ACCOUNT_CONFIRMATION
     });
 
-    const { html, subject } =
-      this.emailTemplatesService.registrationEmailTemplate({
-        userInfo,
-        link,
-        language
-      });
+    const { html, subject } = this.emailTemplatesService.registrationEmailTemplate({
+      userInfo,
+      link,
+      language
+    });
 
     await this.sendEmail({ to, html, subject });
   }
@@ -66,8 +64,7 @@ export class EmailService {
     language,
     trx
   }: SecurityInitEmailInterface) {
-    const confirmationHash =
-      this.cryptographicService.generateConfirmationHash();
+    const confirmationHash = this.cryptographicService.generateConfirmationHash();
 
     const { confirmationType, userId, to } = payload;
 
@@ -84,12 +81,13 @@ export class EmailService {
       route: Routes.RESET_PASSWORD
     });
 
-    const { html, subject } =
-      this.emailTemplatesService.forgotPasswordEmailTemplate({
+    const { html, subject } = this.emailTemplatesService.forgotPasswordEmailTemplate(
+      {
         userInfo,
         link,
         language
-      });
+      }
+    );
 
     await this.sendEmail({ to, html, subject });
   }
@@ -103,12 +101,11 @@ export class EmailService {
       route: Routes.LOGIN
     });
 
-    const { html, subject } =
-      this.emailTemplatesService.resetPasswordComplete({
-        userInfo,
-        language,
-        link
-      });
+    const { html, subject } = this.emailTemplatesService.resetPasswordComplete({
+      userInfo,
+      language,
+      link
+    });
 
     await this.sendEmail({ to, html, subject });
   }
@@ -123,25 +120,22 @@ export class EmailService {
       hash: newslettersId
     });
 
-    const { html, subject } =
-      this.emailTemplatesService.subscriptionConfirmation({
-        language,
-        link
-      });
+    const { html, subject } = this.emailTemplatesService.subscriptionConfirmation({
+      language,
+      link
+    });
 
     await this.sendEmail({ to, html, subject });
   }
 
   async contact({ name, message, email }: ContactEmailInterface) {
-    const contactEmailAddress =
-      this.configService.contactEmailAddress;
+    const contactEmailAddress = this.configService.contactEmailAddress;
 
-    const { html, subject } =
-      this.emailTemplatesService.contactEmailTemplate({
-        name,
-        message,
-        email
-      });
+    const { html, subject } = this.emailTemplatesService.contactEmailTemplate({
+      name,
+      message,
+      email
+    });
 
     await this.sendEmail({
       to: contactEmailAddress,
@@ -150,10 +144,7 @@ export class EmailService {
     });
   }
 
-  private getConfirmationLink({
-    hash,
-    route
-  }: GetConfirmLinkInterface) {
+  private getConfirmationLink({ hash, route }: GetConfirmLinkInterface) {
     return `${this.configService.frontEndUrl}/${route}${hash ? `/${hash}` : ''}`;
   }
 

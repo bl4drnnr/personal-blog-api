@@ -24,15 +24,9 @@ export class CategoriesService {
   async createCategory({ payload, trx }: CreateCategoryInterface) {
     const { categories } = payload;
 
-    const ruCategory = categories.find(
-      (c) => c.categoryLanguage === Language.RU
-    );
-    const plCategory = categories.find(
-      (c) => c.categoryLanguage === Language.PL
-    );
-    const enCategory = categories.find(
-      (c) => c.categoryLanguage === Language.EN
-    );
+    const ruCategory = categories.find((c) => c.categoryLanguage === Language.RU);
+    const plCategory = categories.find((c) => c.categoryLanguage === Language.PL);
+    const enCategory = categories.find((c) => c.categoryLanguage === Language.EN);
 
     const existingRuCategory = await this.getCategoryByName({
       categoryName: ruCategory.categoryName,
@@ -106,10 +100,7 @@ export class CategoriesService {
     return new CategoryDeletedDto();
   }
 
-  async getCategoryByName({
-    categoryName,
-    trx
-  }: GetCategoryByNameInterface) {
+  async getCategoryByName({ categoryName, trx }: GetCategoryByNameInterface) {
     return this.categoryRepository.findOne({
       where: { categoryName },
       include: { all: true },
@@ -117,10 +108,7 @@ export class CategoriesService {
     });
   }
 
-  async getCategoryById({
-    categoryId,
-    trx
-  }: GetCategoryByIdInterface) {
+  async getCategoryById({ categoryId, trx }: GetCategoryByIdInterface) {
     return this.categoryRepository.findByPk(categoryId, {
       include: { all: true },
       transaction: trx

@@ -53,7 +53,7 @@ export class ExperiencePosition extends Model<
 
   @Column({
     type: DataType.DATE,
-    allowNull: false,
+    allowNull: true,
     field: 'position_end_date'
   })
   positionEndDate: Date;

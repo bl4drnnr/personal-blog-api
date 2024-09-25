@@ -1,7 +1,4 @@
-import {
-  createParamDecorator,
-  ExecutionContext
-} from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const CookieRefreshToken = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {

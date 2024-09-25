@@ -12,11 +12,7 @@ import { ConfirmationHash } from '@models/confirmation-hash.model';
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
-    SequelizeModule.forFeature([
-      User,
-      UserSettings,
-      ConfirmationHash
-    ]),
+    SequelizeModule.forFeature([User, UserSettings, ConfirmationHash]),
     forwardRef(() => ConfirmationHashModule),
     forwardRef(() => AuthModule)
   ],

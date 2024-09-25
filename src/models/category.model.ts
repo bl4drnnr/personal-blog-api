@@ -21,10 +21,7 @@ interface CategoryCreationAttributes {
 const languageTypes = [Language.PL, Language.EN, Language.RU];
 
 @Table({ tableName: 'categories' })
-export class CategoryModel extends Model<
-  CategoryModel,
-  CategoryCreationAttributes
-> {
+export class CategoryModel extends Model<CategoryModel, CategoryCreationAttributes> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)

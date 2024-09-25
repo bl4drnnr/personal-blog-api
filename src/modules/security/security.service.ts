@@ -42,10 +42,7 @@ export class SecurityService {
     return await this.generateQrCode({ email });
   }
 
-  async loginGenerateTwoFaQrCode({
-    payload,
-    trx
-  }: LoginGenerate2faInterface) {
+  async loginGenerateTwoFaQrCode({ payload, trx }: LoginGenerate2faInterface) {
     const { email, password } = payload;
 
     await this.usersService.verifyUserCredentials({
@@ -92,18 +89,14 @@ export class SecurityService {
     }
   }
 
-  async loginVerifyTwoFaQrCode({
-    payload,
-    trx
-  }: LoginVerify2faInterface) {
+  async loginVerifyTwoFaQrCode({ payload, trx }: LoginVerify2faInterface) {
     const { code, twoFaToken, email, password } = payload;
 
-    const { id: userId } =
-      await this.usersService.verifyUserCredentials({
-        email,
-        password,
-        trx
-      });
+    const { id: userId } = await this.usersService.verifyUserCredentials({
+      email,
+      password,
+      trx
+    });
 
     try {
       return await this.verifyQrCode({
@@ -117,11 +110,7 @@ export class SecurityService {
     }
   }
 
-  async verifyTwoFaQrCode({
-    payload,
-    userId,
-    trx
-  }: Verify2faInterface) {
+  async verifyTwoFaQrCode({ payload, userId, trx }: Verify2faInterface) {
     const { code, twoFaToken } = payload;
 
     try {
@@ -162,8 +151,7 @@ export class SecurityService {
       token: code
     });
 
-    if (!delta || (delta && delta.delta !== 0))
-      throw new WrongCodeException();
+    if (!delta || (delta && delta.delta !== 0)) throw new WrongCodeException();
 
     await this.usersService.updateUser({
       payload: { isMfaSet: true },

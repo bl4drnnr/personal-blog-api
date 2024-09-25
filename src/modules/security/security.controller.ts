@@ -45,10 +45,7 @@ export class SecurityController {
 
   @UseGuards(AuthGuard)
   @Get('generate-2fa-qr')
-  generateTwoFaQrCode(
-    @UserId() userId: string,
-    @TrxDecorator() trx: Transaction
-  ) {
+  generateTwoFaQrCode(@UserId() userId: string, @TrxDecorator() trx: Transaction) {
     return this.securityService.generateTwoFaQrCode({ userId, trx });
   }
 

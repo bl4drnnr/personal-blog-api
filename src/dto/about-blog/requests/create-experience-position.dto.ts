@@ -1,9 +1,4 @@
-import {
-  IsDateString,
-  IsString,
-  IsUUID,
-  MinLength
-} from 'class-validator';
+import { IsDateString, IsString, IsUUID, MinLength } from 'class-validator';
 import { ValidationError } from '@interfaces/validation-error.enum';
 
 export class CreateExperiencePositionDto {

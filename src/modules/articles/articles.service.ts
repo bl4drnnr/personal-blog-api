@@ -48,9 +48,7 @@ export class ArticlesService {
     return article;
   }
 
-  async getAllPostedArticlesSlugs({
-    trx
-  }: GetAllPostedArticlesSlugs) {
+  async getAllPostedArticlesSlugs({ trx }: GetAllPostedArticlesSlugs) {
     const articlesSlugs = await this.articleRepository.findAll({
       attributes: ['articleSlug', 'articleLanguage'],
       where: { articlePosted: true },
@@ -63,11 +61,7 @@ export class ArticlesService {
     }));
   }
 
-  async getPostedArticleBySlug({
-    slug,
-    language,
-    trx
-  }: GetArticleBySlugInterface) {
+  async getPostedArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
     if (!slug || !language) throw new ArticleNotFoundException();
 
     const attributes = [
@@ -87,9 +81,7 @@ export class ArticlesService {
         articleLanguage: language,
         articlePosted: true
       },
-      include: [
-        { model: CategoryModel, attributes: ['categoryName'] }
-      ],
+      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
       transaction: trx
     });
 
@@ -98,18 +90,12 @@ export class ArticlesService {
     return article;
   }
 
-  async getArticleBySlug({
-    slug,
-    language,
-    trx
-  }: GetArticleBySlugInterface) {
+  async getArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
     if (!slug || !language) throw new ArticleNotFoundException();
 
     const article = await this.articleRepository.findOne({
       where: { articleSlug: slug, articleLanguage: language },
-      include: [
-        { model: CategoryModel, attributes: ['categoryName'] }
-      ],
+      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
       transaction: trx
     });
 
@@ -118,19 +104,13 @@ export class ArticlesService {
     return article;
   }
 
-  async createArticle({
-    userId,
-    payload,
-    trx
-  }: CreateArticleInterface) {
+  async createArticle({ userId, payload, trx }: CreateArticleInterface) {
     const { articles } = payload;
 
     const enArticle = articles.find(
       (article) => article.articleLanguage === Language.EN
     );
-    const articleSlug = this.generateArticleSlug(
-      enArticle.articleName
-    );
+    const articleSlug = this.generateArticleSlug(enArticle.articleName);
 
     for (const article of articles) {
       const category = await this.categoryService.getCategoryById({
@@ -140,9 +120,7 @@ export class ArticlesService {
 
       if (!category) throw new CategoryNotFoundException();
 
-      const articleImage = await this.uploadArticlePicture(
-        article.articlePicture
-      );
+      const articleImage = await this.uploadArticlePicture(article.articlePicture);
 
       await this.articleRepository.create(
         {
@@ -163,10 +141,7 @@ export class ArticlesService {
     return new ArticleCreatedDto();
   }
 
-  async changePublishArticleStatus({
-    articleId,
-    trx
-  }: PublishArticleInterface) {
+  async changePublishArticleStatus({ articleId, trx }: PublishArticleInterface) {
     const existingArticle = await this.getArticleById({
       articleId,
       trx
@@ -214,8 +189,7 @@ export class ArticlesService {
     if (articleName) articleUpdatedFields.articleName = articleName;
     if (articleDescription)
       articleUpdatedFields.articleDescription = articleDescription;
-    if (articleContent)
-      articleUpdatedFields.articleContent = articleContent;
+    if (articleContent) articleUpdatedFields.articleContent = articleContent;
     if (articleTags) articleUpdatedFields.articleTags = articleTags;
 
     if (categoryId) {
@@ -282,18 +256,15 @@ export class ArticlesService {
       ];
     }
 
-    const { rows, count } =
-      await this.articleRepository.findAndCountAll({
-        where,
-        attributes,
-        limit,
-        offset,
-        include: [
-          { model: CategoryModel, attributes: ['categoryName'] }
-        ],
-        order: [[order, orderBy]],
-        transaction: trx
-      });
+    const { rows, count } = await this.articleRepository.findAndCountAll({
+      where,
+      attributes,
+      limit,
+      offset,
+      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
+      order: [[order, orderBy]],
+      transaction: trx
+    });
 
     return new ListArticlesDto(rows, count);
   }
@@ -311,8 +282,7 @@ export class ArticlesService {
 
     const type = picture.split(';')[0].split('/')[1];
 
-    if (!['png', 'jpg', 'jpeg'].includes(type))
-      throw new WrongPictureException();
+    if (!['png', 'jpg', 'jpeg'].includes(type)) throw new WrongPictureException();
 
     const pictureHash = this.cryptographicService.hash({
       data: base64Data.toString() + Date.now().toString(),

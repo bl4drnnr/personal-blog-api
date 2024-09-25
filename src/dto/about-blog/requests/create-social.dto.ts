@@ -1,9 +1,4 @@
-import {
-  IsString,
-  IsUUID,
-  Matches,
-  MinLength
-} from 'class-validator';
+import { IsString, IsUUID, Matches, MinLength } from 'class-validator';
 import { ValidationError } from '@interfaces/validation-error.enum';
 import { LinkRegex } from '@regex/link.regex';
 

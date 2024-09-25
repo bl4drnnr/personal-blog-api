@@ -162,10 +162,7 @@ export class AboutBlogController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   @Post('create-social')
-  createSocial(
-    @Body() payload: CreateSocialDto,
-    @TrxDecorator() trx: Transaction
-  ) {
+  createSocial(@Body() payload: CreateSocialDto, @TrxDecorator() trx: Transaction) {
     return this.aboutBlogService.createSocial({ payload, trx });
   }
 
@@ -208,20 +205,14 @@ export class AboutBlogController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   @Patch('update-author')
-  updateAuthor(
-    @Body() payload: UpdateAuthorDto,
-    @TrxDecorator() trx: Transaction
-  ) {
+  updateAuthor(@Body() payload: UpdateAuthorDto, @TrxDecorator() trx: Transaction) {
     return this.aboutBlogService.updateAuthor({ payload, trx });
   }
 
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   @Patch('update-social')
-  updateSocial(
-    @Body() payload: UpdateSocialDto,
-    @TrxDecorator() trx: Transaction
-  ) {
+  updateSocial(@Body() payload: UpdateSocialDto, @TrxDecorator() trx: Transaction) {
     return this.aboutBlogService.updateSocial({ payload, trx });
   }
 
@@ -360,19 +351,14 @@ export class AboutBlogController {
       limits: { fileSize: 5 * 1024 * 1024 },
       fileFilter: (_req, file, callback) => {
         if (!file.mimetype.match(/\/(pdf)$/)) {
-          return callback(
-            new Error('Only PDF files are allowed!'),
-            false
-          );
+          return callback(new Error('Only PDF files are allowed!'), false);
         }
         callback(null, true);
       }
     })
   )
   @Post('certification-file-upload')
-  certificationFileUpload(
-    @UploadedFile() payload: Express.Multer.File
-  ) {
+  certificationFileUpload(@UploadedFile() payload: Express.Multer.File) {
     return this.aboutBlogService.certificationFileUpload(payload);
   }
 }

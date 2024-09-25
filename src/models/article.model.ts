@@ -29,10 +29,7 @@ interface ArticleCreationAttributes {
 }
 
 @Table({ tableName: 'articles' })
-export class ArticleModel extends Model<
-  ArticleModel,
-  ArticleCreationAttributes
-> {
+export class ArticleModel extends Model<ArticleModel, ArticleCreationAttributes> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)

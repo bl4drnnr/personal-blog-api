@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Query,
-  UsePipes
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UsePipes } from '@nestjs/common';
 import { ConfirmationHashService } from '@modules/confirmation-hash.service';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { Transaction } from 'sequelize';
@@ -14,9 +7,7 @@ import { ResetUserPasswordDto } from '@dto/reset-user-password.dto';
 
 @Controller('confirmation-hash')
 export class ConfirmationHashController {
-  constructor(
-    private readonly confirmationHashService: ConfirmationHashService
-  ) {}
+  constructor(private readonly confirmationHashService: ConfirmationHashService) {}
 
   @Get('account-confirmation')
   confirmAccount(

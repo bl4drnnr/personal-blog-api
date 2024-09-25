@@ -20,10 +20,7 @@ interface SessionCreationAttributes {
 @Table({
   tableName: 'sessions'
 })
-export class Session extends Model<
-  Session,
-  SessionCreationAttributes
-> {
+export class Session extends Model<Session, SessionCreationAttributes> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)

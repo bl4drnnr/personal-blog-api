@@ -11,12 +11,7 @@ export class GetUserInfoResponseDto {
   readonly lastName: string;
   readonly email: string;
 
-  constructor({
-    userIdHash,
-    firstName,
-    lastName,
-    email
-  }: UserInfoResponse) {
+  constructor({ userIdHash, firstName, lastName, email }: UserInfoResponse) {
     this.userIdHash = userIdHash;
     this.firstName = firstName;
     this.lastName = lastName;

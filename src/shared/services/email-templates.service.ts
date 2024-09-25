@@ -21,20 +21,16 @@ export class EmailTemplatesService {
 
     switch (language) {
       case Language.EN:
-        subject =
-          'Bahdashych on Security - Registration confirmation';
+        subject = 'Bahdashych on Security - Registration confirmation';
         break;
       case Language.RU:
-        subject =
-          'Bahdashych on Security - Подтверждение регистрации';
+        subject = 'Bahdashych on Security - Подтверждение регистрации';
         break;
       case Language.PL:
-        subject =
-          'Bahdashych on Security - Potwierdzenie rejestracji';
+        subject = 'Bahdashych on Security - Potwierdzenie rejestracji';
         break;
       default:
-        subject =
-          'Bahdashych on Security - Registration confirmation';
+        subject = 'Bahdashych on Security - Registration confirmation';
         break;
     }
 
@@ -87,8 +83,7 @@ export class EmailTemplatesService {
 
     switch (language) {
       case Language.EN:
-        subject =
-          'Bahdashych on Security - Password successfully reset';
+        subject = 'Bahdashych on Security - Password successfully reset';
         break;
       case Language.RU:
         subject = 'Bahdashych on Security - Пароль сброшен';
@@ -97,8 +92,7 @@ export class EmailTemplatesService {
         subject = 'Bahdashych on Security - Hasło zresetowane';
         break;
       default:
-        subject =
-          'Bahdashych on Security - Password successfully reset';
+        subject = 'Bahdashych on Security - Password successfully reset';
         break;
     }
 
@@ -119,19 +113,16 @@ export class EmailTemplatesService {
 
     switch (language) {
       case Language.EN:
-        subject =
-          'Bahdashych on Security - Subscription Confirmation';
+        subject = 'Bahdashych on Security - Subscription Confirmation';
         break;
       case Language.RU:
         subject = 'Bahdashych on Security - Подтверждение подписки';
         break;
       case Language.PL:
-        subject =
-          'Bahdashych on Security - Potwierdzenie subskrypcji';
+        subject = 'Bahdashych on Security - Potwierdzenie subskrypcji';
         break;
       default:
-        subject =
-          'Bahdashych on Security - Subscription Confirmation';
+        subject = 'Bahdashych on Security - Subscription Confirmation';
         break;
     }
 

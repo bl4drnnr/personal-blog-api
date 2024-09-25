@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  UseGuards,
-  UsePipes
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, UsePipes } from '@nestjs/common';
 import { UsersService } from '@modules/users.service';
 import { AuthGuard } from '@guards/auth.guard';
 import { UserId } from '@decorators/user-id.decorator';
@@ -20,10 +13,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard)
   @Get('user-info')
-  getUserInfo(
-    @UserId() userId: string,
-    @TrxDecorator() trx: Transaction
-  ) {
+  getUserInfo(@UserId() userId: string, @TrxDecorator() trx: Transaction) {
     return this.usersService.getUserInfo({ userId, trx });
   }
 

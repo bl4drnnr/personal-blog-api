@@ -1,9 +1,4 @@
-import {
-  forwardRef,
-  HttpException,
-  Inject,
-  Injectable
-} from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { UsersService } from '@modules/users.service';
@@ -42,10 +37,7 @@ export class ConfirmationHashService {
     private readonly confirmationHashRepository: typeof ConfirmationHash
   ) {}
 
-  async confirmAccount({
-    confirmationHash,
-    trx
-  }: ConfirmAccountInterface) {
+  async confirmAccount({ confirmationHash, trx }: ConfirmAccountInterface) {
     const { user, foundHash } = await this.getUserByConfirmationHash({
       confirmationHash,
       confirmationType: Confirmation.REGISTRATION,
@@ -62,8 +54,7 @@ export class ConfirmationHashService {
 
     if (isAccConfirmed && !isMfaSet) return new MfaNotSetDto();
 
-    if (isAccConfirmed && !isRecoverySetUp)
-      return new RecoveryKeysNotSetDto();
+    if (isAccConfirmed && !isRecoverySetUp) return new RecoveryKeysNotSetDto();
 
     await this.confirmHash({
       hashId: foundHash.id,
@@ -106,27 +97,24 @@ export class ConfirmationHashService {
     if (!isWithinDay) throw new LinkExpiredException();
 
     try {
-      const mfaStatusResponse =
-        await this.authService.checkUserMfaStatus({
-          mfaCode,
-          userSettings
-        });
+      const mfaStatusResponse = await this.authService.checkUserMfaStatus({
+        mfaCode,
+        userSettings
+      });
 
       if (mfaStatusResponse) return mfaStatusResponse;
     } catch (e: any) {
       throw new HttpException(e.response.message, e.status);
     }
 
-    const hashedPassword =
-      await this.cryptographicService.hashPassword({
-        password
-      });
+    const hashedPassword = await this.cryptographicService.hashPassword({
+      password
+    });
 
-    const isPreviousPassword =
-      await this.cryptographicService.comparePasswords({
-        dataToCompare: hashedPassword,
-        hash: currentUserPassword
-      });
+    const isPreviousPassword = await this.cryptographicService.comparePasswords({
+      dataToCompare: hashedPassword,
+      hash: currentUserPassword
+    });
 
     if (isPreviousPassword) throw new PreviousPasswordException();
 
@@ -187,10 +175,7 @@ export class ConfirmationHashService {
     });
   }
 
-  async confirmHash({
-    hashId: id,
-    trx: transaction
-  }: ConfirmHashInterface) {
+  async confirmHash({ hashId: id, trx: transaction }: ConfirmHashInterface) {
     await this.confirmationHashRepository.update(
       {
         confirmed: true

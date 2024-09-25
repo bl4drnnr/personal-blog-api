@@ -17,20 +17,8 @@ import { json, urlencoded } from 'express';
   app.use(urlencoded({ extended: true, limit: '50mb' }));
 
   app.enableCors({
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'X-Access-Token'
-    ],
-    methods: [
-      'GET',
-      'POST',
-      'PUT',
-      'PATCH',
-      'DELETE',
-      'OPTIONS',
-      'HEAD'
-    ],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Access-Token'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
     origin: whitelist,
     credentials: true
   });

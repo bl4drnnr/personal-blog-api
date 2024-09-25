@@ -44,10 +44,7 @@ export class UsersService {
     private readonly userSettingsRepository: typeof UserSettings
   ) {}
 
-  async getUserByEmail({
-    email,
-    trx: transaction
-  }: GetUserByEmailInterface) {
+  async getUserByEmail({ email, trx: transaction }: GetUserByEmailInterface) {
     return await this.userRepository.findOne({
       rejectOnEmpty: undefined,
       where: { email },
@@ -56,10 +53,7 @@ export class UsersService {
     });
   }
 
-  async createUser({
-    payload,
-    trx: transaction
-  }: CreateUserInterface) {
+  async createUser({ payload, trx: transaction }: CreateUserInterface) {
     const user = await this.userRepository.create(payload, {
       transaction
     });
@@ -83,11 +77,7 @@ export class UsersService {
     );
   }
 
-  async updateUser({
-    payload,
-    userId,
-    trx: transaction
-  }: UpdateUserInterface) {
+  async updateUser({ payload, userId, trx: transaction }: UpdateUserInterface) {
     await this.userRepository.update(
       {
         ...payload
@@ -121,14 +111,12 @@ export class UsersService {
   }: VerifyUserCredentialsInterface) {
     const user = await this.getUserByEmail({ email, trx });
 
-    if (!user || !user.password)
-      throw new WrongCredentialsException();
+    if (!user || !user.password) throw new WrongCredentialsException();
 
-    const passwordEquals =
-      await this.cryptographicService.comparePasswords({
-        dataToCompare: password,
-        hash: user.password
-      });
+    const passwordEquals = await this.cryptographicService.comparePasswords({
+      dataToCompare: password,
+      hash: user.password
+    });
 
     if (!passwordEquals) throw new WrongCredentialsException();
 
@@ -145,13 +133,7 @@ export class UsersService {
 
     if (!user) return new ResetPasswordEmailDto();
 
-    const {
-      id: userId,
-      email,
-      firstName,
-      lastName,
-      userSettings
-    } = user;
+    const { id: userId, email, firstName, lastName, userSettings } = user;
 
     const isWithinDay = this.timeService.isWithinTimeframe({
       time: userSettings.passwordChanged,
@@ -161,20 +143,16 @@ export class UsersService {
     if (isWithinDay) throw new PasswordChangedException();
 
     const userLastPasswordResent =
-      await this.confirmationHashService.getUserLastPasswordResetHash(
-        {
-          userId,
-          trx
-        }
-      );
+      await this.confirmationHashService.getUserLastPasswordResetHash({
+        userId,
+        trx
+      });
 
     if (userLastPasswordResent) {
-      const isWithinThreeMinutes = this.timeService.isWithinTimeframe(
-        {
-          time: userLastPasswordResent.createdAt,
-          seconds: 180
-        }
-      );
+      const isWithinThreeMinutes = this.timeService.isWithinTimeframe({
+        time: userLastPasswordResent.createdAt,
+        seconds: 180
+      });
 
       if (isWithinThreeMinutes) throw new WrongTimeframeException();
     }
@@ -215,10 +193,7 @@ export class UsersService {
     });
   }
 
-  async getUserSecuritySettings({
-    userId,
-    trx
-  }: GetUserSecuritySettingsInterface) {
+  async getUserSecuritySettings({ userId, trx }: GetUserSecuritySettingsInterface) {
     const {
       userSettings: { passwordChanged, twoFaToken },
       email
@@ -233,9 +208,7 @@ export class UsersService {
     });
 
     const isTwoFaSetUp = !!twoFaToken;
-    const passwordCanBeChanged = passwordChanged
-      ? !isWithinDay
-      : true;
+    const passwordCanBeChanged = passwordChanged ? !isWithinDay : true;
 
     return new GetUserSecResponseDto({
       passwordCanBeChanged,
@@ -244,11 +217,7 @@ export class UsersService {
     });
   }
 
-  async updateUserInfo({
-    userId,
-    payload,
-    trx
-  }: UpdateUserInfoInterface) {
+  async updateUserInfo({ userId, payload, trx }: UpdateUserInfoInterface) {
     await this.updateUser({ payload, userId, trx });
 
     return new UserUpdatedDto();
@@ -286,9 +255,6 @@ export class UsersService {
     userId,
     trx: transaction
   }: CreateUserSettingsInterface) {
-    return await this.userSettingsRepository.create(
-      { userId },
-      { transaction }
-    );
+    return await this.userSettingsRepository.create({ userId }, { transaction });
   }
 }

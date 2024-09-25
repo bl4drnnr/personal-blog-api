@@ -1,9 +1,4 @@
-import {
-  IsOptional,
-  IsString,
-  Matches,
-  MinLength
-} from 'class-validator';
+import { IsOptional, IsString, Matches, MinLength } from 'class-validator';
 import { ImageRegex } from '@regex/image.regex';
 import { ValidationError } from '@interfaces/validation-error.enum';
 

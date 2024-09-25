@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Query,
-  UseGuards,
-  UsePipes
-} from '@nestjs/common';
+import { Body, Controller, Post, Query, UseGuards, UsePipes } from '@nestjs/common';
 import { ValidationPipe } from '@pipes/validation.pipe';
 import { GenerateRecoveryKeysDto } from '@dto/generate-recovery-keys.dto';
 import { TrxDecorator } from '@decorators/transaction.decorator';
