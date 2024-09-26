@@ -334,13 +334,40 @@ export class AboutBlogService {
       'createdAt',
       'updatedAt'
     ];
-    const experiencesAttributes = [];
+    const experiencesAttributes = [
+      'id',
+      'companyName',
+      'companyDescription',
+      'companyLink',
+      'companyLinkTitle',
+      'companyPicture',
+      'startDate',
+      'endDate',
+      'isSelected',
+      'createdAt',
+      'updatedAt'
+    ];
+    const experiencesPositionsAttributes = [
+      'id',
+      'positionTitle',
+      'positionDescription',
+      'positionStartDate',
+      'positionEndDate',
+      'createdAt',
+      'updatedAt'
+    ];
 
     const author = await this.authorsRepository.findByPk(authorId, {
       include: [
         { model: Social, attributes: socialsAttributes },
         { model: Cert, attributes: certsAttributes },
-        { model: Experience, attributes: experiencesAttributes }
+        {
+          model: Experience,
+          attributes: experiencesAttributes,
+          include: [
+            { model: ExperiencePosition, attributes: experiencesPositionsAttributes }
+          ]
+        }
       ],
       transaction: trx
     });
