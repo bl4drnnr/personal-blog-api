@@ -149,7 +149,11 @@ export class AboutBlogService {
   getSelectedAuthor({ trx }: GetSelectedAuthorInterface) {
     return this.authorsRepository.findOne({
       where: { isSelected: true },
-      include: [{ model: Social, attributes: ['link', 'title'] }],
+      include: [
+        { model: Social },
+        { model: Cert },
+        { model: Experience, include: [ExperiencePosition] }
+      ],
       transaction: trx
     });
   }
@@ -378,7 +382,7 @@ export class AboutBlogService {
   }
 
   async createAuthor({ userId, payload, trx }: CreateAuthorInterface) {
-    const { firstName, lastName, profilePicture, description } = payload;
+    const { firstName, lastName, profilePicture, description, title } = payload;
 
     const authorPicture = await this.uploadPicture(
       profilePicture,
@@ -390,6 +394,7 @@ export class AboutBlogService {
         userId,
         firstName,
         lastName,
+        title,
         profilePicture: authorPicture,
         description
       },
@@ -519,7 +524,8 @@ export class AboutBlogService {
   }
 
   async updateAuthor({ payload, trx }: UpdateAuthorInterface) {
-    const { authorId, firstName, lastName, profilePicture, description } = payload;
+    const { authorId, firstName, lastName, profilePicture, description, title } =
+      payload;
 
     const author = await this.getAuthorById({ authorId, trx });
 
@@ -530,6 +536,7 @@ export class AboutBlogService {
     if (firstName) authorUpdatedFields.firstName = firstName;
     if (lastName) authorUpdatedFields.lastName = lastName;
     if (description) authorUpdatedFields.description = description;
+    if (title) authorUpdatedFields.title = title;
 
     if (profilePicture) {
       await this.deleteFile(author.profilePicture, StaticStorages.AUTHORS_PICTURES);
@@ -795,6 +802,13 @@ export class AboutBlogService {
         isSelected: authorUpdatedStatus
       },
       { where: { id: authorId }, transaction: trx }
+    );
+
+    await this.authorsRepository.update(
+      {
+        isSelected: false
+      },
+      { where: { id: { [Op.not]: authorId } }, transaction: trx }
     );
 
     return new AuthorSelectionStatusUpdatedDto(authorUpdatedStatus);

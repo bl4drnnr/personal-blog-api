@@ -33,6 +33,8 @@ export enum ValidationError {
   WRONG_AUTHOR_FIRST_NAME_LENGTH = 'wrong-author-first-length',
   WRONG_AUTHOR_LAST_NAME_FORMAT = 'wrong-author-last-format',
   WRONG_AUTHOR_LAST_NAME_LENGTH = 'wrong-author-last-length',
+  WRONG_AUTHOR_TITLE_FORMAT = 'wrong-author-title-format',
+  WRONG_AUTHOR_TITLE_LENGTH = 'wrong-author-title-length',
   WRONG_COMPANY_NAME_FORMAT = 'wrong-company-name-format',
   WRONG_COMPANY_NAME_LENGTH = 'wrong-company-name-length',
   WRONG_COMPANY_DESC_FORMAT = 'wrong-company-desc-format',

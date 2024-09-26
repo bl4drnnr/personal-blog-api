@@ -25,6 +25,15 @@ export class UpdateAuthorDto {
   lastName?: string;
 
   @IsOptional()
+  @IsString({
+    message: ValidationError.WRONG_AUTHOR_TITLE_FORMAT
+  })
+  @MinLength(1, {
+    message: ValidationError.WRONG_AUTHOR_TITLE_LENGTH
+  })
+  title?: string;
+
+  @IsOptional()
   @IsString({ message: ValidationError.WRONG_ARTICLE_NAME_FORMAT })
   @MinLength(1, {
     message: ValidationError.WRONG_ARTICLE_NAME_LENGTH

@@ -19,6 +19,7 @@ import { Cert } from '@models/cert.model';
 interface AuthorCreationAttributes {
   firstName: string;
   lastName: string;
+  title: string;
   description: string;
   profilePicture: string;
   userId: string;
@@ -44,6 +45,9 @@ export class Author extends Model<Author, AuthorCreationAttributes> {
     field: 'last_name'
   })
   lastName: string;
+
+  @Column({ type: DataType.STRING, allowNull: false })
+  title: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
   description: string;
