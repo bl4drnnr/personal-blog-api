@@ -38,7 +38,7 @@ export class Cert extends Model<Cert, CertCreationAttributes> {
   certName: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT,
     allowNull: false,
     field: 'cert_description'
   })

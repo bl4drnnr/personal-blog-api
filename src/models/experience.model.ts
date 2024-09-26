@@ -41,7 +41,7 @@ export class Experience extends Model<Experience, ExperienceCreationAttributes> 
   companyName: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT,
     allowNull: false,
     field: 'company_description'
   })
