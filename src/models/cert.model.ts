@@ -11,6 +11,9 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { Author } from '@models/author.model';
+import { Language } from '@interfaces/language.enum';
+
+const languageTypes = [Language.PL, Language.EN, Language.RU];
 
 interface CertCreationAttributes {
   certName: string;
@@ -20,6 +23,7 @@ interface CertCreationAttributes {
   obtainingDate: Date;
   expirationDate?: Date;
   obtainedSkills: Array<string>;
+  certLanguage: Language;
   authorId: string;
 }
 
@@ -86,6 +90,13 @@ export class Cert extends Model<Cert, CertCreationAttributes> {
     field: 'is_selected'
   })
   isSelected: boolean;
+
+  @Column({
+    type: DataType.ENUM(...languageTypes),
+    allowNull: false,
+    field: 'cert_language'
+  })
+  certLanguage: Language;
 
   @ForeignKey(() => Author)
   @Column({

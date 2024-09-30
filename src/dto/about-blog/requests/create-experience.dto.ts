@@ -17,16 +17,16 @@ export class CreateExperienceDto {
   @MinLength(1, {
     message: ValidationError.WRONG_COMPANY_NAME_LENGTH
   })
-  companyName: string;
+  readonly companyName: string;
 
   @IsString({ message: ValidationError.WRONG_COMPANY_DESC_FORMAT })
   @MinLength(1, {
     message: ValidationError.WRONG_COMPANY_DESC_LENGTH
   })
-  companyDescription: string;
+  readonly companyDescription: string;
 
   @Matches(LinkRegex, { message: ValidationError.WRONG_LINK_FORMAT })
-  companyLink: string;
+  readonly companyLink: string;
 
   @IsString({
     message: ValidationError.WRONG_COMPANY_LINK_TITLE_FORMAT
@@ -34,24 +34,24 @@ export class CreateExperienceDto {
   @MinLength(1, {
     message: ValidationError.WRONG_COMPANY_LINK_TITLE_LENGTH
   })
-  companyLinkTitle: string;
+  readonly companyLinkTitle: string;
 
   @Matches(ImageRegex, {
     message: ValidationError.WRONG_IMAGE_FORMAT
   })
-  companyPicture: string;
+  readonly companyPicture: string;
 
   @IsArray()
   @ArrayMinSize(1)
-  obtainedSkills: Array<string>;
+  readonly obtainedSkills: Array<string>;
 
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
-  startDate: Date;
+  readonly startDate: Date;
 
   @IsOptional()
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
-  endDate?: Date;
+  readonly endDate?: Date;
 
   @IsUUID('4', { message: ValidationError.WRONG_AUTHOR_ID_FORMAT })
-  authorId: string;
+  readonly authorId: string;
 }

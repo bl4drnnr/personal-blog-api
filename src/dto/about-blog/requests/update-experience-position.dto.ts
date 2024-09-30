@@ -11,27 +11,27 @@ export class UpdateExperiencePositionDto {
   @IsUUID('4', {
     message: ValidationError.WRONG_EXPERIENCE_POSITION_ID_FORMAT
   })
-  experiencePositionId: string;
+  readonly experiencePositionId: string;
 
   @IsOptional()
   @IsString({ message: ValidationError.WRONG_POSITION_TITLE_FORMAT })
   @MinLength(1, {
     message: ValidationError.WRONG_POSITION_TITLE_LENGTH
   })
-  positionTitle?: string;
+  readonly positionTitle?: string;
 
   @IsOptional()
   @IsString({ message: ValidationError.WRONG_POSITION_DESC_FORMAT })
   @MinLength(1, {
     message: ValidationError.WRONG_POSITION_DESC_LENGTH
   })
-  positionDescription?: string;
+  readonly positionDescription?: string;
 
   @IsOptional()
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
-  positionStartDate?: Date;
+  readonly positionStartDate?: Date;
 
   @IsOptional()
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
-  positionEndDate?: Date;
+  readonly positionEndDate?: Date;
 }

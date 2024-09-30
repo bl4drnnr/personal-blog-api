@@ -16,40 +16,40 @@ export class UpdateCertificationDto {
   @IsUUID('4', {
     message: ValidationError.WRONG_CERTIFICATION_ID_FORMAT
   })
-  certificationId: string;
+  readonly certificationId: string;
 
   @IsOptional()
   @IsString({ message: ValidationError.WRONG_CERT_NAME_FORMAT })
   @MinLength(1, { message: ValidationError.WRONG_CERT_NAME_LENGTH })
-  certName?: string;
+  readonly certName?: string;
 
   @IsOptional()
   @IsString({ message: ValidationError.WRONG_CERT_DESC_FORMAT })
   @MinLength(1, { message: ValidationError.WRONG_CERT_DESC_LENGTH })
-  certDescription?: string;
+  readonly certDescription?: string;
 
   @IsOptional()
   @Matches(ImageRegex, {
     message: ValidationError.WRONG_IMAGE_FORMAT
   })
-  certPicture?: string;
+  readonly certPicture?: string;
 
   @IsOptional()
   @Matches(PdfRegex, {
     message: ValidationError.WRONG_PDF_NAME_FORMAT
   })
-  certDocs?: string;
+  readonly certDocs?: string;
 
   @IsOptional()
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
-  obtainingDate?: Date;
+  readonly obtainingDate?: Date;
 
   @IsOptional()
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
-  expirationDate?: Date;
+  readonly expirationDate?: Date;
 
   @IsOptional()
   @IsArray()
   @ArrayMinSize(1)
-  obtainedSkills?: Array<string>;
+  readonly obtainedSkills?: Array<string>;
 }

@@ -7,16 +7,16 @@ export class ContactDto {
   @MinLength(1, {
     message: ValidationError.WRONG_CONTACT_NAME_LENGTH
   })
-  name: string;
+  readonly name: string;
 
   @Matches(EmailRegex, {
     message: ValidationError.WRONG_EMAIL_FORMAT
   })
-  email: string;
+  readonly email: string;
 
   @IsString({ message: ValidationError.WRONG_CONTACT_MESSAGE_FORMAT })
   @MinLength(1, {
     message: ValidationError.WRONG_CONTACT_MESSAGE_LENGTH
   })
-  message: string;
+  readonly message: string;
 }

@@ -15,33 +15,33 @@ import { PdfRegex } from '@regex/pdf.regex';
 export class CreateCertificationDto {
   @IsString({ message: ValidationError.WRONG_CERT_NAME_FORMAT })
   @MinLength(1, { message: ValidationError.WRONG_CERT_NAME_LENGTH })
-  certName: string;
+  readonly certName: string;
 
   @IsString({ message: ValidationError.WRONG_CERT_DESC_FORMAT })
   @MinLength(1, { message: ValidationError.WRONG_CERT_DESC_LENGTH })
-  certDescription: string;
+  readonly certDescription: string;
 
   @Matches(ImageRegex, {
     message: ValidationError.WRONG_IMAGE_FORMAT
   })
-  certPicture: string;
+  readonly certPicture: string;
 
   @Matches(PdfRegex, {
     message: ValidationError.WRONG_PDF_NAME_FORMAT
   })
-  certDocs: string;
+  readonly certDocs: string;
 
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
-  obtainingDate: Date;
+  readonly obtainingDate: Date;
 
   @IsOptional()
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
-  expirationDate?: Date;
+  readonly expirationDate?: Date;
 
   @IsArray()
   @ArrayMinSize(1)
-  obtainedSkills: Array<string>;
+  readonly obtainedSkills: Array<string>;
 
   @IsUUID('4', { message: ValidationError.WRONG_AUTHOR_ID_FORMAT })
-  authorId: string;
+  readonly authorId: string;
 }

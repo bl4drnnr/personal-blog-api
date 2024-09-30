@@ -4,7 +4,7 @@ import { LinkRegex } from '@regex/link.regex';
 
 export class UpdateSocialDto {
   @IsUUID('4', { message: ValidationError.WRONG_SOCIAL_ID_FORMAT })
-  socialId: string;
+  readonly socialId: string;
 
   @IsOptional()
   @IsString({
@@ -13,9 +13,9 @@ export class UpdateSocialDto {
   @MinLength(1, {
     message: ValidationError.WRONG_SOCIAL_TITLE_LENGTH
   })
-  title?: string;
+  readonly title?: string;
 
   @IsOptional()
   @Matches(LinkRegex, { message: ValidationError.WRONG_LINK_FORMAT })
-  link?: string;
+  readonly link?: string;
 }

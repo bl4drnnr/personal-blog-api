@@ -16,25 +16,25 @@ export class UpdateExperienceDto {
   @IsUUID('4', {
     message: ValidationError.WRONG_EXPERIENCE_ID_FORMAT
   })
-  experienceId: string;
+  readonly experienceId: string;
 
   @IsOptional()
   @IsString({ message: ValidationError.WRONG_COMPANY_NAME_FORMAT })
   @MinLength(1, {
     message: ValidationError.WRONG_COMPANY_NAME_LENGTH
   })
-  companyName?: string;
+  readonly companyName?: string;
 
   @IsOptional()
   @IsString({ message: ValidationError.WRONG_COMPANY_DESC_FORMAT })
   @MinLength(1, {
     message: ValidationError.WRONG_COMPANY_DESC_LENGTH
   })
-  companyDescription?: string;
+  readonly companyDescription?: string;
 
   @IsOptional()
   @Matches(LinkRegex, { message: ValidationError.WRONG_LINK_FORMAT })
-  companyLink?: string;
+  readonly companyLink?: string;
 
   @IsOptional()
   @IsString({
@@ -43,24 +43,24 @@ export class UpdateExperienceDto {
   @MinLength(1, {
     message: ValidationError.WRONG_COMPANY_LINK_TITLE_LENGTH
   })
-  companyLinkTitle?: string;
+  readonly companyLinkTitle?: string;
 
   @IsOptional()
   @Matches(ImageRegex, {
     message: ValidationError.WRONG_IMAGE_FORMAT
   })
-  companyPicture?: string;
+  readonly companyPicture?: string;
 
   @IsOptional()
   @IsArray()
   @ArrayMinSize(1)
-  obtainedSkills?: Array<string>;
+  readonly obtainedSkills?: Array<string>;
 
   @IsOptional()
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
-  startDate?: Date;
+  readonly startDate?: Date;
 
   @IsOptional()
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
-  endDate?: Date;
+  readonly endDate?: Date;
 }

@@ -11,12 +11,16 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { Experience } from '@models/experience.model';
+import { Language } from '@interfaces/language.enum';
+
+const languageTypes = [Language.PL, Language.EN, Language.RU];
 
 interface ExperiencePositionCreationAttributes {
   positionTitle: string;
   positionDescription: string;
   positionStartDate: Date;
   positionEndDate: Date;
+  positionLanguage: Language;
   experienceId: string;
 }
 // @TODO Add maximum number of characters available for a field
@@ -59,6 +63,13 @@ export class ExperiencePosition extends Model<
     field: 'position_end_date'
   })
   positionEndDate: Date;
+
+  @Column({
+    type: DataType.ENUM(...languageTypes),
+    allowNull: false,
+    field: 'position_language'
+  })
+  positionLanguage: Language;
 
   @ForeignKey(() => Experience)
   @Column({

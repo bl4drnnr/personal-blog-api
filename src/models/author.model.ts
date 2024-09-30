@@ -15,6 +15,9 @@ import { User } from '@models/user.model';
 import { Social } from '@models/social.model';
 import { Experience } from '@models/experience.model';
 import { Cert } from '@models/cert.model';
+import { Language } from '@interfaces/language.enum';
+
+const languageTypes = [Language.PL, Language.EN, Language.RU];
 
 interface AuthorCreationAttributes {
   firstName: string;
@@ -22,6 +25,7 @@ interface AuthorCreationAttributes {
   title: string;
   description: string;
   profilePicture: string;
+  authorLanguage: Language;
   userId: string;
 }
 
@@ -66,6 +70,13 @@ export class Author extends Model<Author, AuthorCreationAttributes> {
     field: 'is_selected'
   })
   isSelected: boolean;
+
+  @Column({
+    type: DataType.ENUM(...languageTypes),
+    allowNull: false,
+    field: 'author_language'
+  })
+  authorLanguage: Language;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })

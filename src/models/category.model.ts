@@ -12,13 +12,13 @@ import {
 import { ArticleModel } from '@models/article.model';
 import { Language } from '@interfaces/language.enum';
 
+const languageTypes = [Language.PL, Language.EN, Language.RU];
+
 interface CategoryCreationAttributes {
   categoryName: string;
   categoryDescription: string;
   categoryLanguage: Language;
 }
-
-const languageTypes = [Language.PL, Language.EN, Language.RU];
 
 @Table({ tableName: 'categories' })
 export class CategoryModel extends Model<CategoryModel, CategoryCreationAttributes> {

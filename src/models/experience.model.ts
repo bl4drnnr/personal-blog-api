@@ -13,6 +13,9 @@ import {
 } from 'sequelize-typescript';
 import { ExperiencePosition } from '@models/experience-position.model';
 import { Author } from '@models/author.model';
+import { Language } from '@interfaces/language.enum';
+
+const languageTypes = [Language.PL, Language.EN, Language.RU];
 
 interface ExperienceCreationAttributes {
   companyName: string;
@@ -23,6 +26,7 @@ interface ExperienceCreationAttributes {
   obtainedSkills: Array<string>;
   startDate: Date;
   endDate?: Date;
+  experienceLanguage: Language;
   authorId: string;
 }
 
@@ -92,6 +96,13 @@ export class Experience extends Model<Experience, ExperienceCreationAttributes> 
     field: 'is_selected'
   })
   isSelected: boolean;
+
+  @Column({
+    type: DataType.ENUM(...languageTypes),
+    allowNull: false,
+    field: 'experience_language'
+  })
+  experienceLanguage: Language;
 
   @ForeignKey(() => Author)
   @Column({
