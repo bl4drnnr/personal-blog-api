@@ -35,7 +35,7 @@ export class CategoryModel extends Model<CategoryModel, CategoryCreationAttribut
   categoryName: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT,
     allowNull: false,
     field: 'category_description'
   })

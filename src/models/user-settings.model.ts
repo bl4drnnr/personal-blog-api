@@ -29,13 +29,6 @@ export class UserSettings extends Model<
   id: string;
 
   @Column({
-    type: DataType.DATE,
-    allowNull: true,
-    field: 'code_sent_at'
-  })
-  codeSentAt: Date;
-
-  @Column({
     type: DataType.STRING,
     allowNull: true,
     field: 'two_fa_token'
