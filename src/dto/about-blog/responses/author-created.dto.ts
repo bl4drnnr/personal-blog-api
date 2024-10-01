@@ -1,7 +1,7 @@
 export class AuthorCreatedDto {
-  readonly authorId: string;
+  readonly message: string;
 
-  constructor(authorId: string) {
-    this.authorId = authorId;
+  constructor(message = 'author-created') {
+    this.message = message;
   }
 }

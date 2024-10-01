@@ -382,26 +382,26 @@ export class AboutBlogService {
   }
 
   async createAuthor({ userId, payload, trx }: CreateAuthorInterface) {
-    const { firstName, lastName, profilePicture, description, title } = payload;
+    const { authors } = payload;
 
-    const authorPicture = await this.uploadPicture(
-      profilePicture,
-      StaticStorages.AUTHORS_PICTURES
-    );
+    for (const author of authors) {
+      const authorPicture = await this.uploadPicture(
+        author.profilePicture,
+        StaticStorages.AUTHORS_PICTURES
+      );
 
-    const createdAuthor = await this.authorsRepository.create(
-      {
+      await this.authorsRepository.create({
         userId,
-        firstName,
-        lastName,
-        title,
+        firstName: author.firstName,
+        lastName: author.lastName,
+        title: author.title,
         profilePicture: authorPicture,
-        description
-      },
-      { transaction: trx }
-    );
+        description: author.description,
+        authorLanguage: author.authorLanguage
+      }, { transaction: trx });
+    }
 
-    return new AuthorCreatedDto(createdAuthor.id);
+    return new AuthorCreatedDto();
   }
 
   async createSocial({ payload, trx }: CreateSocialInterface) {

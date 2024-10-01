@@ -1,8 +1,19 @@
-import { IsOptional, IsString, Matches, MinLength } from 'class-validator';
+import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray, IsEnum,
+  IsOptional,
+  IsString,
+  Matches,
+  MinLength,
+  ValidateNested
+} from 'class-validator';
 import { ImageRegex } from '@regex/image.regex';
 import { ValidationError } from '@interfaces/validation-error.enum';
+import { Type } from 'class-transformer';
+import { Language } from '@interfaces/language.enum';
 
-export class CreateAuthorDto {
+class AuthorDto {
   @IsString({
     message: ValidationError.WRONG_AUTHOR_FIRST_NAME_FORMAT
   })
@@ -38,4 +49,16 @@ export class CreateAuthorDto {
     message: ValidationError.WRONG_IMAGE_FORMAT
   })
   readonly profilePicture: string;
+
+  @IsEnum(Language)
+  readonly authorLanguage: Language;
+}
+
+export class CreateAuthorDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ArrayMinSize(3, { message: ValidationError.WRONG_AUTHORS_LENGTH })
+  @ArrayMaxSize(3, { message: ValidationError.WRONG_AUTHORS_LENGTH })
+  @Type(() => AuthorDto)
+  readonly authors: Array<AuthorDto>;
 }

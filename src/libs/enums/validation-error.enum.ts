@@ -29,6 +29,7 @@ export enum ValidationError {
   WRONG_ARTICLE_ID_FORMAT = 'wrong-article-id-format',
   WRONG_CATEGORIES_LENGTH = 'wrong-categories-length',
   WRONG_ARTICLES_LENGTH = 'wrong-articles-length',
+  WRONG_AUTHORS_LENGTH = 'wrong-authors-length',
   WRONG_AUTHOR_FIRST_NAME_FORMAT = 'wrong-author-first-format',
   WRONG_AUTHOR_FIRST_NAME_LENGTH = 'wrong-author-first-length',
   WRONG_AUTHOR_LAST_NAME_FORMAT = 'wrong-author-last-format',
