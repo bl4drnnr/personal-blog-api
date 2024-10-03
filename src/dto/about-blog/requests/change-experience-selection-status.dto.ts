@@ -5,5 +5,5 @@ export class ChangeExperienceSelectionStatusDto {
   @IsUUID('4', {
     message: ValidationError.WRONG_EXPERIENCE_ID_FORMAT
   })
-  readonly experienceId: string;
+  readonly experienceCommonId: string;
 }

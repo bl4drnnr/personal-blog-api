@@ -26,6 +26,7 @@ interface AuthorCreationAttributes {
   description: string;
   profilePicture: string;
   authorLanguage: Language;
+  authorCommonId: string;
   userId: string;
 }
 
@@ -77,6 +78,14 @@ export class Author extends Model<Author, AuthorCreationAttributes> {
     field: 'author_language'
   })
   authorLanguage: Language;
+
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'author_common_id',
+    unique: false
+  })
+  authorCommonId: string;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })

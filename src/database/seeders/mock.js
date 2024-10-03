@@ -1,5 +1,6 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
+  // @TODO Change IDs for author items
   async up(queryInterface, sequelize) {
     try {
       await queryInterface.bulkInsert('users', [
@@ -123,6 +124,36 @@ module.exports = {
           description: 'Poland-based ex full-stack financial technologies/crypto web developer. Currently doing cybersecurity. Holding the bachelor degree in Software Engineering at UITM (University of Information Technology and Management) in Rzeszow, Poland. Improving skills at not only web development, but mostly at cybersecurity along with Artificial Intelligence and Machine Learning.',
           profile_picture: 'literally-me.jpeg',
           is_selected: true,
+          author_language: 'en',
+          author_common_id: 'cf73c629-fc39-4ae6-b4ca-7ab5f3bff65b',
+          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
+          first_name: 'Michał',
+          last_name: 'Bahdashych',
+          title: 'Specjalista ds. cyberbezpieczeństwa / Główny autor',
+          description: 'Były programista full-stack financial technologies/crypto web developer z siedzibą w Polsce. Obecnie zajmuje się cyberbezpieczeństwem. Posiada tytuł licencjata z inżynierii oprogramowania na UITM (Wyższej Szkole Informatyki i Zarządzania) w Rzeszowie, Polska. Doskonalenie umiejętności nie tylko w zakresie tworzenia stron internetowych, ale przede wszystkim w zakresie cyberbezpieczeństwa wraz ze sztuczną inteligencją i uczeniem maszynowym.',
+          profile_picture: 'literally-me.jpeg',
+          is_selected: true,
+          author_language: 'pl',
+          author_common_id: 'cf73c629-fc39-4ae6-b4ca-7ab5f3bff65b',
+          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
+          first_name: 'Михаил',
+          last_name: 'Богдашич',
+          title: 'Сотрудник по кибербезопасности / Главный автор',
+          description: 'Бывший веб-разработчик full-stack финансовых технологий/криптовалюты из Польши. В настоящее время занимаюсь кибербезопасностью. Имеет степень бакалавра по программной инженерии в UITM (Университет информационных технологий и менеджмента) в Жешуве, Польша. Совершенствую навыки не только в веб-разработке, но и в кибербезопасности, а также в области искусственного интеллекта и машинного обучения.',
+          profile_picture: 'literally-me.jpeg',
+          is_selected: true,
+          author_language: 'ru',
+          author_common_id: 'cf73c629-fc39-4ae6-b4ca-7ab5f3bff65b',
           user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
           created_at: new Date(),
           updated_at: new Date()
@@ -133,13 +164,15 @@ module.exports = {
         {
           id: 'f2cbe13b-2fcc-46f2-8081-b07a23fcb818',
           cert_name: 'CCNA',
-          cert_description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
           cert_picture: 'ccna.jpg',
           cert_docs: 'ccna.pdf',
           obtaining_date: new Date(),
           expiration_date: new Date(),
           obtained_skills: ['Networking', 'Security', 'Cisco'],
           is_selected: true,
+          cert_language: 'en',
+          cert_common_id: '6c058a14-abf3-4e1b-acae-7833daaf724f',
           author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
           created_at: new Date,
           updated_at: new Date
@@ -147,13 +180,15 @@ module.exports = {
         {
           id: '60f9956d-5af4-40aa-af9c-f7890e20cc87',
           cert_name: 'CCNAv7: ENSA',
-          cert_description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
           cert_picture: 'ccna_ensa.png',
           cert_docs: 'ccna_ensa.pdf',
           obtaining_date: new Date(),
           expiration_date: new Date(),
           obtained_skills: ['Networking', 'Security', 'Cisco'],
           is_selected: true,
+          cert_language: 'en',
+          cert_common_id: '8badd29b-7f02-4a80-90fd-4dfead56acee',
           author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
           created_at: new Date,
           updated_at: new Date
@@ -161,13 +196,15 @@ module.exports = {
         {
           id: '2cda5c60-e449-46e2-bbf6-987562666b6f',
           cert_name: 'CCNAv7: SRWE',
-          cert_description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
           cert_picture: 'ccna_srwe.png',
           cert_docs: 'ccna_srwe.pdf',
           obtaining_date: new Date(),
           expiration_date: new Date(),
           obtained_skills: ['Networking', 'Security', 'Cisco'],
           is_selected: true,
+          cert_language: 'en',
+          cert_common_id: '84c8630e-b37e-4d73-88b8-c4332d3c62d7',
           author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
           created_at: new Date,
           updated_at: new Date
@@ -175,13 +212,143 @@ module.exports = {
         {
           id: '42048156-03b0-4729-bd63-46b535457fd1',
           cert_name: 'CompTIA Security+',
-          cert_description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
           cert_picture: 'comptia-sec-certification.png',
           cert_docs: 'comptia-sec-certification.pdf',
           obtaining_date: new Date(),
           expiration_date: new Date(),
           obtained_skills: ['Networking', 'Security', 'Cisco'],
           is_selected: true,
+          cert_language: 'en',
+          cert_common_id: 'b0f0acbe-a9e8-4e14-b9c9-5490bff648ff',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: 'a5c59d7b-029e-41ec-85e5-4daad52999dc',
+          cert_name: 'CCNA',
+          cert_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_picture: 'ccna.jpg',
+          cert_docs: 'ccna.pdf',
+          obtaining_date: new Date(),
+          expiration_date: new Date(),
+          obtained_skills: ['Networking', 'Security', 'Cisco'],
+          is_selected: true,
+          cert_language: 'ru',
+          cert_common_id: '6c058a14-abf3-4e1b-acae-7833daaf724f',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: 'b1df86af-2e8c-4c90-ac8a-0520e0e197b4',
+          cert_name: 'CCNAv7: ENSA',
+          cert_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_picture: 'ccna_ensa.png',
+          cert_docs: 'ccna_ensa.pdf',
+          obtaining_date: new Date(),
+          expiration_date: new Date(),
+          obtained_skills: ['Networking', 'Security', 'Cisco'],
+          is_selected: true,
+          cert_language: 'ru',
+          cert_common_id: '8badd29b-7f02-4a80-90fd-4dfead56acee',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: '56109859-70d5-44e2-bf01-2158cd5908c5',
+          cert_name: 'CCNAv7: SRWE',
+          cert_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_picture: 'ccna_srwe.png',
+          cert_docs: 'ccna_srwe.pdf',
+          obtaining_date: new Date(),
+          expiration_date: new Date(),
+          obtained_skills: ['Networking', 'Security', 'Cisco'],
+          is_selected: true,
+          cert_language: 'ru',
+          cert_common_id: '84c8630e-b37e-4d73-88b8-c4332d3c62d7',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: 'be9904b2-a443-464f-aa95-5656991438c6',
+          cert_name: 'CompTIA Security+',
+          cert_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_picture: 'comptia-sec-certification.png',
+          cert_docs: 'comptia-sec-certification.pdf',
+          obtaining_date: new Date(),
+          expiration_date: new Date(),
+          obtained_skills: ['Networking', 'Security', 'Cisco'],
+          is_selected: true,
+          cert_language: 'ru',
+          cert_common_id: 'b0f0acbe-a9e8-4e14-b9c9-5490bff648ff',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: 'b3e01b23-7465-43a6-aa0a-62819a85c56e',
+          cert_name: 'CCNA',
+          cert_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_picture: 'ccna.jpg',
+          cert_docs: 'ccna.pdf',
+          obtaining_date: new Date(),
+          expiration_date: new Date(),
+          obtained_skills: ['Networking', 'Security', 'Cisco'],
+          is_selected: true,
+          cert_language: 'pl',
+          cert_common_id: '6c058a14-abf3-4e1b-acae-7833daaf724f',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: 'd21bd3de-f376-4a9b-b7b3-cad896f4fe0d',
+          cert_name: 'CCNAv7: ENSA',
+          cert_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_picture: 'ccna_ensa.png',
+          cert_docs: 'ccna_ensa.pdf',
+          obtaining_date: new Date(),
+          expiration_date: new Date(),
+          obtained_skills: ['Networking', 'Security', 'Cisco'],
+          is_selected: true,
+          cert_language: 'pl',
+          cert_common_id: '8badd29b-7f02-4a80-90fd-4dfead56acee',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: '47e410e7-1346-494d-bafd-dde43219ae28',
+          cert_name: 'CCNAv7: SRWE',
+          cert_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_picture: 'ccna_srwe.png',
+          cert_docs: 'ccna_srwe.pdf',
+          obtaining_date: new Date(),
+          expiration_date: new Date(),
+          obtained_skills: ['Networking', 'Security', 'Cisco'],
+          is_selected: true,
+          cert_language: 'pl',
+          cert_common_id: '84c8630e-b37e-4d73-88b8-c4332d3c62d7',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: 'fd5e73d8-fc7f-448a-abfe-e46312660c4e',
+          cert_name: 'CompTIA Security+',
+          cert_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
+          cert_picture: 'comptia-sec-certification.png',
+          cert_docs: 'comptia-sec-certification.pdf',
+          obtaining_date: new Date(),
+          expiration_date: new Date(),
+          obtained_skills: ['Networking', 'Security', 'Cisco'],
+          is_selected: true,
+          cert_language: 'pl',
+          cert_common_id: 'b0f0acbe-a9e8-4e14-b9c9-5490bff648ff',
           author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
           created_at: new Date,
           updated_at: new Date
@@ -204,6 +371,38 @@ module.exports = {
           author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
           created_at: new Date,
           updated_at: new Date
+        },
+        {
+          id: 'c7bf4552-8f51-4895-8325-153cbdd82a3f',
+          link: 'www.linkedin.com/in/mikhail-bahdashych',
+          title: 'LI.',
+          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: 'c6018079-7070-47c3-b40e-267f736a03dc',
+          link: 'stackoverflow.com/users/16732680/dokichan',
+          title: 'SO.',
+          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: 'e6106f9d-7166-4c00-9d63-0791cd1f554c',
+          link: 'www.linkedin.com/in/mikhail-bahdashych',
+          title: 'LI.',
+          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
+          created_at: new Date,
+          updated_at: new Date
+        },
+        {
+          id: '74c5db3e-8459-46f2-b8f2-14ee26b5469f',
+          link: 'stackoverflow.com/users/16732680/dokichan',
+          title: 'SO.',
+          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
+          created_at: new Date,
+          updated_at: new Date
         }
       ]);
 
@@ -211,7 +410,7 @@ module.exports = {
         {
           id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
           company_name: 'Cryptovoucher / P100',
-          company_description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
+          company_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
           company_link: 'cryptovoucher.io',
           company_link_title: 'Cryptovoucher Official Website',
           company_picture: 'cv.jpeg',
@@ -219,6 +418,8 @@ module.exports = {
           start_date: new Date(),
           end_date: new Date(),
           is_selected: true,
+          experience_language: 'en',
+          experience_common_id: 'faff454c-1139-400f-b432-ef46c9f6b3db',
           author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
           created_at: new Date(),
           updated_at: new Date()
@@ -226,7 +427,7 @@ module.exports = {
         {
           id: '93187a57-e8ab-4b05-9013-eec33e389239',
           company_name: 'Knowde',
-          company_description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
+          company_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
           company_link: 'knowde.com',
           company_link_title: 'Knowde Official Website',
           company_picture: 'knowde.webp',
@@ -234,6 +435,76 @@ module.exports = {
           start_date: new Date(),
           end_date: new Date(),
           is_selected: true,
+          experience_language: 'en',
+          experience_common_id: '0bef5296-5310-425f-a195-404bf770035f',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '4995d9f5-166f-4d20-8f59-b207ae68c59f',
+          company_name: 'Cryptovoucher / P100',
+          company_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
+          company_link: 'cryptovoucher.io',
+          company_link_title: 'Cryptovoucher Official Website',
+          company_picture: 'cv.jpeg',
+          obtained_skills: ['Assets management', 'Users management', 'Cybersecurity management'],
+          start_date: new Date(),
+          end_date: new Date(),
+          is_selected: true,
+          experience_language: 'pl',
+          experience_common_id: 'faff454c-1139-400f-b432-ef46c9f6b3db',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '5ac4dc4c-c8b3-4769-bdf9-8dc7d5931676',
+          company_name: 'Knowde',
+          company_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
+          company_link: 'knowde.com',
+          company_link_title: 'Knowde Official Website',
+          company_picture: 'knowde.webp',
+          obtained_skills: ['Web development', 'Anti-money laundering', 'AWS'],
+          start_date: new Date(),
+          end_date: new Date(),
+          is_selected: true,
+          experience_language: 'pl',
+          experience_common_id: '0bef5296-5310-425f-a195-404bf770035f',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '31b4242f-8741-4d78-9806-9ad989573973',
+          company_name: 'Cryptovoucher / P100',
+          company_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
+          company_link: 'cryptovoucher.io',
+          company_link_title: 'Cryptovoucher Official Website',
+          company_picture: 'cv.jpeg',
+          obtained_skills: ['Assets management', 'Users management', 'Cybersecurity management'],
+          start_date: new Date(),
+          end_date: new Date(),
+          is_selected: true,
+          experience_language: 'ru',
+          experience_common_id: 'faff454c-1139-400f-b432-ef46c9f6b3db',
+          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '40e62a56-7cf5-4ce6-83f0-0f5b9bdd99a8',
+          company_name: 'Knowde',
+          company_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
+          company_link: 'knowde.com',
+          company_link_title: 'Knowde Official Website',
+          company_picture: 'knowde.webp',
+          obtained_skills: ['Web development', 'Anti-money laundering', 'AWS'],
+          start_date: new Date(),
+          end_date: new Date(),
+          is_selected: true,
+          experience_language: 'ru',
+          experience_common_id: '0bef5296-5310-425f-a195-404bf770035f',
           author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
           created_at: new Date(),
           updated_at: new Date()
@@ -243,9 +514,11 @@ module.exports = {
         {
           id: '0d90be89-f748-4003-bff7-7190509bddef',
           position_title: 'Full Stack Web Developer',
-          position_description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
+          position_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
           position_start_date: new Date(),
           position_end_date: new Date(),
+          position_language: 'en',
+          position_common_id: '93823178-c3f9-4acf-ac7d-f41d64809a63',
           experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
           created_at: new Date(),
           updated_at: new Date()
@@ -253,9 +526,11 @@ module.exports = {
         {
           id: 'fc2ef3e8-c21c-499e-af57-a8584927c1ee',
           position_title: 'Jr Security Operations Specialist',
-          position_description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
+          position_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
           position_start_date: new Date(),
           position_end_date: new Date(),
+          position_language: 'en',
+          position_common_id: 'b051b110-596e-4a7e-ab82-6aa631a68974',
           experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
           created_at: new Date(),
           updated_at: new Date()
@@ -263,9 +538,83 @@ module.exports = {
         {
           id: '32cae7e1-a3ce-4c2f-a74d-fa4f5c140faa',
           position_title: 'Middle Security Operations Specialist',
-          position_description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
+          position_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
           position_start_date: new Date(),
           position_end_date: new Date(),
+          position_language: 'en',
+          position_common_id: 'd2848268-3225-45a8-80c9-aa4614db0727',
+          experience_id: '93187a57-e8ab-4b05-9013-eec33e389239',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: 'd4c737ca-c90f-42a9-a7f1-91b4a2eee574',
+          position_title: 'Full Stack Web Developer',
+          position_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
+          position_start_date: new Date(),
+          position_end_date: new Date(),
+          position_language: 'pl',
+          position_common_id: '93823178-c3f9-4acf-ac7d-f41d64809a63',
+          experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: 'e53703bc-7fe7-4fef-bb96-90b02ac27c58',
+          position_title: 'Jr Security Operations Specialist',
+          position_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
+          position_start_date: new Date(),
+          position_end_date: new Date(),
+          position_language: 'pl',
+          position_common_id: 'b051b110-596e-4a7e-ab82-6aa631a68974',
+          experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '20128c3a-040a-4a0c-8d64-53db5eadfe46',
+          position_title: 'Middle Security Operations Specialist',
+          position_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
+          position_start_date: new Date(),
+          position_end_date: new Date(),
+          position_language: 'pl',
+          position_common_id: 'd2848268-3225-45a8-80c9-aa4614db0727',
+          experience_id: '93187a57-e8ab-4b05-9013-eec33e389239',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '8cb0cf56-9582-4ae8-aa6e-014118aea57d',
+          position_title: 'Full Stack Web Developer',
+          position_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
+          position_start_date: new Date(),
+          position_end_date: new Date(),
+          position_language: 'ru',
+          position_common_id: '93823178-c3f9-4acf-ac7d-f41d64809a63',
+          experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '353f5770-d499-461a-802b-a40d4270f165',
+          position_title: 'Jr Security Operations Specialist',
+          position_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
+          position_start_date: new Date(),
+          position_end_date: new Date(),
+          position_language: 'ru',
+          position_common_id: 'b051b110-596e-4a7e-ab82-6aa631a68974',
+          experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: 'b83bc1c8-df0e-4191-ad8a-93a62e6b63cb',
+          position_title: 'Middle Security Operations Specialist',
+          position_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
+          position_start_date: new Date(),
+          position_end_date: new Date(),
+          position_language: 'ru',
+          position_common_id: 'd2848268-3225-45a8-80c9-aa4614db0727',
           experience_id: '93187a57-e8ab-4b05-9013-eec33e389239',
           created_at: new Date(),
           updated_at: new Date()
@@ -283,5 +632,11 @@ module.exports = {
     await queryInterface.bulkDelete('users', null, {});
 
     await queryInterface.bulkDelete('categories', null, {});
+
+    await queryInterface.bulkDelete('experience_positions', null, {});
+    await queryInterface.bulkDelete('experiences', null, {});
+
+    await queryInterface.bulkDelete('socials', null, {});
+    await queryInterface.bulkDelete('certificates', null, {});
   },
 };

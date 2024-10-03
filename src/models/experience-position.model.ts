@@ -21,6 +21,7 @@ interface ExperiencePositionCreationAttributes {
   positionStartDate: Date;
   positionEndDate: Date;
   positionLanguage: Language;
+  positionCommonId: string;
   experienceId: string;
 }
 // @TODO Add maximum number of characters available for a field
@@ -70,6 +71,14 @@ export class ExperiencePosition extends Model<
     field: 'position_language'
   })
   positionLanguage: Language;
+
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'position_common_id',
+    unique: false
+  })
+  positionCommonId: string;
 
   @ForeignKey(() => Experience)
   @Column({

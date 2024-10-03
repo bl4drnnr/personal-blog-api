@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Author } from '@models/author.model';
@@ -7,7 +8,6 @@ import { Cert } from '@models/cert.model';
 import { Social } from '@models/social.model';
 import { GetSelectedAuthorInterface } from '@interfaces/get-selected-author.interface';
 import { ListExperiencesInterface } from '@interfaces/list-experiences.interface';
-import { GetSelectedCertificationsInterface } from '@interfaces/get-selected-certifications.interface';
 import { CreateAuthorInterface } from '@interfaces/create-author.interface';
 import { ApiConfigService } from '@shared/config.service';
 import { S3 } from 'aws-sdk';
@@ -37,7 +37,6 @@ import { Op } from 'sequelize';
 import { ListExperiencesDto } from '@dto/list-experiences.dto';
 import { ListCertifications } from '@interfaces/list-certifications.interface';
 import { ListCertificationsDto } from '@dto/list-certifications.dto';
-import { GetSelectedExperience } from '@interfaces/get-selected-experience';
 import { ListAuthorsInterface } from '@interfaces/list-authors.interface';
 import { ListAuthorsDto } from '@dto/list-authors.dto';
 import { GetCertificationById } from '@interfaces/get-certification-by-id.interface';
@@ -68,6 +67,9 @@ import { SocialNotFoundException } from '@exceptions/social-not-found.exception'
 import { SocialUpdatedDto } from '@dto/social-updated.dto';
 import { DeleteSocialInterface } from '@interfaces/delete-social.interface';
 import { SocialDeletedDto } from '@dto/social-deleted.dto';
+import { GetAuthorsByCommonIdInterface } from '@interfaces/get-authors-by-common-id.interface';
+import { GetCertificationsByCommonIdInterface } from '@interfaces/get-certifications-by-common-id.interface';
+import { GetExperiencesByCommonIdInterface } from '@interfaces/get-experiences-by-common-id.interface';
 
 @Injectable()
 export class AboutBlogService {
@@ -88,6 +90,13 @@ export class AboutBlogService {
 
   getAuthorById({ authorId, trx }: GetAuthorByIdInterface) {
     return this.authorsRepository.findByPk(authorId, {
+      transaction: trx
+    });
+  }
+
+  getAuthorsByCommonId({ authorCommonId, trx }: GetAuthorsByCommonIdInterface) {
+    return this.authorsRepository.findAndCountAll({
+      where: { authorCommonId },
       transaction: trx
     });
   }
@@ -120,6 +129,16 @@ export class AboutBlogService {
     });
   }
 
+  getExperiencesByCommonId({
+    experienceCommonId,
+    trx
+  }: GetExperiencesByCommonIdInterface) {
+    return this.experiencesRepository.findAndCountAll({
+      where: { experienceCommonId },
+      transaction: trx
+    });
+  }
+
   getExperiencePositionById({
     experiencePositionId,
     trx
@@ -146,28 +165,33 @@ export class AboutBlogService {
     });
   }
 
-  getSelectedAuthor({ trx }: GetSelectedAuthorInterface) {
+  getCertificationsByCommonId({
+    certCommonId,
+    trx
+  }: GetCertificationsByCommonIdInterface) {
+    return this.certsRepository.findAndCountAll({
+      where: { certCommonId },
+      transaction: trx
+    });
+  }
+
+  getSelectedAuthor({ authorLanguage, trx }: GetSelectedAuthorInterface) {
     return this.authorsRepository.findOne({
-      where: { isSelected: true },
+      where: { authorLanguage, isSelected: true },
       include: [
         { model: Social },
-        { model: Cert },
-        { model: Experience, include: [ExperiencePosition] }
+        { model: Cert, where: { isSelected: true, certLanguage: authorLanguage } },
+        {
+          model: Experience,
+          where: { isSelected: true, experienceLanguage: authorLanguage },
+          include: [
+            {
+              model: ExperiencePosition,
+              where: { positionLanguage: authorLanguage }
+            }
+          ]
+        }
       ],
-      transaction: trx
-    });
-  }
-
-  getSelectedExperience({ trx }: GetSelectedExperience) {
-    return this.experiencesRepository.findAll({
-      where: { isSelected: true },
-      transaction: trx
-    });
-  }
-
-  getSelectedCertifications({ trx }: GetSelectedCertificationsInterface) {
-    return this.certsRepository.findAll({
-      where: { isSelected: true },
       transaction: trx
     });
   }
@@ -195,6 +219,8 @@ export class AboutBlogService {
       'description',
       'profilePicture',
       'isSelected',
+      'authorLanguage',
+      'authorCommonId',
       'createdAt',
       'updatedAt'
     ];
@@ -247,6 +273,8 @@ export class AboutBlogService {
       'startDate',
       'endDate',
       'isSelected',
+      'experienceLanguage',
+      'experienceCommonId',
       'createdAt',
       'updatedAt'
     ];
@@ -298,6 +326,8 @@ export class AboutBlogService {
       'expirationDate',
       'obtainedSkills',
       'isSelected',
+      'certLanguage',
+      'certCommonId',
       'createdAt',
       'updatedAt'
     ];
@@ -361,28 +391,39 @@ export class AboutBlogService {
       'updatedAt'
     ];
 
-    const author = await this.authorsRepository.findByPk(authorId, {
+    const author = await this.getAuthorById({ authorId, trx });
+
+    if (!author) throw new AuthorNotFoundException();
+
+    return await this.authorsRepository.findByPk(authorId, {
       include: [
         { model: Social, attributes: socialsAttributes },
-        { model: Cert, attributes: certsAttributes },
+        {
+          model: Cert,
+          attributes: certsAttributes,
+          where: { certLanguage: author.authorLanguage }
+        },
         {
           model: Experience,
           attributes: experiencesAttributes,
+          where: { experienceLanguage: author.authorLanguage },
           include: [
-            { model: ExperiencePosition, attributes: experiencesPositionsAttributes }
+            {
+              model: ExperiencePosition,
+              attributes: experiencesPositionsAttributes
+            }
           ]
         }
       ],
       transaction: trx
     });
-
-    if (!author) throw new AuthorNotFoundException();
-
-    return author;
   }
 
   async createAuthor({ userId, payload, trx }: CreateAuthorInterface) {
     const { authors } = payload;
+
+    const authorsIds: Array<string> = [];
+    const authorCommonId = this.generateUUIDv4();
 
     for (const author of authors) {
       const authorPicture = await this.uploadPicture(
@@ -390,18 +431,24 @@ export class AboutBlogService {
         StaticStorages.AUTHORS_PICTURES
       );
 
-      await this.authorsRepository.create({
-        userId,
-        firstName: author.firstName,
-        lastName: author.lastName,
-        title: author.title,
-        profilePicture: authorPicture,
-        description: author.description,
-        authorLanguage: author.authorLanguage
-      }, { transaction: trx });
+      const createdAuthor = await this.authorsRepository.create(
+        {
+          userId,
+          firstName: author.firstName,
+          lastName: author.lastName,
+          title: author.title,
+          profilePicture: authorPicture,
+          description: author.description,
+          authorLanguage: author.authorLanguage,
+          authorCommonId
+        },
+        { transaction: trx }
+      );
+
+      authorsIds.push(createdAuthor.id);
     }
 
-    return new AuthorCreatedDto();
+    return new AuthorCreatedDto(authorsIds);
   }
 
   async createSocial({ payload, trx }: CreateSocialInterface) {
@@ -789,26 +836,26 @@ export class AboutBlogService {
     payload,
     trx
   }: ChangeAuthorSelectionStatusInterface) {
-    const { authorId } = payload;
+    const { authorCommonId } = payload;
 
-    const author = await this.getAuthorById({ authorId, trx });
+    const authors = await this.getAuthorsByCommonId({ authorCommonId, trx });
 
-    if (!author) throw new AuthorNotFoundException();
+    if (!authors || authors.count !== 3) throw new AuthorNotFoundException();
 
-    const authorUpdatedStatus = !author.isSelected;
+    const authorUpdatedStatus = !authors.rows[0].isSelected;
 
     await this.authorsRepository.update(
       {
         isSelected: authorUpdatedStatus
       },
-      { where: { id: authorId }, transaction: trx }
+      { where: { authorCommonId }, transaction: trx }
     );
 
     await this.authorsRepository.update(
       {
         isSelected: false
       },
-      { where: { id: { [Op.not]: authorId } }, transaction: trx }
+      { where: { authorCommonId: { [Op.not]: authorCommonId } }, transaction: trx }
     );
 
     return new AuthorSelectionStatusUpdatedDto(authorUpdatedStatus);
@@ -818,22 +865,23 @@ export class AboutBlogService {
     payload,
     trx
   }: ChangeExperienceSelectionStatusInterface) {
-    const { experienceId } = payload;
+    const { experienceCommonId } = payload;
 
-    const experience = await this.getExperienceById({
-      experienceId,
+    const experiences = await this.getExperiencesByCommonId({
+      experienceCommonId,
       trx
     });
 
-    if (!experience) throw new ExperienceNotFoundException();
+    if (!experiences || experiences.count !== 3)
+      throw new ExperienceNotFoundException();
 
-    const experienceUpdatedStatus = !experience.isSelected;
+    const experienceUpdatedStatus = !experiences.rows[0].isSelected;
 
     await this.experiencesRepository.update(
       {
         isSelected: experienceUpdatedStatus
       },
-      { where: { id: experienceId }, transaction: trx }
+      { where: { experienceCommonId }, transaction: trx }
     );
 
     return new ExperienceSelectionStatusUpdatedDto(experienceUpdatedStatus);
@@ -843,22 +891,23 @@ export class AboutBlogService {
     payload,
     trx
   }: ChangeCertificationSelectionStatusInterface) {
-    const { certificationId } = payload;
+    const { certCommonId } = payload;
 
-    const certification = await this.getCertificationById({
-      certificationId,
+    const certifications = await this.getCertificationsByCommonId({
+      certCommonId,
       trx
     });
 
-    if (!certification) throw new CertificationNotFoundException();
+    if (!certifications || certifications.count !== 3)
+      throw new CertificationNotFoundException();
 
-    const certificationUpdatedStatus = !certification.isSelected;
+    const certificationUpdatedStatus = !certifications.rows[0].isSelected;
 
     await this.certsRepository.update(
       {
         isSelected: certificationUpdatedStatus
       },
-      { where: { id: certificationId }, transaction: trx }
+      { where: { certCommonId }, transaction: trx }
     );
 
     return new CertificationSelectionStatusUpdatedDto(certificationUpdatedStatus);
@@ -936,5 +985,9 @@ export class AboutBlogService {
     };
 
     await s3.deleteObject(params).promise();
+  }
+
+  private generateUUIDv4() {
+    return uuid.v4();
   }
 }

@@ -27,6 +27,7 @@ interface ExperienceCreationAttributes {
   startDate: Date;
   endDate?: Date;
   experienceLanguage: Language;
+  experienceCommonId: string;
   authorId: string;
 }
 
@@ -103,6 +104,14 @@ export class Experience extends Model<Experience, ExperienceCreationAttributes> 
     field: 'experience_language'
   })
   experienceLanguage: Language;
+
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'experience_common_id',
+    unique: false
+  })
+  experienceCommonId: string;
 
   @ForeignKey(() => Author)
   @Column({

@@ -24,6 +24,7 @@ interface CertCreationAttributes {
   expirationDate?: Date;
   obtainedSkills: Array<string>;
   certLanguage: Language;
+  certCommonId: string;
   authorId: string;
 }
 
@@ -97,6 +98,14 @@ export class Cert extends Model<Cert, CertCreationAttributes> {
     field: 'cert_language'
   })
   certLanguage: Language;
+
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'cert_common_id',
+    unique: false
+  })
+  certCommonId: string;
 
   @ForeignKey(() => Author)
   @Column({

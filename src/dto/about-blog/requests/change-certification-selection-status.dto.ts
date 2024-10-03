@@ -5,5 +5,5 @@ export class ChangeCertificationSelectionStatusDto {
   @IsUUID('4', {
     message: ValidationError.WRONG_CERTIFICATION_ID_FORMAT
   })
-  readonly certificationId: string;
+  readonly certCommonId: string;
 }

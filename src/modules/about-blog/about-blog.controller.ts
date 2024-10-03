@@ -37,18 +37,11 @@ export class AboutBlogController {
   constructor(private readonly aboutBlogService: AboutBlogService) {}
 
   @Get('get-selected-author')
-  getSelectedAuthor(@TrxDecorator() trx: Transaction) {
-    return this.aboutBlogService.getSelectedAuthor({ trx });
-  }
-
-  @Get('get-selected-experience')
-  getSelectedExperience(@TrxDecorator() trx: Transaction) {
-    return this.aboutBlogService.getSelectedExperience({ trx });
-  }
-
-  @Get('get-selected-certifications')
-  getSelectedCertifications(@TrxDecorator() trx: Transaction) {
-    return this.aboutBlogService.getSelectedCertifications({ trx });
+  getSelectedAuthor(
+    @Query('authorLanguage') authorLanguage: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.aboutBlogService.getSelectedAuthor({ authorLanguage, trx });
   }
 
   @UseGuards(AuthGuard)

@@ -1,7 +1,8 @@
 import {
   ArrayMaxSize,
   ArrayMinSize,
-  IsArray, IsEnum,
+  IsArray,
+  IsEnum,
   IsOptional,
   IsString,
   Matches,
