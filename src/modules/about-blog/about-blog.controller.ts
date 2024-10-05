@@ -248,10 +248,10 @@ export class AboutBlogController {
   @UseGuards(AuthGuard)
   @Delete('delete-author')
   deleteAuthor(
-    @Query('authorId') authorId: string,
+    @Query('authorCommonId') authorCommonId: string,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.aboutBlogService.deleteAuthor({ authorId, trx });
+    return this.aboutBlogService.deleteAuthor({ authorCommonId, trx });
   }
 
   @UseGuards(AuthGuard)

@@ -1,6 +1,6 @@
 import { Transaction } from 'sequelize';
 
 export interface DeleteAuthorInterface {
-  authorId: string;
+  authorCommonId: string;
   trx?: Transaction;
 }

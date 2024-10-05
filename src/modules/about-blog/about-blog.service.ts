@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Author } from '@models/author.model';
@@ -397,20 +397,23 @@ export class AboutBlogService {
 
     return await this.authorsRepository.findByPk(authorId, {
       include: [
-        { model: Social, attributes: socialsAttributes },
+        { model: Social, attributes: socialsAttributes, required: false },
         {
           model: Cert,
           attributes: certsAttributes,
-          where: { certLanguage: author.authorLanguage }
+          where: { certLanguage: author.authorLanguage },
+          required: false
         },
         {
           model: Experience,
           attributes: experiencesAttributes,
           where: { experienceLanguage: author.authorLanguage },
+          required: false,
           include: [
             {
               model: ExperiencePosition,
-              attributes: experiencesPositionsAttributes
+              attributes: experiencesPositionsAttributes,
+              required: false
             }
           ]
         }
@@ -537,37 +540,34 @@ export class AboutBlogService {
   }
 
   async createCertification({ payload, trx }: CreateCertificationInterface) {
-    const {
-      certName,
-      certDescription,
-      certPicture,
-      certDocs,
-      obtainingDate,
-      expirationDate,
-      obtainedSkills,
-      authorId
-    } = payload;
+    const { certifications } = payload;
 
-    const certificationPicture = await this.uploadPicture(
-      certPicture,
-      StaticStorages.CERTS_PICTURES
-    );
+    const certificationCommonId = this.generateUUIDv4();
 
-    const createdCert = await this.certsRepository.create(
-      {
-        certName,
-        certDescription,
-        certPicture: certificationPicture,
-        certDocs,
-        obtainingDate,
-        expirationDate,
-        obtainedSkills,
-        authorId
-      },
-      { transaction: trx }
-    );
+    for (const cert of certifications) {
+      const certificationPicture = await this.uploadPicture(
+        cert.certPicture,
+        StaticStorages.CERTS_PICTURES
+      );
 
-    return new CertificationCreatedDto(createdCert.id);
+      await this.certsRepository.create(
+        {
+          certName: cert.certName,
+          certDescription: cert.certDescription,
+          certPicture: certificationPicture,
+          certDocs: cert.certDocs,
+          obtainingDate: cert.obtainingDate,
+          expirationDate: cert.expirationDate,
+          obtainedSkills: cert.obtainedSkills,
+          certLanguage: cert.certLanguage,
+          certCommonId: certificationCommonId,
+          authorId: cert.authorId
+        },
+        { transaction: trx }
+      );
+    }
+
+    return new CertificationCreatedDto();
   }
 
   async updateAuthor({ payload, trx }: UpdateAuthorInterface) {
@@ -756,15 +756,18 @@ export class AboutBlogService {
     return new CertificationUpdatedDto();
   }
 
-  async deleteAuthor({ authorId, trx }: DeleteAuthorInterface) {
-    const author = await this.getAuthorById({ authorId, trx });
+  async deleteAuthor({ authorCommonId, trx }: DeleteAuthorInterface) {
+    const authors = await this.getAuthorsByCommonId({ authorCommonId, trx });
 
-    if (!author) throw new AuthorNotFoundException();
+    if (!authors || authors.count !== 3) throw new AuthorNotFoundException();
 
-    await this.deleteFile(author.profilePicture, StaticStorages.AUTHORS_PICTURES);
+    await this.deleteFile(
+      authors.rows[0].profilePicture,
+      StaticStorages.AUTHORS_PICTURES
+    );
 
     await this.authorsRepository.destroy({
-      where: { id: authorId },
+      where: { authorCommonId },
       transaction: trx
     });
 

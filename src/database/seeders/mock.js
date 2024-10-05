@@ -1,6 +1,5 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  // @TODO Change IDs for author items
   async up(queryInterface, sequelize) {
     try {
       await queryInterface.bulkInsert('users', [
@@ -237,7 +236,7 @@ module.exports = {
           is_selected: true,
           cert_language: 'ru',
           cert_common_id: '6c058a14-abf3-4e1b-acae-7833daaf724f',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
           created_at: new Date,
           updated_at: new Date
         },
@@ -253,7 +252,7 @@ module.exports = {
           is_selected: true,
           cert_language: 'ru',
           cert_common_id: '8badd29b-7f02-4a80-90fd-4dfead56acee',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
           created_at: new Date,
           updated_at: new Date
         },
@@ -269,7 +268,7 @@ module.exports = {
           is_selected: true,
           cert_language: 'ru',
           cert_common_id: '84c8630e-b37e-4d73-88b8-c4332d3c62d7',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
           created_at: new Date,
           updated_at: new Date
         },
@@ -285,7 +284,7 @@ module.exports = {
           is_selected: true,
           cert_language: 'ru',
           cert_common_id: 'b0f0acbe-a9e8-4e14-b9c9-5490bff648ff',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
           created_at: new Date,
           updated_at: new Date
         },
@@ -301,7 +300,7 @@ module.exports = {
           is_selected: true,
           cert_language: 'pl',
           cert_common_id: '6c058a14-abf3-4e1b-acae-7833daaf724f',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
           created_at: new Date,
           updated_at: new Date
         },
@@ -317,7 +316,7 @@ module.exports = {
           is_selected: true,
           cert_language: 'pl',
           cert_common_id: '8badd29b-7f02-4a80-90fd-4dfead56acee',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
           created_at: new Date,
           updated_at: new Date
         },
@@ -333,7 +332,7 @@ module.exports = {
           is_selected: true,
           cert_language: 'pl',
           cert_common_id: '84c8630e-b37e-4d73-88b8-c4332d3c62d7',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
           created_at: new Date,
           updated_at: new Date
         },
@@ -349,7 +348,7 @@ module.exports = {
           is_selected: true,
           cert_language: 'pl',
           cert_common_id: 'b0f0acbe-a9e8-4e14-b9c9-5490bff648ff',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
           created_at: new Date,
           updated_at: new Date
         }
@@ -454,7 +453,7 @@ module.exports = {
           is_selected: true,
           experience_language: 'pl',
           experience_common_id: 'faff454c-1139-400f-b432-ef46c9f6b3db',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -471,7 +470,7 @@ module.exports = {
           is_selected: true,
           experience_language: 'pl',
           experience_common_id: '0bef5296-5310-425f-a195-404bf770035f',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -505,7 +504,7 @@ module.exports = {
           is_selected: true,
           experience_language: 'ru',
           experience_common_id: '0bef5296-5310-425f-a195-404bf770035f',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
+          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
           created_at: new Date(),
           updated_at: new Date()
         }
@@ -555,7 +554,7 @@ module.exports = {
           position_end_date: new Date(),
           position_language: 'pl',
           position_common_id: '93823178-c3f9-4acf-ac7d-f41d64809a63',
-          experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
+          experience_id: '4995d9f5-166f-4d20-8f59-b207ae68c59f',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -567,7 +566,7 @@ module.exports = {
           position_end_date: new Date(),
           position_language: 'pl',
           position_common_id: 'b051b110-596e-4a7e-ab82-6aa631a68974',
-          experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
+          experience_id: '5ac4dc4c-c8b3-4769-bdf9-8dc7d5931676',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -579,7 +578,7 @@ module.exports = {
           position_end_date: new Date(),
           position_language: 'pl',
           position_common_id: 'd2848268-3225-45a8-80c9-aa4614db0727',
-          experience_id: '93187a57-e8ab-4b05-9013-eec33e389239',
+          experience_id: '5ac4dc4c-c8b3-4769-bdf9-8dc7d5931676',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -591,7 +590,7 @@ module.exports = {
           position_end_date: new Date(),
           position_language: 'ru',
           position_common_id: '93823178-c3f9-4acf-ac7d-f41d64809a63',
-          experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
+          experience_id: '31b4242f-8741-4d78-9806-9ad989573973',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -603,7 +602,7 @@ module.exports = {
           position_end_date: new Date(),
           position_language: 'ru',
           position_common_id: 'b051b110-596e-4a7e-ab82-6aa631a68974',
-          experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
+          experience_id: '40e62a56-7cf5-4ce6-83f0-0f5b9bdd99a8',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -615,7 +614,7 @@ module.exports = {
           position_end_date: new Date(),
           position_language: 'ru',
           position_common_id: 'd2848268-3225-45a8-80c9-aa4614db0727',
-          experience_id: '93187a57-e8ab-4b05-9013-eec33e389239',
+          experience_id: '40e62a56-7cf5-4ce6-83f0-0f5b9bdd99a8',
           created_at: new Date(),
           updated_at: new Date()
         }

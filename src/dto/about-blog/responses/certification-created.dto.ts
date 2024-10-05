@@ -1,7 +1,7 @@
 export class CertificationCreatedDto {
-  readonly certificationId: string;
+  readonly message: string;
 
-  constructor(certificationId: string) {
-    this.certificationId = certificationId;
+  constructor(message = 'certification-created') {
+    this.message = message;
   }
 }

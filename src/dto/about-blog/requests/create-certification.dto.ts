@@ -1,18 +1,24 @@
 import {
+  ArrayMaxSize,
   ArrayMinSize,
   IsArray,
   IsDateString,
+  IsEnum,
   IsOptional,
   IsString,
   IsUUID,
   Matches,
-  MinLength
+  MinLength,
+  ValidateNested
 } from 'class-validator';
 import { ValidationError } from '@interfaces/validation-error.enum';
 import { ImageRegex } from '@regex/image.regex';
 import { PdfRegex } from '@regex/pdf.regex';
+import { Type } from 'class-transformer';
+import { Language } from '@interfaces/language.enum';
 
-export class CreateCertificationDto {
+// @TODO Fix bug with validation of the cert here
+class CertificationDto {
   @IsString({ message: ValidationError.WRONG_CERT_NAME_FORMAT })
   @MinLength(1, { message: ValidationError.WRONG_CERT_NAME_LENGTH })
   readonly certName: string;
@@ -42,6 +48,18 @@ export class CreateCertificationDto {
   @ArrayMinSize(1)
   readonly obtainedSkills: Array<string>;
 
+  @IsEnum(Language)
+  readonly certLanguage: Language;
+
   @IsUUID('4', { message: ValidationError.WRONG_AUTHOR_ID_FORMAT })
   readonly authorId: string;
+}
+
+export class CreateCertificationDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ArrayMinSize(3, { message: ValidationError.WRONG_CERTIFICATIONS_LENGTH })
+  @ArrayMaxSize(3, { message: ValidationError.WRONG_CERTIFICATIONS_LENGTH })
+  @Type(() => CertificationDto)
+  readonly certifications: Array<CertificationDto>;
 }
