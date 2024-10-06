@@ -1,7 +1,9 @@
 export class ExperienceCreatedDto {
-  readonly experienceId: string;
+  readonly experiencesIds: Array<string>;
+  readonly message: string;
 
-  constructor(experienceId: string) {
-    this.experienceId = experienceId;
+  constructor(experiencesIds: Array<string>, message = 'experience-created') {
+    this.experiencesIds = experiencesIds;
+    this.message = message;
   }
 }

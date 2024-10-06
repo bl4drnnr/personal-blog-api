@@ -266,11 +266,11 @@ export class AboutBlogController {
   @UseGuards(AuthGuard)
   @Delete('delete-experience')
   deleteExperience(
-    @Query('experienceId') experienceId: string,
+    @Query('experienceCommonId') experienceCommonId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return this.aboutBlogService.deleteExperience({
-      experienceId,
+      experienceCommonId,
       trx
     });
   }

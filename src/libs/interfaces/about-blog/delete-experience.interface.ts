@@ -1,6 +1,6 @@
 import { Transaction } from 'sequelize';
 
 export interface DeleteExperienceInterface {
-  experienceId: string;
+  experienceCommonId: string;
   trx?: Transaction;
 }

@@ -474,39 +474,37 @@ export class AboutBlogService {
   }
 
   async createExperience({ payload, trx }: CreateExperienceInterface) {
-    const {
-      companyName,
-      companyDescription,
-      companyLink,
-      companyLinkTitle,
-      companyPicture,
-      obtainedSkills,
-      startDate,
-      endDate,
-      authorId
-    } = payload;
+    const { experiences } = payload;
 
-    const experiencePicture = await this.uploadPicture(
-      companyPicture,
-      StaticStorages.EXPERIENCES_PICTURES
-    );
+    const experiencesIds: Array<string> = [];
+    const experienceCommonId = this.generateUUIDv4();
 
-    const createdExperience = await this.experiencesRepository.create(
-      {
-        companyName,
-        companyDescription,
-        companyLink,
-        companyLinkTitle,
-        companyPicture: experiencePicture,
-        obtainedSkills,
-        startDate,
-        endDate: endDate ? endDate : null,
-        authorId
-      },
-      { transaction: trx }
-    );
+    for (const experience of experiences) {
+      const experiencePicture = await this.uploadPicture(
+        experience.companyPicture,
+        StaticStorages.EXPERIENCES_PICTURES
+      );
 
-    return new ExperienceCreatedDto(createdExperience.id);
+      const createdExperience = await this.experiencesRepository.create(
+        {
+          companyName: experience.companyName,
+          companyDescription: experience.companyDescription,
+          companyLink: experience.companyLink,
+          companyLinkTitle: experience.companyLinkTitle,
+          companyPicture: experiencePicture,
+          startDate: experience.startDate,
+          endDate: experience.endDate,
+          experienceLanguage: experience.experienceLanguage,
+          experienceCommonId,
+          authorId: experience.authorId
+        },
+        { transaction: trx }
+      );
+
+      experiencesIds.push(createdExperience.id);
+    }
+
+    return new ExperienceCreatedDto(experiencesIds);
   }
 
   async createExperiencePosition({ payload, trx }: CreateCertificationPosition) {
@@ -786,16 +784,29 @@ export class AboutBlogService {
     return new SocialDeletedDto();
   }
 
-  async deleteExperience({ experienceId, trx }: DeleteExperienceInterface) {
-    const experience = await this.getExperienceById({
-      experienceId,
+  async deleteExperience({ experienceCommonId, trx }: DeleteExperienceInterface) {
+    const experiences = await this.getExperiencesByCommonId({
+      experienceCommonId,
       trx
     });
 
-    if (!experience) throw new ExperienceNotFoundException();
+    if (!experiences || experiences.count !== 3)
+      throw new ExperienceNotFoundException();
+
+    for (const experience of experiences.rows) {
+      await this.experiencePositionsRepository.destroy({
+        where: { experienceId: experience.id },
+        transaction: trx
+      });
+
+      await this.deleteFile(
+        experience.companyPicture,
+        StaticStorages.EXPERIENCES_PICTURES
+      );
+    }
 
     await this.experiencesRepository.destroy({
-      where: { id: experience.id },
+      where: { experienceCommonId },
       transaction: trx
     });
 

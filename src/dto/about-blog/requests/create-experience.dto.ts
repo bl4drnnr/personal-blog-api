@@ -1,18 +1,23 @@
 import {
+  ArrayMaxSize,
   ArrayMinSize,
   IsArray,
   IsDateString,
+  IsEnum,
   IsOptional,
   IsString,
   IsUUID,
   Matches,
-  MinLength
+  MinLength,
+  ValidateNested
 } from 'class-validator';
 import { ValidationError } from '@interfaces/validation-error.enum';
 import { ImageRegex } from '@regex/image.regex';
 import { LinkRegex } from '@regex/link.regex';
+import { Type } from 'class-transformer';
+import { Language } from '@interfaces/language.enum';
 
-export class CreateExperienceDto {
+class ExperienceDto {
   @IsString({ message: ValidationError.WRONG_COMPANY_NAME_FORMAT })
   @MinLength(1, {
     message: ValidationError.WRONG_COMPANY_NAME_LENGTH
@@ -52,6 +57,18 @@ export class CreateExperienceDto {
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
   readonly endDate?: Date;
 
+  @IsEnum(Language)
+  readonly experienceLanguage: Language;
+
   @IsUUID('4', { message: ValidationError.WRONG_AUTHOR_ID_FORMAT })
   readonly authorId: string;
+}
+
+export class CreateExperienceDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ArrayMinSize(3, { message: ValidationError.WRONG_EXPERIENCES_LENGTH })
+  @ArrayMaxSize(3, { message: ValidationError.WRONG_EXPERIENCES_LENGTH })
+  @Type(() => ExperienceDto)
+  readonly experiences: Array<ExperienceDto>;
 }

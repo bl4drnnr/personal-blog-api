@@ -22,7 +22,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config test/jest-e2e.json",
-    "database:dev:undo": "NODE_ENV=development npx sequelize-cli db:seed:undo --seed wipe.js",
+    "database:dev:wipe": "NODE_ENV=development npx sequelize-cli db:seed:undo --seed wipe.js",
     "database:dev:mock": "NODE_ENV=development npx sequelize-cli db:seed --seed mock.js",
     "database:dev:mock:undo": "NODE_ENV=development npx sequelize-cli db:seed:undo --seed mock.js"
   },
