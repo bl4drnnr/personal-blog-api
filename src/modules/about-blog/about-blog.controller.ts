@@ -290,11 +290,11 @@ export class AboutBlogController {
   @UseGuards(AuthGuard)
   @Delete('delete-certification')
   deleteCertification(
-    @Query('certificationId') certificationId: string,
+    @Query('certCommonId') certCommonId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return this.aboutBlogService.deleteCertification({
-      certificationId,
+      certCommonId,
       trx
     });
   }

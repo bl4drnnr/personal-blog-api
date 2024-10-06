@@ -1,6 +1,6 @@
 import { Transaction } from 'sequelize';
 
 export interface DeleteCertificationInterface {
-  certificationId: string;
+  certCommonId: string;
   trx?: Transaction;
 }

@@ -17,7 +17,6 @@ import { PdfRegex } from '@regex/pdf.regex';
 import { Type } from 'class-transformer';
 import { Language } from '@interfaces/language.enum';
 
-// @TODO Fix bug with validation of the cert here
 class CertificationDto {
   @IsString({ message: ValidationError.WRONG_CERT_NAME_FORMAT })
   @MinLength(1, { message: ValidationError.WRONG_CERT_NAME_LENGTH })
@@ -45,7 +44,7 @@ class CertificationDto {
   readonly expirationDate?: Date;
 
   @IsArray()
-  @ArrayMinSize(1)
+  @ArrayMinSize(1, { message: ValidationError.WRONG_OBTAINED_SKILLS_LENGTH })
   readonly obtainedSkills: Array<string>;
 
   @IsEnum(Language)

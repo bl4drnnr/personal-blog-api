@@ -62,5 +62,6 @@ export enum ValidationError {
   WRONG_POSITION_DESC_LENGTH = 'wrong-position-desc-length',
   WRONG_SOCIAL_TITLE_FORMAT = 'wrong-social-title-format',
   WRONG_SOCIAL_TITLE_LENGTH = 'wrong-social-title-length',
-  WRONG_SOCIAL_ID_FORMAT = 'wrong-social-id-format'
+  WRONG_SOCIAL_ID_FORMAT = 'wrong-social-id-format',
+  WRONG_OBTAINED_SKILLS_LENGTH = 'wrong-obtained-skills-length'
 }

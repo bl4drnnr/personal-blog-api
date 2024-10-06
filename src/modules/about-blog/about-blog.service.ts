@@ -761,10 +761,9 @@ export class AboutBlogService {
 
     if (!authors || authors.count !== 3) throw new AuthorNotFoundException();
 
-    await this.deleteFile(
-      authors.rows[0].profilePicture,
-      StaticStorages.AUTHORS_PICTURES
-    );
+    for (const author of authors.rows) {
+      await this.deleteFile(author.profilePicture, StaticStorages.AUTHORS_PICTURES);
+    }
 
     await this.authorsRepository.destroy({
       where: { authorCommonId },
@@ -819,16 +818,23 @@ export class AboutBlogService {
     return new ExperiencePositionDeletedDto();
   }
 
-  async deleteCertification({ certificationId, trx }: DeleteCertificationInterface) {
-    const certification = await this.getCertificationById({
-      certificationId,
+  async deleteCertification({ certCommonId, trx }: DeleteCertificationInterface) {
+    const certifications = await this.getCertificationsByCommonId({
+      certCommonId,
       trx
     });
 
-    if (!certification) throw new CertificationNotFoundException();
+    if (!certifications || certifications.count !== 3)
+      throw new CertificationNotFoundException();
+
+    for (const cert of certifications.rows) {
+      await this.deleteFile(cert.certPicture, StaticStorages.CERTS_PICTURES);
+
+      await this.deleteFile(cert.certDocs, StaticStorages.CERTS_FILES);
+    }
 
     await this.certsRepository.destroy({
-      where: { id: certification.id },
+      where: { certCommonId },
       transaction: trx
     });
 
