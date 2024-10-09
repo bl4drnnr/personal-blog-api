@@ -25,6 +25,9 @@ export class EndUser extends Model<EndUser, EndUserCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   email: string;
 
+  @HasOne(() => Newsletter)
+  newsletter: Newsletter;
+
   @CreatedAt
   @Column({ field: 'created_at' })
   createdAt: Date;
@@ -32,7 +35,4 @@ export class EndUser extends Model<EndUser, EndUserCreationAttributes> {
   @UpdatedAt
   @Column({ field: 'updated_at' })
   updatedAt: Date;
-
-  @HasOne(() => Newsletter)
-  newsletter: Newsletter;
 }

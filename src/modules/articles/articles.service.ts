@@ -26,6 +26,7 @@ import { PublishArticleInterface } from '@interfaces/publish-article.interface';
 import { ArticlePublishStatusDto } from '@dto/articles/response/article-published.dto';
 import { GetAllPostedArticlesSlugs } from '@interfaces/get-all-posted-articles-slugs.interface';
 import { Language } from '@interfaces/language.enum';
+import { StaticStorages } from '@interfaces/static-storages.enum';
 
 @Injectable()
 export class ArticlesService {
@@ -60,11 +61,7 @@ export class ArticlesService {
     }));
   }
 
-  async getPostedArticleBySlug({
-    slug,
-    language,
-    trx
-  }: GetArticleBySlugInterface) {
+  async getPostedArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
     if (!slug || !language) throw new ArticleNotFoundException();
 
     const attributes = [
@@ -123,9 +120,7 @@ export class ArticlesService {
 
       if (!category) throw new CategoryNotFoundException();
 
-      const articleImage = await this.uploadArticlePicture(
-        article.articlePicture
-      );
+      const articleImage = await this.uploadArticlePicture(article.articlePicture);
 
       await this.articleRepository.create(
         {
@@ -146,11 +141,11 @@ export class ArticlesService {
     return new ArticleCreatedDto();
   }
 
-  async changePublishArticleStatus({
-    articleId,
-    trx
-  }: PublishArticleInterface) {
-    const existingArticle = await this.getArticleById({ articleId, trx });
+  async changePublishArticleStatus({ articleId, trx }: PublishArticleInterface) {
+    const existingArticle = await this.getArticleById({
+      articleId,
+      trx
+    });
 
     await this.articleRepository.update(
       { articlePosted: !existingArticle.articlePosted },
@@ -182,7 +177,10 @@ export class ArticlesService {
       categoryId
     } = payload;
 
-    const existingArticle = await this.getArticleById({ articleId, trx });
+    const existingArticle = await this.getArticleById({
+      articleId,
+      trx
+    });
 
     if (!existingArticle) throw new ArticleNotFoundException();
 
@@ -284,8 +282,7 @@ export class ArticlesService {
 
     const type = picture.split(';')[0].split('/')[1];
 
-    if (!['png', 'jpg', 'jpeg'].includes(type))
-      throw new WrongPictureException();
+    if (!['png', 'jpg', 'jpeg'].includes(type)) throw new WrongPictureException();
 
     const pictureHash = this.cryptographicService.hash({
       data: base64Data.toString() + Date.now().toString(),
@@ -296,7 +293,7 @@ export class ArticlesService {
 
     const params = {
       Bucket: bucketName,
-      Key: `articles-main-pictures/${pictureName}`,
+      Key: `${StaticStorages.ARTICLES_MAIN_PICTURES}/${pictureName}`,
       Body: base64Data,
       ContentEncoding: 'base64',
       ContentType: `image/${type}`
@@ -315,7 +312,7 @@ export class ArticlesService {
 
     const params = {
       Bucket: bucketName,
-      Key: `articles-main-pictures/${picture}`
+      Key: `${StaticStorages.ARTICLES_MAIN_PICTURES}/${picture}`
     };
 
     await s3.deleteObject(params).promise();

@@ -54,8 +54,13 @@ export class UsersService {
   }
 
   async createUser({ payload, trx: transaction }: CreateUserInterface) {
-    const user = await this.userRepository.create(payload, { transaction });
-    await this.createUserSettings({ userId: user.id, trx: transaction });
+    const user = await this.userRepository.create(payload, {
+      transaction
+    });
+    await this.createUserSettings({
+      userId: user.id,
+      trx: transaction
+    });
     return user;
   }
 
@@ -188,10 +193,7 @@ export class UsersService {
     });
   }
 
-  async getUserSecuritySettings({
-    userId,
-    trx
-  }: GetUserSecuritySettingsInterface) {
+  async getUserSecuritySettings({ userId, trx }: GetUserSecuritySettingsInterface) {
     const {
       userSettings: { passwordChanged, twoFaToken },
       email
@@ -233,7 +235,10 @@ export class UsersService {
 
     if (!userSettings) throw new WrongRecoveryKeysException();
 
-    return this.getUserById({ id: userSettings.userId, trx: transaction });
+    return this.getUserById({
+      id: userSettings.userId,
+      trx: transaction
+    });
   }
 
   async deleteUserAccount({
@@ -250,9 +255,6 @@ export class UsersService {
     userId,
     trx: transaction
   }: CreateUserSettingsInterface) {
-    return await this.userSettingsRepository.create(
-      { userId },
-      { transaction }
-    );
+    return await this.userSettingsRepository.create({ userId }, { transaction });
   }
 }

@@ -26,7 +26,11 @@ export class Session extends Model<Session, SessionCreationAttributes> {
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.UUID, allowNull: false, field: 'token_id' })
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'token_id'
+  })
   tokenId: string;
 
   @ForeignKey(() => User)

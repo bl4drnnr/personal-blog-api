@@ -13,10 +13,7 @@ import {
 import { User } from '@models/user.model';
 import { Confirmation } from '@interfaces/confirmation-type.enum';
 
-const confirmationTypes = [
-  Confirmation.REGISTRATION,
-  Confirmation.FORGOT_PASSWORD
-];
+const confirmationTypes = [Confirmation.REGISTRATION, Confirmation.FORGOT_PASSWORD];
 
 interface ConfirmationHashCreationAttributes {
   userId: string;

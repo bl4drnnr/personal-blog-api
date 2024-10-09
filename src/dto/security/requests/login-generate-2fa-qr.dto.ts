@@ -4,7 +4,9 @@ import { PasswordRegex } from '@regex/password.regex';
 import { ValidationError } from '@interfaces/validation-error.enum';
 
 export class LoginGenerate2faQrDto {
-  @Matches(EmailRegex, { message: ValidationError.WRONG_EMAIL_FORMAT })
+  @Matches(EmailRegex, {
+    message: ValidationError.WRONG_EMAIL_FORMAT
+  })
   readonly email: string;
 
   @Matches(PasswordRegex, {

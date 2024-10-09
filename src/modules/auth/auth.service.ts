@@ -185,8 +185,7 @@ export class AuthService {
         token: mfaCode
       });
 
-      if (!delta || (delta && delta.delta !== 0))
-        throw new WrongCodeException();
+      if (!delta || (delta && delta.delta !== 0)) throw new WrongCodeException();
     }
   }
 
@@ -196,8 +195,7 @@ export class AuthService {
         secret: this.configService.jwtAuthConfig.secret
       });
     } catch (error: any) {
-      if (error instanceof jwt.TokenExpiredError)
-        throw new ExpiredTokenException();
+      if (error instanceof jwt.TokenExpiredError) throw new ExpiredTokenException();
       else if (error instanceof jwt.JsonWebTokenError)
         throw new InvalidTokenException();
     }

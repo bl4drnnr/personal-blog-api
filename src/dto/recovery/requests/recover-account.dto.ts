@@ -9,7 +9,9 @@ import { ValidationError } from '@interfaces/validation-error.enum';
 
 export class RecoverAccountDto {
   @IsString({ message: ValidationError.WRONG_PASSPHRASE_FORMAT })
-  @Length(8, 128, { message: ValidationError.WRONG_PASSPHRASE_LENGTH })
+  @Length(8, 128, {
+    message: ValidationError.WRONG_PASSPHRASE_LENGTH
+  })
   readonly passphrase: string;
 
   @ArrayMinSize(5, { message: ValidationError.WRONG_REC_KEYS })

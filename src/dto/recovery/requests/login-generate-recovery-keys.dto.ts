@@ -5,10 +5,14 @@ import { ValidationError } from '@interfaces/validation-error.enum';
 
 export class LoginGenerateRecoveryKeysDto {
   @IsString({ message: ValidationError.WRONG_PASSPHRASE_FORMAT })
-  @Length(8, 128, { message: ValidationError.WRONG_PASSPHRASE_LENGTH })
+  @Length(8, 128, {
+    message: ValidationError.WRONG_PASSPHRASE_LENGTH
+  })
   readonly passphrase: string;
 
-  @Matches(EmailRegex, { message: ValidationError.WRONG_EMAIL_FORMAT })
+  @Matches(EmailRegex, {
+    message: ValidationError.WRONG_EMAIL_FORMAT
+  })
   readonly email: string;
 
   @Matches(PasswordRegex, {

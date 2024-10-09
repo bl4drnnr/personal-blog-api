@@ -73,4 +73,8 @@ export class ApiConfigService {
       iv: this.getString('RECOVERY_ENCRYPTION_IV')
     };
   }
+
+  get contactEmailAddress() {
+    return this.getString('CONTACT_EMAIL_ADDRESS');
+  }
 }

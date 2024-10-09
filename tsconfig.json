@@ -29,7 +29,9 @@
         "src/exceptions/security/*",
         "src/exceptions/validation/*",
         "src/exceptions/categories/*",
-        "src/exceptions/recovery/*"
+        "src/exceptions/recovery/*",
+        "src/exceptions/about-blog/*",
+        "src/exceptions/contact/*"
       ],
       "@dto/*": [
         "src/dto/*",
@@ -50,7 +52,11 @@
         "src/dto/newsletters/requests/*",
         "src/dto/newsletters/responses/*",
         "src/dto/end-user/requests/*",
-        "src/dto/end-user/responses/*"
+        "src/dto/end-user/responses/*",
+        "src/dto/about-blog/requests/*",
+        "src/dto/about-blog/responses/*",
+        "src/dto/contact/requests/*",
+        "src/dto/contact/responses/*"
       ],
       "@events/*": ["src/events/*"],
       "@guards/*": ["src/guards/*"],
@@ -66,7 +72,9 @@
         "src/modules/articles/*",
         "src/modules/categories/*",
         "src/modules/newsletters/*",
-        "src/modules/end-user/*"
+        "src/modules/end-user/*",
+        "src/modules/about-blog/*",
+        "src/modules/contact/*"
       ],
       "@interfaces/*": [
         "src/libs/enums/*",
@@ -84,7 +92,9 @@
         "src/libs/interfaces/articles/*",
         "src/libs/interfaces/categories/*",
         "src/libs/interfaces/newsletters/*",
-        "src/libs/interfaces/end-user/*"
+        "src/libs/interfaces/end-user/*",
+        "src/libs/interfaces/about-blog/*",
+        "src/libs/interfaces/contact/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [

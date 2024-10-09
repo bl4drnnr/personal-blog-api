@@ -27,10 +27,7 @@ export class NewslettersService {
     private readonly emailService: EmailService
   ) {}
 
-  async getNewslettersById({
-    newslettersId,
-    trx
-  }: GetNewslettersByIdInterface) {
+  async getNewslettersById({ newslettersId, trx }: GetNewslettersByIdInterface) {
     return this.newsletterRepository.findByPk(newslettersId, {
       transaction: trx
     });
@@ -94,7 +91,10 @@ export class NewslettersService {
     });
 
     if (!existingUser) {
-      existingUser = await this.endUserService.createEndUser({ email, trx });
+      existingUser = await this.endUserService.createEndUser({
+        email,
+        trx
+      });
 
       const newsletters = await this.createNewslettersSubscription({
         endUserId: existingUser.id,
@@ -147,7 +147,10 @@ export class NewslettersService {
     if (existingNewsletters && existingNewsletters.isConfirmed)
       throw new SubscriptionAlreadyConfirmedException();
 
-    await this.confirmNewslettersSubscriptionById({ newslettersId, trx });
+    await this.confirmNewslettersSubscriptionById({
+      newslettersId,
+      trx
+    });
 
     return new SubscriptionConfirmedDto();
   }
@@ -163,7 +166,10 @@ export class NewslettersService {
 
     if (!existingNewsletters) throw new NewslettersNotFoundException();
 
-    await this.deleteNewslettersSubscriptionById({ newslettersId, trx });
+    await this.deleteNewslettersSubscriptionById({
+      newslettersId,
+      trx
+    });
 
     return new UnsubscriptionConfirmedDto();
   }

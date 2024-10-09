@@ -34,7 +34,10 @@ export class SecurityService {
         trx
       });
 
-    const { email } = await this.usersService.getUserById({ id: userId, trx });
+    const { email } = await this.usersService.getUserById({
+      id: userId,
+      trx
+    });
 
     return await this.generateQrCode({ email });
   }
@@ -52,7 +55,10 @@ export class SecurityService {
   }
 
   async generateTwoFaQrCode({ userId, trx }: Generate2faInterface) {
-    const { email } = await this.usersService.getUserById({ id: userId, trx });
+    const { email } = await this.usersService.getUserById({
+      id: userId,
+      trx
+    });
 
     return await this.generateQrCode({ email });
   }

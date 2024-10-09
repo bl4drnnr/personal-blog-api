@@ -5,7 +5,8 @@ import { json, urlencoded } from 'express';
 (async () => {
   const whitelist = [
     'http://localhost:4200', // Admin panel
-    'http://localhost:4202' // Blog front
+    'http://localhost:4202', // Blog front
+    'http://localhost:4000' // Blog production front
   ];
 
   const app = await NestFactory.create(AppModule);

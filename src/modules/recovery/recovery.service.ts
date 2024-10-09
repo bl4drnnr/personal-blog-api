@@ -87,12 +87,10 @@ export class RecoveryService {
       passphrase
     });
 
-    const encryptedRecoveryKeys = this.cryptographicService.encryptRecoveryKeys(
-      {
-        recoveryKeys,
-        hashedPassphrase
-      }
-    );
+    const encryptedRecoveryKeys = this.cryptographicService.encryptRecoveryKeys({
+      recoveryKeys,
+      hashedPassphrase
+    });
 
     const recoveryKeysFingerprint = this.cryptographicService.hash({
       data: encryptedRecoveryKeys,
@@ -137,12 +135,10 @@ export class RecoveryService {
       passphrase
     });
 
-    const encryptedRecoveryKeys = this.cryptographicService.encryptRecoveryKeys(
-      {
-        recoveryKeys,
-        hashedPassphrase
-      }
-    );
+    const encryptedRecoveryKeys = this.cryptographicService.encryptRecoveryKeys({
+      recoveryKeys,
+      hashedPassphrase
+    });
 
     const recoveryKeysFingerprint = this.cryptographicService.hash({
       data: encryptedRecoveryKeys,

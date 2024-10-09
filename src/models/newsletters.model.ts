@@ -21,21 +21,26 @@ interface NewslettersCreationAttributes {
 }
 
 @Table({ tableName: 'newsletters' })
-export class Newsletter extends Model<
-  Newsletter,
-  NewslettersCreationAttributes
-> {
+export class Newsletter extends Model<Newsletter, NewslettersCreationAttributes> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id: string;
 
   @ForeignKey(() => EndUser)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'end_user_id' })
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    field: 'end_user_id'
+  })
   endUserId: string;
 
   @Default(false)
-  @Column({ type: DataType.BOOLEAN, allowNull: false, field: 'is_confirmed' })
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    field: 'is_confirmed'
+  })
   isConfirmed: boolean;
 
   @Column({

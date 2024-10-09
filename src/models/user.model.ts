@@ -14,6 +14,7 @@ import { Session } from '@models/session.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { ArticleModel } from '@models/article.model';
 import { UserSettings } from '@models/user-settings.model';
+import { Author } from '@models/author.model';
 
 interface UserCreationAttributes {
   email: string;
@@ -32,10 +33,18 @@ export class User extends Model<User, UserCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: true })
   password: string;
 
-  @Column({ type: DataType.STRING, allowNull: true, field: 'first_name' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'first_name'
+  })
   firstName: string;
 
-  @Column({ type: DataType.STRING, allowNull: true, field: 'last_name' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'last_name'
+  })
   lastName: string;
 
   @Default(false)
@@ -65,6 +74,9 @@ export class User extends Model<User, UserCreationAttributes> {
 
   @HasOne(() => UserSettings)
   userSettings: UserSettings;
+
+  @HasOne(() => Author)
+  author: Author;
 
   @CreatedAt
   @Column({ field: 'created_at' })

@@ -43,10 +43,7 @@ export class CategoriesController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   @Patch('edit')
-  editCategory(
-    @Body() payload: EditCategoryDto,
-    @TrxDecorator() trx: Transaction
-  ) {
+  editCategory(@Body() payload: EditCategoryDto, @TrxDecorator() trx: Transaction) {
     return this.categoriesService.editCategory({ payload, trx });
   }
 

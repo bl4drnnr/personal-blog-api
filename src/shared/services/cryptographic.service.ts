@@ -59,9 +59,7 @@ export class CryptographicService {
     const key = CryptoJS.enc.Base64.parse(passphrase);
     const iv = CryptoJS.enc.Base64.parse(this.iv);
 
-    return CryptoJS.AES.decrypt(ciphertext, key, { iv }).toString(
-      CryptoJS.enc.Utf8
-    );
+    return CryptoJS.AES.decrypt(ciphertext, key, { iv }).toString(CryptoJS.enc.Utf8);
   }
 
   generateRecoveryKey() {

@@ -41,10 +41,7 @@ export class AuthController {
 
   @UsePipes(ValidationPipe)
   @Post('registration')
-  registration(
-    @Body() payload: CreateUserDto,
-    @TrxDecorator() trx: Transaction
-  ) {
+  registration(@Body() payload: CreateUserDto, @TrxDecorator() trx: Transaction) {
     return this.authService.registration({ payload, trx });
   }
 

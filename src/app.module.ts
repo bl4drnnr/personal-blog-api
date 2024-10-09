@@ -23,6 +23,14 @@ import { EndUser } from '@models/end-user.model';
 import { Newsletter } from '@models/newsletters.model';
 import { NewslettersModule } from '@modules/newsletters.module';
 import { EndUserModule } from '@modules/end-user.module';
+import { AboutBlogModule } from '@modules/about-blog/about-blog.module';
+import { Author } from '@models/author.model';
+import { ExperiencePosition } from '@models/experience-position.model';
+import { Cert } from '@models/cert.model';
+import { Experience } from '@models/experience.model';
+import { Social } from '@models/social.model';
+import { ContactModule } from './modules/contact/contact.module';
+import { PagesContent } from '@models/pages-content.model';
 
 @Module({
   imports: [
@@ -52,7 +60,13 @@ import { EndUserModule } from '@modules/end-user.module';
         ArticleModel,
         CategoryModel,
         EndUser,
-        Newsletter
+        Newsletter,
+        Author,
+        Experience,
+        ExperiencePosition,
+        Cert,
+        Social,
+        PagesContent
       ],
       autoLoadModels: true
     }),
@@ -65,7 +79,9 @@ import { EndUserModule } from '@modules/end-user.module';
     ArticlesModule,
     CategoriesModule,
     NewslettersModule,
-    EndUserModule
+    EndUserModule,
+    AboutBlogModule,
+    ContactModule
   ],
   providers: [
     {

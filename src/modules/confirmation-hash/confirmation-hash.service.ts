@@ -111,12 +111,10 @@ export class ConfirmationHashService {
       password
     });
 
-    const isPreviousPassword = await this.cryptographicService.comparePasswords(
-      {
-        dataToCompare: hashedPassword,
-        hash: currentUserPassword
-      }
-    );
+    const isPreviousPassword = await this.cryptographicService.comparePasswords({
+      dataToCompare: hashedPassword,
+      hash: currentUserPassword
+    });
 
     if (isPreviousPassword) throw new PreviousPasswordException();
 
