@@ -47,7 +47,7 @@ class CertificationDto {
   @ArrayMinSize(1, { message: ValidationError.WRONG_OBTAINED_SKILLS_LENGTH })
   readonly obtainedSkills: Array<string>;
 
-  @IsEnum(Language)
+  @IsEnum(Language, { message: ValidationError.WRONG_LANGUAGES_FORMAT })
   readonly certLanguage: Language;
 
   @IsUUID('4', { message: ValidationError.WRONG_AUTHOR_ID_FORMAT })

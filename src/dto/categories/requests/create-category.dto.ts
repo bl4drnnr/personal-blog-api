@@ -24,7 +24,7 @@ class CategoryDto {
   })
   readonly categoryDescription: string;
 
-  @IsEnum(Language)
+  @IsEnum(Language, { message: ValidationError.WRONG_LANGUAGES_FORMAT })
   readonly categoryLanguage: Language;
 }
 

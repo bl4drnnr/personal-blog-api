@@ -18,6 +18,6 @@ export class ResetUserPasswordDto {
   readonly mfaCode?: string;
 
   @IsOptional()
-  @IsEnum(Language)
+  @IsEnum(Language, { message: ValidationError.WRONG_LANGUAGES_FORMAT })
   readonly language?: Language;
 }

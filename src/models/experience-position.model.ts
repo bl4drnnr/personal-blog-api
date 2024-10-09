@@ -24,8 +24,6 @@ interface ExperiencePositionCreationAttributes {
   positionCommonId: string;
   experienceId: string;
 }
-// @TODO Add maximum number of characters available for a field
-// @TODO Add validation (both front and back) for the max amount as well
 
 @Table({ tableName: 'experience_positions' })
 export class ExperiencePosition extends Model<

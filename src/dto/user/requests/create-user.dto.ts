@@ -34,6 +34,6 @@ export class CreateUserDto {
   readonly tac: boolean;
 
   @IsOptional()
-  @IsEnum(Language)
+  @IsEnum(Language, { message: ValidationError.WRONG_LANGUAGES_FORMAT })
   readonly language?: Language;
 }

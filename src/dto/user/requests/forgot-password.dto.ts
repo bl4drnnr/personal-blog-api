@@ -10,6 +10,6 @@ export class ForgotPasswordDto {
   readonly email: string;
 
   @IsOptional()
-  @IsEnum(Language)
+  @IsEnum(Language, { message: ValidationError.WRONG_LANGUAGES_FORMAT })
   readonly language?: Language;
 }

@@ -63,4 +63,8 @@ export class UpdateExperienceDto {
   @IsOptional()
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
   readonly endDate?: Date;
+
+  @IsOptional()
+  @IsUUID('4', { message: ValidationError.WRONG_AUTHOR_ID_FORMAT })
+  readonly authorId?: string;
 }

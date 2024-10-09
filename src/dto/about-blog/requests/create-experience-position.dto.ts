@@ -1,5 +1,6 @@
-import { IsDateString, IsString, IsUUID, MinLength } from 'class-validator';
+import { IsDateString, IsEnum, IsString, IsUUID, MinLength } from 'class-validator';
 import { ValidationError } from '@interfaces/validation-error.enum';
+import { Language } from '@interfaces/language.enum';
 
 export class CreateExperiencePositionDto {
   @IsUUID('4', {
@@ -24,4 +25,7 @@ export class CreateExperiencePositionDto {
 
   @IsDateString({}, { message: ValidationError.WRONG_DATE_FORMAT })
   readonly positionEndDate: Date;
+
+  @IsEnum(Language, { message: ValidationError.WRONG_LANGUAGES_FORMAT })
+  readonly positionLanguage: Language;
 }

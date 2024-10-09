@@ -45,7 +45,7 @@ class ArticleDto {
   @IsUUID('4', { message: ValidationError.WRONG_CATEGORY_ID_FORMAT })
   readonly categoryId: string;
 
-  @IsEnum(Language)
+  @IsEnum(Language, { message: ValidationError.WRONG_LANGUAGES_FORMAT })
   readonly articleLanguage: Language;
 }
 

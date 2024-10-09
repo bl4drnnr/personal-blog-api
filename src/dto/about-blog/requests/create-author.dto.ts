@@ -51,7 +51,7 @@ class AuthorDto {
   })
   readonly profilePicture: string;
 
-  @IsEnum(Language)
+  @IsEnum(Language, { message: ValidationError.WRONG_LANGUAGES_FORMAT })
   readonly authorLanguage: Language;
 }
 

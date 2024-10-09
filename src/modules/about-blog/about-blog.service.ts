@@ -70,6 +70,7 @@ import { SocialDeletedDto } from '@dto/social-deleted.dto';
 import { GetAuthorsByCommonIdInterface } from '@interfaces/get-authors-by-common-id.interface';
 import { GetCertificationsByCommonIdInterface } from '@interfaces/get-certifications-by-common-id.interface';
 import { GetExperiencesByCommonIdInterface } from '@interfaces/get-experiences-by-common-id.interface';
+import { CreatedExperience } from '@interfaces/created-experience.interface';
 
 @Injectable()
 export class AboutBlogService {
@@ -175,7 +176,7 @@ export class AboutBlogService {
     });
   }
 
-  getSelectedAuthor({ authorLanguage, trx }: GetSelectedAuthorInterface) {
+  async getSelectedAuthor({ authorLanguage, trx }: GetSelectedAuthorInterface) {
     return this.authorsRepository.findOne({
       where: { authorLanguage, isSelected: true },
       include: [
@@ -476,7 +477,7 @@ export class AboutBlogService {
   async createExperience({ payload, trx }: CreateExperienceInterface) {
     const { experiences } = payload;
 
-    const experiencesIds: Array<string> = [];
+    const createdExperiences: Array<CreatedExperience> = [];
     const experienceCommonId = this.generateUUIDv4();
 
     for (const experience of experiences) {
@@ -492,6 +493,7 @@ export class AboutBlogService {
           companyLink: experience.companyLink,
           companyLinkTitle: experience.companyLinkTitle,
           companyPicture: experiencePicture,
+          obtainedSkills: experience.obtainedSkills,
           startDate: experience.startDate,
           endDate: experience.endDate,
           experienceLanguage: experience.experienceLanguage,
@@ -501,10 +503,13 @@ export class AboutBlogService {
         { transaction: trx }
       );
 
-      experiencesIds.push(createdExperience.id);
+      createdExperiences.push({
+        id: createdExperience.id,
+        language: experience.experienceLanguage
+      });
     }
 
-    return new ExperienceCreatedDto(experiencesIds);
+    return new ExperienceCreatedDto(createdExperiences);
   }
 
   async createExperiencePosition({ payload, trx }: CreateCertificationPosition) {
@@ -513,7 +518,8 @@ export class AboutBlogService {
       positionStartDate,
       positionEndDate,
       positionTitle,
-      positionDescription
+      positionDescription,
+      positionLanguage
     } = payload;
 
     const experience = await this.getExperienceById({
@@ -523,13 +529,17 @@ export class AboutBlogService {
 
     if (!experience) throw new ExperienceNotFoundException();
 
+    const positionCommonId = this.generateUUIDv4();
+
     await this.experiencePositionsRepository.create(
       {
         experienceId,
         positionStartDate,
         positionEndDate,
         positionTitle,
-        positionDescription
+        positionDescription,
+        positionLanguage,
+        positionCommonId
       },
       { transaction: trx }
     );
@@ -629,7 +639,8 @@ export class AboutBlogService {
       companyName,
       obtainedSkills,
       startDate,
-      endDate
+      endDate,
+      authorId
     } = payload;
 
     const experience = await this.getExperienceById({
@@ -650,6 +661,7 @@ export class AboutBlogService {
     if (startDate) experienceUpdatedFields.startDate = startDate;
     if (endDate || endDate === null) experienceUpdatedFields.endDate = endDate;
     if (obtainedSkills) experienceUpdatedFields.obtainedSkills = obtainedSkills;
+    if (authorId) experienceUpdatedFields.authorId = authorId;
     if (companyPicture) {
       await this.deleteFile(
         experience.companyPicture,
@@ -760,6 +772,17 @@ export class AboutBlogService {
     if (!authors || authors.count !== 3) throw new AuthorNotFoundException();
 
     for (const author of authors.rows) {
+      await this.experiencesRepository.destroy({
+        where: { authorId: author.id },
+        cascade: true,
+        transaction: trx
+      });
+
+      await this.certsRepository.destroy({
+        where: { authorId: author.id },
+        transaction: trx
+      });
+
       await this.deleteFile(author.profilePicture, StaticStorages.AUTHORS_PICTURES);
     }
 

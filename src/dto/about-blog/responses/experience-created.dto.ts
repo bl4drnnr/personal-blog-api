@@ -1,9 +1,14 @@
+import { CreatedExperience } from '@interfaces/created-experience.interface';
+
 export class ExperienceCreatedDto {
-  readonly experiencesIds: Array<string>;
+  readonly createdExperiences: Array<CreatedExperience>;
   readonly message: string;
 
-  constructor(experiencesIds: Array<string>, message = 'experience-created') {
-    this.experiencesIds = experiencesIds;
+  constructor(
+    createdExperiences: Array<CreatedExperience>,
+    message = 'experience-created'
+  ) {
+    this.createdExperiences = createdExperiences;
     this.message = message;
   }
 }

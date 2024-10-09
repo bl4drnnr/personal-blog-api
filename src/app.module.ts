@@ -30,6 +30,7 @@ import { Cert } from '@models/cert.model';
 import { Experience } from '@models/experience.model';
 import { Social } from '@models/social.model';
 import { ContactModule } from './modules/contact/contact.module';
+import { PagesContent } from '@models/pages-content.model';
 
 @Module({
   imports: [
@@ -64,7 +65,8 @@ import { ContactModule } from './modules/contact/contact.module';
         Experience,
         ExperiencePosition,
         Cert,
-        Social
+        Social,
+        PagesContent
       ],
       autoLoadModels: true
     }),
