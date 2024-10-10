@@ -40,9 +40,16 @@ jobs:
 
       - name: Create the .ssh directory
         run: mkdir ~/.ssh && chmod 700 ~/.ssh
-      - name: Install the deploy key for the back-end
+      - name: Install the deploy key for the API
         run: echo "${{ secrets.API_DEPLOY_KEY }}" >> ~/.ssh/api_deploy && chmod 600 ~/.ssh/api_deploy
       - name: Create the known hosts file
         run: echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
-      - name: Remotely trigger building and deployment script for the back-end
-        run: ssh -i ~/.ssh/api_deploy deployer@${{ secrets.API_DEPLOY_KEY }}
+      - name: Remotely trigger building and deployment script for the API
+        run: ssh -i ~/.ssh/api_deploy deployer@${{ secrets.API_HOST_IP }}
+
+      - name: Remove Github Actions IP from security group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-name ${{ env.AWS_API_SG_NAME }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32;
+          aws ec2 revoke-security-group-ingress --group-name ${{ env.AWS_API_SG_NAME }} --protocol all --cidr 0.0.0.0/0;
+          aws ec2 revoke-security-group-egress --group-id ${{ steps.get_api_sg_id.outputs.api_security_group_id }} --protocol all --cidr 0.0.0.0/0;
+        if: always()
