@@ -1,15 +1,7 @@
-import {
-  IsBoolean,
-  IsEnum,
-  IsOptional,
-  IsString,
-  Length,
-  Matches
-} from 'class-validator';
+import { IsString, Length, Matches } from 'class-validator';
 import { EmailRegex } from '@regex/email.regex';
 import { PasswordRegex } from '@regex/password.regex';
 import { ValidationError } from '@interfaces/validation-error.enum';
-import { Language } from '@interfaces/language.enum';
 
 export class CreateUserDto {
   @Matches(EmailRegex, {
@@ -29,11 +21,4 @@ export class CreateUserDto {
   @IsString({ message: ValidationError.WRONG_LAST_NAME_FORMAT })
   @Length(1, 64, { message: ValidationError.WRONG_LAST_NAME_LENGTH })
   readonly lastName: string;
-
-  @IsBoolean()
-  readonly tac: boolean;
-
-  @IsOptional()
-  @IsEnum(Language, { message: ValidationError.WRONG_LANGUAGES_FORMAT })
-  readonly language?: Language;
 }

@@ -1,8 +1,13 @@
-import { User } from '@models/user.model';
 import { Transaction } from 'sequelize';
 
 export interface UpdateUserInterface {
-  payload: Partial<User>;
   userId: string;
+  payload: {
+    email?: string;
+    password?: string;
+    firstName?: string;
+    lastName?: string;
+    isMfaSet?: boolean;
+  };
   trx?: Transaction;
 }

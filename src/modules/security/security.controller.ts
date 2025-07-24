@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Query,
-  UseGuards,
-  UsePipes
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, UsePipes } from '@nestjs/common';
 import { SecurityService } from '@modules/security.service';
 import { VerifyTwoFaDto } from '@dto/verify-two-fa.dto';
 import { ValidationPipe } from '@pipes/validation.pipe';
@@ -19,17 +11,6 @@ import { LoginGenerate2faQrDto } from '@dto/login-generate-2fa-qr.dto';
 @Controller('security')
 export class SecurityController {
   constructor(private readonly securityService: SecurityService) {}
-
-  @Get('registration-generate-2fa-qr')
-  registrationGenerateTwoFaQrCode(
-    @Query('confirmationHash') confirmationHash: string,
-    @TrxDecorator() trx: Transaction
-  ) {
-    return this.securityService.registrationGenerateTwoFaQrCode({
-      confirmationHash,
-      trx
-    });
-  }
 
   @UsePipes(ValidationPipe)
   @Post('login-generate-2fa-qr')
@@ -47,20 +28,6 @@ export class SecurityController {
   @Get('generate-2fa-qr')
   generateTwoFaQrCode(@UserId() userId: string, @TrxDecorator() trx: Transaction) {
     return this.securityService.generateTwoFaQrCode({ userId, trx });
-  }
-
-  @UsePipes(ValidationPipe)
-  @Post('registration-verify-2fa')
-  registrationVerifyTwoFaQrCode(
-    @Body() payload: VerifyTwoFaDto,
-    @Query('confirmationHash') confirmationHash: string,
-    @TrxDecorator() trx: Transaction
-  ) {
-    return this.securityService.registrationVerifyTwoFaQrCode({
-      payload,
-      confirmationHash,
-      trx
-    });
   }
 
   @UsePipes(ValidationPipe)

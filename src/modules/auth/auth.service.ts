@@ -4,7 +4,6 @@ import * as jwt from 'jsonwebtoken';
 import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { Session } from '@models/session.model';
 import { InjectModel } from '@nestjs/sequelize';
-import { Confirmation } from '@interfaces/confirmation-type.enum';
 import { LogInUserResponseDto } from '@dto/log-in-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { CryptographicService } from '@shared/cryptographic.service';
@@ -12,14 +11,8 @@ import { ApiConfigService } from '@shared/config.service';
 import { UsersService } from '@modules/users.service';
 import { EmailService } from '@shared/email.service';
 import { LoginInterface } from '@interfaces/login.interface';
-import { AccountNotConfirmedException } from '@exceptions/account-not-confirmed.exception';
 import { MfaNotSetDto } from '@dto/mfa-not-set.dto';
-import { RecoveryKeysNotSetDto } from '@dto/recovery-keys-not-set.dto';
 import { GenerateTokensInterface } from '@interfaces/generate-tokens.interface';
-import { RegistrationInterface } from '@interfaces/registration.interface';
-import { UserAlreadyExistsException } from '@exceptions/user-already-exists.exception';
-import { TacNotAcceptedException } from '@exceptions/tac-not-accepted.exception';
-import { UserCreatedDto } from '@dto/user-created.dto';
 import { LogoutInterface } from '@interfaces/logout.interface';
 import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
 import { LoggedOutDto } from '@dto/logged-out.dto';
@@ -53,7 +46,6 @@ export class AuthService {
 
     const {
       id: userId,
-      confirmationHashes,
       isMfaSet,
       userSettings
     } = await this.usersService.verifyUserCredentials({
@@ -62,20 +54,7 @@ export class AuthService {
       trx
     });
 
-    const registrationHashes = [Confirmation.REGISTRATION];
-
-    const registrationHash = confirmationHashes.find((hash) =>
-      registrationHashes.includes(hash.confirmationType)
-    );
-
-    const isAccConfirmed = registrationHash.confirmed;
-    const isRecoverySetUp = userSettings.recoveryKeysFingerprint;
-
-    if (!isAccConfirmed) throw new AccountNotConfirmedException();
-
     if (!isMfaSet) return new MfaNotSetDto();
-
-    if (!isRecoverySetUp) return new RecoveryKeysNotSetDto();
 
     try {
       const mfaStatusResponse = await this.checkUserMfaStatus({
@@ -96,46 +75,6 @@ export class AuthService {
     const { _rt, _at } = await this.generateTokens(generateTokensPayload);
 
     return new LogInUserResponseDto({ _rt, _at });
-  }
-
-  async registration({ payload, trx }: RegistrationInterface) {
-    const { email, password, firstName, lastName, tac, language } = payload;
-
-    const existingUser = await this.usersService.getUserByEmail({
-      email,
-      trx
-    });
-
-    if (existingUser) throw new UserAlreadyExistsException();
-    if (!tac) throw new TacNotAcceptedException();
-
-    const hashedPassword = await this.cryptographicService.hashPassword({
-      password
-    });
-
-    const { id: userId } = await this.usersService.createUser({
-      payload: {
-        ...payload,
-        password: hashedPassword
-      },
-      trx
-    });
-
-    await this.emailService.sendRegistrationConfirmationEmail({
-      payload: {
-        to: email,
-        confirmationType: Confirmation.REGISTRATION,
-        userId
-      },
-      userInfo: {
-        firstName,
-        lastName
-      },
-      language,
-      trx
-    });
-
-    return new UserCreatedDto();
   }
 
   async logout({ userId, trx }: LogoutInterface) {

@@ -4,15 +4,21 @@ import { ArticlesService } from './articles.service';
 import { AuthModule } from '@modules/auth.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ArticleModel } from '@models/article.model';
-import { CategoriesModule } from '@modules/categories.module';
+import { JwtModule } from '@nestjs/jwt';
+import { ApiConfigService } from '@shared/config.service';
 
 @Module({
   controllers: [ArticlesController],
   providers: [ArticlesService],
   imports: [
-    CategoriesModule,
     forwardRef(() => AuthModule),
-    SequelizeModule.forFeature([ArticleModel])
+    SequelizeModule.forFeature([ArticleModel]),
+    JwtModule.registerAsync({
+      useFactory: async (configService: ApiConfigService) => ({
+        secret: configService.jwtAuthConfig.secret
+      }),
+      inject: [ApiConfigService]
+    })
   ]
 })
 export class ArticlesModule {}

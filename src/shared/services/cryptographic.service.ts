@@ -7,7 +7,6 @@ import { HashInterface } from '@interfaces/hash.interface';
 import { HashPassphraseInterface } from '@interfaces/hash-passphrase.interface';
 import { EncryptInterface } from '@interfaces/encrypt.interface';
 import { DecryptInterface } from '@interfaces/decrypt.interface';
-import { EncryptRecoveryKeysInterface } from '@interfaces/encrypt-recovery-keys.interface';
 import { HashPasswordInterface } from '@interfaces/hash-password.interface';
 import { ComparePasswordsInterface } from '@interfaces/compare-passwords.interface';
 
@@ -71,17 +70,6 @@ export class CryptographicService {
     });
 
     return recoveryKeys;
-  }
-
-  encryptRecoveryKeys({
-    recoveryKeys,
-    hashedPassphrase
-  }: EncryptRecoveryKeysInterface) {
-    const recoveryKeysStr = recoveryKeys.join(',');
-    return this.encrypt({
-      data: recoveryKeysStr,
-      passphrase: hashedPassphrase
-    });
   }
 
   generateConfirmationHash() {

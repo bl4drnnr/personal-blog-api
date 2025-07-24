@@ -1,622 +1,952 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, sequelize) {
+  async up(queryInterface) {
     try {
+      // Create test user
       await queryInterface.bulkInsert('users', [
         {
           id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
-          email: 'ryan.gosling@drive.com',
-          // Password: 12qw!@QW
+          email: 'admin@example.com',
           password: '$2a$10$1HvnaYFhmlKAT/kmpA2rDOu3jSXqzRoBsbeFUrHLQoqKQgl8lsUba',
-          first_name: 'Ryan',
-          last_name: 'Gosling',
+          first_name: 'Admin',
+          last_name: 'User',
           is_mfa_set: true,
-          tac: true,
           created_at: new Date(),
           updated_at: new Date()
         }
       ]);
-      await queryInterface.bulkInsert('confirmation_hashes', [
-        {
-          id: 'd1486e56-88fc-4774-9c28-48a1b70e6f8b',
-          confirmation_hash: '7a860d74af63e0fab36585e8fea66e5693017448',
-          confirmed: true,
-          confirmation: 'REGISTRATION',
-          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
-          created_at: new Date(),
-          updated_at: new Date()
-        }
-      ]);
+
+      // Create user settings for MFA
       await queryInterface.bulkInsert('users_settings', [
         {
           id: 'da334f15-2ce1-4a00-b8cc-6ed9204860d2',
           two_fa_token: 'MNKFQUP6S77VONDE47A3B6VMFEPKVD5X',
           password_changed: null,
-          recovery_keys_fingerprint: 'f98987f041451623cccef2992a04f733078640120c7ea00f48e5ca12fe65d74c4bee8a69c248366544784b10a2aafa51efceea1c191a5a9a6878c9e7e44eca46',
           user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
           created_at: new Date(),
           updated_at: new Date()
         }
       ]);
 
-      await queryInterface.bulkInsert('categories', [
+      // Create site configuration
+      await queryInterface.bulkInsert('site_config', [
         {
-          id: 'b20808d8-cc5a-4762-8a2a-f40016bb09db',
-          category_name: 'Cybersecurity',
-          category_description: 'In today\'s digital age, protecting sensitive information and safeguarding online activities is more important than ever. Our Cybersecurity category is dedicated to providing insights, news, and practical tips on how to stay secure in the fast-evolving digital world. Whether you\'re a business owner, IT professional, or an everyday internet user, this space will cover topics ranging from the latest cyber threats and data breaches to security best practices, encryption techniques, and emerging technologies like AI in cybersecurity. Stay informed, stay protected, and learn how to build a strong defense against cyber risks.\n',
-          category_language: 'en',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: 'b47b575f-4aa4-418d-a7d2-bf4f77773468',
-          category_name: 'Cyberbezpieczeństwo',
-          category_description: 'W dzisiejszej erze cyfrowej ochrona poufnych informacji i zabezpieczanie aktywności online jest ważniejsze niż kiedykolwiek. Nasza kategoria Cyberbezpieczeństwo jest poświęcona dostarczaniu spostrzeżeń, wiadomości i praktycznych wskazówek, jak zachować bezpieczeństwo w szybko ewoluującym świecie cyfrowym. Niezależnie od tego, czy jesteś właścicielem firmy, specjalistą IT, czy codziennym użytkownikiem Internetu, ta przestrzeń obejmie tematy od najnowszych cyberzagrożeń i naruszeń danych po najlepsze praktyki bezpieczeństwa, techniki szyfrowania i nowe technologie, takie jak sztuczna inteligencja w cyberbezpieczeństwie. Bądź na bieżąco, zachowaj ochronę i dowiedz się, jak zbudować silną obronę przed cyberzagrożeniami.',
-          category_language: 'pl',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '51eaea12-98fc-4a75-a84c-39ebd42a5b95',
-          category_name: 'Кибербезопасность',
-          category_description: 'В сегодняшнюю цифровую эпоху защита конфиденциальной информации и обеспечение безопасности онлайн-активности важнее, чем когда-либо. Наша категория «Кибербезопасность» посвящена предоставлению информации, новостей и практических советов о том, как оставаться в безопасности в быстро меняющемся цифровом мире. Независимо от того, являетесь ли вы владельцем бизнеса, ИТ-специалистом или обычным пользователем Интернета, в этом пространстве будут рассмотрены темы, начиная от последних киберугроз и утечек данных до лучших практик безопасности, методов шифрования и новых технологий, таких как ИИ в кибербезопасности. Будьте в курсе, оставайтесь защищенными и узнайте, как создать надежную защиту от киберрисков.',
-          category_language: 'ru',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: 'e0a8c5d3-6f84-4369-9280-47324a149099',
-          category_name: 'News',
-          category_description: 'Stay up to date with the latest developments and breaking stories from around the world in our News category. We bring you timely updates on a wide range of topics, including global events, technology advancements, business trends, political shifts, and cultural happenings. Whether you\'re looking for in-depth analysis, expert opinions, or quick headlines, this section delivers everything you need to stay informed in an ever-changing world. Our commitment is to provide accurate, insightful, and unbiased reporting that keeps you connected to the news that matters most.\n',
-          category_language: 'en',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '6c7184d1-3634-46b2-b1dc-f025865fb01e',
-          category_name: 'Wiadomości',
-          category_description: 'Bądź na bieżąco z najnowszymi wydarzeniami i najnowszymi historiami z całego świata w naszej kategorii Wiadomości. Dostarczamy Ci aktualne informacje na szeroki zakres tematów, w tym wydarzenia globalne, postęp technologiczny, trendy biznesowe, zmiany polityczne i wydarzenia kulturalne. Niezależnie od tego, czy szukasz dogłębnej analizy, opinii ekspertów czy szybkich nagłówków, ta sekcja dostarcza wszystkiego, czego potrzebujesz, aby być na bieżąco w ciągle zmieniającym się świecie. Naszym zobowiązaniem jest dostarczanie dokładnych, wnikliwych i bezstronnych relacji, które pozwolą Ci być na bieżąco z najważniejszymi wiadomościami.',
-          category_language: 'pl',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '3f69170c-8f03-4820-b311-3d41441b54d1',
-          category_name: 'Новости',
-          category_description: 'Оставайтесь в курсе последних событий и новостей со всего мира в нашей категории новостей. Мы предоставляем вам своевременные обновления по широкому кругу тем, включая мировые события, технологические достижения, бизнес-тенденции, политические сдвиги и культурные события. Если вы ищете глубокий анализ, экспертные мнения или быстрые заголовки, этот раздел предоставляет все, что вам нужно, чтобы оставаться в курсе событий в постоянно меняющемся мире. Наша цель — предоставлять точные, проницательные и беспристрастные репортажи, которые позволят вам оставаться в курсе самых важных новостей.',
-          category_language: 'ru',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '0d37f12a-e21d-4017-9d2b-3c1727abb318',
-          category_name: 'Networking',
-          category_description: 'In the increasingly interconnected world of technology, networking plays a crucial role in enabling communication, data exchange, and collaboration. Our Networking category explores everything from the fundamentals of network architecture to the latest trends in wireless technologies, cloud networking, and IoT connectivity. Whether you\'re an IT professional, a network engineer, or a tech enthusiast, this space offers insights into network security, infrastructure design, protocols, troubleshooting, and the future of 5G and beyond. Stay ahead with expert tips, tutorials, and the latest industry news in the world of networking.\n',
-          category_language: 'en',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: 'dd4f101e-6b4a-494a-84b4-5a98c65aa652',
-          category_name: 'Sieci',
-          category_description: 'W coraz bardziej połączonym świecie technologii sieci odgrywają kluczową rolę w umożliwianiu komunikacji, wymiany danych i współpracy. Nasza kategoria Sieci obejmuje wszystko, od podstaw architektury sieciowej po najnowsze trendy w technologiach bezprzewodowych, sieciach w chmurze i łączności IoT. Niezależnie od tego, czy jesteś profesjonalistą IT, inżynierem sieciowym czy entuzjastą technologii, ta przestrzeń oferuje wgląd w bezpieczeństwo sieci, projektowanie infrastruktury, protokoły, rozwiązywanie problemów oraz przyszłość 5G i nie tylko. Bądź na bieżąco dzięki poradom ekspertów, samouczkom i najnowszym wiadomościom branżowym ze świata sieci.',
-          category_language: 'pl',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '237dbcd8-1c48-4c31-829f-50e8fd5d15c2',
-          category_name: 'Сети',
-          category_description: 'В мире технологий, который становится все более взаимосвязанным, сетевые технологии играют решающую роль в обеспечении связи, обмена данными и совместной работы. Наша категория «Сетевые технологии» исследует все: от основ сетевой архитектуры до последних тенденций в беспроводных технологиях, облачных сетях и подключении к Интернету вещей. Независимо от того, являетесь ли вы ИТ-специалистом, сетевым инженером или энтузиастом технологий, это пространство предлагает идеи по сетевой безопасности, проектированию инфраструктуры, протоколам, устранению неполадок и будущему 5G и далее. Будьте в курсе событий с помощью советов экспертов, учебных пособий и последних новостей отрасли в мире сетей.',
-          category_language: 'ru',
+          id: '550e8400-e29b-41d4-a716-446655440000',
+          site_name: 'Personal Security Blog',
+          site_description:
+            'A blog about cybersecurity, technology, and development',
+          site_author: 'Blog Author',
+          site_url: 'https://example.com',
+          default_image: 'https://example.com/og-default.jpg',
+          keywords: 'cybersecurity, technology, web development, security',
+          social_media: JSON.stringify({
+            linkedin: 'https://linkedin.com/in/blogauthor',
+            github: 'https://github.com/blogauthor'
+          }),
+          organization: JSON.stringify({
+            name: 'Personal Security Blog',
+            url: 'https://example.com',
+            logo: 'https://example.com/logo.jpg'
+          }),
           created_at: new Date(),
           updated_at: new Date()
         }
       ]);
 
-      await queryInterface.bulkInsert('authors', [
+      // Create sample articles
+      await queryInterface.bulkInsert('articles', [
         {
-          id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
-          first_name: 'Mikhail',
-          last_name: 'Bahdashych',
-          title: 'Cybersecurity Officer / Chief Author',
-          description: 'Poland-based ex full-stack financial technologies/crypto web developer. Currently doing cybersecurity. Holding the bachelor degree in Software Engineering at UITM (University of Information Technology and Management) in Rzeszow, Poland. Improving skills at not only web development, but mostly at cybersecurity along with Artificial Intelligence and Machine Learning.',
-          profile_picture: 'literally-me.jpeg',
-          is_selected: true,
-          author_language: 'en',
-          author_common_id: 'cf73c629-fc39-4ae6-b4ca-7ab5f3bff65b',
+          id: '11111111-1111-1111-1111-111111111111',
+          title: 'Introduction to Cybersecurity',
+          slug: 'introduction-to-cybersecurity',
+          description:
+            'A comprehensive guide to understanding cybersecurity fundamentals and best practices.',
+          content: `<h1>Introduction to Cybersecurity</h1>\n<img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=400&fit=crop" alt="Cybersecurity concept with digital locks" />\n<p>Cybersecurity is more important than ever in today's digital world. This article covers the fundamental concepts every professional should know.</p>`,
+          excerpt:
+            'Learn the fundamentals of cybersecurity including the CIA triad, risk assessment, and common attack vectors.',
+          featured_image:
+            'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=630&fit=crop',
+          tags: ['cybersecurity', 'security', 'fundamentals', 'risk-assessment'],
+          published: true,
           user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
-          created_at: new Date(),
-          updated_at: new Date()
+          created_at: new Date('2024-01-15'),
+          updated_at: new Date('2024-01-15')
         },
         {
-          id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
-          first_name: 'Michał',
-          last_name: 'Bahdashych',
-          title: 'Specjalista ds. cyberbezpieczeństwa / Główny autor',
-          description: 'Były programista full-stack financial technologies/crypto web developer z siedzibą w Polsce. Obecnie zajmuje się cyberbezpieczeństwem. Posiada tytuł licencjata z inżynierii oprogramowania na UITM (Wyższej Szkole Informatyki i Zarządzania) w Rzeszowie, Polska. Doskonalenie umiejętności nie tylko w zakresie tworzenia stron internetowych, ale przede wszystkim w zakresie cyberbezpieczeństwa wraz ze sztuczną inteligencją i uczeniem maszynowym.',
-          profile_picture: 'literally-me.jpeg',
-          is_selected: true,
-          author_language: 'pl',
-          author_common_id: 'cf73c629-fc39-4ae6-b4ca-7ab5f3bff65b',
+          id: '22222222-2222-2222-2222-222222222222',
+          title: 'Modern Web Development Security',
+          slug: 'modern-web-development-security',
+          description:
+            'Security considerations for modern web applications and development practices.',
+          content: `<h1>Modern Web Development Security</h1>
+<img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=400&fit=crop" alt="Web development security code" />
+<p>As web applications become more complex, security considerations must be built in from the ground up. This article explores essential security practices for modern development.</p>
+
+<h2>Input Validation & Sanitization</h2>
+<p>Never trust user input. Here's an example of proper input validation in Node.js:</p>
+<pre><code class="language-javascript">
+const validator = require('validator');
+const DOMPurify = require('dompurify');
+
+function validateUserInput(input) {
+  // Check for XSS
+  if (!validator.isLength(input, { min: 1, max: 1000 })) {
+    throw new Error('Invalid input length');
+  }
+  
+  // Sanitize HTML
+  const cleanInput = DOMPurify.sanitize(input);
+  
+  // Additional validation
+  if (validator.contains(cleanInput, '<script>')) {
+    throw new Error('Potentially malicious input detected');
+  }
+  
+  return cleanInput;
+}
+</code></pre>
+
+<h2>SQL Injection Prevention</h2>
+<img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=300&fit=crop" alt="Database security concept" />
+<p>Always use parameterized queries:</p>
+<pre><code class="language-sql">
+-- BAD: Vulnerable to SQL injection
+SELECT * FROM users WHERE username = '" + userInput + "';
+
+-- GOOD: Parameterized query
+SELECT * FROM users WHERE username = $1;
+</code></pre>
+
+<h2>Authentication Security</h2>
+<p>Implement robust authentication with proper hashing:</p>
+<pre><code class="language-python">
+import bcrypt
+import secrets
+
+def hash_password(password: str) -> str:
+    # Generate a salt
+    salt = bcrypt.gensalt(rounds=12)
+    # Hash the password
+    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed.decode('utf-8')
+
+def verify_password(password: str, hashed: str) -> bool:
+    return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+
+# Generate secure session tokens
+def generate_session_token() -> str:
+    return secrets.token_urlsafe(32)
+</code></pre>
+
+<h2>HTTPS and TLS Configuration</h2>
+<p>Proper TLS configuration is crucial. The probability of a successful man-in-the-middle attack decreases exponentially with proper implementation:</p>
+<p>$$P_{attack} = e^{-\\alpha \\cdot TLS_{strength}}$$</p>
+<p>Where α is the security coefficient and TLS strength includes cipher suite quality, certificate validation, and HSTS implementation.</p>
+
+<h2>Content Security Policy (CSP)</h2>
+<pre><code class="language-html">
+&lt;meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; 
+               script-src 'self' 'unsafe-inline'; 
+               style-src 'self' 'unsafe-inline'; 
+               img-src 'self' data: https:; 
+               font-src 'self' https://fonts.gstatic.com;"&gt;
+</code></pre>
+
+<h2>Security Headers Checklist</h2>
+<ul>
+<li>✅ Content-Security-Policy</li>
+<li>✅ X-Frame-Options: DENY</li>
+<li>✅ X-Content-Type-Options: nosniff</li>
+<li>✅ Referrer-Policy: strict-origin-when-cross-origin</li>
+<li>✅ Strict-Transport-Security</li>
+</ul>`,
+          excerpt:
+            'Essential security practices for modern web development including input validation, SQL injection prevention, and proper authentication.',
+          featured_image:
+            'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1200&h=630&fit=crop',
+          tags: [
+            'web development',
+            'security',
+            'best practices',
+            'authentication',
+            'xss'
+          ],
+          published: true,
           user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
-          created_at: new Date(),
-          updated_at: new Date()
+          created_at: new Date('2024-01-20'),
+          updated_at: new Date('2024-01-20')
         },
         {
-          id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
-          first_name: 'Михаил',
-          last_name: 'Богдашич',
-          title: 'Сотрудник по кибербезопасности / Главный автор',
-          description: 'Бывший веб-разработчик full-stack финансовых технологий/криптовалюты из Польши. В настоящее время занимаюсь кибербезопасностью. Имеет степень бакалавра по программной инженерии в UITM (Университет информационных технологий и менеджмента) в Жешуве, Польша. Совершенствую навыки не только в веб-разработке, но и в кибербезопасности, а также в области искусственного интеллекта и машинного обучения.',
-          profile_picture: 'literally-me.jpeg',
-          is_selected: true,
-          author_language: 'ru',
-          author_common_id: 'cf73c629-fc39-4ae6-b4ca-7ab5f3bff65b',
+          id: '33333333-3333-3333-3333-333333333333',
+          title: 'Understanding Cryptographic Hash Functions',
+          slug: 'understanding-cryptographic-hash-functions',
+          description:
+            'Deep dive into cryptographic hash functions, their properties, and practical applications.',
+          content: `<h1>Understanding Cryptographic Hash Functions</h1>
+<img src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=800&h=400&fit=crop" alt="Cryptographic algorithms visualization" />
+<p>Cryptographic hash functions are fundamental building blocks of modern cryptography. They transform input data of any size into a fixed-size string of bytes.</p>
+
+<h2>Properties of Cryptographic Hash Functions</h2>
+<p>A good cryptographic hash function must satisfy several properties:</p>
+
+<h3>1. Deterministic</h3>
+<p>The same input always produces the same output:</p>
+<p>$$H(m) = h \\text{ where } m \\text{ is the message and } h \\text{ is the hash}$$</p>
+
+<h3>2. Collision Resistance</h3>
+<p>It should be computationally infeasible to find two different inputs that produce the same hash:</p>
+<p>$$\\text{Find } m_1, m_2 \\text{ such that } H(m_1) = H(m_2) \\text{ and } m_1 \\neq m_2$$</p>
+
+<h2>Popular Hash Functions</h2>
+<img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&h=300&fit=crop" alt="Hash function comparison chart" />
+
+<h3>SHA-256 Implementation Example</h3>
+<pre><code class="language-python">
+import hashlib
+import hmac
+import secrets
+
+def sha256_hash(data: str) -> str:
+    """Generate SHA-256 hash of input data"""
+    return hashlib.sha256(data.encode()).hexdigest()
+
+def verify_integrity(data: str, expected_hash: str) -> bool:
+    """Verify data integrity using hash comparison"""
+    actual_hash = sha256_hash(data)
+    return hmac.compare_digest(actual_hash, expected_hash)
+
+# Example usage
+message = "Hello, World!"
+hash_value = sha256_hash(message)
+print(f"SHA-256 of '{message}': {hash_value}")
+
+# Integrity verification
+is_valid = verify_integrity(message, hash_value)
+print(f"Data integrity check: {is_valid}")
+</code></pre>
+
+<h2>Birthday Paradox in Hash Functions</h2>
+<p>The birthday attack exploits the birthday paradox. For a hash function with n-bit output, the probability of finding a collision after trying k different inputs is approximately:</p>
+<p>$$P(collision) \\approx 1 - e^{-\\frac{k^2}{2 \\cdot 2^n}}$$</p>
+<p>This means we only need to try about $\\sqrt{2^n}$ inputs to have a 50% chance of finding a collision.</p>
+
+<h2>Merkle Trees</h2>
+<img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=300&fit=crop" alt="Tree structure visualization" />
+<p>Hash functions are used to build Merkle trees, essential in blockchain technology:</p>
+<pre><code class="language-javascript">
+class MerkleTree {
+  constructor(data) {
+    this.leaves = data.map(item => this.hash(item));
+    this.tree = this.buildTree(this.leaves);
+  }
+  
+  hash(data) {
+    return crypto.createHash('sha256').update(data).digest('hex');
+  }
+  
+  buildTree(nodes) {
+    if (nodes.length === 1) return nodes[0];
+    
+    const nextLevel = [];
+    for (let i = 0; i < nodes.length; i += 2) {
+      const left = nodes[i];
+      const right = nodes[i + 1] || left; // Handle odd number of nodes
+      nextLevel.push(this.hash(left + right));
+    }
+    
+    return this.buildTree(nextLevel);
+  }
+  
+  getRoot() {
+    return this.tree;
+  }
+}
+
+// Usage example
+const data = ['transaction1', 'transaction2', 'transaction3', 'transaction4'];
+const merkleTree = new MerkleTree(data);
+console.log('Merkle Root:', merkleTree.getRoot());
+</code></pre>
+
+<h2>Hash Function Security Analysis</h2>
+<table>
+<thead>
+<tr><th>Algorithm</th><th>Output Size</th><th>Security Level</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>MD5</td><td>128 bits</td><td>Broken</td><td>❌ Deprecated</td></tr>
+<tr><td>SHA-1</td><td>160 bits</td><td>Weak</td><td>⚠️ Phasing out</td></tr>
+<tr><td>SHA-256</td><td>256 bits</td><td>Strong</td><td>✅ Recommended</td></tr>
+<tr><td>SHA-3</td><td>Variable</td><td>Strong</td><td>✅ Alternative</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>"In cryptography, we trust mathematics, not institutions." - Anonymous</p>
+</blockquote>`,
+          excerpt:
+            'A comprehensive exploration of cryptographic hash functions, their mathematical properties, and real-world applications in security.',
+          featured_image:
+            'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&h=630&fit=crop',
+          tags: [
+            'cryptography',
+            'hash functions',
+            'security',
+            'mathematics',
+            'blockchain'
+          ],
+          published: true,
           user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
-          created_at: new Date(),
-          updated_at: new Date()
+          created_at: new Date('2024-01-25'),
+          updated_at: new Date('2024-01-25')
+        },
+        {
+          id: '44444444-4444-4444-4444-444444444444',
+          title: 'Draft: Machine Learning in Cybersecurity',
+          slug: 'draft-ml-cybersecurity',
+          description:
+            'Exploring the intersection of machine learning and cybersecurity for threat detection.',
+          content: `<h1>Machine Learning in Cybersecurity</h1>
+<p>This article is currently being written. It will cover how machine learning algorithms can be applied to enhance cybersecurity measures.</p>
+<h2>Planned Topics</h2>
+<ul>
+<li>Anomaly detection algorithms</li>
+<li>Behavioral analysis</li>
+<li>Threat classification models</li>
+<li>Neural networks for malware detection</li>
+</ul>
+<p><em>Coming soon...</em></p>`,
+          excerpt:
+            'A work-in-progress article exploring how machine learning enhances cybersecurity threat detection.',
+          featured_image:
+            'https://images.unsplash.com/photo-1555255707-c07966088b7b?w=1200&h=630&fit=crop',
+          tags: [
+            'machine learning',
+            'AI',
+            'cybersecurity',
+            'draft',
+            'threat-detection'
+          ],
+          published: false,
+          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          created_at: new Date('2024-01-28'),
+          updated_at: new Date('2024-01-28')
         }
       ]);
 
-      await queryInterface.bulkInsert('certificates', [
+      // Create sample projects
+      await queryInterface.bulkInsert('projects', [
         {
-          id: 'f2cbe13b-2fcc-46f2-8081-b07a23fcb818',
-          cert_name: 'CCNA',
-          cert_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'ccna.jpg',
-          cert_docs: 'ccna.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'en',
-          cert_common_id: '6c058a14-abf3-4e1b-acae-7833daaf724f',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
-          created_at: new Date,
-          updated_at: new Date
+          id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+          title: 'Security Monitoring Dashboard',
+          slug: 'security-monitoring-dashboard',
+          description:
+            'A real-time security monitoring dashboard built with React and Node.js for comprehensive threat detection.',
+          content: `<h1>Security Monitoring Dashboard</h1>\n<img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop" alt="Security monitoring dashboard interface" />\n<p>This project provides real-time monitoring of security events and threats across enterprise infrastructure. Built with modern web technologies for scalability and performance.</p>`,
+          featured_image:
+            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop',
+          tags: [
+            'security',
+            'monitoring',
+            'dashboard',
+            'real-time',
+            'threat-detection'
+          ],
+          technologies: [
+            'React',
+            'Node.js',
+            'WebSocket',
+            'PostgreSQL',
+            'Redis',
+            'Kafka'
+          ],
+          github_url: 'https://github.com/example/security-monitoring-dashboard',
+          demo_url: 'https://security-dashboard-demo.example.com',
+          featured: true,
+          published: true,
+          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          created_at: new Date('2024-01-10'),
+          updated_at: new Date('2024-01-10')
         },
         {
-          id: '60f9956d-5af4-40aa-af9c-f7890e20cc87',
-          cert_name: 'CCNAv7: ENSA',
-          cert_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'ccna_ensa.png',
-          cert_docs: 'ccna_ensa.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'en',
-          cert_common_id: '8badd29b-7f02-4a80-90fd-4dfead56acee',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: '2cda5c60-e449-46e2-bbf6-987562666b6f',
-          cert_name: 'CCNAv7: SRWE',
-          cert_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'ccna_srwe.png',
-          cert_docs: 'ccna_srwe.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'en',
-          cert_common_id: '84c8630e-b37e-4d73-88b8-c4332d3c62d7',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: '42048156-03b0-4729-bd63-46b535457fd1',
-          cert_name: 'CompTIA Security+',
-          cert_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'comptia-sec-certification.png',
-          cert_docs: 'comptia-sec-certification.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'en',
-          cert_common_id: 'b0f0acbe-a9e8-4e14-b9c9-5490bff648ff',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: 'a5c59d7b-029e-41ec-85e5-4daad52999dc',
-          cert_name: 'CCNA',
-          cert_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'ccna.jpg',
-          cert_docs: 'ccna.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'ru',
-          cert_common_id: '6c058a14-abf3-4e1b-acae-7833daaf724f',
-          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: 'b1df86af-2e8c-4c90-ac8a-0520e0e197b4',
-          cert_name: 'CCNAv7: ENSA',
-          cert_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'ccna_ensa.png',
-          cert_docs: 'ccna_ensa.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'ru',
-          cert_common_id: '8badd29b-7f02-4a80-90fd-4dfead56acee',
-          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: '56109859-70d5-44e2-bf01-2158cd5908c5',
-          cert_name: 'CCNAv7: SRWE',
-          cert_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'ccna_srwe.png',
-          cert_docs: 'ccna_srwe.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'ru',
-          cert_common_id: '84c8630e-b37e-4d73-88b8-c4332d3c62d7',
-          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: 'be9904b2-a443-464f-aa95-5656991438c6',
-          cert_name: 'CompTIA Security+',
-          cert_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'comptia-sec-certification.png',
-          cert_docs: 'comptia-sec-certification.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'ru',
-          cert_common_id: 'b0f0acbe-a9e8-4e14-b9c9-5490bff648ff',
-          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: 'b3e01b23-7465-43a6-aa0a-62819a85c56e',
-          cert_name: 'CCNA',
-          cert_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'ccna.jpg',
-          cert_docs: 'ccna.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'pl',
-          cert_common_id: '6c058a14-abf3-4e1b-acae-7833daaf724f',
-          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: 'd21bd3de-f376-4a9b-b7b3-cad896f4fe0d',
-          cert_name: 'CCNAv7: ENSA',
-          cert_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'ccna_ensa.png',
-          cert_docs: 'ccna_ensa.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'pl',
-          cert_common_id: '8badd29b-7f02-4a80-90fd-4dfead56acee',
-          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: '47e410e7-1346-494d-bafd-dde43219ae28',
-          cert_name: 'CCNAv7: SRWE',
-          cert_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'ccna_srwe.png',
-          cert_docs: 'ccna_srwe.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'pl',
-          cert_common_id: '84c8630e-b37e-4d73-88b8-c4332d3c62d7',
-          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: 'fd5e73d8-fc7f-448a-abfe-e46312660c4e',
-          cert_name: 'CompTIA Security+',
-          cert_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta iste minus quis sit! Distinctio doloremque eveniet expedita facilis magnam, mollitia numquam voluptate. Adipisci beatae, fugit harum ipsam quam quod sit.',
-          cert_picture: 'comptia-sec-certification.png',
-          cert_docs: 'comptia-sec-certification.pdf',
-          obtaining_date: new Date(),
-          expiration_date: new Date(),
-          obtained_skills: ['Networking', 'Security', 'Cisco'],
-          is_selected: true,
-          cert_language: 'pl',
-          cert_common_id: 'b0f0acbe-a9e8-4e14-b9c9-5490bff648ff',
-          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
-          created_at: new Date,
-          updated_at: new Date
-        }
-      ]);
+          id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+          title: 'Personal Blog Platform',
+          slug: 'personal-blog-platform',
+          description:
+            'A full-stack blog platform with Angular SSR and NestJS API, featuring SEO optimization and content management.',
+          content: `<h1>Personal Blog Platform</h1>
+<img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop" alt="Modern blog platform interface" />
+<p>A modern, SEO-optimized blog platform featuring server-side rendering, content management, and comprehensive analytics. Built with Angular Universal and NestJS for optimal performance.</p>
 
-      await queryInterface.bulkInsert('socials', [
-        {
-          id: '51452fdf-64ae-49e1-95a6-7fe24ebc9e07',
-          link: 'www.linkedin.com/in/mikhail-bahdashych',
-          title: 'LI.',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: '78a363c2-f8f4-4e0a-b856-813effa84664',
-          link: 'stackoverflow.com/users/16732680/dokichan',
-          title: 'SO.',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: 'c7bf4552-8f51-4895-8325-153cbdd82a3f',
-          link: 'www.linkedin.com/in/mikhail-bahdashych',
-          title: 'LI.',
-          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: 'c6018079-7070-47c3-b40e-267f736a03dc',
-          link: 'stackoverflow.com/users/16732680/dokichan',
-          title: 'SO.',
-          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: 'e6106f9d-7166-4c00-9d63-0791cd1f554c',
-          link: 'www.linkedin.com/in/mikhail-bahdashych',
-          title: 'LI.',
-          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
-          created_at: new Date,
-          updated_at: new Date
-        },
-        {
-          id: '74c5db3e-8459-46f2-b8f2-14ee26b5469f',
-          link: 'stackoverflow.com/users/16732680/dokichan',
-          title: 'SO.',
-          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
-          created_at: new Date,
-          updated_at: new Date
-        }
-      ]);
+<h2>System Architecture</h2>
+<img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&h=300&fit=crop" alt="System architecture visualization" />
+<p>The platform follows a clean architecture pattern with clear separation of concerns:</p>
 
-      await queryInterface.bulkInsert('experiences', [
-        {
-          id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
-          company_name: 'Cryptovoucher / P100',
-          company_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
-          company_link: 'cryptovoucher.io',
-          company_link_title: 'Cryptovoucher Official Website',
-          company_picture: 'cv.jpeg',
-          obtained_skills: ['Assets management', 'Users management', 'Cybersecurity management'],
-          start_date: new Date(),
-          end_date: new Date(),
-          is_selected: true,
-          experience_language: 'en',
-          experience_common_id: 'faff454c-1139-400f-b432-ef46c9f6b3db',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
-          created_at: new Date(),
-          updated_at: new Date()
+<pre><code class="language-typescript">
+// Domain Layer - Article Entity
+export class Article {
+  constructor(
+    public readonly id: string,
+    public readonly title: string,
+    public readonly slug: string,
+    public readonly content: string,
+    public readonly published: boolean,
+    public readonly created_at: Date
+  ) {}
+
+  static create(data: CreateArticleData): Article {
+    return new Article(
+      generateId(),
+      data.title,
+      slugify(data.title),
+      data.content,
+      data.published || false,
+      new Date()
+    );
+  }
+
+  publish(): Article {
+    return new Article(
+      this.id,
+      this.title,
+      this.slug,
+      this.content,
+      true,
+      this.created_at
+    );
+  }
+}
+</code></pre>
+
+<h2>SEO Optimization Engine</h2>
+<p>Dynamic SEO metadata generation with structured data:</p>
+<pre><code class="language-typescript">
+@Injectable()
+export class SEOService {
+  generateMetaTags(article: Article): MetaTags {
+    const baseUrl = this.configService.get('SITE_URL');
+    const canonicalUrl = \`\${baseUrl}/blog/\${article.slug}\`;
+    
+    return {
+      title: \`\${article.title} | Personal Blog\`,
+      description: article.excerpt || this.truncate(article.content, 160),
+      keywords: article.tags.join(', '),
+      canonical: canonicalUrl,
+      openGraph: {
+        type: 'article',
+        title: article.title,
+        description: article.excerpt,
+        url: canonicalUrl,
+        image: article.featured_image,
+        site_name: 'Personal Blog',
+        published_time: article.created_at.toISOString(),
+        author: article.author.name
+      },
+      structured_data: this.generateArticleStructuredData(article)
+    };
+  }
+
+  private generateArticleStructuredData(article: Article): any {
+    return {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": article.title,
+      "description": article.excerpt,
+      "image": article.featured_image,
+      "author": {
+        "@type": "Person",
+        "name": article.author.name
+      },
+      "date_published": article.created_at.toISOString(),
+      "date_modified": article.updated_at.toISOString()
+    };
+  }
+}
+</code></pre>
+
+<h2>Content Management Interface</h2>
+<img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?w=600&h=300&fit=crop" alt="Content management system interface" />
+<pre><code class="language-typescript">
+@Component({
+  selector: 'app-article-editor',
+  template: \`
+    <div class="editor-container">
+      <form [formGroup]="articleForm" (ngSubmit)="onSubmit()">
+        <mat-form-field>
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" 
+                 (input)="generateSlug()" required>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Slug</mat-label>
+          <input matInput formControlName="slug" readonly>
+        </mat-form-field>
+
+        <div class="content-editor">
+          <quill-editor 
+            formControlName="content"
+            [modules]="editorModules"
+            (onContentChanged)="onContentChange($event)">
+          </quill-editor>
+        </div>
+
+        <div class="actions">
+          <button mat-button type="button" 
+                  (click)="saveDraft()">Save Draft</button>
+          <button mat-raised-button color="primary" 
+                  type="submit">Publish</button>
+        </div>
+      </form>
+    </div>
+  \`
+})
+export class ArticleEditorComponent {
+  articleForm: FormGroup;
+  editorModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      ['code-block', 'image', 'link'],
+      [{ 'header': [1, 2, 3, false] }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+    ],
+    syntax: true
+  };
+
+  constructor(
+    private fb: FormBuilder,
+    private articleService: ArticleService,
+    private router: Router
+  ) {
+    this.articleForm = this.fb.group({
+      title: ['', Validators.required],
+      slug: [''],
+      content: ['', Validators.required],
+      excerpt: [''],
+      tags: [[]],
+      published: [false]
+    });
+  }
+
+  generateSlug(): void {
+    const title = this.articleForm.get('title')?.value;
+    const slug = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    
+    this.articleForm.patchValue({ slug });
+  }
+
+  async onSubmit(): Promise<void> {
+    if (this.articleForm.valid) {
+      const article = await this.articleService.create(
+        this.articleForm.value
+      );
+      this.router.navigate(['/admin/articles', article.id]);
+    }
+  }
+}
+</code></pre>
+
+<h2>Performance Optimization</h2>
+<p>The platform implements several performance optimization techniques:</p>
+
+<h3>Build-time Route Generation</h3>
+<pre><code class="language-javascript">
+// scripts/generate-routes.js
+const fetch = require('node-fetch');
+const fs = require('fs');
+
+async function generateRoutes() {
+  const articlesResponse = await fetch(\`\${process.env.API_URL}/posts/slugs\`);
+  const articles = await articlesResponse.json();
+  
+  const routes = [
+    '/',
+    '/blog',
+    '/projects',
+    '/contact',
+    ...articles.map(article => \`/blog/\${article.slug}\`)
+  ];
+
+  const routesFile = \`
+export const PRERENDER_ROUTES = \${JSON.stringify(routes, null, 2)};
+  \`;
+
+  fs.writeFileSync('src/prerender-routes.ts', routesFile);
+  console.log(\`Generated \${routes.length} routes for prerendering\`);
+}
+
+generateRoutes().catch(console.error);
+</code></pre>
+
+<h3>Caching Strategy</h3>
+<p>Multi-layer caching for optimal performance:</p>
+<p>$$Cache\\_Hit\\_Ratio = \\frac{L1 + L2 \\cdot (1-L1) + L3 \\cdot (1-L1) \\cdot (1-L2)}{1}$$</p>
+<p>Where L1 = Browser Cache, L2 = CDN Cache, L3 = Application Cache</p>
+
+<h2>Key Features</h2>
+<ul>
+<li><strong>Server-side Rendering</strong> - Angular Universal for SEO and performance</li>
+<li><strong>Static Pre-rendering</strong> - Build-time generation of static pages</li>
+<li><strong>Content Management</strong> - Rich text editor with image upload</li>
+<li><strong>SEO Optimization</strong> - Automatic meta tags and structured data</li>
+<li><strong>Newsletter Integration</strong> - Subscriber management and email campaigns</li>
+<li><strong>Analytics Dashboard</strong> - Visitor tracking and content performance</li>
+<li><strong>Mobile Responsive</strong> - Optimized for all device sizes</li>
+</ul>
+
+<h2>Technology Stack</h2>
+<ul>
+<li><strong>Frontend:</strong> Angular 17, Angular Universal, Angular Material</li>
+<li><strong>Backend:</strong> NestJS, TypeScript, JWT Authentication</li>
+<li><strong>Database:</strong> PostgreSQL, Sequelize ORM</li>
+<li><strong>Deployment:</strong> Docker, PM2, NGINX</li>
+<li><strong>Testing:</strong> Jest, Karma, Cypress</li>
+<li><strong>Build Tools:</strong> Angular CLI, Webpack</li>
+</ul>`,
+          featured_image:
+            'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&h=630&fit=crop',
+          tags: [
+            'web development',
+            'blog',
+            'full-stack',
+            'Angular',
+            'NestJS',
+            'SEO'
+          ],
+          technologies: [
+            'Angular',
+            'NestJS',
+            'PostgreSQL',
+            'Docker',
+            'TypeScript',
+            'Angular Universal'
+          ],
+          github_url: 'https://github.com/example/personal-blog-platform',
+          published: false,
+          demo_url: null,
+          featured: true,
+          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          created_at: new Date('2024-01-05'),
+          updated_at: new Date('2024-01-05')
         },
         {
-          id: '93187a57-e8ab-4b05-9013-eec33e389239',
-          company_name: 'Knowde',
-          company_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
-          company_link: 'knowde.com',
-          company_link_title: 'Knowde Official Website',
-          company_picture: 'knowde.webp',
-          obtained_skills: ['Web development', 'Anti-money laundering', 'AWS'],
-          start_date: new Date(),
-          end_date: new Date(),
-          is_selected: true,
-          experience_language: 'en',
-          experience_common_id: '0bef5296-5310-425f-a195-404bf770035f',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '4995d9f5-166f-4d20-8f59-b207ae68c59f',
-          company_name: 'Cryptovoucher / P100',
-          company_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
-          company_link: 'cryptovoucher.io',
-          company_link_title: 'Cryptovoucher Official Website',
-          company_picture: 'cv.jpeg',
-          obtained_skills: ['Assets management', 'Users management', 'Cybersecurity management'],
-          start_date: new Date(),
-          end_date: new Date(),
-          is_selected: true,
-          experience_language: 'pl',
-          experience_common_id: 'faff454c-1139-400f-b432-ef46c9f6b3db',
-          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '5ac4dc4c-c8b3-4769-bdf9-8dc7d5931676',
-          company_name: 'Knowde',
-          company_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
-          company_link: 'knowde.com',
-          company_link_title: 'Knowde Official Website',
-          company_picture: 'knowde.webp',
-          obtained_skills: ['Web development', 'Anti-money laundering', 'AWS'],
-          start_date: new Date(),
-          end_date: new Date(),
-          is_selected: true,
-          experience_language: 'pl',
-          experience_common_id: '0bef5296-5310-425f-a195-404bf770035f',
-          author_id: '56932d76-0dbc-4426-a8dc-98c7378a432f',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '31b4242f-8741-4d78-9806-9ad989573973',
-          company_name: 'Cryptovoucher / P100',
-          company_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
-          company_link: 'cryptovoucher.io',
-          company_link_title: 'Cryptovoucher Official Website',
-          company_picture: 'cv.jpeg',
-          obtained_skills: ['Assets management', 'Users management', 'Cybersecurity management'],
-          start_date: new Date(),
-          end_date: new Date(),
-          is_selected: true,
-          experience_language: 'ru',
-          experience_common_id: 'faff454c-1139-400f-b432-ef46c9f6b3db',
-          author_id: '263d6d5a-8690-476a-9dad-da9d0cc1b61f',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '40e62a56-7cf5-4ce6-83f0-0f5b9bdd99a8',
-          company_name: 'Knowde',
-          company_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque harum itaque magni natus obcaecati odio quae rem! Amet beatae dolorum enim et in magnam molestias natus possimus recusandae tempore.',
-          company_link: 'knowde.com',
-          company_link_title: 'Knowde Official Website',
-          company_picture: 'knowde.webp',
-          obtained_skills: ['Web development', 'Anti-money laundering', 'AWS'],
-          start_date: new Date(),
-          end_date: new Date(),
-          is_selected: true,
-          experience_language: 'ru',
-          experience_common_id: '0bef5296-5310-425f-a195-404bf770035f',
-          author_id: 'a4cb9312-3430-44b2-abcd-b6821a864e37',
-          created_at: new Date(),
-          updated_at: new Date()
-        }
-      ]);
-      await queryInterface.bulkInsert('experience_positions', [
-        {
-          id: '0d90be89-f748-4003-bff7-7190509bddef',
-          position_title: 'Full Stack Web Developer',
-          position_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
-          position_start_date: new Date(),
-          position_end_date: new Date(),
-          position_language: 'en',
-          position_common_id: '93823178-c3f9-4acf-ac7d-f41d64809a63',
-          experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: 'fc2ef3e8-c21c-499e-af57-a8584927c1ee',
-          position_title: 'Jr Security Operations Specialist',
-          position_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
-          position_start_date: new Date(),
-          position_end_date: new Date(),
-          position_language: 'en',
-          position_common_id: 'b051b110-596e-4a7e-ab82-6aa631a68974',
-          experience_id: 'ce48511d-aeaa-4437-8005-b61dca5d928a',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '32cae7e1-a3ce-4c2f-a74d-fa4f5c140faa',
-          position_title: 'Middle Security Operations Specialist',
-          position_description: 'EN Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
-          position_start_date: new Date(),
-          position_end_date: new Date(),
-          position_language: 'en',
-          position_common_id: 'd2848268-3225-45a8-80c9-aa4614db0727',
-          experience_id: '93187a57-e8ab-4b05-9013-eec33e389239',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: 'd4c737ca-c90f-42a9-a7f1-91b4a2eee574',
-          position_title: 'Full Stack Web Developer',
-          position_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
-          position_start_date: new Date(),
-          position_end_date: new Date(),
-          position_language: 'pl',
-          position_common_id: '93823178-c3f9-4acf-ac7d-f41d64809a63',
-          experience_id: '4995d9f5-166f-4d20-8f59-b207ae68c59f',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: 'e53703bc-7fe7-4fef-bb96-90b02ac27c58',
-          position_title: 'Jr Security Operations Specialist',
-          position_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
-          position_start_date: new Date(),
-          position_end_date: new Date(),
-          position_language: 'pl',
-          position_common_id: 'b051b110-596e-4a7e-ab82-6aa631a68974',
-          experience_id: '5ac4dc4c-c8b3-4769-bdf9-8dc7d5931676',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '20128c3a-040a-4a0c-8d64-53db5eadfe46',
-          position_title: 'Middle Security Operations Specialist',
-          position_description: 'PL Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
-          position_start_date: new Date(),
-          position_end_date: new Date(),
-          position_language: 'pl',
-          position_common_id: 'd2848268-3225-45a8-80c9-aa4614db0727',
-          experience_id: '5ac4dc4c-c8b3-4769-bdf9-8dc7d5931676',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '8cb0cf56-9582-4ae8-aa6e-014118aea57d',
-          position_title: 'Full Stack Web Developer',
-          position_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
-          position_start_date: new Date(),
-          position_end_date: new Date(),
-          position_language: 'ru',
-          position_common_id: '93823178-c3f9-4acf-ac7d-f41d64809a63',
-          experience_id: '31b4242f-8741-4d78-9806-9ad989573973',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: '353f5770-d499-461a-802b-a40d4270f165',
-          position_title: 'Jr Security Operations Specialist',
-          position_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
-          position_start_date: new Date(),
-          position_end_date: new Date(),
-          position_language: 'ru',
-          position_common_id: 'b051b110-596e-4a7e-ab82-6aa631a68974',
-          experience_id: '40e62a56-7cf5-4ce6-83f0-0f5b9bdd99a8',
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
-          id: 'b83bc1c8-df0e-4191-ad8a-93a62e6b63cb',
-          position_title: 'Middle Security Operations Specialist',
-          position_description: 'RU Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dignissimos officia possimus rem sapiente sit?',
-          position_start_date: new Date(),
-          position_end_date: new Date(),
-          position_language: 'ru',
-          position_common_id: 'd2848268-3225-45a8-80c9-aa4614db0727',
-          experience_id: '40e62a56-7cf5-4ce6-83f0-0f5b9bdd99a8',
-          created_at: new Date(),
-          updated_at: new Date()
+          id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
+          title: 'Automated Vulnerability Scanner',
+          slug: 'automated-vulnerability-scanner',
+          description:
+            'An automated vulnerability scanning tool for web applications with ML-powered threat detection.',
+          content: `<h1>Automated Vulnerability Scanner</h1>
+<img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop" alt="Vulnerability scanning process visualization" />
+<p>A comprehensive security scanning tool that combines traditional vulnerability detection techniques with machine learning algorithms for advanced threat identification.</p>
+
+<h2>Core Scanning Engine</h2>
+<p>The scanner implements multiple detection algorithms:</p>
+<pre><code class="language-python">
+import asyncio
+import aiohttp
+from typing import List, Dict, Optional
+from dataclasses import dataclass
+
+@dataclass
+class Vulnerability:
+    type: str
+    severity: str
+    description: str
+    location: str
+    confidence: float
+    payload: Optional[str] = None
+
+class VulnerabilityScanner:
+    def __init__(self):
+        self.payloads = self.load_payloads()
+        self.ml_model = self.load_ml_model()
+        self.session = None
+        
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
+        return self
+        
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.session.close()
+
+    async def scan_target(self, target_url: str) -> List[Vulnerability]:
+        vulnerabilities = []
+        
+        # Traditional signature-based scanning
+        vulnerabilities.extend(await self.sql_injection_scan(target_url))
+        vulnerabilities.extend(await self.xss_scan(target_url))
+        vulnerabilities.extend(await self.directory_traversal_scan(target_url))
+        
+        # ML-powered behavioral analysis
+        ml_vulnerabilities = await self.ml_anomaly_detection(target_url)
+        vulnerabilities.extend(ml_vulnerabilities)
+        
+        return self.deduplicate_findings(vulnerabilities)
+
+    async def sql_injection_scan(self, url: str) -> List[Vulnerability]:
+        vulnerabilities = []
+        sql_payloads = [
+            "' OR '1'='1",
+            "' UNION SELECT NULL--",
+            "'; DROP TABLE users--",
+            "' AND (SELECT SUBSTRING(@@version,1,1))='5'--"
+        ]
+        
+        for payload in sql_payloads:
+            try:
+                response = await self.session.get(
+                    url, 
+                    params={'id': payload},
+                    timeout=10
+                )
+                
+                if self.detect_sql_error(response.text):
+                    confidence = self.calculate_confidence(response, payload)
+                    
+                    vulnerabilities.append(Vulnerability(
+                        type='SQL_INJECTION',
+                        severity=self.get_severity(confidence),
+                        description=f'Potential SQL injection vulnerability detected',
+                        location=url,
+                        confidence=confidence,
+                        payload=payload
+                    ))
+                    
+            except asyncio.TimeoutError:
+                continue
+                
+        return vulnerabilities
+</code></pre>
+
+<h2>Machine Learning Threat Detection</h2>
+<img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=300&fit=crop" alt="Machine learning algorithms visualization" />
+<p>Advanced threat detection using ensemble learning:</p>
+<pre><code class="language-python">
+import numpy as np
+from sklearn.ensemble import IsolationForest, RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+import joblib
+
+class MLThreatDetector:
+    def __init__(self):
+        self.anomaly_detector = IsolationForest(contamination=0.1)
+        self.classifier = RandomForestClassifier(n_estimators=100)
+        self.scaler = StandardScaler()
+        self.feature_extractors = [
+            self.extract_response_features,
+            self.extract_timing_features,
+            self.extract_header_features
+        ]
+    
+    def extract_features(self, response_data: Dict) -> np.ndarray:
+        """Extract numerical features from HTTP response data"""
+        features = []
+        
+        for extractor in self.feature_extractors:
+            features.extend(extractor(response_data))
+            
+        return np.array(features).reshape(1, -1)
+    
+    def extract_response_features(self, data: Dict) -> List[float]:
+        """Extract features from HTTP response"""
+        return [
+            len(data.get('content', '')),
+            data.get('status_code', 200),
+            len(data.get('headers', {})),
+            data.get('response_time', 0),
+            self.calculate_entropy(data.get('content', ''))
+        ]
+    
+    def calculate_entropy(self, text: str) -> float:
+        """Calculate Shannon entropy of response content"""
+        if not text:
+            return 0
+            
+        probabilities = [text.count(c) / len(text) for c in set(text)]
+        entropy = -sum(p * np.log2(p) for p in probabilities if p > 0)
+        return entropy
+    
+    def predict_vulnerability(self, response_data: Dict) -> float:
+        """Predict vulnerability probability using ML model"""
+        features = self.extract_features(response_data)
+        scaled_features = self.scaler.transform(features)
+        
+        # Anomaly detection score
+        anomaly_score = self.anomaly_detector.decision_function(scaled_features)[0]
+        
+        # Classification probability
+        class_probability = self.classifier.predict_proba(scaled_features)[0][1]
+        
+        # Ensemble score
+        ensemble_score = (abs(anomaly_score) + class_probability) / 2
+        
+        return min(ensemble_score, 1.0)
+</code></pre>
+
+<h2>Vulnerability Scoring Algorithm</h2>
+<p>CVSS-based scoring with custom weighting:</p>
+<p>$$CVSS_{custom} = \\frac{AV \\times AC \\times Au}{3} \\times \\frac{C \\times I \\times A}{3} \\times ML_{confidence}$$</p>
+<p>Where ML confidence adjusts the traditional CVSS score based on machine learning prediction accuracy.</p>
+
+<h2>Reporting Dashboard</h2>
+<img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop" alt="Security reporting dashboard" />
+<pre><code class="language-javascript">
+// React component for vulnerability reporting
+import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell } from 'recharts';
+
+const VulnerabilityReport = ({ scanResults }) => {
+  const [severityData, setSeverityData] = useState([]);
+  const [typeDistribution, setTypeDistribution] = useState([]);
+
+  useEffect(() => {
+    processScanResults(scanResults);
+  }, [scanResults]);
+
+  const processScanResults = (results) => {
+    const severityCount = results.reduce((acc, vuln) => {
+      acc[vuln.severity] = (acc[vuln.severity] || 0) + 1;
+      return acc;
+    }, {});
+
+    const typeCount = results.reduce((acc, vuln) => {
+      acc[vuln.type] = (acc[vuln.type] || 0) + 1;
+      return acc;
+    }, {});
+
+    setSeverityData(Object.entries(severityCount).map(([key, value]) => ({
+      severity: key,
+      count: value
+    })));
+
+    setTypeDistribution(Object.entries(typeCount).map(([key, value]) => ({
+      type: key,
+      count: value
+    })));
+  };
+
+  const SEVERITY_COLORS = {
+    CRITICAL: '#d32f2f',
+    HIGH: '#f57c00',
+    MEDIUM: '#fbc02d',
+    LOW: '#388e3c'
+  };
+
+  return (
+    <div className="vulnerability-report">
+      <div className="report-header">
+        <h2>Security Scan Report</h2>
+        <div className="scan-summary">
+          <div className="metric">
+            <span className="value">{scanResults.length}</span>
+            <span className="label">Total Vulnerabilities</span>
+          </div>
+          <div className="metric">
+            <span className="value">
+              {scanResults.filter(v => v.severity === 'CRITICAL').length}
+            </span>
+            <span className="label">Critical Issues</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="charts-container">
+        <div className="chart">
+          <h3>Severity Distribution</h3>
+          <BarChart width={400} height={300} data={severityData}>
+            <XAxis dataKey="severity" />
+            <YAxis />
+            <Bar dataKey="count" fill="#8884d8" />
+          </BarChart>
+        </div>
+
+        <div className="chart">
+          <h3>Vulnerability Types</h3>
+          <PieChart width={400} height={300}>
+            <Pie
+              data={typeDistribution}
+              dataKey="count"
+              nameKey="type"
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              label
+            >
+              {typeDistribution.map((entry, index) => (
+                <Cell key={index} fill={SEVERITY_COLORS[entry.type] || '#8884d8'} />
+              ))}
+            </Pie>
+          </PieChart>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default VulnerabilityReport;
+</code></pre>
+
+<h2>Scan Types & Coverage</h2>
+<table>
+<thead>
+<tr><th>Vulnerability Type</th><th>Detection Method</th><th>Accuracy</th><th>False Positive Rate</th></tr>
+</thead>
+<tbody>
+<tr><td>SQL Injection</td><td>Signature + ML</td><td>94.2%</td><td>3.1%</td></tr>
+<tr><td>XSS</td><td>Payload Testing</td><td>91.8%</td><td>4.7%</td></tr>
+<tr><td>CSRF</td><td>Token Analysis</td><td>88.5%</td><td>2.3%</td></tr>
+<tr><td>Directory Traversal</td><td>Path Manipulation</td><td>92.1%</td><td>1.8%</td></tr>
+<tr><td>SSL/TLS Issues</td><td>Certificate Analysis</td><td>98.7%</td><td>0.5%</td></tr>
+</tbody>
+</table>
+
+<h2>Key Features</h2>
+<ul>
+<li><strong>Automated Scanning</strong> - Scheduled and on-demand vulnerability scans</li>
+<li><strong>ML-Enhanced Detection</strong> - Machine learning for improved accuracy</li>
+<li><strong>Comprehensive Coverage</strong> - OWASP Top 10 and custom vulnerability checks</li>
+<li><strong>API Integration</strong> - RESTful API for CI/CD pipeline integration</li>
+<li><strong>Detailed Reporting</strong> - Executive and technical reports with remediation guidance</li>
+<li><strong>False Positive Reduction</strong> - AI-powered filtering to reduce noise</li>
+</ul>
+
+<h2>Technology Stack</h2>
+<ul>
+<li><strong>Core Engine:</strong> Python 3.9, asyncio, aiohttp</li>
+<li><strong>Machine Learning:</strong> scikit-learn, TensorFlow, pandas</li>
+<li><strong>Web Interface:</strong> React, D3.js for visualizations</li>
+<li><strong>Database:</strong> PostgreSQL, Redis for caching</li>
+<li><strong>Deployment:</strong> Docker, Kubernetes</li>
+<li><strong>API:</strong> FastAPI, OpenAPI documentation</li>
+</ul>`,
+          featured_image:
+            'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=630&fit=crop',
+          tags: [
+            'security',
+            'automation',
+            'vulnerability',
+            'machine learning',
+            'python'
+          ],
+          technologies: [
+            'Python',
+            'scikit-learn',
+            'React',
+            'PostgreSQL',
+            'Docker',
+            'FastAPI'
+          ],
+          github_url: 'https://github.com/example/vulnerability-scanner',
+          published: true,
+          demo_url: null,
+          featured: false,
+          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          created_at: new Date('2024-01-01'),
+          updated_at: new Date('2024-01-01')
         }
       ]);
     } catch (e) {
@@ -625,17 +955,11 @@ module.exports = {
   },
 
   async down(queryInterface, sequelize) {
+    await queryInterface.bulkDelete('projects', null, {});
+    await queryInterface.bulkDelete('articles', null, {});
+    await queryInterface.bulkDelete('site_config', null, {});
     await queryInterface.bulkDelete('sessions', null, {});
     await queryInterface.bulkDelete('users_settings', null, {});
-    await queryInterface.bulkDelete('confirmation_hashes', null, {});
     await queryInterface.bulkDelete('users', null, {});
-
-    await queryInterface.bulkDelete('categories', null, {});
-
-    await queryInterface.bulkDelete('experience_positions', null, {});
-    await queryInterface.bulkDelete('experiences', null, {});
-
-    await queryInterface.bulkDelete('socials', null, {});
-    await queryInterface.bulkDelete('certificates', null, {});
-  },
+  }
 };

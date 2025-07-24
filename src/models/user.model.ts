@@ -11,10 +11,8 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { Session } from '@models/session.model';
-import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { ArticleModel } from '@models/article.model';
 import { UserSettings } from '@models/user-settings.model';
-import { Author } from '@models/author.model';
 
 interface UserCreationAttributes {
   email: string;
@@ -55,17 +53,6 @@ export class User extends Model<User, UserCreationAttributes> {
   })
   isMfaSet: boolean;
 
-  @Default(false)
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    field: 'tac'
-  })
-  tac: boolean;
-
-  @HasMany(() => ConfirmationHash)
-  confirmationHashes: Array<ConfirmationHash>;
-
   @HasMany(() => ArticleModel)
   articles: Array<ArticleModel>;
 
@@ -74,9 +61,6 @@ export class User extends Model<User, UserCreationAttributes> {
 
   @HasOne(() => UserSettings)
   userSettings: UserSettings;
-
-  @HasOne(() => Author)
-  author: Author;
 
   @CreatedAt
   @Column({ field: 'created_at' })

@@ -3,121 +3,88 @@ import {
   Controller,
   Delete,
   Get,
-  Patch,
+  Param,
   Post,
+  Put,
   Query,
   UseGuards,
   UsePipes
 } from '@nestjs/common';
-import { ArticlesService } from '@modules/articles.service';
+import { ArticlesService } from './articles.service';
 import { AuthGuard } from '@guards/auth.guard';
 import { UserId } from '@decorators/user-id.decorator';
 import { Transaction } from 'sequelize';
 import { TrxDecorator } from '@decorators/transaction.decorator';
-import { CreateArticleDto } from '@dto/create-article.dto';
+import { CreateArticleDto } from '@dto/articles/requests/create-article.dto';
 import { ValidationPipe } from '@pipes/validation.pipe';
-import { EditArticleDto } from '@dto/edit-article.dto';
-import { Language } from '@interfaces/language.enum';
 
-@Controller('articles')
+@Controller()
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
-  @Get('get-all-posted-articles-slugs')
-  getAllPostedArticlesSlugs(@TrxDecorator() trx: Transaction) {
-    return this.articlesService.getAllPostedArticlesSlugs({ trx });
+  // Public endpoints for frontend
+  @Get('posts')
+  async getAllPosts() {
+    return this.articlesService.findAllPublished();
   }
 
-  @Get('get-posted-by-slug')
-  getPostedArticleBySlug(
-    @Query('slug') slug: string,
-    @Query('language') language: Language,
-    @TrxDecorator() trx: Transaction
-  ) {
-    return this.articlesService.getPostedArticleBySlug({
-      slug,
-      language,
-      trx
-    });
+  @Get('posts/slugs')
+  async getPostsSlugs() {
+    return this.articlesService.getSlugs();
   }
 
+  @Get('posts/:slug')
+  async getPostBySlug(@Param('slug') slug: string) {
+    return this.articlesService.getPublishedPostBySlug({ slug });
+  }
+
+  // Admin endpoints
   @UseGuards(AuthGuard)
-  @Get('get-by-slug')
-  getArticleBySlug(
-    @Query('slug') slug: string,
-    @Query('language') language: Language,
-    @TrxDecorator() trx: Transaction
-  ) {
-    return this.articlesService.getArticleBySlug({
-      slug,
-      language,
-      trx
-    });
-  }
-
-  @UsePipes(ValidationPipe)
-  @UseGuards(AuthGuard)
-  @Post('create')
-  createArticle(
+  @Get('admin/posts')
+  async getAdminPosts(
     @UserId() userId: string,
-    @Body() payload: CreateArticleDto,
-    @TrxDecorator() trx: Transaction
+    @Query('published') published?: string
   ) {
-    return this.articlesService.createArticle({
-      userId,
-      payload,
-      trx
-    });
+    return this.articlesService.getAdminPosts({ userId, published });
   }
 
   @UseGuards(AuthGuard)
-  @Patch('change-publish')
-  changePublishArticleStatus(
-    @Query('articleId') articleId: string,
-    @TrxDecorator() trx: Transaction
-  ) {
-    return this.articlesService.changePublishArticleStatus({
-      articleId,
-      trx
-    });
-  }
-
-  @UseGuards(AuthGuard)
-  @Delete('delete')
-  deleteArticle(
-    @Query('articleId') articleId: string,
-    @TrxDecorator() trx: Transaction
-  ) {
-    return this.articlesService.deleteArticle({
-      articleId,
-      trx
-    });
-  }
-
   @UsePipes(ValidationPipe)
-  @UseGuards(AuthGuard)
-  @Patch('edit')
-  editArticle(@Body() payload: EditArticleDto, @TrxDecorator() trx: Transaction) {
-    return this.articlesService.editArticle({ payload, trx });
+  @Post('admin/posts')
+  async createPost(
+    @Body() data: CreateArticleDto,
+    @UserId() userId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.articlesService.create({ data, userId, trx });
   }
 
   @UseGuards(AuthGuard)
-  @Get('list')
-  listArticles(
-    @Query('query') query: string,
-    @Query('page') page: string,
-    @Query('pageSize') pageSize: string,
-    @Query('order') order: string,
-    @Query('orderBy') orderBy: string,
+  @UsePipes(ValidationPipe)
+  @Put('admin/posts/:id')
+  async updatePost(
+    @Param('id') articleId: string,
+    @Body() data: Partial<CreateArticleDto>,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.articlesService.listArticles({
-      query,
-      page,
-      pageSize,
-      order,
-      orderBy,
-      trx
-    });
+    return this.articlesService.update({ articleId, data, trx });
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('admin/posts/:id')
+  async deletePost(
+    @Param('id') articleId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.articlesService.delete({ articleId, trx });
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('admin/posts/:id/publish')
+  async togglePublishStatus(
+    @Param('id') articleId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.articlesService.togglePublished({ articleId, trx });
   }
 }

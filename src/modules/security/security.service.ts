@@ -1,14 +1,10 @@
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 import { HttpException, Injectable } from '@nestjs/common';
-import { Confirmation } from '@interfaces/confirmation-type.enum';
 import { WrongCodeException } from '@exceptions/wrong-code.exception';
 import { UsersService } from '@modules/users.service';
-import { ConfirmationHashService } from '@modules/confirmation-hash.service';
-import { RegistrationGenerate2faInterface } from '@interfaces/registration-generate-2fa.interface';
 import { LoginGenerate2faInterface } from '@interfaces/login-generate-2fa.interface';
 import { Generate2faInterface } from '@interfaces/generate-2fa.interface';
-import { RegistrationVerify2faInterface } from '@interfaces/registration-verify-2fa.interface';
 import { LoginVerify2faInterface } from '@interfaces/login-verify-2fa.interface';
 import { Verify2faInterface } from '@interfaces/verify-2fa.interface';
 import { GenerateQrCodeInterface } from '@interfaces/generate-qr-code.interface';
@@ -18,29 +14,7 @@ import { MfaSetDto } from '@dto/mfa-set.dto';
 
 @Injectable()
 export class SecurityService {
-  constructor(
-    private readonly confirmationHashService: ConfirmationHashService,
-    private readonly usersService: UsersService
-  ) {}
-
-  async registrationGenerateTwoFaQrCode({
-    confirmationHash,
-    trx
-  }: RegistrationGenerate2faInterface) {
-    const { userId } =
-      await this.confirmationHashService.getUserIdByConfirmationHash({
-        confirmationHash,
-        confirmationType: Confirmation.REGISTRATION,
-        trx
-      });
-
-    const { email } = await this.usersService.getUserById({
-      id: userId,
-      trx
-    });
-
-    return await this.generateQrCode({ email });
-  }
+  constructor(private readonly usersService: UsersService) {}
 
   async loginGenerateTwoFaQrCode({ payload, trx }: LoginGenerate2faInterface) {
     const { email, password } = payload;
@@ -61,32 +35,6 @@ export class SecurityService {
     });
 
     return await this.generateQrCode({ email });
-  }
-
-  async registrationVerifyTwoFaQrCode({
-    payload,
-    confirmationHash,
-    trx
-  }: RegistrationVerify2faInterface) {
-    const { code, twoFaToken } = payload;
-
-    const { userId } =
-      await this.confirmationHashService.getUserIdByConfirmationHash({
-        confirmationHash,
-        confirmationType: Confirmation.REGISTRATION,
-        trx
-      });
-
-    try {
-      return await this.verifyQrCode({
-        userId,
-        code,
-        twoFaToken,
-        trx
-      });
-    } catch (e: any) {
-      throw new HttpException(e.response.message, e.status);
-    }
   }
 
   async loginVerifyTwoFaQrCode({ payload, trx }: LoginVerify2faInterface) {
@@ -128,7 +76,7 @@ export class SecurityService {
   private async generateQrCode({ email }: GenerateQrCodeInterface) {
     const secret = speakeasy.generateSecret({
       length: 20,
-      name: `Bahdashych on Security - ${email}`
+      name: `Personal Blog - ${email}`
     });
 
     const qrUrl = await qrcode.toDataURL(secret.otpauth_url);

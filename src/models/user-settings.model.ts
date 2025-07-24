@@ -42,13 +42,6 @@ export class UserSettings extends Model<
   })
   passwordChanged: Date;
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: true,
-    field: 'recovery_keys_fingerprint'
-  })
-  recoveryKeysFingerprint: string;
-
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;

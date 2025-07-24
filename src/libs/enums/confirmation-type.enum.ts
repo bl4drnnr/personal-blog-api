@@ -1,4 +1,0 @@
-export enum Confirmation {
-  REGISTRATION = 'REGISTRATION',
-  FORGOT_PASSWORD = 'FORGOT_PASSWORD'
-}

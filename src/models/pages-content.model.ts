@@ -8,12 +8,8 @@ import {
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
-import { Language } from '@interfaces/language.enum';
-
-const languageTypes = [Language.PL, Language.EN, Language.RU];
 
 interface PagesContentCreationAttributes {
-  contentLanguage: Language;
   contents: Array<string>;
 }
 
@@ -26,13 +22,6 @@ export class PagesContent extends Model<
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id: string;
-
-  @Column({
-    type: DataType.ENUM(...languageTypes),
-    allowNull: false,
-    field: 'content_language'
-  })
-  contentLanguage: Language;
 
   @Column({
     type: DataType.ARRAY(DataType.STRING),

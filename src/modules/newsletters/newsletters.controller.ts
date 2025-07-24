@@ -4,7 +4,6 @@ import { TrxDecorator } from '@decorators/transaction.decorator';
 import { Transaction } from 'sequelize';
 import { ValidationPipe } from '@pipes/validation.pipe';
 import { SubscribeToNewslettersDto } from '@dto/subscribe-to-newsletters.dto';
-import { Language } from '@interfaces/language.enum';
 
 @Controller('newsletters')
 export class NewslettersController {
@@ -14,12 +13,10 @@ export class NewslettersController {
   @Post('subscribe')
   subscribeToNewsletters(
     @Body() payload: SubscribeToNewslettersDto,
-    @Query('language') language: Language,
     @TrxDecorator() trx: Transaction
   ) {
     return this.newslettersService.subscribeToNewsletters({
       payload,
-      language,
       trx
     });
   }

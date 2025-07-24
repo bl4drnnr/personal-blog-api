@@ -1,29 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Newsletter } from '@models/newsletters.model';
-import { SubscribeToNewslettersInterface } from '@interfaces/subscribe-to-newsletters.interface';
-import { SubscribedToNewslettersDto } from '@dto/subscribed-to-newsletters.dto';
-import { EndUserService } from '@modules/end-user.service';
-import { EndUser } from '@models/end-user.model';
-import { GetEndUserNewslettersInterface } from '@interfaces/get-end-user-newsletters.interface';
-import { ConfirmNewslettersSubscriptionInterface } from '@interfaces/confirm-newsletters-subscription.interface';
-import { SubscriptionConfirmedDto } from '@dto/subscription-confirmed.dto';
+import { SubscribedToNewslettersDto } from '@dto/newsletters/responses/subscribed-to-newsletters.dto';
+import { SubscriptionConfirmedDto } from '@dto/newsletters/responses/subscription-confirmed.dto';
+import { SubscriptionAlreadyConfirmedException } from '@exceptions/newsletters/subscription-already-confirmed.exception';
+import { NewslettersNotFoundException } from '@exceptions/newsletters/newsletters-not-found.exception';
+import { UnsubscriptionConfirmedDto } from '@dto/newsletters/responses/unsubscription-confirmed.dto';
+import { EmailService } from '@shared/email.service';
 import { GetNewslettersByIdInterface } from '@interfaces/get-newsletters-by-id.interface';
 import { ConfirmNewslettersSubscriptionByIdInterface } from '@interfaces/confirm-newsletters-subscription-by-id.interface';
-import { SubscriptionAlreadyConfirmedException } from '@exceptions/newsletters/subscription-already-confirmed.exception';
-import { UnsubscribeFromNewslettersInterface } from '@interfaces/unsubscribe-from-newsletters.interface';
-import { NewslettersNotFoundException } from '@exceptions/newsletters/newsletters-not-found.exception';
-import { UnsubscriptionConfirmedDto } from '@dto/unsubscription-confirmed.dto';
 import { DeleteNewslettersSubscriptionInterface } from '@interfaces/delete-newsletters-subscription.interface';
-import { EmailService } from '@shared/email.service';
 import { CreateNewslettersSubscriptionInterface } from '@interfaces/create-newsletters-subscription.interface';
+import { SubscribeToNewslettersInterface } from '@interfaces/subscribe-to-newsletters.interface';
+import { ConfirmNewslettersSubscriptionInterface } from '@interfaces/confirm-newsletters-subscription.interface';
+import { UnsubscribeFromNewslettersInterface } from '@interfaces/unsubscribe-from-newsletters.interface';
 
 @Injectable()
 export class NewslettersService {
   constructor(
     @InjectModel(Newsletter)
     private readonly newsletterRepository: typeof Newsletter,
-    private readonly endUserService: EndUserService,
     private readonly emailService: EmailService
   ) {}
 
@@ -33,12 +29,9 @@ export class NewslettersService {
     });
   }
 
-  async getNewslettersByEndUserId({
-    endUserId,
-    trx
-  }: GetEndUserNewslettersInterface) {
+  async getNewslettersByEmail({ email, trx }) {
     return this.newsletterRepository.findOne({
-      where: { endUserId },
+      where: { email },
       transaction: trx
     });
   }
@@ -66,68 +59,30 @@ export class NewslettersService {
   }
 
   async createNewslettersSubscription({
-    endUserId,
-    newslettersLanguage,
+    email,
     trx
   }: CreateNewslettersSubscriptionInterface) {
-    return await this.newsletterRepository.create(
-      { endUserId, newslettersLanguage },
-      { transaction: trx }
-    );
+    return await this.newsletterRepository.create({ email }, { transaction: trx });
   }
 
-  async subscribeToNewsletters({
-    payload,
-    language,
-    trx
-  }: SubscribeToNewslettersInterface) {
+  async subscribeToNewsletters({ payload, trx }: SubscribeToNewslettersInterface) {
     const { email } = payload;
 
-    let existingUser: EndUser;
-
-    existingUser = await this.endUserService.getEndUserByEmail({
+    const existingNewsletter = await this.getNewslettersByEmail({
       email,
-      trx
-    });
-
-    if (!existingUser) {
-      existingUser = await this.endUserService.createEndUser({
-        email,
-        trx
-      });
-
-      const newsletters = await this.createNewslettersSubscription({
-        endUserId: existingUser.id,
-        newslettersLanguage: language,
-        trx
-      });
-
-      await this.emailService.sendSubscriptionConfirmationEmail({
-        to: existingUser.email,
-        newslettersId: newsletters.id,
-        language
-      });
-
-      return new SubscribedToNewslettersDto();
-    }
-
-    const existingNewsletter = await this.getNewslettersByEndUserId({
-      endUserId: existingUser.id,
       trx
     });
 
     if (existingNewsletter) return new SubscribedToNewslettersDto();
 
     const newsletters = await this.createNewslettersSubscription({
-      endUserId: existingUser.id,
-      newslettersLanguage: language,
+      email,
       trx
     });
 
     await this.emailService.sendSubscriptionConfirmationEmail({
-      to: existingUser.email,
-      newslettersId: newsletters.id,
-      language
+      to: email,
+      newslettersId: newsletters.id
     });
 
     return new SubscribedToNewslettersDto();

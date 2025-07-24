@@ -1,6 +1,6 @@
 FROM node:latest
 
-WORKDIR /usr/src/bahdashych-on-security-api
+WORKDIR /usr/src/personal-blog-api
 
 RUN npm i -g nest
 RUN npm i -g @nestjs/cli
@@ -13,4 +13,4 @@ COPY . .
 
 ENV NODE_ENV=development
 
-RUN npm run build
+RUN npm run api:build

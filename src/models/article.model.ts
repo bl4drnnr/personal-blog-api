@@ -11,21 +11,17 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { User } from '@models/user.model';
-import { CategoryModel } from '@models/category.model';
-import { Language } from '@interfaces/language.enum';
-
-const languageTypes = [Language.PL, Language.EN, Language.RU];
 
 interface ArticleCreationAttributes {
-  articleName: string;
-  articleSlug: string;
-  articleDescription: string;
-  articleTags: Array<string>;
-  articleContent: string;
-  articleImage: string;
-  articleLanguage: Language;
+  title: string;
+  slug: string;
+  description: string;
+  content: string;
+  excerpt?: string;
+  featuredImage?: string;
+  tags?: Array<string>;
+  published?: boolean;
   userId: string;
-  categoryId: string;
 }
 
 @Table({ tableName: 'articles' })
@@ -38,75 +34,64 @@ export class ArticleModel extends Model<ArticleModel, ArticleCreationAttributes>
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    field: 'article_name'
+    field: 'title'
   })
-  articleName: string;
+  title: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    unique: false,
-    field: 'article_slug'
+    unique: true,
+    field: 'slug'
   })
-  articleSlug: string;
+  slug: string;
 
   @Column({
     type: DataType.TEXT,
     allowNull: false,
-    field: 'article_description'
+    field: 'description'
   })
-  articleDescription: string;
+  description: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+    field: 'content'
+  })
+  content: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+    field: 'excerpt'
+  })
+  excerpt: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'featured_image'
+  })
+  featuredImage: string;
 
   @Column({
     type: DataType.ARRAY(DataType.STRING),
-    allowNull: false,
-    field: 'article_tags'
+    allowNull: true,
+    field: 'tags'
   })
-  articleTags: Array<string>;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    field: 'article_content'
-  })
-  articleContent: string;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    field: 'article_image'
-  })
-  articleImage: string;
-
-  @Column({
-    type: DataType.ENUM(...languageTypes),
-    allowNull: false,
-    field: 'article_language'
-  })
-  articleLanguage: Language;
+  tags: Array<string>;
 
   @Default(false)
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
-    field: 'article_posted'
+    field: 'published'
   })
-  articlePosted: boolean;
+  published: boolean;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;
-
-  @ForeignKey(() => CategoryModel)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-    field: 'category_id'
-  })
-  categoryId: string;
-
-  @BelongsTo(() => CategoryModel)
-  category: CategoryModel;
 
   @BelongsTo(() => User)
   user: User;

@@ -1,328 +1,158 @@
-import { Op } from 'sequelize';
-import { S3 } from 'aws-sdk';
 import { Injectable } from '@nestjs/common';
-import { ArticleModel } from '@models/article.model';
 import { InjectModel } from '@nestjs/sequelize';
-import { CreateArticleInterface } from '@interfaces/create-article.interface';
-import { ArticleCreatedDto } from '@dto/articles/response/article-created.dto';
-import { CategoriesService } from '@modules/categories.service';
-import { CategoryNotFoundException } from '@exceptions/category-not-found.exception';
-import { ApiConfigService } from '@shared/config.service';
-import { WrongPictureException } from '@exceptions/wrong-picture.exception';
-import { CryptographicService } from '@shared/cryptographic.service';
-import { CryptoHashAlgorithm } from '@interfaces/crypto-hash-algorithm.enum';
-import { GetArticleBySlugInterface } from '@interfaces/get-article-by-slug.interface';
+import { ArticleModel } from '@models/article.model';
+import { User } from '@models/user.model';
 import { ArticleNotFoundException } from '@exceptions/articles/article-not-found.exception';
+import { GetArticleBySlugInterface } from '@interfaces/get-article-by-slug.interface';
+import { CreateArticleInterface } from '@interfaces/create-article.interface';
+import { GetPostsSlugsInterface } from '@interfaces/get-posts-slugs.interface';
+import { GetArticlesByUserInterface } from '@interfaces/get-articles-by-user.interface';
+import { UpdateArticleInterface } from '@interfaces/update-article.interface';
 import { DeleteArticleInterface } from '@interfaces/delete-article.interface';
-import { GetArticleByIdInterface } from '@interfaces/get-article-by-id.interface';
-import { ArticleDeletedDto } from '@dto/articles/response/article-deleted.dto';
-import { ListArticlesInterface } from '@interfaces/list-articles.interface';
-import { ParseException } from '@exceptions/parse.exception';
-import { ListArticlesDto } from '@dto/articles/response/list-articles.dto';
-import { CategoryModel } from '@models/category.model';
-import { EditArticleInterface } from '@interfaces/edit-article.interface';
-import { ArticleEditedDto } from '@dto/articles/response/article-edited.dto';
-import { PublishArticleInterface } from '@interfaces/publish-article.interface';
-import { ArticlePublishStatusDto } from '@dto/articles/response/article-published.dto';
-import { GetAllPostedArticlesSlugs } from '@interfaces/get-all-posted-articles-slugs.interface';
-import { Language } from '@interfaces/language.enum';
-import { StaticStorages } from '@interfaces/static-storages.enum';
+import { TogglePublishArticleInterface } from '@interfaces/toggle-publish-article.interface';
+import { GetAdminPostsInterface } from '@interfaces/get-admin-posts.interface';
 
 @Injectable()
 export class ArticlesService {
   constructor(
     @InjectModel(ArticleModel)
-    private readonly articleRepository: typeof ArticleModel,
-    private readonly categoryService: CategoriesService,
-    private readonly configService: ApiConfigService,
-    private readonly cryptographicService: CryptographicService
+    private readonly articleModel: typeof ArticleModel
   ) {}
 
-  async getArticleById({ articleId, trx }: GetArticleByIdInterface) {
-    const article = await this.articleRepository.findByPk(articleId, {
-      transaction: trx
+  async create(payload: CreateArticleInterface) {
+    const { data, userId, trx } = payload;
+
+    return await this.articleModel.create(
+      {
+        ...data,
+        userId
+      },
+      { transaction: trx }
+    );
+  }
+
+  async findAllPublished() {
+    return await this.articleModel.findAll({
+      where: { published: true },
+      include: [{ model: User, attributes: ['name'] }],
+      order: [['createdAt', 'DESC']]
+    });
+  }
+
+  async getPublishedPostBySlug({ slug }: GetArticleBySlugInterface) {
+    const post = await this.articleModel.findOne({
+      where: { slug },
+      include: [{ model: User, attributes: ['name'] }]
     });
 
-    if (!article) throw new ArticleNotFoundException();
+    if (!post || !post.published) {
+      throw new ArticleNotFoundException();
+    }
+
+    return {
+      slug: post.slug,
+      title: post.title,
+      description: post.description,
+      content: post.content,
+      publishDate: post.createdAt,
+      updatedDate: post.updatedAt,
+      tags: post.tags || [],
+      featuredImage: post.featuredImage,
+      author: `${post.user.firstName} ${post.user.lastName}`,
+      excerpt: post.excerpt
+    };
+  }
+
+  async findBySlug({ slug }: GetArticleBySlugInterface) {
+    const article = await this.articleModel.findOne({
+      where: { slug },
+      include: [{ model: User, attributes: ['name'] }]
+    });
+
+    if (!article) {
+      throw new ArticleNotFoundException();
+    }
 
     return article;
   }
 
-  async getAllPostedArticlesSlugs({ trx }: GetAllPostedArticlesSlugs) {
-    const articlesSlugs = await this.articleRepository.findAll({
-      attributes: ['articleSlug', 'articleLanguage'],
-      where: { articlePosted: true },
-      transaction: trx
+  async getSlugs(): Promise<GetPostsSlugsInterface[]> {
+    const posts = await this.articleModel.findAll({
+      where: { published: true },
+      attributes: ['slug', 'title', 'description', 'createdAt', 'tags'],
+      order: [['createdAt', 'DESC']]
     });
 
-    return articlesSlugs.map(({ articleSlug, articleLanguage }) => ({
-      articleLanguage,
-      articleSlug
+    return posts.map((post) => ({
+      slug: post.slug,
+      title: post.title,
+      description: post.description,
+      publishDate: post.createdAt,
+      tags: post.tags || []
     }));
   }
 
-  async getPostedArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
-    if (!slug || !language) throw new ArticleNotFoundException();
-
-    const attributes = [
-      'articleName',
-      'articleSlug',
-      'articleDescription',
-      'articleTags',
-      'articleContent',
-      'articleImage',
-      'createdAt'
-    ];
-
-    const article = await this.articleRepository.findOne({
-      attributes,
-      where: {
-        articleSlug: slug,
-        articleLanguage: language,
-        articlePosted: true
-      },
-      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
-      transaction: trx
-    });
-
-    if (!article) throw new ArticleNotFoundException();
-
-    return article;
-  }
-
-  async getArticleBySlug({ slug, language, trx }: GetArticleBySlugInterface) {
-    if (!slug || !language) throw new ArticleNotFoundException();
-
-    const article = await this.articleRepository.findOne({
-      where: { articleSlug: slug, articleLanguage: language },
-      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
-      transaction: trx
-    });
-
-    if (!article) throw new ArticleNotFoundException();
-
-    return article;
-  }
-
-  async createArticle({ userId, payload, trx }: CreateArticleInterface) {
-    const { articles } = payload;
-
-    const enArticle = articles.find(
-      (article) => article.articleLanguage === Language.EN
-    );
-    const articleSlug = this.generateArticleSlug(enArticle.articleName);
-
-    for (const article of articles) {
-      const category = await this.categoryService.getCategoryById({
-        categoryId: article.categoryId,
-        trx
-      });
-
-      if (!category) throw new CategoryNotFoundException();
-
-      const articleImage = await this.uploadArticlePicture(article.articlePicture);
-
-      await this.articleRepository.create(
-        {
-          articleName: article.articleName,
-          articleSlug,
-          articleDescription: article.articleDescription,
-          articleTags: article.articleTags,
-          articleContent: article.articleContent,
-          articleImage,
-          articleLanguage: article.articleLanguage,
-          userId,
-          categoryId: article.categoryId
-        },
-        { transaction: trx }
-      );
+  async findByUserId({ userId, published }: GetArticlesByUserInterface) {
+    const whereClause: any = { userId };
+    if (published !== undefined) {
+      whereClause.published = published;
     }
 
-    return new ArticleCreatedDto();
-  }
-
-  async changePublishArticleStatus({ articleId, trx }: PublishArticleInterface) {
-    const existingArticle = await this.getArticleById({
-      articleId,
-      trx
+    return await this.articleModel.findAll({
+      where: whereClause,
+      order: [['createdAt', 'DESC']]
     });
-
-    await this.articleRepository.update(
-      { articlePosted: !existingArticle.articlePosted },
-      { where: { id: existingArticle.id }, transaction: trx }
-    );
-
-    return new ArticlePublishStatusDto();
   }
 
-  async deleteArticle({ articleId, trx }: DeleteArticleInterface) {
-    await this.getArticleById({ articleId, trx });
+  async update(payload: UpdateArticleInterface) {
+    const { articleId, data, trx } = payload;
 
-    await this.articleRepository.destroy({
+    const [updatedRowsCount] = await this.articleModel.update(data, {
       where: { id: articleId },
       transaction: trx
     });
 
-    return new ArticleDeletedDto();
+    if (updatedRowsCount === 0) {
+      throw new ArticleNotFoundException();
+    }
+
+    return await this.articleModel.findByPk(articleId, { transaction: trx });
   }
 
-  async editArticle({ payload, trx }: EditArticleInterface) {
-    const {
-      articleId,
-      articleName,
-      articleDescription,
-      articlePicture,
-      articleTags,
-      articleContent,
-      categoryId
-    } = payload;
+  async delete(payload: DeleteArticleInterface) {
+    const { articleId, trx } = payload;
 
-    const existingArticle = await this.getArticleById({
-      articleId,
-      trx
-    });
-
-    if (!existingArticle) throw new ArticleNotFoundException();
-
-    const articleUpdatedFields: Partial<ArticleModel> = {};
-
-    if (articleName) articleUpdatedFields.articleName = articleName;
-    if (articleDescription)
-      articleUpdatedFields.articleDescription = articleDescription;
-    if (articleContent) articleUpdatedFields.articleContent = articleContent;
-    if (articleTags) articleUpdatedFields.articleTags = articleTags;
-
-    if (categoryId) {
-      const category = await this.categoryService.getCategoryById({
-        categoryId,
-        trx
-      });
-
-      if (!category) throw new CategoryNotFoundException();
-
-      articleUpdatedFields.categoryId = category.id;
-    }
-
-    if (articlePicture) {
-      await this.deleteArticlePicture(existingArticle.articleImage);
-      articleUpdatedFields.articleImage =
-        await this.uploadArticlePicture(articlePicture);
-    }
-
-    await this.articleRepository.update(
-      { ...articleUpdatedFields },
-      { where: { id: articleId }, transaction: trx }
-    );
-
-    return new ArticleEditedDto();
-  }
-
-  async listArticles({
-    query,
-    page,
-    pageSize,
-    order,
-    orderBy,
-    trx
-  }: ListArticlesInterface) {
-    const offset = Number(page) * Number(pageSize);
-    const limit = Number(pageSize);
-
-    const paginationParseError =
-      isNaN(offset) || isNaN(limit) || offset < 0 || limit < 0;
-
-    if (paginationParseError) throw new ParseException();
-
-    const attributes = [
-      'id',
-      'articleName',
-      'articleSlug',
-      'articleDescription',
-      'articleTags',
-      'articleImage',
-      'articlePosted',
-      'articleLanguage',
-      'createdAt',
-      'updatedAt'
-    ];
-
-    const where = {};
-
-    if (query) {
-      where[Op.or] = [
-        { articleName: { [Op.iLike]: `%${query}%` } },
-        { articleSlug: { [Op.iLike]: `%${query}%` } },
-        { articleDescription: { [Op.iLike]: `%${query}%` } }
-      ];
-    }
-
-    const { rows, count } = await this.articleRepository.findAndCountAll({
-      where,
-      attributes,
-      limit,
-      offset,
-      include: [{ model: CategoryModel, attributes: ['categoryName'] }],
-      order: [[order, orderBy]],
+    const deletedRowsCount = await this.articleModel.destroy({
+      where: { id: articleId },
       transaction: trx
     });
 
-    return new ListArticlesDto(rows, count);
+    if (deletedRowsCount === 0) {
+      throw new ArticleNotFoundException();
+    }
+
+    return { message: 'Article deleted successfully' };
   }
 
-  private async uploadArticlePicture(picture: string) {
-    const { accessKeyId, secretAccessKey, bucketName } =
-      this.configService.awsSdkCredentials;
+  async togglePublished(payload: TogglePublishArticleInterface) {
+    const { articleId, trx } = payload;
 
-    const s3 = new S3({ accessKeyId, secretAccessKey });
-
-    const base64Data = Buffer.from(
-      picture.replace(/^data:image\/\w+;base64,/, ''),
-      'base64'
-    );
-
-    const type = picture.split(';')[0].split('/')[1];
-
-    if (!['png', 'jpg', 'jpeg'].includes(type)) throw new WrongPictureException();
-
-    const pictureHash = this.cryptographicService.hash({
-      data: base64Data.toString() + Date.now().toString(),
-      algorithm: CryptoHashAlgorithm.MD5
+    const article = await this.articleModel.findByPk(articleId, {
+      transaction: trx
     });
 
-    const pictureName = `${pictureHash}.${type}`;
+    if (!article) {
+      throw new ArticleNotFoundException();
+    }
 
-    const params = {
-      Bucket: bucketName,
-      Key: `${StaticStorages.ARTICLES_MAIN_PICTURES}/${pictureName}`,
-      Body: base64Data,
-      ContentEncoding: 'base64',
-      ContentType: `image/${type}`
-    };
+    await article.update({ published: !article.published }, { transaction: trx });
+    await article.reload({ transaction: trx });
 
-    await s3.upload(params).promise();
-
-    return pictureName;
+    return article;
   }
 
-  private async deleteArticlePicture(picture: string) {
-    const { accessKeyId, secretAccessKey, bucketName } =
-      this.configService.awsSdkCredentials;
-
-    const s3 = new S3({ accessKeyId, secretAccessKey });
-
-    const params = {
-      Bucket: bucketName,
-      Key: `${StaticStorages.ARTICLES_MAIN_PICTURES}/${picture}`
-    };
-
-    await s3.deleteObject(params).promise();
-  }
-
-  private generateArticleSlug(articleName: string) {
-    let slug = articleName.toLowerCase();
-    slug = slug.replace(/\s+/g, '-');
-    slug = slug.replace(/[^\w\-]+/g, '');
-
-    return slug;
+  async getAdminPosts({ userId, published }: GetAdminPostsInterface) {
+    const isPublished = published !== undefined ? published === 'true' : undefined;
+    return this.findByUserId({ userId, published: isPublished });
   }
 }

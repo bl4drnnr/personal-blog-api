@@ -10,21 +10,13 @@ module.exports = {
 
   async down(queryInterface) {
     await queryInterface.bulkDelete('sessions', null, {});
-
-    await queryInterface.bulkDelete('categories', null, {});
-    await queryInterface.bulkDelete('articles', null, {});
-
-    await queryInterface.bulkDelete('certificates', null, {});
-    await queryInterface.bulkDelete('socials', null, {});
-    await queryInterface.bulkDelete('experience_positions', null, {});
-    await queryInterface.bulkDelete('experiences', null, {});
-
-    await queryInterface.bulkDelete('authors', null, {});
-    await queryInterface.bulkDelete('confirmation_hashes', null, {});
-    await queryInterface.bulkDelete('end_users', null, {});
-    await queryInterface.bulkDelete('newsletters', null, {});
-
-    await queryInterface.bulkDelete('users', null, {});
     await queryInterface.bulkDelete('users_settings', null, {});
+    await queryInterface.bulkDelete('articles', null, {});
+    await queryInterface.bulkDelete('projects', null, {});
+    await queryInterface.bulkDelete('newsletters', null, {});
+    await queryInterface.bulkDelete('site_config', null, {});
+    await queryInterface.bulkDelete('pages', null, {});
+    await queryInterface.bulkDelete('pages_content', null, {});
+    await queryInterface.bulkDelete('users', null, {});
   }
 };
