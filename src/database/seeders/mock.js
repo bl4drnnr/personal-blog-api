@@ -949,12 +949,399 @@ export default VulnerabilityReport;
           updated_at: new Date('2024-01-01')
         }
       ]);
+
+      // Create about page content
+      await queryInterface.bulkInsert('about_page', [
+        {
+          id: '00000000-0000-0000-0000-000000000001',
+          title: "Hello, I'm Mikhail!",
+          content: `
+            <p>Welcome to my personal blog. I'm passionate about <strong>web development</strong>, <em>design</em>, and sharing knowledge with the world. Here you'll find my thoughts, projects, and more about my journey in tech and creativity.</p>
+            
+            <h3>My Expertise</h3>
+            <p>I specialize in <strong>full-stack development</strong> with a focus on modern technologies. My experience spans across:</p>
+            
+            <ul>
+              <li><strong>Frontend:</strong> Angular, React, Vue.js, TypeScript</li>
+              <li><strong>Backend:</strong> Node.js, NestJS, Express, Python</li>
+              <li><strong>Databases:</strong> PostgreSQL, MongoDB, Redis</li>
+              <li><strong>Cloud:</strong> AWS, Google Cloud, Docker, Kubernetes</li>
+            </ul>
+            
+            <h4>Philosophy & Approach</h4>
+            <blockquote>
+              "Great software is not just about clean code—it's about solving real problems and creating meaningful experiences for users."
+            </blockquote>
+            
+            <p>I believe in <em>continuous learning</em> and staying up-to-date with the latest industry trends. Whether it's exploring new frameworks, contributing to <a href="https://github.com" target="_blank">open source projects</a>, or mentoring fellow developers, I'm always looking for ways to grow and give back to the community.</p>
+            
+            <h4>Recent Achievements</h4>
+            <ol>
+              <li>Led a team of 5 developers in migrating a legacy system to modern architecture</li>
+              <li>Reduced application load time by <strong>60%</strong> through performance optimization</li>
+              <li>Implemented CI/CD pipeline reducing deployment time from hours to minutes</li>
+              <li>Conducted workshops on <em>TypeScript best practices</em> for junior developers</li>
+            </ol>
+            
+            <h4>Let's Connect!</h4>
+            <p>I'm always excited to discuss new opportunities, share knowledge, or collaborate on interesting projects. Feel free to <a href="/contact">reach out</a> if you'd like to connect!</p>
+            
+            <p><small>Last updated: January 2024</small></p>
+          `,
+          footer_text:
+            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          hero_image_main:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_secondary:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_main_alt: 'Abstract Gradient Art',
+          hero_image_secondary_alt: 'Abstract Gradient Art',
+          logo_text: 'Luch',
+          breadcrumb_text: 'About Me',
+          hero_title: 'About Me',
+          contact_tiles: JSON.stringify([
+            {
+              link: 'mailto:hello@luchcreative.com',
+              image: 'assets/images/mail-send-fill.svg',
+              alt: 'Mail Send',
+              label: 'Email Us',
+              sublabel: 'hello@luchcreative.com',
+              target: '_blank'
+            },
+            {
+              link: 'tel:+15551234567',
+              image: 'assets/images/phone-fill.svg',
+              alt: 'Phone',
+              label: 'Call us',
+              sublabel: '+1 (555) 123-4567',
+              target: '_blank'
+            },
+            {
+              link: 'https://t.me/LuchSupport',
+              image: 'assets/images/message-2-fill.svg',
+              alt: 'Message',
+              label: 'Lets chat',
+              sublabel: '@LuchSupport',
+              target: '_blank'
+            },
+            {
+              link: 'https://goo.gl/maps/xyz',
+              image: 'assets/images/map-2-fill.svg',
+              alt: 'Map',
+              label: 'Visit us',
+              sublabel: 'Dreamcity, USA',
+              target: '_blank'
+            }
+          ]),
+          meta_title: 'About Me - Personal Blog',
+          meta_description:
+            'Learn more about me, my expertise in full-stack development, and my journey in technology and creative problem solving.',
+          meta_keywords:
+            'about, full-stack developer, web development, technology, experience',
+          og_title: 'About Me',
+          og_description:
+            'Passionate about web development, design, and sharing knowledge. Specializing in full-stack development with modern technologies.',
+          og_image:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          structured_data: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: 'Mikhail',
+            jobTitle: 'Full Stack Developer',
+            description:
+              'Passionate about web development, design, and sharing knowledge with the world.',
+            url: 'https://example.com/about',
+            knowsAbout: [
+              'Angular',
+              'React',
+              'Vue.js',
+              'TypeScript',
+              'Node.js',
+              'NestJS',
+              'PostgreSQL',
+              'MongoDB',
+              'AWS',
+              'Docker'
+            ]
+          }),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create experiences
+      const experience1Id = '10000000-0000-0000-0000-000000000001';
+      const experience2Id = '10000000-0000-0000-0000-000000000002';
+
+      await queryInterface.bulkInsert('experiences', [
+        {
+          id: experience1Id,
+          company_name: 'Tech Company Inc.',
+          company_logo: 'assets/images/LUCH-Framework-Bigger.svg',
+          company_website: 'https://techcompany.com',
+          order: 0,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: experience2Id,
+          company_name: 'StartUp Solutions',
+          company_logo: 'assets/images/S.svg',
+          company_website: 'https://startupsolutions.com',
+          order: 1,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create positions
+      await queryInterface.bulkInsert('positions', [
+        {
+          id: '20000000-0000-0000-0000-000000000001',
+          title: 'Senior Software Engineer',
+          start_date: '2023-01-01',
+          end_date: null,
+          description: `Leading development of full-stack applications using Angular, Node.js, and cloud technologies. Mentoring junior developers and driving technical decisions.
+            
+            <strong>Most Impactful Achievements:</strong>
+            <ul>
+              <li>Architected and implemented microservices architecture that improved system scalability by 300%</li>
+              <li>Led migration from legacy PHP system to modern Angular/NestJS stack, reducing load times by 60%</li>
+              <li>Established automated testing practices that increased code coverage from 30% to 85%</li>
+              <li>Mentored 3 junior developers who were promoted to mid-level within 12 months</li>
+              <li>Implemented CI/CD pipeline that reduced deployment time from 2 hours to 15 minutes</li>
+            </ul>`,
+          skills: JSON.stringify([
+            'Angular',
+            'NestJS',
+            'TypeScript',
+            'PostgreSQL',
+            'Docker',
+            'AWS',
+            'Team Leadership',
+            'Code Review',
+            'System Architecture',
+            'Mentoring'
+          ]),
+          experience_id: experience1Id,
+          order: 0,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '20000000-0000-0000-0000-000000000002',
+          title: 'Software Engineer',
+          start_date: '2021-06-01',
+          end_date: '2022-12-31',
+          description: `Developed and maintained web applications using modern JavaScript frameworks. Collaborated with cross-functional teams to deliver high-quality software solutions.
+            
+            <strong>Most Impactful Achievements:</strong>
+            <ul>
+              <li>Built responsive e-commerce platform that increased mobile conversion rate by 45%</li>
+              <li>Optimized database queries resulting in 40% faster page load times</li>
+              <li>Developed reusable component library used across 5 different projects</li>
+              <li>Introduced TypeScript to existing JavaScript codebase, reducing bugs by 30%</li>
+            </ul>`,
+          skills: JSON.stringify([
+            'React',
+            'Node.js',
+            'Express.js',
+            'MongoDB',
+            'JavaScript',
+            'TypeScript',
+            'REST APIs',
+            'Git',
+            'Agile Development',
+            'Responsive Design'
+          ]),
+          experience_id: experience1Id,
+          order: 1,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '20000000-0000-0000-0000-000000000003',
+          title: 'Full Stack Developer',
+          start_date: '2020-01-01',
+          end_date: '2021-05-31',
+          description: `Built responsive web applications from scratch using React, Express.js, and PostgreSQL. Worked in an agile environment and contributed to all aspects of the development lifecycle.
+            
+            <strong>Most Impactful Achievements:</strong>
+            <ul>
+              <li>Developed MVP for startup that secured $500K in Series A funding</li>
+              <li>Created automated reporting system that saved 20 hours of manual work per week</li>
+              <li>Implemented real-time chat feature using WebSockets that increased user engagement by 25%</li>
+              <li>Built authentication system with OAuth integration supporting Google and GitHub</li>
+            </ul>`,
+          skills: JSON.stringify([
+            'React',
+            'Express.js',
+            'PostgreSQL',
+            'JavaScript',
+            'HTML5',
+            'CSS3',
+            'SASS',
+            'WebSockets',
+            'OAuth',
+            'Jest',
+            'Git',
+            'Startup Environment'
+          ]),
+          experience_id: experience2Id,
+          order: 0,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create certificates
+      await queryInterface.bulkInsert('certificates', [
+        {
+          id: '30000000-0000-0000-0000-000000000001',
+          name: 'AWS Certified Solutions Architect',
+          issued_date: '2023-06-15',
+          expiration_date: '2026-06-15',
+          logo: 'assets/images/Wave.svg',
+          description:
+            'Validates expertise in designing distributed systems and applications on the Amazon Web Services platform with a focus on best practices for security, reliability, and cost optimization.',
+          order: 0,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '30000000-0000-0000-0000-000000000002',
+          name: 'Google Cloud Professional Developer',
+          issued_date: '2023-03-20',
+          expiration_date: '2025-03-20',
+          logo: 'assets/images/Flow.svg',
+          description:
+            'Demonstrates proficiency in developing scalable and highly available applications using Google Cloud Platform services and tools.',
+          order: 1,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '30000000-0000-0000-0000-000000000003',
+          name: 'Microsoft Azure Fundamentals',
+          issued_date: '2022-11-10',
+          expiration_date: null,
+          logo: 'assets/images/Sun.svg',
+          description:
+            'Foundational knowledge of cloud services and how those services are provided with Microsoft Azure, covering core Azure services, pricing, and support.',
+          order: 2,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '30000000-0000-0000-0000-000000000004',
+          name: 'Kubernetes Administrator (CKA)',
+          issued_date: '2023-08-05',
+          expiration_date: '2024-08-05',
+          logo: 'assets/images/Grow.svg',
+          description:
+            'Validates skills in deploying, managing, and troubleshooting Kubernetes clusters in production environments.',
+          order: 3,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create changelog page content
+      await queryInterface.bulkInsert('changelog_page', [
+        {
+          id: '00000000-0000-0000-0000-000000000002',
+          title: 'Changelog',
+          content: 'Track the latest updates and improvements to our platform.',
+          footer_text:
+            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          hero_image_main:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_secondary:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_main_alt: 'Abstract Gradient Art',
+          hero_image_secondary_alt: 'Abstract Gradient Art',
+          logo_text: 'Luch',
+          breadcrumb_text: 'Changelog',
+          hero_title: 'Latest Features & Improvements',
+          meta_title: 'Changelog - Personal Blog',
+          meta_description:
+            "Stay updated with the latest features, improvements, and bug fixes. See what's new in our platform.",
+          meta_keywords: 'changelog, updates, features, improvements, release notes',
+          og_title: 'Changelog - Latest Updates',
+          og_description:
+            "Discover the latest features and improvements to our platform. Track our progress and see what's new.",
+          og_image:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          structured_data: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'TechArticle',
+            headline: 'Platform Changelog',
+            description:
+              'Latest updates, features, and improvements to our platform',
+            author: {
+              '@type': 'Organization',
+              name: 'Development Team'
+            },
+            dateModified: new Date().toISOString(),
+            mainEntityOfPage: 'https://example.com/changelog'
+          }),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create changelog entries
+      await queryInterface.bulkInsert('changelog_entries', [
+        {
+          id: '40000000-0000-0000-0000-000000000001',
+          version: '1.1.0',
+          date: 'February 2025',
+          title: 'Enhanced User Experience',
+          description:
+            'Minor improvements to the overall appearance and performance of the template.',
+          changes: JSON.stringify([
+            'Added lightbox gallery and description block to blog and project collection pages',
+            'Improved responsive design for mobile devices',
+            'Enhanced navigation accessibility',
+            'Optimized loading performance'
+          ]),
+          sort_order: 0,
+          created_at: new Date('2025-02-01'),
+          updated_at: new Date('2025-02-01')
+        },
+        {
+          id: '40000000-0000-0000-0000-000000000002',
+          version: '1.0.0',
+          date: 'January 2025',
+          title: 'Initial Release',
+          description: 'The template has been released!',
+          changes: JSON.stringify([
+            'Complete website launch',
+            'Blog functionality with dynamic content',
+            'Projects showcase with detailed pages',
+            'Contact form implementation',
+            'Responsive design for all devices',
+            'Modern UI with smooth animations',
+            'SEO optimization',
+            'Analytics integration'
+          ]),
+          sort_order: 1,
+          created_at: new Date('2025-01-01'),
+          updated_at: new Date('2025-01-01')
+        }
+      ]);
     } catch (e) {
       console.log('Error while creating seeders: ', e);
     }
   },
 
   async down(queryInterface, sequelize) {
+    await queryInterface.bulkDelete('changelog_entries', null, {});
+    await queryInterface.bulkDelete('changelog_page', null, {});
+    await queryInterface.bulkDelete('certificates', null, {});
+    await queryInterface.bulkDelete('positions', null, {});
+    await queryInterface.bulkDelete('experiences', null, {});
+    await queryInterface.bulkDelete('about_page', null, {});
     await queryInterface.bulkDelete('projects', null, {});
     await queryInterface.bulkDelete('articles', null, {});
     await queryInterface.bulkDelete('site_config', null, {});

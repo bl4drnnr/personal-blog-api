@@ -25,6 +25,14 @@ import { SiteConfigModule } from '@modules/site-config/site-config.module';
 import { SiteConfigModel } from '@models/site-config.model';
 import { PagesModule } from '@modules/pages/pages.module';
 import { PageModel } from '@models/page.model';
+import { AboutModule } from '@modules/about/about.module';
+import { AboutPage } from '@models/about-page.model';
+import { Experience } from '@models/experience.model';
+import { Position } from '@models/position.model';
+import { Certificate } from '@models/certificate.model';
+import { ChangelogModule } from '@modules/changelog/changelog.module';
+import { ChangelogPage } from '@models/changelog-page.model';
+import { ChangelogEntry } from '@models/changelog-entry.model';
 
 @Module({
   imports: [
@@ -55,7 +63,13 @@ import { PageModel } from '@models/page.model';
         Newsletter,
         PagesContent,
         SiteConfigModel,
-        PageModel
+        PageModel,
+        AboutPage,
+        Experience,
+        Position,
+        Certificate,
+        ChangelogPage,
+        ChangelogEntry
       ],
       autoLoadModels: true
     }),
@@ -69,7 +83,9 @@ import { PageModel } from '@models/page.model';
     ContactModule,
     ControlModule,
     SiteConfigModule,
-    PagesModule
+    PagesModule,
+    AboutModule,
+    ChangelogModule
   ],
   providers: [
     {
