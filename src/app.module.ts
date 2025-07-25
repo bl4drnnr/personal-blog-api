@@ -33,6 +33,9 @@ import { Certificate } from '@models/certificate.model';
 import { ChangelogModule } from '@modules/changelog/changelog.module';
 import { ChangelogPage } from '@models/changelog-page.model';
 import { ChangelogEntry } from '@models/changelog-entry.model';
+import { LicenseModule } from '@modules/license/license.module';
+import { LicensePage } from '@models/license-page.model';
+import { LicenseTile } from '@models/license-tile.model';
 
 @Module({
   imports: [
@@ -69,7 +72,9 @@ import { ChangelogEntry } from '@models/changelog-entry.model';
         Position,
         Certificate,
         ChangelogPage,
-        ChangelogEntry
+        ChangelogEntry,
+        LicensePage,
+        LicenseTile
       ],
       autoLoadModels: true
     }),
@@ -85,7 +90,8 @@ import { ChangelogEntry } from '@models/changelog-entry.model';
     SiteConfigModule,
     PagesModule,
     AboutModule,
-    ChangelogModule
+    ChangelogModule,
+    LicenseModule
   ],
   providers: [
     {

@@ -1,0 +1,115 @@
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  UseGuards,
+  UsePipes
+} from '@nestjs/common';
+import { LicenseService } from './license.service';
+import { AuthGuard } from '@guards/auth.guard';
+import { ValidationPipe } from '@pipes/validation.pipe';
+import { TrxDecorator } from '@decorators/transaction.decorator';
+import { Transaction } from 'sequelize';
+
+@Controller()
+export class LicenseController {
+  constructor(private readonly licenseService: LicenseService) {}
+
+  // Public endpoint for frontend SSR
+  @Get('license')
+  async getLicensePageData() {
+    return await this.licenseService.getLicensePageData();
+  }
+
+  // Admin endpoints for license tiles
+  @UseGuards(AuthGuard)
+  @Get('admin/license/tiles')
+  async getLicenseTiles() {
+    return await this.licenseService.getLicenseTiles();
+  }
+
+  @UseGuards(AuthGuard)
+  @UsePipes(ValidationPipe)
+  @Post('admin/license/tiles')
+  async createLicenseTile(
+    @Body()
+    data: {
+      title: string;
+      description: string;
+      links: Array<{
+        label: string;
+        url: string;
+      }>;
+      sortOrder?: number;
+    },
+    @TrxDecorator() trx: Transaction
+  ) {
+    return await this.licenseService.createLicenseTile({ data, trx });
+  }
+
+  @UseGuards(AuthGuard)
+  @UsePipes(ValidationPipe)
+  @Put('admin/license/tiles/:id')
+  async updateLicenseTile(
+    @Param('id') tileId: string,
+    @Body()
+    data: {
+      title?: string;
+      description?: string;
+      links?: Array<{
+        label: string;
+        url: string;
+      }>;
+      sortOrder?: number;
+    },
+    @TrxDecorator() trx: Transaction
+  ) {
+    return await this.licenseService.updateLicenseTile({ tileId, data, trx });
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('admin/license/tiles/:id')
+  async deleteLicenseTile(
+    @Param('id') tileId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return await this.licenseService.deleteLicenseTile({ tileId, trx });
+  }
+
+  // Admin endpoint for license page settings (layout, SEO, etc.)
+  @UseGuards(AuthGuard)
+  @UsePipes(ValidationPipe)
+  @Put('admin/license/page')
+  async updateLicensePage(
+    @Body()
+    data: {
+      title?: string;
+      licenseDate?: string;
+      paragraphs?: string[];
+      additionalInfoTitle?: string;
+      additionalInfoParagraphs?: string[];
+      footerText?: string;
+      heroImageMain?: string;
+      heroImageSecondary?: string;
+      heroImageMainAlt?: string;
+      heroImageSecondaryAlt?: string;
+      logoText?: string;
+      breadcrumbText?: string;
+      heroTitle?: string;
+      metaTitle?: string;
+      metaDescription?: string;
+      metaKeywords?: string;
+      ogTitle?: string;
+      ogDescription?: string;
+      ogImage?: string;
+      structuredData?: object;
+    },
+    @TrxDecorator() trx: Transaction
+  ) {
+    return await this.licenseService.updateLicensePage({ data, trx });
+  }
+}

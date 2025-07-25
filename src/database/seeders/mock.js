@@ -1330,12 +1330,182 @@ export default VulnerabilityReport;
           updated_at: new Date('2025-01-01')
         }
       ]);
+
+      // Create license page content
+      await queryInterface.bulkInsert('license_page', [
+        {
+          id: '00000000-0000-0000-0000-000000000003',
+          title: 'MIT License',
+          license_date: 'Copyright (c) 2025 LUCH Framework',
+          paragraphs: JSON.stringify([
+            'Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:',
+            'The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.',
+            'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.'
+          ]),
+          additional_info_title: 'Additional Information',
+          additional_info_paragraphs: JSON.stringify([
+            'This template is built using Angular and follows modern web development practices. The design and components are created with accessibility and performance in mind.'
+          ]),
+          footer_text:
+            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          hero_image_main:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_secondary:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_main_alt: 'Abstract Gradient Art',
+          hero_image_secondary_alt: 'Abstract Gradient Art',
+          logo_text: 'Luch',
+          breadcrumb_text: 'License',
+          hero_title: 'License Information',
+          meta_title: 'License - Personal Blog',
+          meta_description:
+            'MIT License information for the LUCH Framework. Learn about usage rights, permissions, and legal terms for this open-source template.',
+          meta_keywords:
+            'license, MIT license, open source, legal, permissions, usage rights',
+          og_title: 'License Information - MIT License',
+          og_description:
+            'MIT License details for the LUCH Framework. Free to use, modify, and distribute under open source terms.',
+          og_image:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          structured_data: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CreativeWork',
+            name: 'LUCH Framework',
+            license: 'https://opensource.org/licenses/MIT',
+            description: 'MIT License for LUCH Framework template',
+            creator: {
+              '@type': 'Organization',
+              name: 'LUCH Framework'
+            },
+            dateCreated: '2025-01-01',
+            copyrightHolder: {
+              '@type': 'Organization',
+              name: 'LUCH Framework'
+            }
+          }),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create license tiles
+      await queryInterface.bulkInsert('license_tiles', [
+        {
+          id: '50000000-0000-0000-0000-000000000001',
+          title: 'Webflow: Template Licenses',
+          description:
+            'Not sure where and how often you can use your Webflow template? This licensing guide breaks down all the rules for you.',
+          links: JSON.stringify([
+            {
+              label: 'Template Licenses',
+              url: 'https://webflow.com/templates/template-licenses'
+            }
+          ]),
+          sort_order: 0,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '50000000-0000-0000-0000-000000000002',
+          title: 'Fonts: Roboto Font Family',
+          description:
+            'These are free fonts from Google Fonts, ready to enhance your website. Discover more typography options on the Google Fonts website.',
+          links: JSON.stringify([
+            {
+              label: 'Google Fonts Licensing',
+              url: 'https://fonts.google.com/knowledge/glossary/licensing'
+            }
+          ]),
+          sort_order: 1,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '50000000-0000-0000-0000-000000000003',
+          title: 'Images: Lummi Images',
+          description:
+            "Everything you need to know about using Lummi's images freely.",
+          links: JSON.stringify([
+            {
+              label: 'Lummi License',
+              url: 'https://www.lummi.ai/license'
+            }
+          ]),
+          sort_order: 2,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '50000000-0000-0000-0000-000000000004',
+          title: 'Icons: Remix Icon',
+          description:
+            'RemixIcon is licensed based on the Apache License and all rights of products are reserved for RemixIcon.',
+          links: JSON.stringify([
+            {
+              label: 'Apache License',
+              url: 'https://github.com/Remix-Design/remixicon/blob/master/License'
+            }
+          ]),
+          sort_order: 3,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '50000000-0000-0000-0000-000000000005',
+          title: 'Open Logo - Free Logo Library',
+          description: 'Open Logo is an open-source library of logos.',
+          links: JSON.stringify([
+            {
+              label: 'Licensed under CC BY 4.0',
+              url: 'https://www.figma.com/community/file/978681400875967088/open-logo-free-logo-library'
+            }
+          ]),
+          sort_order: 4,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '50000000-0000-0000-0000-000000000006',
+          title: 'Country Flags Icons Set',
+          description: 'Free, Circular Country Flags Icons Set.',
+          links: JSON.stringify([
+            {
+              label: 'Licensed under CC BY 4.0',
+              url: 'https://www.figma.com/community/file/1373119187969493166/country-flags-icons-set-component'
+            }
+          ]),
+          sort_order: 5,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '50000000-0000-0000-0000-000000000007',
+          title: 'Pexels Video & Images',
+          description:
+            'All photos and videos on Pexels can be downloaded and used for free.',
+          links: JSON.stringify([
+            {
+              label: 'Video by Google DeepMind',
+              url: 'https://www.pexels.com/video/an-artist-s-illustration-of-artificial-intelligence-ai-this-image-explores-how-ai-can-be-used-to-progress-the-field-of-quantum-computing-it-was-created-by-bakken-and-baeck-as-part-of-t-25744127/'
+            },
+            {
+              label: 'Photo by Google DeepMind',
+              url: 'https://www.pexels.com/photo/diagram-on-white-background-25626435/'
+            }
+          ]),
+          sort_order: 6,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
     } catch (e) {
       console.log('Error while creating seeders: ', e);
     }
   },
 
   async down(queryInterface, sequelize) {
+    await queryInterface.bulkDelete('license_tiles', null, {});
+    await queryInterface.bulkDelete('license_page', null, {});
     await queryInterface.bulkDelete('changelog_entries', null, {});
     await queryInterface.bulkDelete('changelog_page', null, {});
     await queryInterface.bulkDelete('certificates', null, {});
