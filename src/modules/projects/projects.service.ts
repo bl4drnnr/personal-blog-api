@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { ProjectModel } from '@models/project.model';
+import { ProjectsPage } from '@models/projects-page.model';
 import { ProjectNotFoundException } from '@exceptions/projects/project-not-found.exception';
 import { CreateProjectInterface } from '@interfaces/create-project.interface';
 import { GetProjectBySlugInterface } from '@interfaces/get-project-by-slug.interface';
@@ -9,11 +11,19 @@ import { UpdateProjectInterface } from '@interfaces/update-project.interface';
 import { DeleteProjectInterface } from '@interfaces/delete-project.interface';
 import { GetProjectsByUserInterface } from '@interfaces/get-projects-by-user.interface';
 
+interface PaginationQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectModel(ProjectModel)
-    private readonly projectModel: typeof ProjectModel
+    private readonly projectModel: typeof ProjectModel,
+    @InjectModel(ProjectsPage)
+    private readonly projectsPageModel: typeof ProjectsPage
   ) {}
 
   async create(payload: CreateProjectInterface) {
@@ -26,13 +36,6 @@ export class ProjectsService {
       },
       { transaction: trx }
     );
-  }
-
-  async findAll() {
-    return await this.projectModel.findAll({
-      where: { published: true },
-      order: [['createdAt', 'DESC']]
-    });
   }
 
   async getProjectBySlug({ slug }: GetProjectBySlugInterface) {
@@ -52,9 +55,6 @@ export class ProjectsService {
       date: project.createdAt,
       tags: project.tags || [],
       featuredImage: project.featuredImage,
-      technologies: project.technologies || [],
-      githubUrl: project.githubUrl,
-      demoUrl: project.demoUrl,
       featured: project.featured,
       published: project.published
     };
@@ -118,5 +118,98 @@ export class ProjectsService {
       where: { userId },
       order: [['createdAt', 'DESC']]
     });
+  }
+
+  async getProjectsPageData(query: PaginationQuery = {}) {
+    const { page = 1, limit = 12, search } = query;
+    const offset = (page - 1) * limit;
+
+    // Build where conditions
+    const whereConditions: any = {
+      published: true
+    };
+
+    if (search) {
+      whereConditions[Op.or] = [
+        { title: { [Op.iLike]: `%${search}%` } },
+        { description: { [Op.iLike]: `%${search}%` } }
+      ];
+    }
+
+    const [projectsPage, { rows: projects, count: totalProjects }] =
+      await Promise.all([
+        this.projectsPageModel.findOne(),
+        this.projectModel.findAndCountAll({
+          where: whereConditions,
+          order: [['createdAt', 'DESC']],
+          limit,
+          offset,
+          attributes: [
+            'id',
+            'title',
+            'slug',
+            'description',
+            'featuredImage',
+            'tags',
+            'featured',
+            'createdAt',
+            'updatedAt'
+          ]
+        })
+      ]);
+
+    if (!projectsPage) {
+      throw new NotFoundException('Projects page content not found');
+    }
+
+    const totalPages = Math.ceil(totalProjects / limit);
+    const hasNextPage = page < totalPages;
+    const hasPrevPage = page > 1;
+
+    return {
+      pageContent: {
+        title: projectsPage.title,
+        subtitle: projectsPage.subtitle,
+        description: projectsPage.description
+      },
+      layoutData: {
+        footerText: projectsPage.footerText,
+        heroImageMain: projectsPage.heroImageMain,
+        heroImageSecondary: projectsPage.heroImageSecondary,
+        heroImageMainAlt: projectsPage.heroImageMainAlt,
+        heroImageSecondaryAlt: projectsPage.heroImageSecondaryAlt,
+        logoText: projectsPage.logoText,
+        breadcrumbText: projectsPage.breadcrumbText,
+        heroTitle: projectsPage.heroTitle
+      },
+      seoData: {
+        metaTitle: projectsPage.metaTitle,
+        metaDescription: projectsPage.metaDescription,
+        metaKeywords: projectsPage.metaKeywords,
+        ogTitle: projectsPage.ogTitle,
+        ogDescription: projectsPage.ogDescription,
+        ogImage: projectsPage.ogImage,
+        structuredData: projectsPage.structuredData
+      },
+      projects: projects.map((project) => ({
+        id: project.id,
+        title: project.title,
+        slug: project.slug,
+        description: project.description,
+        featuredImage: project.featuredImage,
+        tags: project.tags,
+        featured: project.featured,
+        createdAt: project.createdAt,
+        updatedAt: project.updatedAt
+      })),
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalItems: totalProjects,
+        itemsPerPage: limit,
+        hasNextPage,
+        hasPrevPage
+      }
+    };
   }
 }

@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
   UsePipes
 } from '@nestjs/common';
@@ -17,14 +18,26 @@ import { TrxDecorator } from '@decorators/transaction.decorator';
 import { UserId } from '@decorators/user-id.decorator';
 import { Transaction } from 'sequelize';
 
+interface ProjectsQuery {
+  page?: string;
+  limit?: string;
+  search?: string;
+}
+
 @Controller()
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   // Public endpoints for frontend
   @Get('projects')
-  async getAllProjects() {
-    return this.projectsService.findAll();
+  async getProjectsPage(@Query() query: ProjectsQuery) {
+    const { page, limit, search } = query;
+
+    return this.projectsService.getProjectsPageData({
+      page: page ? parseInt(page, 10) : 1,
+      limit: limit ? parseInt(limit, 10) : 12,
+      search
+    });
   }
 
   @Get('projects/slugs')

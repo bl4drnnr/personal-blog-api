@@ -36,6 +36,17 @@ import { ChangelogEntry } from '@models/changelog-entry.model';
 import { LicenseModule } from '@modules/license/license.module';
 import { LicensePage } from '@models/license-page.model';
 import { LicenseTile } from '@models/license-tile.model';
+import { PrivacyModule } from '@modules/privacy/privacy.module';
+import { PrivacyPage } from '@models/privacy-page.model';
+import { PrivacySection } from '@models/privacy-section.model';
+import { PrivacyContentItem } from '@models/privacy-content-item.model';
+import { HomePage } from '@models/home-page.model';
+import { HomeModule } from '@modules/home/home.module';
+import { BlogModule } from '@modules/blog/blog.module';
+import { BlogPage } from '@models/blog-page.model';
+import { ProjectsPage } from '@models/projects-page.model';
+import { Faq } from '@models/faq.model';
+import { WhysSection } from '@models/whys-section.model';
 
 @Module({
   imports: [
@@ -74,7 +85,15 @@ import { LicenseTile } from '@models/license-tile.model';
         ChangelogPage,
         ChangelogEntry,
         LicensePage,
-        LicenseTile
+        LicenseTile,
+        PrivacyPage,
+        PrivacySection,
+        PrivacyContentItem,
+        HomePage,
+        BlogPage,
+        ProjectsPage,
+        Faq,
+        WhysSection
       ],
       autoLoadModels: true
     }),
@@ -91,7 +110,10 @@ import { LicenseTile } from '@models/license-tile.model';
     PagesModule,
     AboutModule,
     ChangelogModule,
-    LicenseModule
+    LicenseModule,
+    PrivacyModule,
+    HomeModule,
+    BlogModule
   ],
   providers: [
     {

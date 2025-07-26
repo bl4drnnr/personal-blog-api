@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { ArticleModel } from '@models/article.model';
-import { User } from '@models/user.model';
 import { ArticleNotFoundException } from '@exceptions/articles/article-not-found.exception';
 import { GetArticleBySlugInterface } from '@interfaces/get-article-by-slug.interface';
 import { CreateArticleInterface } from '@interfaces/create-article.interface';
@@ -34,15 +33,13 @@ export class ArticlesService {
   async findAllPublished() {
     return await this.articleModel.findAll({
       where: { published: true },
-      include: [{ model: User, attributes: ['name'] }],
       order: [['createdAt', 'DESC']]
     });
   }
 
   async getPublishedPostBySlug({ slug }: GetArticleBySlugInterface) {
     const post = await this.articleModel.findOne({
-      where: { slug },
-      include: [{ model: User, attributes: ['name'] }]
+      where: { slug }
     });
 
     if (!post || !post.published) {
@@ -58,15 +55,13 @@ export class ArticlesService {
       updatedDate: post.updatedAt,
       tags: post.tags || [],
       featuredImage: post.featuredImage,
-      author: `${post.user.firstName} ${post.user.lastName}`,
       excerpt: post.excerpt
     };
   }
 
   async findBySlug({ slug }: GetArticleBySlugInterface) {
     const article = await this.articleModel.findOne({
-      where: { slug },
-      include: [{ model: User, attributes: ['name'] }]
+      where: { slug }
     });
 
     if (!article) {

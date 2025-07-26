@@ -20,6 +20,7 @@ interface ArticleCreationAttributes {
   excerpt?: string;
   featuredImage?: string;
   tags?: Array<string>;
+  featured?: boolean;
   published?: boolean;
   userId: string;
 }
@@ -80,6 +81,14 @@ export class ArticleModel extends Model<ArticleModel, ArticleCreationAttributes>
     field: 'tags'
   })
   tags: Array<string>;
+
+  @Default(false)
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    field: 'featured'
+  })
+  featured: boolean;
 
   @Default(false)
   @Column({

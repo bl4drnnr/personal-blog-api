@@ -19,9 +19,6 @@ interface ProjectCreationAttributes {
   content: string;
   featuredImage?: string;
   tags?: Array<string>;
-  technologies?: Array<string>;
-  githubUrl?: string;
-  demoUrl?: string;
   featured?: boolean;
   published?: boolean;
   userId: string;
@@ -76,27 +73,6 @@ export class ProjectModel extends Model<ProjectModel, ProjectCreationAttributes>
     field: 'tags'
   })
   tags: Array<string>;
-
-  @Column({
-    type: DataType.ARRAY(DataType.STRING),
-    allowNull: true,
-    field: 'technologies'
-  })
-  technologies: Array<string>;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: true,
-    field: 'github_url'
-  })
-  githubUrl: string;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: true,
-    field: 'demo_url'
-  })
-  demoUrl: string;
 
   @Default(false)
   @Column({

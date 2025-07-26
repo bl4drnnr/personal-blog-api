@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsArray, IsBoolean, IsUrl } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsBoolean } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
@@ -20,18 +20,6 @@ export class CreateProjectDto {
   @IsOptional()
   @IsArray()
   tags?: Array<string>;
-
-  @IsOptional()
-  @IsArray()
-  technologies?: Array<string>;
-
-  @IsOptional()
-  @IsUrl()
-  githubUrl?: string;
-
-  @IsOptional()
-  @IsUrl()
-  demoUrl?: string;
 
   @IsOptional()
   @IsBoolean()

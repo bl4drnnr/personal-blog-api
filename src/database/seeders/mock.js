@@ -353,16 +353,6 @@ console.log('Merkle Root:', merkleTree.getRoot());
             'real-time',
             'threat-detection'
           ],
-          technologies: [
-            'React',
-            'Node.js',
-            'WebSocket',
-            'PostgreSQL',
-            'Redis',
-            'Kafka'
-          ],
-          github_url: 'https://github.com/example/security-monitoring-dashboard',
-          demo_url: 'https://security-dashboard-demo.example.com',
           featured: true,
           published: true,
           user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
@@ -617,17 +607,7 @@ generateRoutes().catch(console.error);
             'NestJS',
             'SEO'
           ],
-          technologies: [
-            'Angular',
-            'NestJS',
-            'PostgreSQL',
-            'Docker',
-            'TypeScript',
-            'Angular Universal'
-          ],
-          github_url: 'https://github.com/example/personal-blog-platform',
           published: false,
-          demo_url: null,
           featured: true,
           user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
           created_at: new Date('2024-01-05'),
@@ -932,17 +912,7 @@ export default VulnerabilityReport;
             'machine learning',
             'python'
           ],
-          technologies: [
-            'Python',
-            'scikit-learn',
-            'React',
-            'PostgreSQL',
-            'Docker',
-            'FastAPI'
-          ],
-          github_url: 'https://github.com/example/vulnerability-scanner',
           published: true,
-          demo_url: null,
           featured: false,
           user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
           created_at: new Date('2024-01-01'),
@@ -1498,12 +1468,497 @@ export default VulnerabilityReport;
           updated_at: new Date()
         }
       ]);
+
+      // Create privacy page content
+      await queryInterface.bulkInsert('privacy_page', [
+        {
+          id: '00000000-0000-0000-0000-000000000004',
+          title: 'Privacy Policy',
+          last_updated: 'Last updated: January 2025',
+          cookie_policy_title: 'Cookie Policy',
+          footer_text:
+            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          hero_image_main:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_secondary:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_main_alt: 'Abstract Gradient Art',
+          hero_image_secondary_alt: 'Abstract Gradient Art',
+          logo_text: 'Luch',
+          breadcrumb_text: 'Privacy',
+          hero_title: 'Privacy Policy',
+          meta_title: 'Privacy Policy - Personal Blog',
+          meta_description:
+            'Privacy Policy for our personal blog. Learn how we collect, use, and protect your personal information.',
+          meta_keywords:
+            'privacy policy, data protection, personal information, cookies, GDPR',
+          og_title: 'Privacy Policy - Data Protection',
+          og_description:
+            'Our privacy policy explains how we handle your personal data and protect your privacy when using our blog.',
+          og_image:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          structured_data: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: 'Privacy Policy',
+            description: 'Privacy policy and data protection information',
+            publisher: {
+              '@type': 'Organization',
+              name: 'Personal Blog'
+            },
+            dateModified: new Date().toISOString(),
+            mainEntityOfPage: 'https://example.com/privacy'
+          }),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create privacy sections
+      const privacySections = [
+        {
+          id: '60000000-0000-0000-0000-000000000001',
+          title: '1. Information We Collect',
+          sort_order: 0,
+          section_type: 'main'
+        },
+        {
+          id: '60000000-0000-0000-0000-000000000002',
+          title: '2. How We Use Your Information',
+          sort_order: 1,
+          section_type: 'main'
+        },
+        {
+          id: '60000000-0000-0000-0000-000000000003',
+          title: '3. Information Sharing',
+          sort_order: 2,
+          section_type: 'main'
+        },
+        {
+          id: '60000000-0000-0000-0000-000000000004',
+          title: '4. Cookies and Tracking Technologies',
+          sort_order: 3,
+          section_type: 'main'
+        },
+        {
+          id: '60000000-0000-0000-0000-000000000005',
+          title: '5. Data Security',
+          sort_order: 4,
+          section_type: 'main'
+        },
+        {
+          id: '60000000-0000-0000-0000-000000000006',
+          title: '6. Your Rights',
+          sort_order: 5,
+          section_type: 'main'
+        },
+        {
+          id: '60000000-0000-0000-0000-000000000007',
+          title: "7. Children's Privacy",
+          sort_order: 6,
+          section_type: 'main'
+        },
+        {
+          id: '60000000-0000-0000-0000-000000000008',
+          title: '8. Changes to This Policy',
+          sort_order: 7,
+          section_type: 'main'
+        },
+        {
+          id: '60000000-0000-0000-0000-000000000009',
+          title: '9. Contact Us',
+          sort_order: 8,
+          section_type: 'main'
+        },
+        {
+          id: '60000000-0000-0000-0000-000000000010',
+          title: 'Cookie Policy Content',
+          sort_order: 0,
+          section_type: 'cookie_policy'
+        }
+      ];
+
+      await queryInterface.bulkInsert(
+        'privacy_sections',
+        privacySections.map((section) => ({
+          ...section,
+          created_at: new Date(),
+          updated_at: new Date()
+        }))
+      );
+
+      // Create privacy content items
+      const privacyContentItems = [
+        // Section 1: Information We Collect
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000001',
+          type: 'paragraph',
+          text: 'We collect information you provide directly to us, such as when you create an account, subscribe to our newsletter, or contact us. This may include your name, email address, and any other information you choose to provide.',
+          sort_order: 0
+        },
+        // Section 2: How We Use Your Information
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000002',
+          type: 'paragraph',
+          text: 'We use the information we collect to:',
+          sort_order: 0
+        },
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000002',
+          type: 'list',
+          items: JSON.stringify([
+            'Provide, maintain, and improve our services',
+            'Send you technical notices, updates, and support messages',
+            'Respond to your comments and questions',
+            'Communicate with you about products, services, and events'
+          ]),
+          sort_order: 1
+        },
+        // Section 3: Information Sharing
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000003',
+          type: 'paragraph',
+          text: 'We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy or as required by law.',
+          sort_order: 0
+        },
+        // Section 4: Cookies and Tracking Technologies
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000004',
+          type: 'paragraph',
+          text: 'We use cookies and similar tracking technologies to enhance your experience on our website. These technologies help us understand how you use our site and improve our services.',
+          sort_order: 0
+        },
+        // Section 5: Data Security
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000005',
+          type: 'paragraph',
+          text: 'We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.',
+          sort_order: 0
+        },
+        // Section 6: Your Rights
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000006',
+          type: 'paragraph',
+          text: 'You have the right to:',
+          sort_order: 0
+        },
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000006',
+          type: 'list',
+          items: JSON.stringify([
+            'Access your personal information',
+            'Correct inaccurate information',
+            'Request deletion of your information',
+            'Opt-out of marketing communications'
+          ]),
+          sort_order: 1
+        },
+        // Section 7: Children's Privacy
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000007',
+          type: 'paragraph',
+          text: 'Our services are not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13.',
+          sort_order: 0
+        },
+        // Section 8: Changes to This Policy
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000008',
+          type: 'paragraph',
+          text: 'We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.',
+          sort_order: 0
+        },
+        // Section 9: Contact Us
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000009',
+          type: 'paragraph_with_link',
+          text: 'If you have any questions about this privacy policy, please contact us through our',
+          link_text: 'contact page',
+          link_url: '/contact',
+          sort_order: 0
+        },
+        // Cookie Policy Section
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000010',
+          type: 'paragraph',
+          text: 'This website uses cookies to enhance your browsing experience. By continuing to use this site, you consent to our use of cookies in accordance with our privacy policy.',
+          sort_order: 0
+        },
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000010',
+          type: 'subtitle',
+          text: 'Types of Cookies We Use:',
+          sort_order: 1
+        },
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000010',
+          type: 'list',
+          items: JSON.stringify([
+            '<strong>Essential Cookies:</strong> Required for the website to function properly',
+            '<strong>Analytics Cookies:</strong> Help us understand how visitors interact with our website',
+            '<strong>Functional Cookies:</strong> Remember your preferences and settings'
+          ]),
+          sort_order: 2
+        },
+        {
+          privacy_section_id: '60000000-0000-0000-0000-000000000010',
+          type: 'paragraph',
+          text: 'You can control and manage cookies through your browser settings. However, disabling certain cookies may affect the functionality of our website.',
+          sort_order: 3
+        }
+      ];
+
+      await queryInterface.bulkInsert(
+        'privacy_content_items',
+        privacyContentItems.map((item, index) => ({
+          id: `70000000-0000-0000-0000-${String(index + 1).padStart(12, '0')}`,
+          ...item,
+          created_at: new Date(),
+          updated_at: new Date()
+        }))
+      );
+
+      // Create home page content
+      await queryInterface.bulkInsert('home_page', [
+        {
+          id: '00000000-0000-0000-0000-000000000005',
+          title: 'Welcome to LUCH',
+          subtitle: 'Modern Creative Portfolio Template',
+          description:
+            'A fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          footer_text:
+            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          hero_image_main: 'assets/images/Contemplative-Astronaut-Woman.webp',
+          hero_image_secondary:
+            'assets/images/Astronaut-in-Space_1Astronaut in Space.webp',
+          hero_image_main_alt: 'Contemplative Astronaut Woman',
+          hero_image_secondary_alt: 'Astronaut in Space',
+          logo_text: 'LUCH',
+          breadcrumb_text: 'Home',
+          hero_title: 'Welcome to LUCH',
+          marquee_left_text: 'LUCH Framework',
+          marquee_right_text: 'Who LUCH is for',
+          latest_projects_title: 'Latest Projects',
+          latest_posts_title: 'Latest Posts',
+          why_section_title: 'Why LUCH?',
+          faq_section_title: 'FAQ',
+          meta_title: 'Home - LUCH Creative Template',
+          meta_description:
+            'Welcome to LUCH - a modern creative portfolio template designed for artists, bloggers, and creatives.',
+          meta_keywords:
+            'creative template, portfolio, blog, webflow, design, modern',
+          og_title: 'LUCH - Modern Creative Portfolio Template',
+          og_description:
+            'A fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          og_image: 'assets/images/Contemplative-Astronaut-Woman.webp',
+          structured_data: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'LUCH Creative Template',
+            description:
+              'A fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+            url: 'https://example.com',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: 'https://example.com/search?q={search_term_string}',
+              'query-input': 'required name=search_term_string'
+            }
+          }),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create projects page content
+      await queryInterface.bulkInsert('projects_page', [
+        {
+          id: '00000000-0000-0000-0000-000000000006',
+          title: 'Projects',
+          subtitle: 'Showcase of My Work',
+          description:
+            'Explore my portfolio of projects showcasing innovative solutions and creative implementations.',
+          footer_text:
+            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          hero_image_main:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_secondary:
+            'assets/images/Astronaut-Woman-in-Spacecraft_1Astronaut Woman in Spacecraft.avif',
+          hero_image_main_alt: 'Abstract Gradient Art',
+          hero_image_secondary_alt: 'Astronaut Woman in Spacecraft',
+          logo_text: 'LUCH',
+          breadcrumb_text: 'Projects',
+          hero_title: 'My Projects',
+          meta_title: 'Projects - Portfolio Showcase',
+          meta_description:
+            'Explore my portfolio of innovative projects and creative implementations. Discover the latest technologies and methodologies I work with.',
+          meta_keywords:
+            'projects, portfolio, web development, software engineering, innovation',
+          og_title: 'Projects Portfolio - Latest Work',
+          og_description:
+            'Browse through my latest projects showcasing cutting-edge technologies and creative solutions.',
+          og_image:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          structured_data: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Projects Portfolio',
+            description:
+              'Portfolio showcasing innovative projects and creative implementations',
+            mainEntity: {
+              '@type': 'ItemList',
+              name: 'Projects Collection'
+            }
+          }),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create blog page content
+      await queryInterface.bulkInsert('blog_page', [
+        {
+          id: '00000000-0000-0000-0000-000000000007',
+          title: 'Blog',
+          subtitle: 'Thoughts & Insights',
+          description:
+            'Dive into articles about web development, technology trends, and creative problem-solving.',
+          footer_text:
+            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          hero_image_main:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_secondary:
+            'assets/images/Astronaut-Woman-in-Spacecraft_1Astronaut Woman in Spacecraft.avif',
+          hero_image_main_alt: 'Abstract Gradient Art',
+          hero_image_secondary_alt: 'Astronaut Woman in Spacecraft',
+          logo_text: 'LUCH',
+          breadcrumb_text: 'Blog',
+          hero_title: 'Latest Articles',
+          meta_title: 'Blog - Web Development & Technology Articles',
+          meta_description:
+            'Read the latest articles about web development, technology trends, programming insights, and creative problem-solving techniques.',
+          meta_keywords:
+            'blog, web development, technology, programming, articles, insights',
+          og_title: 'Blog - Latest Articles & Insights',
+          og_description:
+            'Discover articles about web development, technology trends, and programming insights from an experienced developer.',
+          og_image:
+            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          structured_data: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Blog',
+            name: 'Personal Development Blog',
+            description:
+              'Articles about web development, technology trends, and creative problem-solving',
+            author: {
+              '@type': 'Person',
+              name: 'Blog Author'
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: 'Personal Blog'
+            }
+          }),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create whys section
+      await queryInterface.bulkInsert('whys_sections', [
+        {
+          id: '80000000-0000-0000-0000-000000000001',
+          title: 'Why LUCH?',
+          why_blocks: JSON.stringify([
+            {
+              text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aliquam at, dolorem, dolorum error expedita facilis itaque iure nobis quas repellat, ullam unde velit! Autem dolorem fugiat quibusdam quidem temporibus! Beatae cumque est fugiat magnam modi pariatur praesentium reprehenderit sint? At cumque fugit molestiae nemo nesciunt, quae reiciendis unde? Iure.'
+            },
+            {
+              text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aliquam at, dolorem, dolorum error expedita facilis itaque iure nobis quas repellat, ullam unde velit! Autem dolorem fugiat quibusdam quidem temporibus! Beatae cumque est fugiat magnam modi pariatur praesentium reprehenderit sint? At cumque fugit molestiae nemo nesciunt, quae reiciendis unde? Iure.'
+            }
+          ]),
+          features: JSON.stringify([
+            { title: 'SEO Optimized' },
+            { title: 'Customizable' },
+            { title: 'Cross-browser Compatible' },
+            { title: 'Professional Support' }
+          ]),
+          featured: true,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create FAQ questions
+      await queryInterface.bulkInsert('faqs', [
+        {
+          id: '83000000-0000-0000-0000-000000000001',
+          question: 'What is LUCH Framework?',
+          answer:
+            'LUCH is a modern creative portfolio template designed for artists, bloggers, and creatives. It features a clean, responsive design with powerful customization options.',
+          sort_order: 0,
+          is_active: true,
+          featured: true,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '83000000-0000-0000-0000-000000000002',
+          question: 'Is LUCH mobile-friendly?',
+          answer:
+            'Yes, LUCH is fully responsive and optimized for all devices including smartphones, tablets, and desktops. The template automatically adapts to different screen sizes.',
+          sort_order: 1,
+          is_active: true,
+          featured: true,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '83000000-0000-0000-0000-000000000003',
+          question: 'Can I customize the design?',
+          answer:
+            'Absolutely! LUCH comes with extensive customization options. You can modify colors, fonts, layouts, and add your own content to match your brand and style.',
+          sort_order: 2,
+          is_active: true,
+          featured: true,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '83000000-0000-0000-0000-000000000004',
+          question: 'Do I get support after purchase?',
+          answer:
+            'Yes, we provide comprehensive support including documentation, video tutorials, and direct assistance to help you get the most out of your LUCH template.',
+          sort_order: 3,
+          is_active: true,
+          featured: true,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '83000000-0000-0000-0000-000000000005',
+          question: 'Is LUCH SEO optimized?',
+          answer:
+            'Yes, LUCH is built with SEO best practices in mind. It includes optimized markup, fast loading times, and clean code structure to help your site rank better in search engines.',
+          sort_order: 4,
+          is_active: true,
+          featured: true,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
     } catch (e) {
       console.log('Error while creating seeders: ', e);
     }
   },
 
   async down(queryInterface, sequelize) {
+    await queryInterface.bulkDelete('faqs', null, {});
+    await queryInterface.bulkDelete('whys_sections', null, {});
+    await queryInterface.bulkDelete('blog_page', null, {});
+    await queryInterface.bulkDelete('projects_page', null, {});
+    await queryInterface.bulkDelete('home_page', null, {});
+    await queryInterface.bulkDelete('privacy_content_items', null, {});
+    await queryInterface.bulkDelete('privacy_sections', null, {});
+    await queryInterface.bulkDelete('privacy_page', null, {});
     await queryInterface.bulkDelete('license_tiles', null, {});
     await queryInterface.bulkDelete('license_page', null, {});
     await queryInterface.bulkDelete('changelog_entries', null, {});
