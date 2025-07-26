@@ -1,548 +1,782 @@
 # Personal Blog API
 
-A robust, enterprise-grade NestJS backend API providing comprehensive content management, authentication, and SEO optimization for a personal blog application. The API supports full-featured blog and project management with advanced security features including two-factor authentication, automated email services, and AWS S3 integration.
+A comprehensive NestJS-based REST API for a personal blog platform with advanced content management, authentication, and SEO features. This API serves as the backend for a full-stack personal blog application with Angular SSR frontend integration.
 
-## Architecture Overview
+## 🚀 Overview
 
-### Core Technologies
+The Personal Blog API is a robust, scalable backend service built with modern technologies and best practices. It provides comprehensive content management capabilities, advanced security features, and seamless integration with server-side rendering (SSR) frontend applications.
 
-- **Framework**: NestJS 10.x with TypeScript
-- **Database**: PostgreSQL with Sequelize ORM
-- **Authentication**: JWT-based with refresh tokens and TOTP 2FA
-- **Email Service**: SendGrid integration
-- **File Storage**: AWS S3 integration
-- **Security**: bcryptjs password hashing, AES encryption
-- **Validation**: class-validator with comprehensive DTOs
+### Key Features
 
-### Design Patterns
+- **🔐 Advanced Authentication**: JWT-based authentication with refresh tokens and TOTP-based 2FA
+- **📝 Content Management**: Full CRUD operations for articles, projects, pages, and dynamic content
+- **🎯 SEO Optimization**: Built-in SEO metadata, Open Graph tags, and structured data support
+- **📧 Email Integration**: SendGrid-powered email system for contact forms and newsletters
+- **🔄 Transaction Management**: Database transactions with custom decorators for data consistency
+- **🐳 Docker Support**: Containerized development environment with Docker Compose
+- **🧪 Testing**: Comprehensive test suite with Jest and E2E testing
+- **📊 Database Seeding**: Mock data generation for development and testing
 
-- **Domain-Driven Design**: Feature-based modular architecture
-- **Repository Pattern**: Sequelize models with TypeScript
-- **Interface-Driven Development**: Comprehensive TypeScript interfaces
-- **Transaction Management**: Global transaction interceptor
-- **Exception Handling**: Custom exception classes with structured responses
+## 🛠 Technology Stack
 
-## Project Structure
+- **Framework**: [NestJS](https://nestjs.com/) 10.x with TypeScript
+- **Database**: PostgreSQL with [Sequelize ORM](https://sequelize.org/)
+- **Authentication**: JWT with refresh tokens + [Speakeasy](https://github.com/speakeasyjs/speakeasy) TOTP 2FA
+- **Email Service**: [SendGrid](https://sendgrid.com/) integration
+- **Cloud Storage**: AWS S3 integration
+- **Security**: bcryptjs password hashing + AES encryption
+- **Containerization**: Docker & Docker Compose
+- **Process Management**: PM2 for production deployment
+- **Testing**: Jest for unit testing, Supertest for E2E testing
+
+## 📋 Prerequisites
+
+- Node.js 18+ and npm
+- Docker and Docker Compose
+- PostgreSQL 13+ (if running without Docker)
+- SendGrid account (for email functionality)
+- AWS S3 bucket (for file storage)
+
+## ⚡ Quick Start
+
+### 1. Clone the Repository
+
+```bash
+git clone &lt;repository-url&gt;
+cd personal-blog-api
+```
+
+### 2. Environment Configuration
+
+Create environment files based on your needs:
+
+```bash
+# Copy and configure development environment
+cp .env.development.example .env.development
+
+# Copy and configure production environment  
+cp .env.production.example .env.production
+```
+
+#### Required Environment Variables
+
+```bash
+# Database Configuration
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USERNAME=your_username
+POSTGRES_PASSWORD=your_password
+POSTGRES_DATABASE=personal_blog
+
+# API Configuration
+API_PORT=3000
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_SECRET=your_refresh_secret_key
+JWT_REFRESH_EXPIRES_IN=7d
+
+# Security & Encryption
+HASH_PASSWORD_ROUNDS=12
+RECOVERY_ENCRYPTION_KEY_SIZE=256
+RECOVERY_ENCRYPTION_ITERATIONS=100000
+RECOVERY_ENCRYPTION_SALT=your_salt_here
+RECOVERY_ENCRYPTION_IV=your_iv_here
+
+# Email Configuration (SendGrid)
+SENDGRID_API_KEY=your_sendgrid_api_key
+SENDGRID_FROM_EMAIL=noreply@yourdomain.com
+SENDGRID_FROM_NAME="Your Blog Name"
+
+# AWS S3 Configuration
+AWS_S3_BUCKET_NAME=your_s3_bucket
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_S3_REGION=us-east-1
+
+# Frontend Integration
+FRONTEND_URL=http://localhost:4200
+```
+
+### 3. Development Setup
+
+#### Option A: Docker Compose (Recommended)
+
+```bash
+# Start development environment with PostgreSQL
+npm run api:dev
+
+# Or build and start fresh containers
+npm run api:dev:build
+
+# Stop services
+npm run api:dev:down
+```
+
+#### Option B: Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Ensure PostgreSQL is running locally
+# Update .env.development with your local database credentials
+
+# Start development server
+npm run start:dev
+```
+
+### 4. Database Setup
+
+```bash
+# Seed database with mock data (after containers are running)
+npm run database:dev:mock
+
+# To remove mock data
+npm run database:dev:mock:undo
+
+# To completely wipe database
+npm run database:dev:wipe
+```
+
+The API will be available at `http://localhost:3000` (or your configured API_PORT).
+
+## 📚 Available Scripts
+
+### Development Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run start:dev` | Start development server with watch mode |
+| `npm run api:dev` | Run via Docker Compose for development |
+| `npm run api:dev:build` | Build and run Docker Compose containers |
+| `npm run api:dev:down` | Stop Docker Compose services |
+
+### Production Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run api:build` | Build NestJS application for production |
+| `npm run prod` | Start production server |
+| `npm run api:process-start` | Start with PM2 process manager |
+| `npm run api:restart` | Restart PM2 process |
+
+### Database Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run database:dev:mock` | Seed database with mock data |
+| `npm run database:dev:mock:undo` | Remove mock data |
+| `npm run database:dev:wipe` | Clear all seeded data |
+
+### Testing & Quality Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm test` | Run Jest unit tests |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:cov` | Run tests with coverage report |
+| `npm run test:e2e` | Run end-to-end tests |
+| `npm run lint` | Run ESLint with automatic fixes |
+| `npm run format` | Format code with Prettier and ESLint |
+
+## 🏗 Architecture
+
+### Module Structure
+
+The application follows a feature-based modular architecture:
 
 ```
 src/
-├── modules/                    # Feature modules
-│   ├── auth/                  # Authentication & session management
-│   ├── articles/              # Blog post management
-│   ├── projects/              # Portfolio project management
-│   ├── about/                 # Professional profile & experience
-│   ├── home/                  # Landing page content management
-│   ├── changelog/             # Version history & updates
-│   ├── license/               # Legal documentation
-│   ├── privacy/               # Privacy policy management
-│   ├── users/                 # User management
-│   ├── security/              # Two-factor authentication
-│   ├── contact/               # Contact form handling
-│   └── newsletters/           # Email subscription management
-├── models/                    # Sequelize database models
-├── dto/                       # Data Transfer Objects
-│   ├── requests/              # Input validation DTOs
-│   └── responses/             # Output format DTOs
-├── shared/                    # Shared services & utilities
-│   └── services/
-│       ├── cryptographic.service.ts  # Security operations
-│       ├── email.service.ts          # Email communication
-│       ├── config.service.ts         # Configuration management
-│       └── time.service.ts           # Date/time utilities
-├── guards/                    # Authentication guards
-├── interceptors/              # Transaction & logging interceptors
-├── pipes/                     # Validation pipes
-├── decorators/               # Custom decorators
-├── exceptions/               # Custom exception classes
-└── libs/                     # Interfaces, enums, utilities
+├── modules/              # Feature modules
+│   ├── auth/            # Authentication & session management
+│   ├── articles/        # Blog post management
+│   ├── projects/        # Portfolio project showcase
+│   ├── about/           # Professional experience & certifications
+│   ├── security/        # Two-factor authentication (TOTP)
+│   ├── newsletters/     # Email subscription management
+│   ├── contact/         # Contact form handling
+│   ├── home/           # Landing page content
+│   ├── changelog/      # Platform changelog
+│   ├── license/        # License page management
+│   ├── privacy/        # Privacy policy management
+│   ├── pages/          # Dynamic page management
+│   ├── blog/           # Blog listing functionality
+│   ├── site-config/    # Global site configuration
+│   ├── users/          # User management
+│   └── control/        # System health checks
+├── models/              # Sequelize TypeScript models
+├── dto/                 # Data Transfer Objects for validation
+├── guards/              # Authentication guards
+├── interceptors/        # Transaction interceptors
+├── decorators/          # Custom decorators
+├── exceptions/          # Custom exception classes
+├── shared/              # Shared services and utilities
+└── libs/                # Interfaces, enums, and utilities
 ```
 
-## Core Features
+### Key Design Patterns
 
-### Authentication & Security
+- **Domain-Driven Design**: Feature-based modular organization
+- **Repository Pattern**: Sequelize models with TypeScript interfaces
+- **Transaction Management**: Global transaction interceptor with `@Transaction()` decorator
+- **Exception Handling**: Custom exception classes for different error types
+- **Interface-Driven Development**: Comprehensive TypeScript interfaces for type safety
 
-#### JWT Authentication System
-- **Access Tokens**: Short-lived tokens for API authentication
-- **Refresh Tokens**: Long-lived tokens stored in database sessions
-- **Secure Cookies**: HTTPOnly cookies for refresh token storage
-- **Token Rotation**: Automatic refresh token rotation on use
+## 🔐 Authentication & Security
 
-#### Two-Factor Authentication (2FA)
-- **TOTP Implementation**: Time-based one-time passwords using Speakeasy
-- **QR Code Generation**: Dynamic QR code generation for authenticator apps
-- **Backup Codes**: Recovery codes for account access
-- **Forced 2FA**: Configurable requirement for enhanced security
+### JWT Authentication
 
-#### Password Security
-- **bcryptjs Hashing**: Configurable salt rounds for password protection
-- **Password Recovery**: Secure email-based password reset flow
-- **Strength Validation**: Regex-based password complexity requirements
-- **Account Lockout**: Protection against brute force attacks
+The API uses a dual-token JWT authentication system:
 
-### Content Management System
+- **Access Token**: Short-lived (15 minutes) for API requests
+- **Refresh Token**: Long-lived (7 days) stored in HTTP-only cookies
+- **Custom Header**: `x-access-token: Bearer &lt;token&gt;`
 
-#### Blog Articles
-- **Rich Content Support**: HTML content with markdown support
-- **SEO Optimization**: Meta tags, Open Graph, and structured data
-- **Slug-Based Routing**: SEO-friendly URL generation
-- **Publishing Workflow**: Draft/published status with scheduling
-- **Tag System**: Flexible categorization and filtering
-- **Featured Content**: Highlighted articles for homepage display
+### Two-Factor Authentication
 
-#### Project Portfolio
-- **Project Showcase**: Detailed project descriptions and galleries
-- **Technology Tags**: Skill and technology categorization
-- **External Links**: GitHub, demo, and documentation links
-- **Featured Projects**: Homepage integration
-- **Date Tracking**: Project completion and update dates
+- **TOTP-based 2FA** using Speakeasy library
+- **QR Code generation** for authenticator apps
+- **Time-based verification** with delta tolerance
 
-#### Page Management
-- **Dynamic Pages**: Content management for static pages
-- **Layout Configuration**: Flexible layout and hero image settings
-- **SEO Metadata**: Comprehensive meta tag management
-- **Content Sections**: Modular content blocks for complex layouts
+### Security Features
 
-### Professional Profile Management
+- **Password Hashing**: bcryptjs with configurable salt rounds
+- **AES Encryption**: CryptoJS for sensitive data encryption
+- **Session Management**: Database-stored refresh tokens with rotation
+- **Input Validation**: class-validator decorators on all DTOs
+- **CORS Protection**: Configurable CORS for frontend integration
 
-#### About Page System
-- **Experience Timeline**: Hierarchical work experience with positions
-- **Professional Certifications**: Achievement and certification tracking
-- **Contact Information**: Dynamic contact tiles and social links
-- **Skills & Technologies**: Comprehensive skill categorization
-- **SEO Integration**: Professional structured data for search engines
+### Authentication Flow
 
-#### Legal & Compliance
-- **Privacy Policy**: GDPR-compliant privacy documentation
-- **License Management**: Software and content licensing information
-- **Changelog System**: Version history and platform updates
-- **Cookie Policy**: Detailed cookie usage documentation
+1. **Login**: `POST /auth/login` with email/password
+2. **2FA Check**: If enabled, requires TOTP verification
+3. **Token Generation**: Returns access token + HTTP-only refresh token cookie
+4. **API Requests**: Include `x-access-token: Bearer &lt;token&gt;` header
+5. **Token Refresh**: `GET /auth/refresh` using refresh token cookie
+6. **Logout**: `GET /auth/logout` clears refresh token
 
-### Email & Communication
-
-#### Email Service Integration
-- **SendGrid Integration**: Reliable email delivery service
-- **Template System**: HTML email templates with dynamic content
-- **Subscription Management**: Newsletter signup and confirmation flow
-- **Contact Form Processing**: Automated contact form handling
-- **Notification System**: Admin alerts for form submissions
-
-#### Newsletter System
-- **Subscription Management**: Double opt-in confirmation process
-- **Unsubscribe Handling**: One-click unsubscribe with confirmation
-- **Email Validation**: Comprehensive email format validation
-- **GDPR Compliance**: Consent tracking and data management
-
-### API Design & Integration
-
-#### RESTful API Architecture
-- **Resource-Based URLs**: Intuitive endpoint structure
-- **HTTP Status Codes**: Proper status code implementation
-- **Request/Response DTOs**: Comprehensive data validation
-- **Error Handling**: Structured error responses with meaningful messages
-
-#### SSR Integration Endpoints
-- **Public Data Endpoints**: Optimized for Angular SSR pre-rendering
-- **Bulk Data APIs**: Efficient data fetching for static generation
-- **Slug Management**: Dynamic route generation support
-- **SEO Data**: Structured data for search engine optimization
-
-## Database Schema
+## 📊 Database Schema
 
 ### Core Models
 
 #### User Management
-- **User**: Primary user authentication and profile data
-- **UserSettings**: User preferences, 2FA settings, and configuration
-- **Session**: JWT refresh token storage and session management
+- **User**: Core user authentication and profiles
+- **UserSettings**: User-specific settings and 2FA tokens
+- **Session**: JWT session management and refresh tokens
 
-#### Content Models
-- **Article**: Blog posts with rich metadata and SEO data
-- **Project**: Portfolio projects with technology tags and links
-- **Page**: Dynamic page content with layout configuration
+#### Content Management
+- **Article**: Blog posts with SEO optimization
+- **Project**: Portfolio projects showcase
+- **Page**: Dynamic pages with custom content
 
-#### Professional Experience
-- **Experience**: Work experience entries with company information
-- **Position**: Individual job positions within experiences
-- **Certificate**: Professional certifications and achievements
+#### Specialized Pages
+- **AboutPage**: Professional experience & certifications
+- **Experience**: Professional work history
+- **Position**: Individual job positions
+- **Certificate**: Professional certifications
+- **HomePage**: Landing page configuration
+- **ChangelogPage**: Platform changelog
+- **ChangelogEntry**: Individual changelog entries
+- **LicensePage**: License documentation
+- **LicenseTile**: License information tiles
+- **PrivacyPage**: Privacy policy management
+- **PrivacySection**: Privacy policy sections
+- **PrivacyContentItem**: Flexible privacy content
 
-#### Page Management
-- **HomePage**: Landing page content and featured content
-- **AboutPage**: Professional profile page structure
-- **ChangelogPage**: Platform changelog and version history
-- **LicensePage**: Legal and licensing documentation
-- **PrivacyPage**: Privacy policy and GDPR compliance
-
-#### Communication
+#### Utility Models
 - **Newsletter**: Email subscription management
-- **ContactSubmission**: Contact form submissions and tracking
+- **SiteConfig**: Global site configuration
+- **FAQ**: Frequently asked questions
+- **WhysSection**: "Why choose us" content
 
-## Installation & Setup
+### Database Features
 
-### Prerequisites
+- **UUID Primary Keys**: All models use UUID for enhanced security
+- **Timestamps**: Automatic `createdAt` and `updatedAt` management
+- **JSONB Fields**: PostgreSQL JSONB for flexible content storage
+- **SEO Fields**: Comprehensive meta tags, Open Graph, and structured data
+- **Relationships**: Proper foreign key relationships and cascading
+- **Constraints**: Unique constraints on slugs and email addresses
 
-- Node.js 18+ and npm
-- PostgreSQL 12+
-- Docker & Docker Compose (for development)
-- SendGrid account for email services
-- AWS S3 bucket for file storage
+## 🔌 API Endpoints
+
+### Public Endpoints
+
+#### Content Retrieval
+```bash
+# Articles
+GET /posts                    # Get all published blog posts
+GET /posts/slugs             # Get post slugs for route generation
+GET /posts/:slug             # Get specific post by slug
+
+# Projects  
+GET /projects                # Get projects with pagination
+GET /projects/slugs          # Get project slugs for route generation
+GET /projects/:slug          # Get specific project by slug
+GET /projects/featured       # Get featured projects
+
+# Pages
+GET /pages                   # Get all published pages
+GET /pages/slugs            # Get page slugs for route generation
+GET /pages/:slug            # Get specific page by slug
+
+# Static Pages (SSR Data)
+GET /home                   # Home page data
+GET /about                  # About page data  
+GET /blog                   # Blog listing page data
+GET /changelog              # Changelog page data
+GET /license                # License page data
+GET /privacy                # Privacy policy page data
+
+# Site Configuration
+GET /site/config            # Public site configuration
+
+# System
+GET /control/health-check   # Health check endpoint
+```
+
+#### User Actions
+```bash
+# Authentication
+POST /auth/login            # User login
+GET /auth/logout            # User logout
+GET /auth/refresh           # Refresh access token
+
+# Contact & Newsletter
+POST /contact/contact       # Submit contact form
+POST /newsletters/subscribe # Subscribe to newsletter
+POST /newsletters/confirm-newsletters-subscription # Confirm subscription
+POST /newsletters/unsubscribe-from-newsletters # Unsubscribe
+
+# Password Recovery
+POST /users/forgot-password # Send password reset email
+```
+
+### Protected Endpoints (Require Authentication)
+
+#### User Management
+```bash
+GET /users/user-info        # Get current user information
+```
+
+#### Content Management
+```bash
+# Articles Management
+GET /admin/posts            # Get admin posts list
+POST /admin/posts           # Create new post
+PUT /admin/posts/:id        # Update existing post
+DELETE /admin/posts/:id     # Delete post
+PUT /admin/posts/:id/publish # Toggle publish status
+
+# Projects Management
+GET /admin/projects         # Get admin projects list
+POST /admin/projects        # Create new project
+PUT /admin/projects/:id     # Update existing project
+DELETE /admin/projects/:id  # Delete project
+
+# Pages Management
+GET /admin/pages            # Get all pages for admin
+GET /admin/pages/:slug      # Get specific page for editing
+POST /admin/pages           # Create new page
+PUT /admin/pages/:id        # Update existing page
+DELETE /admin/pages/:id     # Delete page
+```
+
+#### About Page Management
+```bash
+# About Page
+GET /admin/about            # Get admin about page data
+POST /admin/about           # Create about page content
+PUT /admin/about/:id        # Update about page content
+
+# Experience Management
+GET /admin/experiences      # Get all experiences
+POST /admin/experiences     # Create experience entry
+PUT /admin/experiences/:id  # Update experience entry
+DELETE /admin/experiences/:id # Delete experience entry
+
+# Certificate Management
+GET /admin/certificates     # Get all certificates
+POST /admin/certificates    # Create certificate entry
+PUT /admin/certificates/:id # Update certificate entry
+DELETE /admin/certificates/:id # Delete certificate entry
+```
+
+#### Specialized Page Management
+```bash
+# Changelog Management
+GET /admin/changelog/entries     # Get changelog entries
+POST /admin/changelog/entries    # Create changelog entry
+PUT /admin/changelog/entries/:id # Update changelog entry
+DELETE /admin/changelog/entries/:id # Delete changelog entry
+PUT /admin/changelog/page        # Update changelog page settings
+
+# License Management
+GET /admin/license/tiles         # Get license tiles
+POST /admin/license/tiles        # Create license tile
+PUT /admin/license/tiles/:id     # Update license tile
+DELETE /admin/license/tiles/:id  # Delete license tile
+PUT /admin/license/page          # Update license page settings
+
+# Privacy Management
+PUT /admin/privacy/page          # Update privacy page settings
+POST /admin/privacy/sections     # Create privacy section
+PUT /admin/privacy/sections/:id  # Update privacy section
+DELETE /admin/privacy/sections/:id # Delete privacy section
+POST /admin/privacy/content-items # Create privacy content item
+PUT /admin/privacy/content-items/:id # Update privacy content item
+DELETE /admin/privacy/content-items/:id # Delete privacy content item
+```
+
+#### Site Configuration
+```bash
+GET /admin/site/config      # Get admin site configuration
+PUT /admin/site/config      # Update site configuration
+```
+
+#### Two-Factor Authentication
+```bash
+POST /security/login-generate-2fa-qr # Generate 2FA QR during login
+GET /security/generate-2fa-qr        # Generate 2FA QR for user
+POST /security/login-verify-2fa      # Verify 2FA during login
+POST /security/verify-2fa            # Verify 2FA for user
+```
+
+## 📧 Email System
+
+The API includes a comprehensive email system powered by SendGrid:
+
+### Email Templates
+- **Contact Form**: Professional contact form notifications
+- **Newsletter Subscription**: Welcome and confirmation emails
+- **Password Recovery**: Secure password reset functionality
+
+### Email Features
+- **HTML Templates**: Professional email templates with branding
+- **Template Service**: Centralized email template management
+- **Error Handling**: Robust error handling for email delivery
+- **Configuration**: Environment-based email configuration
+
+### Email Endpoints
+```bash
+POST /contact/contact                    # Sends contact notification
+POST /newsletters/subscribe              # Sends subscription confirmation
+POST /users/forgot-password             # Sends password reset email
+```
+
+## 🧪 Testing
+
+### Test Structure
+```bash
+src/
+├── **/*.spec.ts            # Unit tests
+test/
+├── **/*.e2e-spec.ts       # End-to-end tests
+└── jest-e2e.json          # E2E test configuration
+```
+
+### Running Tests
+```bash
+# Unit tests
+npm test                    # Run all tests
+npm run test:watch          # Watch mode
+npm run test:cov           # With coverage
+
+# E2E tests
+npm run test:e2e           # End-to-end tests
+
+# Debug tests
+npm run test:debug         # Debug mode
+```
+
+### Test Configuration
+- **Framework**: Jest with TypeScript support
+- **Coverage**: Istanbul code coverage reports
+- **E2E Testing**: Supertest for HTTP testing
+- **Mocking**: Jest mocking capabilities
+- **Test Environment**: Node.js test environment
+
+## 🚀 Deployment
+
+### Development Deployment
+
+#### Docker Compose (Recommended)
+```bash
+# Start development environment
+npm run api:dev:build
+
+# View logs
+docker-compose logs -f
+
+# Stop environment
+npm run api:dev:down
+```
+
+#### Local Development
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run start:dev
+```
+
+### Production Deployment
+
+#### PM2 Process Manager
+```bash
+# Build application
+npm run api:build
+
+# Start with PM2
+npm run api:process-start
+
+# Restart PM2 process
+npm run api:restart
+
+# Monitor PM2 processes
+pm2 monit
+
+# View PM2 logs
+pm2 logs personal-blog-api
+```
+
+#### Docker Production Setup
+```bash
+# Build production image
+docker build -t personal-blog-api .
+
+# Run production container
+docker run -d \
+  --name personal-blog-api \
+  --env-file .env.production \
+  -p 3000:3000 \
+  personal-blog-api
+```
 
 ### Environment Configuration
 
-Create environment files for different stages:
+#### Development Environment
+- Uses `.env.development` configuration
+- Docker Compose with PostgreSQL container
+- Hot reload enabled
+- Debug logging enabled
 
-#### Development (`.env.development`)
+#### Production Environment
+- Uses `.env.production` configuration
+- External PostgreSQL database
+- PM2 process management
+- Optimized build and logging
+
+### Health Monitoring
 ```bash
-# Database Configuration
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=your_db_user
-DB_PASSWORD=your_db_password
-DB_DATABASE=personal_blog_dev
+# Health check endpoint
+GET /control/health-check
 
-# JWT Configuration
-JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRATION=3600
-REFRESH_TOKEN_EXPIRATION=604800
+# Response format
+{
+  "status": "ok",
+  "timestamp": "2024-01-01T00:00:00.000Z",
+  "uptime": 12345
+}
+```
 
-# Email Configuration
+## 🔧 Configuration
+
+### Environment Files
+- `.env.development` - Development configuration
+- `.env.production` - Production configuration
+
+### Key Configuration Options
+
+#### Database Configuration
+```bash
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USERNAME=username
+POSTGRES_PASSWORD=password
+POSTGRES_DATABASE=personal_blog
+```
+
+#### JWT Configuration
+```bash
+JWT_SECRET=your_jwt_secret_here
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_SECRET=your_refresh_secret_here
+JWT_REFRESH_EXPIRES_IN=7d
+```
+
+#### Security Configuration
+```bash
+HASH_PASSWORD_ROUNDS=12
+RECOVERY_ENCRYPTION_KEY_SIZE=256
+RECOVERY_ENCRYPTION_ITERATIONS=100000
+```
+
+#### Email Configuration
+```bash
 SENDGRID_API_KEY=your_sendgrid_api_key
-FROM_EMAIL=noreply@yourdomain.com
-
-# AWS S3 Configuration
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-AWS_S3_BUCKET_NAME=your_s3_bucket_name
-AWS_REGION=us-east-1
-
-# Application Configuration
-PORT=3000
-FRONTEND_URL=http://localhost:4202
+SENDGRID_FROM_EMAIL=noreply@yourdomain.com
+SENDGRID_FROM_NAME="Your Blog Name"
 ```
 
-#### Production (`.env.production`)
+#### AWS S3 Configuration
 ```bash
-# Production environment variables
-NODE_ENV=production
-# ... (similar structure with production values)
+AWS_S3_BUCKET_NAME=your_s3_bucket
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_S3_REGION=us-east-1
 ```
 
-### Installation Steps
+## 🔗 Frontend Integration
 
-#### 1. Install Dependencies
+### SSR Data Endpoints
+The API provides specialized endpoints for Angular SSR integration:
+
 ```bash
-npm install
+GET /home          # Home page data with featured content
+GET /about         # About page with experience & certificates
+GET /blog          # Blog listing with pagination
+GET /changelog     # Changelog with entries
+GET /license       # License page with tiles
+GET /privacy       # Privacy policy with sections
 ```
 
-#### 2. Database Setup
-
-**Using Docker Compose (Recommended for Development)**
+### Route Generation
 ```bash
-# Start PostgreSQL database
-npm run api:dev
-
-# Run database migrations (if applicable)
-npx sequelize-cli db:migrate
-
-# Seed development data
-npm run database:dev:mock
+GET /posts/slugs    # Blog post slugs for route generation
+GET /projects/slugs # Project slugs for route generation
+GET /pages/slugs    # Page slugs for route generation
 ```
 
-**Manual PostgreSQL Setup**
+### SEO Integration
+All public endpoints include:
+- **Meta Tags**: Title, description, keywords
+- **Open Graph**: Social media optimization
+- **Structured Data**: JSON-LD for search engines
+- **Canonical URLs**: SEO-friendly URL structure
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+#### Database Connection Issues
 ```bash
-# Create database
-createdb personal_blog_dev
+# Check PostgreSQL is running
+docker-compose ps
 
-# Run the application (it will auto-create tables)
-npm run start:dev
+# Check database logs
+docker-compose logs db
+
+# Restart database container
+docker-compose restart db
 ```
 
-#### 3. Development Server
+#### Email Delivery Issues
 ```bash
-# Start development server with watch mode
-npm run start:dev
+# Verify SendGrid API key
+curl -X "GET" "https://api.sendgrid.com/v3/user/account" \
+  -H "Authorization: Bearer YOUR_API_KEY"
 
-# Or start with Docker Compose
-npm run api:dev
+# Check email service logs
+docker-compose logs api | grep email
 ```
 
-## Available Scripts
-
-### Development Commands
+#### Authentication Issues
 ```bash
-npm run start:dev           # Start development server with watch mode
-npm run api:dev            # Run via Docker Compose for development
-npm run api:dev:build      # Build and run Docker Compose
-npm run api:dev:down       # Stop Docker Compose services
+# Verify JWT configuration
+echo $JWT_SECRET
+echo $JWT_REFRESH_SECRET
+
+# Check token expiration settings
+echo $JWT_EXPIRES_IN
+echo $JWT_REFRESH_EXPIRES_IN
 ```
 
-### Production Commands
+### Debug Mode
 ```bash
-npm run api:build          # Build NestJS application for production
-npm run prod              # Start production server
-npm run api:process-start # Start with PM2 process manager
-npm run api:restart       # Restart PM2 process
+# Start in debug mode
+npm run start:debug
+
+# Debug tests
+npm run test:debug
 ```
 
-### Database Management
+### Logging
 ```bash
-npm run database:dev:wipe      # Clear all seeded data
-npm run database:dev:mock      # Seed database with mock data
-npm run database:dev:mock:undo # Remove mock data
-```
+# View application logs
+docker-compose logs -f api
 
-### Testing & Quality Assurance
-```bash
-npm test                  # Run Jest unit tests
-npm run test:watch       # Run tests in watch mode
-npm run test:cov         # Run tests with coverage report
-npm run test:e2e         # Run end-to-end tests
-npm run lint             # Run ESLint with automatic fixes
-npm run format           # Format code with Prettier and ESLint
-```
+# View database logs
+docker-compose logs -f db
 
-## API Documentation
-
-### Authentication Endpoints
-
-#### POST /auth/login
-Authenticate user and return JWT tokens.
-
-**Request Body:**
-```json
-{
-  "email": "user@example.com",
-  "password": "securePassword123",
-  "mfaCode": "123456"
-}
-```
-
-**Response:**
-```json
-{
-  "accessToken": "jwt_access_token",
-  "refreshToken": "jwt_refresh_token",
-  "user": {
-    "id": 1,
-    "email": "user@example.com",
-    "name": "John Doe"
-  }
-}
-```
-
-#### POST /auth/refresh
-Refresh access token using refresh token.
-
-**Request:**
-```json
-{
-  "refreshToken": "current_refresh_token"
-}
-```
-
-#### POST /auth/logout
-Invalidate refresh token and log out user.
-
-### Content Management Endpoints
-
-#### GET /articles
-Retrieve paginated list of published articles.
-
-**Query Parameters:**
-- `page`: Page number (default: 1)
-- `limit`: Items per page (default: 10)
-- `tag`: Filter by tag
-- `search`: Search in title and content
-
-**Response:**
-```json
-{
-  "articles": [
-    {
-      "id": 1,
-      "title": "Article Title",
-      "slug": "article-title",
-      "description": "Article description",
-      "content": "Full article content",
-      "featuredImage": "https://s3.amazonaws.com/image.jpg",
-      "tags": ["javascript", "tutorial"],
-      "publishDate": "2024-01-15T10:00:00Z",
-      "updatedDate": "2024-01-20T10:00:00Z"
-    }
-  ],
-  "totalCount": 25,
-  "currentPage": 1,
-  "totalPages": 3
-}
-```
-
-#### GET /articles/:slug
-Retrieve single article by slug.
-
-#### POST /admin/articles
-Create new article (requires authentication).
-
-**Request Body:**
-```json
-{
-  "title": "New Article Title",
-  "description": "Article description",
-  "content": "<p>Article content with HTML</p>",
-  "featuredImage": "https://s3.amazonaws.com/image.jpg",
-  "tags": ["javascript", "tutorial"],
-  "isPublished": true
-}
-```
-
-### SSR Integration Endpoints
-
-#### GET /home
-Retrieve complete homepage data for SSR pre-rendering.
-
-**Response:**
-```json
-{
-  "pageContent": {
-    "title": "Welcome to My Blog",
-    "description": "Personal blog and portfolio"
-  },
-  "layoutData": {
-    "heroImage": "https://s3.amazonaws.com/hero.jpg",
-    "footerText": "Copyright 2024"
-  },
-  "seoData": {
-    "metaTitle": "John Doe - Developer & Writer",
-    "metaDescription": "Personal blog featuring web development tutorials",
-    "openGraphImage": "https://s3.amazonaws.com/og-image.jpg"
-  },
-  "featuredPosts": [...],
-  "featuredProjects": [...]
-}
-```
-
-#### GET /about
-Retrieve complete about page data including professional experience.
-
-#### GET /changelog
-Retrieve changelog page with version history.
-
-### Security Features
-
-#### Request Validation
-All endpoints use comprehensive DTO validation:
-- Email format validation
-- Password strength requirements
-- Input sanitization
-- Type checking and transformation
-
-#### Rate Limiting
-API implements rate limiting to prevent abuse:
-- Authentication endpoints: 5 requests per minute
-- General API endpoints: 100 requests per minute
-- Contact form: 3 submissions per hour
-
-#### CORS Configuration
-Configured for frontend integration:
-- Development: `http://localhost:4202`
-- Production: Your production frontend domain
-
-## Deployment
-
-### Docker Deployment
-
-#### Build Docker Image
-```bash
-docker build -t personal-blog-api .
-```
-
-#### Run with Docker Compose
-```bash
-# Production deployment
-docker-compose -f docker-compose.prod.yml up -d
-```
-
-### PM2 Process Management
-
-#### Start Application
-```bash
-npm run api:process-start
-```
-
-#### Monitor Processes
-```bash
-pm2 status
+# PM2 logs (production)
 pm2 logs personal-blog-api
-pm2 restart personal-blog-api
 ```
 
-### Environment Variables for Production
+## 📝 Development Guidelines
 
-Ensure all required environment variables are set:
-- Database connection details
-- JWT secrets and expiration times
-- SendGrid API key and email configuration
-- AWS S3 credentials and bucket information
-- CORS allowed origins for frontend domain
+### Code Style
+- **TypeScript**: Strict mode enabled
+- **ESLint**: Configured with recommended rules
+- **Prettier**: Code formatting with consistent style
+- **Naming**: PascalCase for classes, camelCase for variables
 
-## Security Considerations
+### Commit Guidelines
+- **Format**: `feat: add new feature` or `fix: resolve issue`
+- **Scope**: Use module names when applicable
+- **Description**: Clear, concise description of changes
 
-### Data Protection
-- All passwords are hashed using bcryptjs with configurable salt rounds
-- Sensitive data is encrypted using AES encryption
-- Database queries use parameterized statements to prevent SQL injection
-- Input validation prevents XSS and injection attacks
+### Testing Guidelines
+- **Unit Tests**: Test individual components and services
+- **Integration Tests**: Test module interactions
+- **E2E Tests**: Test complete user workflows
+- **Coverage**: Maintain minimum 80% code coverage
 
-### API Security
-- JWT tokens have configurable expiration times
-- Refresh tokens are stored securely in database sessions
-- Authentication required for all admin endpoints
-- Rate limiting prevents abuse and brute force attacks
+## 🤝 Contributing
 
-### GDPR Compliance
-- User data consent tracking
-- Right to deletion implementation
-- Data export functionality
-- Privacy policy management system
+1. **Fork the repository**
+2. **Create feature branch**: `git checkout -b feature/new-feature`
+3. **Commit changes**: `git commit -m 'feat: add new feature'`
+4. **Push to branch**: `git push origin feature/new-feature`
+5. **Submit pull request**
 
-## Monitoring & Logging
+### Development Setup for Contributors
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/personal-blog-api.git
+cd personal-blog-api
 
-### Application Logging
-- Structured logging with different log levels
-- Error tracking and stack trace capture
-- Performance monitoring for slow queries
-- Security event logging for authentication attempts
+# Add upstream remote
+git remote add upstream https://github.com/ORIGINAL_OWNER/personal-blog-api.git
 
-### Health Checks
-- Database connection monitoring
-- External service availability checks
-- Memory and CPU usage tracking
-- Automated alerts for critical issues
+# Install dependencies
+npm install
 
-## Contributing
+# Start development environment
+npm run api:dev:build
 
-### Development Workflow
-1. Create feature branch from `main`
-2. Implement changes with proper testing
-3. Run linting and formatting: `npm run format`
-4. Run test suite: `npm test`
-5. Create pull request with detailed description
+# Run tests
+npm test
+```
 
-### Code Standards
-- TypeScript strict mode enabled
-- ESLint configuration with Prettier integration
-- Comprehensive interface definitions required
-- Unit tests for all service methods
-- DTOs for all API endpoints
+## 📄 License
 
-### Database Changes
-- Use Sequelize migrations for schema changes
-- Update model definitions and interfaces
-- Test migrations in development environment
-- Document breaking changes in CHANGELOG.md
+This project is licensed under the UNLICENSED License - see the package.json file for details.
 
-## License
+## 🔗 Related Projects
 
-This project is licensed under a custom license. See the LICENSE file for details.
+- **Frontend**: [Personal Blog Frontend](../personal-blog-front) - Angular SSR application
+- **Documentation**: See `CLAUDE.md` for AI assistant integration guidelines
 
-## Support
+## 📞 Support
 
-For technical support or questions about implementation, please contact the development team or create an issue in the project repository.
+For support and questions:
+- Create an issue in the repository
+- Review the troubleshooting section
+- Check the API documentation
+- Verify environment configuration
+
+---
+
+**Built with ❤️ using NestJS, TypeScript, and modern web technologies.**
