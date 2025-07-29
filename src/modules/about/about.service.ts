@@ -5,12 +5,12 @@ import { AboutPage } from '@models/about-page.model';
 import { Experience } from '@models/experience.model';
 import { Position } from '@models/position.model';
 import { Certificate } from '@models/certificate.model';
-import { CreateAboutPageDto } from '@dto/about/requests/create-about-page.dto';
-import { UpdateAboutPageDto } from '@dto/about/requests/update-about-page.dto';
-import { CreateExperienceDto } from '@dto/about/requests/create-experience.dto';
-import { UpdateExperienceDto } from '@dto/about/requests/update-experience.dto';
-import { CreateCertificateDto } from '@dto/about/requests/create-certificate.dto';
-import { UpdateCertificateDto } from '@dto/about/requests/update-certificate.dto';
+import { CreateAboutPageDto } from '@dto/create-about-page.dto';
+import { UpdateAboutPageDto } from '@dto/update-about-page.dto';
+import { CreateExperienceDto } from '@dto/create-experience.dto';
+import { UpdateExperienceDto } from '@dto/update-experience.dto';
+import { CreateCertificateDto } from '@dto/create-certificate.dto';
+import { UpdateCertificateDto } from '@dto/update-certificate.dto';
 
 @Injectable()
 export class AboutService {

@@ -1,4 +1,4 @@
-import { CreateProjectDto } from '@dto/projects/requests/create-project.dto';
+import { CreateProjectDto } from '@dto/create-project.dto';
 import { Transaction } from 'sequelize';
 
 export interface UpdateProjectInterface {

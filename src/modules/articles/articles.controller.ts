@@ -15,8 +15,10 @@ import { AuthGuard } from '@guards/auth.guard';
 import { UserId } from '@decorators/user-id.decorator';
 import { Transaction } from 'sequelize';
 import { TrxDecorator } from '@decorators/transaction.decorator';
-import { CreateArticleDto } from '@dto/articles/requests/create-article.dto';
+import { CreateArticleDto } from '@dto/create-article.dto';
+import { UpdateArticleDto } from '@dto/update-article.dto';
 import { ValidationPipe } from '@pipes/validation.pipe';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
 @Controller()
 export class ArticlesController {
@@ -39,6 +41,7 @@ export class ArticlesController {
   }
 
   // Admin endpoints
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/posts')
   async getAdminPosts(
@@ -48,6 +51,7 @@ export class ArticlesController {
     return this.articlesService.getAdminPosts({ userId, published });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Post('admin/posts')
@@ -59,17 +63,19 @@ export class ArticlesController {
     return this.articlesService.create({ data, userId, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/posts/:id')
   async updatePost(
     @Param('id') articleId: string,
-    @Body() data: Partial<CreateArticleDto>,
+    @Body() data: UpdateArticleDto,
     @TrxDecorator() trx: Transaction
   ) {
     return this.articlesService.update({ articleId, data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Delete('admin/posts/:id')
   async deletePost(
@@ -79,6 +85,7 @@ export class ArticlesController {
     return this.articlesService.delete({ articleId, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Put('admin/posts/:id/publish')
   async togglePublishStatus(

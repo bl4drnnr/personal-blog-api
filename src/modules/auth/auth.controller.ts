@@ -11,6 +11,7 @@ import {
 import { AuthService } from '@modules/auth.service';
 import { Transaction } from 'sequelize';
 import { AuthGuard } from '@guards/auth.guard';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
 import { ValidationPipe } from '@pipes/validation.pipe';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { UserId } from '@decorators/user-id.decorator';
@@ -24,6 +25,7 @@ import {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @UseGuards(BasicAuthGuard)
   @UsePipes(ValidationPipe)
   @Post('login')
   async login(
@@ -41,6 +43,7 @@ export class AuthController {
     }
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('logout')
   async logout(
@@ -55,6 +58,7 @@ export class AuthController {
     return res.status(HttpStatus.OK).json(response);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Get('refresh')
   async refreshToken(
     @CookieRefreshToken() refreshToken: string,

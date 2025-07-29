@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Newsletter } from '@models/newsletters.model';
-import { SubscribedToNewslettersDto } from '@dto/newsletters/responses/subscribed-to-newsletters.dto';
-import { SubscriptionConfirmedDto } from '@dto/newsletters/responses/subscription-confirmed.dto';
+import { SubscribedToNewslettersDto } from '@dto/subscribed-to-newsletters.dto';
+import { SubscriptionConfirmedDto } from '@dto/subscription-confirmed.dto';
 import { SubscriptionAlreadyConfirmedException } from '@exceptions/newsletters/subscription-already-confirmed.exception';
 import { NewslettersNotFoundException } from '@exceptions/newsletters/newsletters-not-found.exception';
-import { UnsubscriptionConfirmedDto } from '@dto/newsletters/responses/unsubscription-confirmed.dto';
+import { UnsubscriptionConfirmedDto } from '@dto/unsubscription-confirmed.dto';
 import { EmailService } from '@shared/email.service';
 import { GetNewslettersByIdInterface } from '@interfaces/get-newsletters-by-id.interface';
 import { ConfirmNewslettersSubscriptionByIdInterface } from '@interfaces/confirm-newsletters-subscription-by-id.interface';

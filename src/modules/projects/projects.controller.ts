@@ -11,12 +11,13 @@ import {
   UsePipes
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
-import { CreateProjectDto } from '@dto/projects/requests/create-project.dto';
+import { CreateProjectDto } from '@dto/create-project.dto';
 import { AuthGuard } from '@guards/auth.guard';
 import { ValidationPipe } from '@pipes/validation.pipe';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { UserId } from '@decorators/user-id.decorator';
 import { Transaction } from 'sequelize';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
 interface ProjectsQuery {
   page?: string;
@@ -56,12 +57,14 @@ export class ProjectsController {
   }
 
   // Admin endpoints
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/projects')
   async getAdminProjects(@UserId() userId: string) {
     return this.projectsService.findByUserId({ userId });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Post('admin/projects')
@@ -73,6 +76,7 @@ export class ProjectsController {
     return this.projectsService.create({ data, userId, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/projects/:id')
@@ -84,6 +88,7 @@ export class ProjectsController {
     return this.projectsService.update({ projectId, data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Delete('admin/projects/:id')
   async deleteProject(

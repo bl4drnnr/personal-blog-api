@@ -14,6 +14,10 @@ import { AuthGuard } from '@guards/auth.guard';
 import { ValidationPipe } from '@pipes/validation.pipe';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { Transaction } from 'sequelize';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
+import { CreateChangelogEntryDto } from '@dto/create-changelog-entry.dto';
+import { UpdateChangelogEntryDto } from '@dto/update-changelog-entry.dto';
+import { UpdateChangelogPageDto } from '@dto/update-changelog-page.dto';
 
 @Controller()
 export class ChangelogController {
@@ -26,49 +30,37 @@ export class ChangelogController {
   }
 
   // Admin endpoints for changelog entries
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/changelog/entries')
   async getChangelogEntries() {
     return await this.changelogService.getChangelogEntries();
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Post('admin/changelog/entries')
   async createChangelogEntry(
-    @Body()
-    data: {
-      version: string;
-      date: string;
-      title: string;
-      description: string;
-      changes: string[];
-      sortOrder?: number;
-    },
+    @Body() data: CreateChangelogEntryDto,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.changelogService.createChangelogEntry({ data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/changelog/entries/:id')
   async updateChangelogEntry(
     @Param('id') entryId: string,
-    @Body()
-    data: {
-      version?: string;
-      date?: string;
-      title?: string;
-      description?: string;
-      changes?: string[];
-      sortOrder?: number;
-    },
+    @Body() data: UpdateChangelogEntryDto,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.changelogService.updateChangelogEntry({ entryId, data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Delete('admin/changelog/entries/:id')
   async deleteChangelogEntry(
@@ -79,30 +71,12 @@ export class ChangelogController {
   }
 
   // Admin endpoint for changelog page settings (layout, SEO, etc.)
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/changelog/page')
   async updateChangelogPage(
-    @Body()
-    data: {
-      title?: string;
-      content?: string;
-      footerText?: string;
-      heroImageMain?: string;
-      heroImageSecondary?: string;
-      heroImageMainAlt?: string;
-      heroImageSecondaryAlt?: string;
-      logoText?: string;
-      breadcrumbText?: string;
-      heroTitle?: string;
-      metaTitle?: string;
-      metaDescription?: string;
-      metaKeywords?: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      ogImage?: string;
-      structuredData?: object;
-    },
+    @Body() data: UpdateChangelogPageDto,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.changelogService.updateChangelogPage({ data, trx });

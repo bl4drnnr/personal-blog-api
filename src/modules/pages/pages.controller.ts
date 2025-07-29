@@ -17,6 +17,7 @@ import { Transaction } from 'sequelize';
 import { CreatePageDto } from '@dto/create-page.dto';
 import { UpdatePageDto } from '@dto/update-page.dto';
 import { UserId } from '@decorators/user-id.decorator';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
 @Controller()
 export class PagesController {
@@ -39,18 +40,21 @@ export class PagesController {
   }
 
   // Admin endpoints
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/pages')
   async getAdminPages() {
     return await this.pagesService.findAllAdmin();
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/pages/:slug')
   async getAdminPageBySlug(@Param('slug') slug: string) {
     return await this.pagesService.getPageBySlugAdmin({ slug });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Post('admin/pages')
@@ -62,6 +66,7 @@ export class PagesController {
     return await this.pagesService.create({ data, userId, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/pages/:id')
@@ -73,6 +78,7 @@ export class PagesController {
     return await this.pagesService.update({ pageId, data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Delete('admin/pages/:id')
   async deletePage(@Param('id') pageId: string, @TrxDecorator() trx: Transaction) {

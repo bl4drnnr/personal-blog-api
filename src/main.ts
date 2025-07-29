@@ -6,6 +6,8 @@ import { json, urlencoded } from 'express';
   const whitelist = [
     'http://localhost:4200', // Admin panel
     'http://localhost:4202', // Blog front
+    'http://localhost:8080', // Blog front
+    'http://127.0.0.1:8080', // Blog front
     'http://localhost:4000' // Blog production front
   ];
 

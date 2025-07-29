@@ -6,11 +6,13 @@ import { TrxDecorator } from '@decorators/transaction.decorator';
 import { Transaction } from 'sequelize';
 import { ForgotPasswordDto } from '@dto/forgot-password.dto';
 import { ValidationPipe } from '@pipes/validation.pipe';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('user-info')
   getUserInfo(@UserId() userId: string, @TrxDecorator() trx: Transaction) {

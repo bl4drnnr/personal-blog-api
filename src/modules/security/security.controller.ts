@@ -7,11 +7,13 @@ import { Transaction } from 'sequelize';
 import { AuthGuard } from '@guards/auth.guard';
 import { UserId } from '@decorators/user-id.decorator';
 import { LoginGenerate2faQrDto } from '@dto/login-generate-2fa-qr.dto';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
 @Controller('security')
 export class SecurityController {
   constructor(private readonly securityService: SecurityService) {}
 
+  @UseGuards(BasicAuthGuard)
   @UsePipes(ValidationPipe)
   @Post('login-generate-2fa-qr')
   loginGenerateTwoFaQrCode(
@@ -24,12 +26,14 @@ export class SecurityController {
     });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('generate-2fa-qr')
   generateTwoFaQrCode(@UserId() userId: string, @TrxDecorator() trx: Transaction) {
     return this.securityService.generateTwoFaQrCode({ userId, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UsePipes(ValidationPipe)
   @Post('login-verify-2fa')
   loginVerifyTwoFaQrCode(
@@ -42,6 +46,7 @@ export class SecurityController {
     });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   @Post('verify-2fa')

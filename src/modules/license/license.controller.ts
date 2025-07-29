@@ -14,6 +14,10 @@ import { AuthGuard } from '@guards/auth.guard';
 import { ValidationPipe } from '@pipes/validation.pipe';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { Transaction } from 'sequelize';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
+import { CreateLicenseTileDto } from '@dto/create-license-tile.dto';
+import { UpdateLicenseTileDto } from '@dto/update-license-tile.dto';
+import { UpdateLicensePageDto } from '@dto/update-license-page.dto';
 
 @Controller()
 export class LicenseController {
@@ -26,51 +30,37 @@ export class LicenseController {
   }
 
   // Admin endpoints for license tiles
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/license/tiles')
   async getLicenseTiles() {
     return await this.licenseService.getLicenseTiles();
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Post('admin/license/tiles')
   async createLicenseTile(
-    @Body()
-    data: {
-      title: string;
-      description: string;
-      links: Array<{
-        label: string;
-        url: string;
-      }>;
-      sortOrder?: number;
-    },
+    @Body() data: CreateLicenseTileDto,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.licenseService.createLicenseTile({ data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/license/tiles/:id')
   async updateLicenseTile(
     @Param('id') tileId: string,
-    @Body()
-    data: {
-      title?: string;
-      description?: string;
-      links?: Array<{
-        label: string;
-        url: string;
-      }>;
-      sortOrder?: number;
-    },
+    @Body() data: UpdateLicenseTileDto,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.licenseService.updateLicenseTile({ tileId, data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Delete('admin/license/tiles/:id')
   async deleteLicenseTile(
@@ -81,33 +71,12 @@ export class LicenseController {
   }
 
   // Admin endpoint for license page settings (layout, SEO, etc.)
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/license/page')
   async updateLicensePage(
-    @Body()
-    data: {
-      title?: string;
-      licenseDate?: string;
-      paragraphs?: string[];
-      additionalInfoTitle?: string;
-      additionalInfoParagraphs?: string[];
-      footerText?: string;
-      heroImageMain?: string;
-      heroImageSecondary?: string;
-      heroImageMainAlt?: string;
-      heroImageSecondaryAlt?: string;
-      logoText?: string;
-      breadcrumbText?: string;
-      heroTitle?: string;
-      metaTitle?: string;
-      metaDescription?: string;
-      metaKeywords?: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      ogImage?: string;
-      structuredData?: object;
-    },
+    @Body() data: UpdateLicensePageDto,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.licenseService.updateLicensePage({ data, trx });

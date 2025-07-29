@@ -14,12 +14,13 @@ import { AuthGuard } from '@guards/auth.guard';
 import { ValidationPipe } from '@pipes/validation.pipe';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { Transaction } from 'sequelize';
-import { CreateAboutPageDto } from '@dto/about/requests/create-about-page.dto';
-import { UpdateAboutPageDto } from '@dto/about/requests/update-about-page.dto';
-import { CreateExperienceDto } from '@dto/about/requests/create-experience.dto';
-import { UpdateExperienceDto } from '@dto/about/requests/update-experience.dto';
-import { CreateCertificateDto } from '@dto/about/requests/create-certificate.dto';
-import { UpdateCertificateDto } from '@dto/about/requests/update-certificate.dto';
+import { CreateAboutPageDto } from '@dto/create-about-page.dto';
+import { UpdateAboutPageDto } from '@dto/update-about-page.dto';
+import { CreateExperienceDto } from '@dto/create-experience.dto';
+import { UpdateExperienceDto } from '@dto/update-experience.dto';
+import { CreateCertificateDto } from '@dto/create-certificate.dto';
+import { UpdateCertificateDto } from '@dto/update-certificate.dto';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
 @Controller()
 export class AboutController {
@@ -32,12 +33,14 @@ export class AboutController {
   }
 
   // Admin endpoints for about page content
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/about')
   async getAdminAboutPageData() {
     return await this.aboutService.getAboutPageDataAdmin();
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Post('admin/about')
@@ -48,6 +51,7 @@ export class AboutController {
     return await this.aboutService.createAboutPage({ data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/about/:id')
@@ -60,12 +64,14 @@ export class AboutController {
   }
 
   // Admin endpoints for experiences
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/experiences')
   async getExperiences() {
     return await this.aboutService.getExperiences();
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Post('admin/experiences')
@@ -76,6 +82,7 @@ export class AboutController {
     return await this.aboutService.createExperience({ data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/experiences/:id')
@@ -87,6 +94,7 @@ export class AboutController {
     return await this.aboutService.updateExperience({ experienceId, data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Delete('admin/experiences/:id')
   async deleteExperience(
@@ -97,12 +105,14 @@ export class AboutController {
   }
 
   // Admin endpoints for certificates
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/certificates')
   async getCertificates() {
     return await this.aboutService.getCertificates();
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Post('admin/certificates')
@@ -113,6 +123,7 @@ export class AboutController {
     return await this.aboutService.createCertificate({ data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/certificates/:id')
@@ -124,6 +135,7 @@ export class AboutController {
     return await this.aboutService.updateCertificate({ certificateId, data, trx });
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Delete('admin/certificates/:id')
   async deleteCertificate(

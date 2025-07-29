@@ -2,7 +2,26 @@
 
 A comprehensive NestJS-based REST API for a personal blog platform with advanced content management, authentication, and SEO features. This API serves as the backend for a full-stack personal blog application with Angular SSR frontend integration.
 
-## 🚀 Overview
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Technology Stack](#technology-stack)
+3. [Prerequisites](#prerequisites)
+4. [Installation & Setup](#installation--setup)
+5. [Environment Variables](#environment-variables)
+6. [Available Scripts](#available-scripts)
+7. [Architecture](#architecture)
+8. [API Endpoints](#api-endpoints)
+9. [Authentication & Security](#authentication--security)
+10. [Database Schema](#database-schema)
+11. [Email System](#email-system)
+12. [Testing](#testing)
+13. [Deployment](#deployment)
+14. [Configuration](#configuration)
+15. [Frontend Integration](#frontend-integration)
+16. [Troubleshooting](#troubleshooting)
+
+## Overview
 
 The Personal Blog API is a robust, scalable backend service built with modern technologies and best practices. It provides comprehensive content management capabilities, advanced security features, and seamless integration with server-side rendering (SSR) frontend applications.
 
@@ -17,7 +36,7 @@ The Personal Blog API is a robust, scalable backend service built with modern te
 - **🧪 Testing**: Comprehensive test suite with Jest and E2E testing
 - **📊 Database Seeding**: Mock data generation for development and testing
 
-## 🛠 Technology Stack
+## Technology Stack
 
 - **Framework**: [NestJS](https://nestjs.com/) 10.x with TypeScript
 - **Database**: PostgreSQL with [Sequelize ORM](https://sequelize.org/)
@@ -29,7 +48,7 @@ The Personal Blog API is a robust, scalable backend service built with modern te
 - **Process Management**: PM2 for production deployment
 - **Testing**: Jest for unit testing, Supertest for E2E testing
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Node.js 18+ and npm
 - Docker and Docker Compose
@@ -37,12 +56,12 @@ The Personal Blog API is a robust, scalable backend service built with modern te
 - SendGrid account (for email functionality)
 - AWS S3 bucket (for file storage)
 
-## ⚡ Quick Start
+## Installation & Setup
 
 ### 1. Clone the Repository
 
 ```bash
-git clone &lt;repository-url&gt;
+git clone <repository-url>
 cd personal-blog-api
 ```
 
@@ -56,45 +75,6 @@ cp .env.development.example .env.development
 
 # Copy and configure production environment  
 cp .env.production.example .env.production
-```
-
-#### Required Environment Variables
-
-```bash
-# Database Configuration
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-POSTGRES_USERNAME=your_username
-POSTGRES_PASSWORD=your_password
-POSTGRES_DATABASE=personal_blog
-
-# API Configuration
-API_PORT=3000
-JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRES_IN=15m
-JWT_REFRESH_SECRET=your_refresh_secret_key
-JWT_REFRESH_EXPIRES_IN=7d
-
-# Security & Encryption
-HASH_PASSWORD_ROUNDS=12
-RECOVERY_ENCRYPTION_KEY_SIZE=256
-RECOVERY_ENCRYPTION_ITERATIONS=100000
-RECOVERY_ENCRYPTION_SALT=your_salt_here
-RECOVERY_ENCRYPTION_IV=your_iv_here
-
-# Email Configuration (SendGrid)
-SENDGRID_API_KEY=your_sendgrid_api_key
-SENDGRID_FROM_EMAIL=noreply@yourdomain.com
-SENDGRID_FROM_NAME="Your Blog Name"
-
-# AWS S3 Configuration
-AWS_S3_BUCKET_NAME=your_s3_bucket
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=your_secret_key
-AWS_S3_REGION=us-east-1
-
-# Frontend Integration
-FRONTEND_URL=http://localhost:4200
 ```
 
 ### 3. Development Setup
@@ -140,7 +120,56 @@ npm run database:dev:wipe
 
 The API will be available at `http://localhost:3000` (or your configured API_PORT).
 
-## 📚 Available Scripts
+## Environment Variables
+
+### Database Configuration
+```bash
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USERNAME=your_username
+POSTGRES_PASSWORD=your_password
+POSTGRES_DATABASE=personal_blog
+```
+
+### API Configuration
+```bash
+API_PORT=3000
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_SECRET=your_refresh_secret_key
+JWT_REFRESH_EXPIRES_IN=7d
+```
+
+### Security & Encryption
+```bash
+HASH_PASSWORD_ROUNDS=12
+RECOVERY_ENCRYPTION_KEY_SIZE=256
+RECOVERY_ENCRYPTION_ITERATIONS=100000
+RECOVERY_ENCRYPTION_SALT=your_salt_here
+RECOVERY_ENCRYPTION_IV=your_iv_here
+```
+
+### Email Configuration (SendGrid)
+```bash
+SENDGRID_API_KEY=your_sendgrid_api_key
+SENDGRID_FROM_EMAIL=noreply@yourdomain.com
+SENDGRID_FROM_NAME="Your Blog Name"
+```
+
+### AWS S3 Configuration
+```bash
+AWS_S3_BUCKET_NAME=your_s3_bucket
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_S3_REGION=us-east-1
+```
+
+### Frontend Integration
+```bash
+FRONTEND_URL=http://localhost:4200
+```
+
+## Available Scripts
 
 ### Development Scripts
 
@@ -179,7 +208,7 @@ The API will be available at `http://localhost:3000` (or your configured API_POR
 | `npm run lint` | Run ESLint with automatic fixes |
 | `npm run format` | Format code with Prettier and ESLint |
 
-## 🏗 Architecture
+## Architecture
 
 ### Module Structure
 
@@ -222,7 +251,192 @@ src/
 - **Exception Handling**: Custom exception classes for different error types
 - **Interface-Driven Development**: Comprehensive TypeScript interfaces for type safety
 
-## 🔐 Authentication & Security
+## API Endpoints
+
+### Public Endpoints
+
+#### Content Retrieval
+```http
+# Articles
+GET /posts                    # Get all published blog posts
+GET /posts/slugs             # Get post slugs for route generation
+GET /posts/:slug             # Get specific post by slug
+
+# Projects  
+GET /projects                # Get projects with pagination
+GET /projects/slugs          # Get project slugs for route generation
+GET /projects/:slug          # Get specific project by slug
+GET /projects/featured       # Get featured projects
+
+# Pages
+GET /pages                   # Get all published pages
+GET /pages/slugs            # Get page slugs for route generation
+GET /pages/:slug            # Get specific page by slug
+
+# Static Pages (SSR Data)
+GET /home                   # Home page data
+GET /about                  # About page data  
+GET /blog                   # Blog listing page data
+GET /changelog              # Changelog page data
+GET /license                # License page data
+GET /privacy                # Privacy policy page data
+
+# Site Configuration
+GET /site/config            # Public site configuration
+
+# System
+GET /control/health-check   # Health check endpoint
+```
+
+#### User Actions
+```http
+# Authentication
+POST /auth/login            # User login
+GET /auth/logout            # User logout
+GET /auth/refresh           # Refresh access token
+
+# Contact & Newsletter
+POST /contact/contact       # Submit contact form
+POST /newsletters/subscribe # Subscribe to newsletter
+POST /newsletters/confirm-newsletters-subscription # Confirm subscription
+POST /newsletters/unsubscribe-from-newsletters # Unsubscribe
+
+# Password Recovery
+POST /users/forgot-password # Send password reset email
+```
+
+### Protected Endpoints (Require Authentication)
+
+#### User Management
+```http
+GET /users/user-info        # Get current user information
+```
+
+#### Content Management
+```http
+# Articles Management
+GET /admin/posts            # Get admin posts list
+POST /admin/posts           # Create new post
+PUT /admin/posts/:id        # Update existing post
+DELETE /admin/posts/:id     # Delete post
+PUT /admin/posts/:id/publish # Toggle publish status
+
+# Projects Management
+GET /admin/projects         # Get admin projects list
+POST /admin/projects        # Create new project
+PUT /admin/projects/:id     # Update existing project
+DELETE /admin/projects/:id  # Delete project
+
+# Pages Management
+GET /admin/pages            # Get all pages for admin
+GET /admin/pages/:slug      # Get specific page for editing
+POST /admin/pages           # Create new page
+PUT /admin/pages/:id        # Update existing page
+DELETE /admin/pages/:id     # Delete page
+```
+
+#### About Page Management
+```http
+# About Page
+GET /admin/about            # Get admin about page data
+POST /admin/about           # Create about page content
+PUT /admin/about/:id        # Update about page content
+
+# Experience Management
+GET /admin/experiences      # Get all experiences
+POST /admin/experiences     # Create experience entry
+PUT /admin/experiences/:id  # Update experience entry
+DELETE /admin/experiences/:id # Delete experience entry
+
+# Certificate Management
+GET /admin/certificates     # Get all certificates
+POST /admin/certificates    # Create certificate entry
+PUT /admin/certificates/:id # Update certificate entry
+DELETE /admin/certificates/:id # Delete certificate entry
+```
+
+#### Specialized Page Management
+```http
+# Changelog Management
+GET /admin/changelog/entries     # Get changelog entries
+POST /admin/changelog/entries    # Create changelog entry
+PUT /admin/changelog/entries/:id # Update changelog entry
+DELETE /admin/changelog/entries/:id # Delete changelog entry
+PUT /admin/changelog/page        # Update changelog page settings
+
+# License Management
+GET /admin/license/tiles         # Get license tiles
+POST /admin/license/tiles        # Create license tile
+PUT /admin/license/tiles/:id     # Update license tile
+DELETE /admin/license/tiles/:id  # Delete license tile
+PUT /admin/license/page          # Update license page settings
+
+# Privacy Management
+PUT /admin/privacy/page          # Update privacy page settings
+POST /admin/privacy/sections     # Create privacy section
+PUT /admin/privacy/sections/:id  # Update privacy section
+DELETE /admin/privacy/sections/:id # Delete privacy section
+POST /admin/privacy/content-items # Create privacy content item
+PUT /admin/privacy/content-items/:id # Update privacy content item
+DELETE /admin/privacy/content-items/:id # Delete privacy content item
+```
+
+#### Site Configuration
+```http
+GET /admin/site/config      # Get admin site configuration
+PUT /admin/site/config      # Update site configuration
+```
+
+#### Two-Factor Authentication
+```http
+POST /security/login-generate-2fa-qr # Generate 2FA QR during login
+GET /security/generate-2fa-qr        # Generate 2FA QR for user
+POST /security/login-verify-2fa      # Verify 2FA during login
+POST /security/verify-2fa            # Verify 2FA for user
+```
+
+### API Response Formats
+
+#### Success Response
+```json
+{
+  "success": true,
+  "data": {
+    // Response data
+  },
+  "message": "Operation completed successfully"
+}
+```
+
+#### Error Response
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Error description",
+    "details": {}
+  }
+}
+```
+
+#### Paginated Response
+```json
+{
+  "success": true,
+  "data": {
+    "items": [],
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "total": 100,
+      "totalPages": 10
+    }
+  }
+}
+```
+
+## Authentication & Security
 
 ### JWT Authentication
 
@@ -230,7 +444,7 @@ The API uses a dual-token JWT authentication system:
 
 - **Access Token**: Short-lived (15 minutes) for API requests
 - **Refresh Token**: Long-lived (7 days) stored in HTTP-only cookies
-- **Custom Header**: `x-access-token: Bearer &lt;token&gt;`
+- **Custom Header**: `x-access-token: Bearer <token>`
 
 ### Two-Factor Authentication
 
@@ -251,11 +465,11 @@ The API uses a dual-token JWT authentication system:
 1. **Login**: `POST /auth/login` with email/password
 2. **2FA Check**: If enabled, requires TOTP verification
 3. **Token Generation**: Returns access token + HTTP-only refresh token cookie
-4. **API Requests**: Include `x-access-token: Bearer &lt;token&gt;` header
+4. **API Requests**: Include `x-access-token: Bearer <token>` header
 5. **Token Refresh**: `GET /auth/refresh` using refresh token cookie
 6. **Logout**: `GET /auth/logout` clears refresh token
 
-## 📊 Database Schema
+## Database Schema
 
 ### Core Models
 
@@ -298,151 +512,7 @@ The API uses a dual-token JWT authentication system:
 - **Relationships**: Proper foreign key relationships and cascading
 - **Constraints**: Unique constraints on slugs and email addresses
 
-## 🔌 API Endpoints
-
-### Public Endpoints
-
-#### Content Retrieval
-```bash
-# Articles
-GET /posts                    # Get all published blog posts
-GET /posts/slugs             # Get post slugs for route generation
-GET /posts/:slug             # Get specific post by slug
-
-# Projects  
-GET /projects                # Get projects with pagination
-GET /projects/slugs          # Get project slugs for route generation
-GET /projects/:slug          # Get specific project by slug
-GET /projects/featured       # Get featured projects
-
-# Pages
-GET /pages                   # Get all published pages
-GET /pages/slugs            # Get page slugs for route generation
-GET /pages/:slug            # Get specific page by slug
-
-# Static Pages (SSR Data)
-GET /home                   # Home page data
-GET /about                  # About page data  
-GET /blog                   # Blog listing page data
-GET /changelog              # Changelog page data
-GET /license                # License page data
-GET /privacy                # Privacy policy page data
-
-# Site Configuration
-GET /site/config            # Public site configuration
-
-# System
-GET /control/health-check   # Health check endpoint
-```
-
-#### User Actions
-```bash
-# Authentication
-POST /auth/login            # User login
-GET /auth/logout            # User logout
-GET /auth/refresh           # Refresh access token
-
-# Contact & Newsletter
-POST /contact/contact       # Submit contact form
-POST /newsletters/subscribe # Subscribe to newsletter
-POST /newsletters/confirm-newsletters-subscription # Confirm subscription
-POST /newsletters/unsubscribe-from-newsletters # Unsubscribe
-
-# Password Recovery
-POST /users/forgot-password # Send password reset email
-```
-
-### Protected Endpoints (Require Authentication)
-
-#### User Management
-```bash
-GET /users/user-info        # Get current user information
-```
-
-#### Content Management
-```bash
-# Articles Management
-GET /admin/posts            # Get admin posts list
-POST /admin/posts           # Create new post
-PUT /admin/posts/:id        # Update existing post
-DELETE /admin/posts/:id     # Delete post
-PUT /admin/posts/:id/publish # Toggle publish status
-
-# Projects Management
-GET /admin/projects         # Get admin projects list
-POST /admin/projects        # Create new project
-PUT /admin/projects/:id     # Update existing project
-DELETE /admin/projects/:id  # Delete project
-
-# Pages Management
-GET /admin/pages            # Get all pages for admin
-GET /admin/pages/:slug      # Get specific page for editing
-POST /admin/pages           # Create new page
-PUT /admin/pages/:id        # Update existing page
-DELETE /admin/pages/:id     # Delete page
-```
-
-#### About Page Management
-```bash
-# About Page
-GET /admin/about            # Get admin about page data
-POST /admin/about           # Create about page content
-PUT /admin/about/:id        # Update about page content
-
-# Experience Management
-GET /admin/experiences      # Get all experiences
-POST /admin/experiences     # Create experience entry
-PUT /admin/experiences/:id  # Update experience entry
-DELETE /admin/experiences/:id # Delete experience entry
-
-# Certificate Management
-GET /admin/certificates     # Get all certificates
-POST /admin/certificates    # Create certificate entry
-PUT /admin/certificates/:id # Update certificate entry
-DELETE /admin/certificates/:id # Delete certificate entry
-```
-
-#### Specialized Page Management
-```bash
-# Changelog Management
-GET /admin/changelog/entries     # Get changelog entries
-POST /admin/changelog/entries    # Create changelog entry
-PUT /admin/changelog/entries/:id # Update changelog entry
-DELETE /admin/changelog/entries/:id # Delete changelog entry
-PUT /admin/changelog/page        # Update changelog page settings
-
-# License Management
-GET /admin/license/tiles         # Get license tiles
-POST /admin/license/tiles        # Create license tile
-PUT /admin/license/tiles/:id     # Update license tile
-DELETE /admin/license/tiles/:id  # Delete license tile
-PUT /admin/license/page          # Update license page settings
-
-# Privacy Management
-PUT /admin/privacy/page          # Update privacy page settings
-POST /admin/privacy/sections     # Create privacy section
-PUT /admin/privacy/sections/:id  # Update privacy section
-DELETE /admin/privacy/sections/:id # Delete privacy section
-POST /admin/privacy/content-items # Create privacy content item
-PUT /admin/privacy/content-items/:id # Update privacy content item
-DELETE /admin/privacy/content-items/:id # Delete privacy content item
-```
-
-#### Site Configuration
-```bash
-GET /admin/site/config      # Get admin site configuration
-PUT /admin/site/config      # Update site configuration
-```
-
-#### Two-Factor Authentication
-```bash
-POST /security/login-generate-2fa-qr # Generate 2FA QR during login
-GET /security/generate-2fa-qr        # Generate 2FA QR for user
-POST /security/login-verify-2fa      # Verify 2FA during login
-POST /security/verify-2fa            # Verify 2FA for user
-```
-
-## 📧 Email System
+## Email System
 
 The API includes a comprehensive email system powered by SendGrid:
 
@@ -458,13 +528,13 @@ The API includes a comprehensive email system powered by SendGrid:
 - **Configuration**: Environment-based email configuration
 
 ### Email Endpoints
-```bash
+```http
 POST /contact/contact                    # Sends contact notification
 POST /newsletters/subscribe              # Sends subscription confirmation
 POST /users/forgot-password             # Sends password reset email
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Test Structure
 ```bash
@@ -496,7 +566,7 @@ npm run test:debug         # Debug mode
 - **Mocking**: Jest mocking capabilities
 - **Test Environment**: Node.js test environment
 
-## 🚀 Deployment
+## Deployment
 
 ### Development Deployment
 
@@ -581,7 +651,7 @@ GET /control/health-check
 }
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Files
 - `.env.development` - Development configuration
@@ -628,12 +698,12 @@ AWS_SECRET_ACCESS_KEY=your_secret_key
 AWS_S3_REGION=us-east-1
 ```
 
-## 🔗 Frontend Integration
+## Frontend Integration
 
 ### SSR Data Endpoints
 The API provides specialized endpoints for Angular SSR integration:
 
-```bash
+```http
 GET /home          # Home page data with featured content
 GET /about         # About page with experience & certificates
 GET /blog          # Blog listing with pagination
@@ -643,7 +713,7 @@ GET /privacy       # Privacy policy with sections
 ```
 
 ### Route Generation
-```bash
+```http
 GET /posts/slugs    # Blog post slugs for route generation
 GET /projects/slugs # Project slugs for route generation
 GET /pages/slugs    # Page slugs for route generation
@@ -656,7 +726,7 @@ All public endpoints include:
 - **Structured Data**: JSON-LD for search engines
 - **Canonical URLs**: SEO-friendly URL structure
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -714,68 +784,9 @@ docker-compose logs -f db
 pm2 logs personal-blog-api
 ```
 
-## 📝 Development Guidelines
-
-### Code Style
-- **TypeScript**: Strict mode enabled
-- **ESLint**: Configured with recommended rules
-- **Prettier**: Code formatting with consistent style
-- **Naming**: PascalCase for classes, camelCase for variables
-
-### Commit Guidelines
-- **Format**: `feat: add new feature` or `fix: resolve issue`
-- **Scope**: Use module names when applicable
-- **Description**: Clear, concise description of changes
-
-### Testing Guidelines
-- **Unit Tests**: Test individual components and services
-- **Integration Tests**: Test module interactions
-- **E2E Tests**: Test complete user workflows
-- **Coverage**: Maintain minimum 80% code coverage
-
-## 🤝 Contributing
-
-1. **Fork the repository**
-2. **Create feature branch**: `git checkout -b feature/new-feature`
-3. **Commit changes**: `git commit -m 'feat: add new feature'`
-4. **Push to branch**: `git push origin feature/new-feature`
-5. **Submit pull request**
-
-### Development Setup for Contributors
-```bash
-# Clone your fork
-git clone https://github.com/YOUR_USERNAME/personal-blog-api.git
-cd personal-blog-api
-
-# Add upstream remote
-git remote add upstream https://github.com/ORIGINAL_OWNER/personal-blog-api.git
-
-# Install dependencies
-npm install
-
-# Start development environment
-npm run api:dev:build
-
-# Run tests
-npm test
-```
-
-## 📄 License
-
-This project is licensed under the UNLICENSED License - see the package.json file for details.
-
-## 🔗 Related Projects
+## Related Projects
 
 - **Frontend**: [Personal Blog Frontend](../personal-blog-front) - Angular SSR application
-- **Documentation**: See `CLAUDE.md` for AI assistant integration guidelines
-
-## 📞 Support
-
-For support and questions:
-- Create an issue in the repository
-- Review the troubleshooting section
-- Check the API documentation
-- Verify environment configuration
 
 ---
 

@@ -50,7 +50,15 @@
         "src/dto/site-config/requests/*",
         "src/dto/site-config/responses/*",
         "src/dto/pages/requests/*",
-        "src/dto/pages/responses/*"
+        "src/dto/pages/responses/*",
+        "src/dto/privacy/requests/*",
+        "src/dto/privacy/responses/*",
+        "src/dto/about/requests/*",
+        "src/dto/about/responses/*",
+        "src/dto/changelog/requests/*",
+        "src/dto/changelog/responses/*",
+        "src/dto/license/requests/*",
+        "src/dto/license/responses/*"
       ],
       "@events/*": ["src/events/*"],
       "@guards/*": ["src/guards/*"],

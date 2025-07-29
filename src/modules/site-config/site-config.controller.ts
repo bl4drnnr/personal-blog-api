@@ -5,6 +5,7 @@ import { ValidationPipe } from '@pipes/validation.pipe';
 import { TrxDecorator } from '@decorators/transaction.decorator';
 import { Transaction } from 'sequelize';
 import { UpdateSiteConfigDto } from '@dto/update-site-config.dto';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
 @Controller()
 export class SiteConfigController {
@@ -17,12 +18,14 @@ export class SiteConfigController {
   }
 
   // Admin endpoints
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/site/config')
   async getAdminSiteConfig() {
     return await this.siteConfigService.getConfig();
   }
 
+  @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/site/config')
