@@ -90,9 +90,9 @@ export class ProjectsController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/projects/:id')
+  @Delete('admin/projects')
   async deleteProject(
-    @Param('id') projectId: string,
+    @Query('id') projectId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return this.projectsService.delete({ projectId, trx });

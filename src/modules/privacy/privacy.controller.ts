@@ -7,7 +7,8 @@ import {
   Delete,
   Param,
   UseGuards,
-  UsePipes
+  UsePipes,
+  Query
 } from '@nestjs/common';
 import { PrivacyService } from './privacy.service';
 import { AuthGuard } from '@guards/auth.guard';
@@ -69,9 +70,9 @@ export class PrivacyController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/privacy/sections/:id')
+  @Delete('admin/privacy/sections')
   async deletePrivacySection(
-    @Param('id') sectionId: string,
+    @Query('id') sectionId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.privacyService.deletePrivacySection({ sectionId, trx });
@@ -103,9 +104,9 @@ export class PrivacyController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/privacy/content-items/:id')
+  @Delete('admin/privacy/content-items')
   async deletePrivacyContentItem(
-    @Param('id') itemId: string,
+    @Query('id') itemId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.privacyService.deletePrivacyContentItem({ itemId, trx });

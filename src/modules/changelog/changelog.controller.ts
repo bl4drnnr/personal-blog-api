@@ -7,7 +7,8 @@ import {
   Delete,
   Param,
   UseGuards,
-  UsePipes
+  UsePipes,
+  Query
 } from '@nestjs/common';
 import { ChangelogService } from './changelog.service';
 import { AuthGuard } from '@guards/auth.guard';
@@ -40,7 +41,7 @@ export class ChangelogController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Post('admin/changelog/entries')
+  @Post('admin/changelog/create-entry')
   async createChangelogEntry(
     @Body() data: CreateChangelogEntryDto,
     @TrxDecorator() trx: Transaction
@@ -51,7 +52,7 @@ export class ChangelogController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/changelog/entries/:id')
+  @Put('admin/changelog/update-entry/:id')
   async updateChangelogEntry(
     @Param('id') entryId: string,
     @Body() data: UpdateChangelogEntryDto,
@@ -62,9 +63,9 @@ export class ChangelogController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/changelog/entries/:id')
+  @Delete('admin/changelog/delete-entry')
   async deleteChangelogEntry(
-    @Param('id') entryId: string,
+    @Query('id') entryId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.changelogService.deleteChangelogEntry({ entryId, trx });

@@ -7,7 +7,8 @@ import {
   Delete,
   Param,
   UseGuards,
-  UsePipes
+  UsePipes,
+  Query
 } from '@nestjs/common';
 import { LicenseService } from './license.service';
 import { AuthGuard } from '@guards/auth.guard';
@@ -62,9 +63,9 @@ export class LicenseController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/license/tiles/:id')
+  @Delete('admin/license/tiles')
   async deleteLicenseTile(
-    @Param('id') tileId: string,
+    @Query('id') tileId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.licenseService.deleteLicenseTile({ tileId, trx });

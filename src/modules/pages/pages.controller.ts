@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
   UsePipes
 } from '@nestjs/common';
@@ -80,8 +81,8 @@ export class PagesController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/pages/:id')
-  async deletePage(@Param('id') pageId: string, @TrxDecorator() trx: Transaction) {
+  @Delete('admin/pages')
+  async deletePage(@Query('id') pageId: string, @TrxDecorator() trx: Transaction) {
     return await this.pagesService.delete({ pageId, trx });
   }
 }

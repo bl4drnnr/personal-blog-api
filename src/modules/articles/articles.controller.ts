@@ -77,9 +77,9 @@ export class ArticlesController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/posts/:id')
+  @Delete('admin/posts')
   async deletePost(
-    @Param('id') articleId: string,
+    @Query('id') articleId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return this.articlesService.delete({ articleId, trx });

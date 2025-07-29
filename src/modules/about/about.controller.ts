@@ -7,7 +7,8 @@ import {
   Delete,
   Param,
   UseGuards,
-  UsePipes
+  UsePipes,
+  Query
 } from '@nestjs/common';
 import { AboutService } from './about.service';
 import { AuthGuard } from '@guards/auth.guard';
@@ -96,9 +97,9 @@ export class AboutController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/experiences/:id')
+  @Delete('admin/experiences')
   async deleteExperience(
-    @Param('id') experienceId: string,
+    @Query('id') experienceId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.aboutService.deleteExperience({ experienceId, trx });
@@ -137,9 +138,9 @@ export class AboutController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/certificates/:id')
+  @Delete('admin/certificates')
   async deleteCertificate(
-    @Param('id') certificateId: string,
+    @Query('id') certificateId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.aboutService.deleteCertificate({ certificateId, trx });
