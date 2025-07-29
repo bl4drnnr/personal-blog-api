@@ -22,7 +22,7 @@ import { CreateCertificateDto } from '@dto/create-certificate.dto';
 import { UpdateCertificateDto } from '@dto/update-certificate.dto';
 import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
-@Controller()
+@Controller('about')
 export class AboutController {
   constructor(private readonly aboutService: AboutService) {}
 

@@ -19,7 +19,7 @@ import { CreateLicenseTileDto } from '@dto/create-license-tile.dto';
 import { UpdateLicenseTileDto } from '@dto/update-license-tile.dto';
 import { UpdateLicensePageDto } from '@dto/update-license-page.dto';
 
-@Controller()
+@Controller('licnse')
 export class LicenseController {
   constructor(private readonly licenseService: LicenseService) {}
 

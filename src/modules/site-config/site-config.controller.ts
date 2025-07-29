@@ -7,7 +7,7 @@ import { Transaction } from 'sequelize';
 import { UpdateSiteConfigDto } from '@dto/update-site-config.dto';
 import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
-@Controller()
+@Controller('site-config')
 export class SiteConfigController {
   constructor(private readonly siteConfigService: SiteConfigService) {}
 

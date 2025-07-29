@@ -25,7 +25,7 @@ interface ProjectsQuery {
   search?: string;
 }
 
-@Controller()
+@Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 

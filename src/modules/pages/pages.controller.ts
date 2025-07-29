@@ -19,7 +19,7 @@ import { UpdatePageDto } from '@dto/update-page.dto';
 import { UserId } from '@decorators/user-id.decorator';
 import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
-@Controller()
+@Controller('pages')
 export class PagesController {
   constructor(private readonly pagesService: PagesService) {}
 

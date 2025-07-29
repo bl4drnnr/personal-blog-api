@@ -19,7 +19,7 @@ import { CreateChangelogEntryDto } from '@dto/create-changelog-entry.dto';
 import { UpdateChangelogEntryDto } from '@dto/update-changelog-entry.dto';
 import { UpdateChangelogPageDto } from '@dto/update-changelog-page.dto';
 
-@Controller()
+@Controller('changelog')
 export class ChangelogController {
   constructor(private readonly changelogService: ChangelogService) {}
 

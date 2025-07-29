@@ -20,7 +20,7 @@ import { UpdateArticleDto } from '@dto/update-article.dto';
 import { ValidationPipe } from '@pipes/validation.pipe';
 import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
-@Controller()
+@Controller('articles')
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 

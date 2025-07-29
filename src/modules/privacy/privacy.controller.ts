@@ -21,7 +21,7 @@ import { UpdatePrivacySectionDto } from '@dto/update-privacy-section.dto';
 import { CreatePrivacyContentItemDto } from '@dto/create-privacy-content-item.dto';
 import { UpdatePrivacyContentItemDto } from '@dto/update-privacy-content-item.dto';
 
-@Controller()
+@Controller('privacy')
 export class PrivacyController {
   constructor(private readonly privacyService: PrivacyService) {}
 
