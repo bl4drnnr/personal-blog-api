@@ -28,8 +28,20 @@ export class StaticAssetsController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/assets')
-  async getAllAssets() {
-    return this.staticAssetsService.findAll();
+  async getAllAssets(
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
+    @Query('orderBy') orderBy?: string,
+    @Query('order') order?: 'ASC' | 'DESC'
+  ) {
+    return this.staticAssetsService.findAll({
+      search,
+      page: page ? parseInt(page, 10) : undefined,
+      pageSize: pageSize ? parseInt(pageSize, 10) : undefined,
+      orderBy,
+      order
+    });
   }
 
   @UseGuards(BasicAuthGuard)

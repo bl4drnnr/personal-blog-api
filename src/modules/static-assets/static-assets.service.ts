@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { StaticAssetModel } from '@models/static-asset.model';
 import { CreateStaticAssetDto } from '@dto/static-assets/requests/create-static-asset.dto';
 import { UpdateStaticAssetDto } from '@dto/static-assets/requests/update-static-asset.dto';
-import { Transaction } from 'sequelize';
+import { Transaction, Op } from 'sequelize';
 import { S3Service } from '@shared/s3.service';
 import { StaticStorages } from '@interfaces/static-storages.enum';
 
@@ -15,10 +15,47 @@ export class StaticAssetsService {
     private readonly s3Service: S3Service
   ) {}
 
-  async findAll() {
-    return await this.staticAssetModel.findAll({
-      order: [['createdAt', 'DESC']]
+  async findAll(query?: {
+    search?: string;
+    page?: number;
+    pageSize?: number;
+    orderBy?: string;
+    order?: 'ASC' | 'DESC';
+  }) {
+    const {
+      search,
+      page = 0,
+      pageSize = 10,
+      orderBy = 'createdAt',
+      order = 'DESC'
+    } = query || {};
+
+    const offset = Number(page) * Number(pageSize);
+    const limit = Number(pageSize);
+
+    // Build where clause for search
+    const whereClause: any = {};
+    if (search && search.trim()) {
+      whereClause[Op.or] = [
+        { name: { [Op.iLike]: `%${search.trim()}%` } },
+        { description: { [Op.iLike]: `%${search.trim()}%` } }
+      ];
+    }
+
+    const { rows, count } = await this.staticAssetModel.findAndCountAll({
+      where: whereClause,
+      order: [[orderBy, order]],
+      limit,
+      offset
     });
+
+    return {
+      assets: rows,
+      total: count,
+      page: Number(page),
+      pageSize: Number(pageSize),
+      totalPages: Math.ceil(count / Number(pageSize))
+    };
   }
 
   async findById(id: string) {
@@ -52,35 +89,6 @@ export class StaticAssetsService {
 
     await asset.destroy({ transaction: trx });
     return { message: 'Static asset deleted successfully' };
-  }
-
-  async findByName(name: string) {
-    return await this.staticAssetModel.findOne({
-      where: { name }
-    });
-  }
-
-  async uploadFile(
-    file: Express.Multer.File,
-    name: string,
-    description?: string,
-    trx?: Transaction
-  ) {
-    const fileName = await this.s3Service.uploadFile({
-      file,
-      folderName: StaticStorages.STATIC_ASSETS
-    });
-
-    const s3Url = this.s3Service.getFileUrl(fileName, StaticStorages.STATIC_ASSETS);
-
-    return await this.staticAssetModel.create(
-      {
-        name,
-        s3Url,
-        description
-      },
-      { transaction: trx }
-    );
   }
 
   async uploadBase64Image(
@@ -137,40 +145,6 @@ export class StaticAssetsService {
         { transaction: trx }
       );
     }
-  }
-
-  async updateFile(
-    id: string,
-    file: Express.Multer.File,
-    data: UpdateStaticAssetDto,
-    trx?: Transaction
-  ) {
-    const asset = await this.findById(id);
-
-    // Delete old file if exists
-    const oldFileName = asset.s3Url.split('/').pop();
-    if (oldFileName) {
-      await this.s3Service.deleteFile({
-        fileName: oldFileName,
-        folderName: StaticStorages.STATIC_ASSETS
-      });
-    }
-
-    // Upload new file
-    const fileName = await this.s3Service.uploadFile({
-      file,
-      folderName: StaticStorages.STATIC_ASSETS
-    });
-
-    const s3Url = this.s3Service.getFileUrl(fileName, StaticStorages.STATIC_ASSETS);
-
-    return await asset.update(
-      {
-        ...data,
-        s3Url
-      },
-      { transaction: trx }
-    );
   }
 
   async updateFileFromBase64(
