@@ -1,8 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction } from 'sequelize';
 import { LicensePage } from '@models/license-page.model';
 import { LicenseTile } from '@models/license-tile.model';
+import { CreateLicenseTileInterface } from '@interfaces/create-license-tile.interface';
+import { UpdateLicenseTileInterface } from '@interfaces/update-license-tile.interface';
+import { DeleteLicenseTileInterface } from '@interfaces/delete-license-tile.interface';
+import { UpdateLicensePageInterface } from '@interfaces/update-license-page.interface';
 
 @Injectable()
 export class LicenseService {
@@ -68,41 +71,11 @@ export class LicenseService {
     });
   }
 
-  async createLicenseTile({
-    data,
-    trx
-  }: {
-    data: {
-      title: string;
-      description: string;
-      links: Array<{
-        label: string;
-        url: string;
-      }>;
-      sortOrder?: number;
-    };
-    trx: Transaction;
-  }) {
+  async createLicenseTile({ data, trx }: CreateLicenseTileInterface) {
     return await this.licenseTileModel.create(data, { transaction: trx });
   }
 
-  async updateLicenseTile({
-    tileId,
-    data,
-    trx
-  }: {
-    tileId: string;
-    data: {
-      title?: string;
-      description?: string;
-      links?: Array<{
-        label: string;
-        url: string;
-      }>;
-      sortOrder?: number;
-    };
-    trx: Transaction;
-  }) {
+  async updateLicenseTile({ tileId, data, trx }: UpdateLicenseTileInterface) {
     const tile = await this.licenseTileModel.findByPk(tileId);
 
     if (!tile) {
@@ -113,7 +86,7 @@ export class LicenseService {
     return tile;
   }
 
-  async deleteLicenseTile({ tileId, trx }: { tileId: string; trx: Transaction }) {
+  async deleteLicenseTile({ tileId, trx }: DeleteLicenseTileInterface) {
     const tile = await this.licenseTileModel.findByPk(tileId);
 
     if (!tile) {
@@ -124,34 +97,7 @@ export class LicenseService {
     return { message: 'License tile deleted successfully' };
   }
 
-  async updateLicensePage({
-    data,
-    trx
-  }: {
-    data: {
-      title?: string;
-      licenseDate?: string;
-      paragraphs?: string[];
-      additionalInfoTitle?: string;
-      additionalInfoParagraphs?: string[];
-      footerText?: string;
-      heroImageMain?: string;
-      heroImageSecondary?: string;
-      heroImageMainAlt?: string;
-      heroImageSecondaryAlt?: string;
-      logoText?: string;
-      breadcrumbText?: string;
-      heroTitle?: string;
-      metaTitle?: string;
-      metaDescription?: string;
-      metaKeywords?: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      ogImage?: string;
-      structuredData?: object;
-    };
-    trx: Transaction;
-  }) {
+  async updateLicensePage({ data, trx }: UpdateLicensePageInterface) {
     let licensePage = await this.licensePageModel.findOne();
 
     if (!licensePage) {

@@ -28,6 +28,80 @@ module.exports = {
         }
       ]);
 
+      // Create static assets
+      await queryInterface.bulkInsert('static_assets', [
+        {
+          id: '90000000-0000-0000-0000-000000000001',
+          name: 'jonas-degener-tZT7eyJqkRA-unsplash.jpg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/jonas-degener-tZT7eyJqkRA-unsplash.jpg',
+          description:
+            'Abstract gradient background image used for hero sections and main banners.',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000002',
+          name: 'michiel-annaert-I1cx5LwM5pA-unsplash.jpg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/michiel-annaert-I1cx5LwM5pA-unsplash.jpg',
+          description:
+            'Technology-themed featured image for blog posts about programming and development.',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000003',
+          name: 'mike-hindle-BXvcjmM6dH8-unsplash.jpg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/mike-hindle-BXvcjmM6dH8-unsplash.jpg',
+          description:
+            'Modern workspace mockup image for showcasing web development projects.',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000004',
+          name: 'mike-hindle-f75bkyxq7mk-unsplash.jpg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/mike-hindle-f75bkyxq7mk-unsplash.jpg',
+          description:
+            'Professional headshot placeholder for author bio sections and about pages.',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000005',
+          name: 'mike-yukhtenko-wfh8dDlNFOk-unsplash.jpg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/mike-yukhtenko-wfh8dDlNFOk-unsplash.jpg',
+          description:
+            'Cybersecurity-themed banner image with digital locks and security concepts.',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000006',
+          name: 'pawel-czerwinski-SOHqP5gmvFU-unsplash.jpg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/pawel-czerwinski-SOHqP5gmvFU-unsplash.jpg',
+          description:
+            'Clean developer workspace with multiple monitors and modern setup for project showcases.',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000007',
+          name: 'pawel-czerwinski-tRm520JvK8Q-unsplash.jpg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/pawel-czerwinski-tRm520JvK8Q-unsplash.jpg',
+          description:
+            'Data visualization and analytics dashboard screenshot for monitoring projects.',
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
       // Create site configuration
       await queryInterface.bulkInsert('site_config', [
         {
@@ -1224,12 +1298,10 @@ export default VulnerabilityReport;
           content: 'Track the latest updates and improvements to our platform.',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
-          hero_image_secondary:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
+          hero_image_secondary_id: '90000000-0000-0000-0000-000000000007',
           hero_image_main_alt: 'Abstract Gradient Art',
-          hero_image_secondary_alt: 'Abstract Gradient Art',
+          hero_image_secondary_alt: 'Data Visualization Charts',
           logo_text: 'Luch',
           breadcrumb_text: 'Changelog',
           hero_title: 'Latest Features & Improvements',
@@ -1240,8 +1312,7 @@ export default VulnerabilityReport;
           og_title: 'Changelog - Latest Updates',
           og_description:
             "Discover the latest features and improvements to our platform. Track our progress and see what's new.",
-          og_image:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          og_image_id: '90000000-0000-0000-0000-000000000005',
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'TechArticle',
@@ -1264,6 +1335,7 @@ export default VulnerabilityReport;
       await queryInterface.bulkInsert('changelog_entries', [
         {
           id: '40000000-0000-0000-0000-000000000001',
+          changelog_page_id: '00000000-0000-0000-0000-000000000002',
           version: '1.1.0',
           date: 'February 2025',
           title: 'Enhanced User Experience',
@@ -1281,6 +1353,7 @@ export default VulnerabilityReport;
         },
         {
           id: '40000000-0000-0000-0000-000000000002',
+          changelog_page_id: '00000000-0000-0000-0000-000000000002',
           version: '1.0.0',
           date: 'January 2025',
           title: 'Initial Release',
@@ -1951,6 +2024,7 @@ export default VulnerabilityReport;
   },
 
   async down(queryInterface, sequelize) {
+    await queryInterface.bulkDelete('static_assets', null, {});
     await queryInterface.bulkDelete('faqs', null, {});
     await queryInterface.bulkDelete('whys_sections', null, {});
     await queryInterface.bulkDelete('blog_page', null, {});

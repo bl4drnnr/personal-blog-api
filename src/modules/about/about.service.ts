@@ -1,16 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction } from 'sequelize';
 import { AboutPage } from '@models/about-page.model';
 import { Experience } from '@models/experience.model';
 import { Position } from '@models/position.model';
 import { Certificate } from '@models/certificate.model';
-import { CreateAboutPageDto } from '@dto/create-about-page.dto';
-import { UpdateAboutPageDto } from '@dto/update-about-page.dto';
 import { CreateExperienceDto } from '@dto/create-experience.dto';
-import { UpdateExperienceDto } from '@dto/update-experience.dto';
-import { CreateCertificateDto } from '@dto/create-certificate.dto';
-import { UpdateCertificateDto } from '@dto/update-certificate.dto';
+import { CreateAboutPageInterface } from '@interfaces/create-about-page.interface';
+import { UpdateAboutPageInterface } from '@interfaces/update-about-page.interface';
+import { CreateExperienceInterface } from '@interfaces/create-experience.interface';
+import { UpdateExperienceInterface } from '@interfaces/update-experience.interface';
+import { DeleteExperienceInterface } from '@interfaces/delete-experience.interface';
+import { CreateCertificateInterface } from '@interfaces/create-certificate.interface';
+import { UpdateCertificateInterface } from '@interfaces/update-certificate.interface';
+import { DeleteCertificateInterface } from '@interfaces/delete-certificate.interface';
 
 @Injectable()
 export class AboutService {
@@ -84,25 +86,11 @@ export class AboutService {
     return await this.getAboutPageData();
   }
 
-  async createAboutPage({
-    data,
-    trx
-  }: {
-    data: CreateAboutPageDto;
-    trx: Transaction;
-  }) {
+  async createAboutPage({ data, trx }: CreateAboutPageInterface) {
     return await this.aboutPageModel.create(data, { transaction: trx });
   }
 
-  async updateAboutPage({
-    aboutPageId,
-    data,
-    trx
-  }: {
-    aboutPageId: string;
-    data: UpdateAboutPageDto;
-    trx: Transaction;
-  }) {
+  async updateAboutPage({ aboutPageId, data, trx }: UpdateAboutPageInterface) {
     const aboutPage = await this.aboutPageModel.findByPk(aboutPageId);
 
     if (!aboutPage) {
@@ -130,13 +118,7 @@ export class AboutService {
     });
   }
 
-  async createExperience({
-    data,
-    trx
-  }: {
-    data: CreateExperienceDto;
-    trx: Transaction;
-  }) {
+  async createExperience({ data, trx }: CreateExperienceInterface) {
     const { positions, ...experienceData } = data;
 
     const experience = await this.experienceModel.create(experienceData, {
@@ -161,15 +143,7 @@ export class AboutService {
     });
   }
 
-  async updateExperience({
-    experienceId,
-    data,
-    trx
-  }: {
-    experienceId: string;
-    data: UpdateExperienceDto;
-    trx: Transaction;
-  }) {
+  async updateExperience({ experienceId, data, trx }: UpdateExperienceInterface) {
     const experience = await this.experienceModel.findByPk(experienceId);
 
     if (!experience) {
@@ -205,13 +179,7 @@ export class AboutService {
     });
   }
 
-  async deleteExperience({
-    experienceId,
-    trx
-  }: {
-    experienceId: string;
-    trx: Transaction;
-  }) {
+  async deleteExperience({ experienceId, trx }: DeleteExperienceInterface) {
     const experience = await this.experienceModel.findByPk(experienceId);
 
     if (!experience) {
@@ -237,25 +205,11 @@ export class AboutService {
     });
   }
 
-  async createCertificate({
-    data,
-    trx
-  }: {
-    data: CreateCertificateDto;
-    trx: Transaction;
-  }) {
+  async createCertificate({ data, trx }: CreateCertificateInterface) {
     return await this.certificateModel.create(data, { transaction: trx });
   }
 
-  async updateCertificate({
-    certificateId,
-    data,
-    trx
-  }: {
-    certificateId: string;
-    data: UpdateCertificateDto;
-    trx: Transaction;
-  }) {
+  async updateCertificate({ certificateId, data, trx }: UpdateCertificateInterface) {
     const certificate = await this.certificateModel.findByPk(certificateId);
 
     if (!certificate) {
@@ -266,13 +220,7 @@ export class AboutService {
     return certificate;
   }
 
-  async deleteCertificate({
-    certificateId,
-    trx
-  }: {
-    certificateId: string;
-    trx: Transaction;
-  }) {
+  async deleteCertificate({ certificateId, trx }: DeleteCertificateInterface) {
     const certificate = await this.certificateModel.findByPk(certificateId);
 
     if (!certificate) {

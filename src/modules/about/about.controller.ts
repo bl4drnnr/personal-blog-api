@@ -5,7 +5,6 @@ import {
   Post,
   Put,
   Delete,
-  Param,
   UseGuards,
   UsePipes,
   Query
@@ -55,9 +54,9 @@ export class AboutController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/about/:id')
+  @Put('admin/about')
   async updateAboutPage(
-    @Param('id') aboutPageId: string,
+    @Query('id') aboutPageId: string,
     @Body() data: UpdateAboutPageDto,
     @TrxDecorator() trx: Transaction
   ) {
@@ -86,9 +85,9 @@ export class AboutController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/experiences/:id')
+  @Put('admin/experiences')
   async updateExperience(
-    @Param('id') experienceId: string,
+    @Query('id') experienceId: string,
     @Body() data: UpdateExperienceDto,
     @TrxDecorator() trx: Transaction
   ) {
@@ -127,9 +126,9 @@ export class AboutController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/certificates/:id')
+  @Put('admin/certificates')
   async updateCertificate(
-    @Param('id') certificateId: string,
+    @Query('id') certificateId: string,
     @Body() data: UpdateCertificateDto,
     @TrxDecorator() trx: Transaction
   ) {

@@ -1,8 +1,10 @@
 import {
+  BelongsTo,
   Column,
   CreatedAt,
   DataType,
   Default,
+  ForeignKey,
   HasMany,
   Model,
   PrimaryKey,
@@ -10,13 +12,14 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { ChangelogEntry } from './changelog-entry.model';
+import { StaticAssetModel } from './static-asset.model';
 
 interface ChangelogPageCreationAttributes {
   title?: string;
   content?: string;
   footerText?: string;
-  heroImageMain?: string;
-  heroImageSecondary?: string;
+  heroImageMainId?: string;
+  heroImageSecondaryId?: string;
   heroImageMainAlt?: string;
   heroImageSecondaryAlt?: string;
   logoText?: string;
@@ -27,7 +30,7 @@ interface ChangelogPageCreationAttributes {
   metaKeywords?: string;
   ogTitle?: string;
   ogDescription?: string;
-  ogImage?: string;
+  ogImageId?: string;
   structuredData?: object;
 }
 
@@ -62,19 +65,27 @@ export class ChangelogPage extends Model<
   })
   footerText: string;
 
+  @ForeignKey(() => StaticAssetModel)
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: true,
-    field: 'hero_image_main'
+    field: 'hero_image_main_id'
   })
-  heroImageMain: string;
+  heroImageMainId: string;
 
+  @BelongsTo(() => StaticAssetModel, 'hero_image_main_id')
+  heroImageMain: StaticAssetModel;
+
+  @ForeignKey(() => StaticAssetModel)
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: true,
-    field: 'hero_image_secondary'
+    field: 'hero_image_secondary_id'
   })
-  heroImageSecondary: string;
+  heroImageSecondaryId: string;
+
+  @BelongsTo(() => StaticAssetModel, 'hero_image_secondary_id')
+  heroImageSecondary: StaticAssetModel;
 
   @Column({
     type: DataType.STRING,
@@ -146,12 +157,16 @@ export class ChangelogPage extends Model<
   })
   ogDescription: string;
 
+  @ForeignKey(() => StaticAssetModel)
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: true,
-    field: 'og_image'
+    field: 'og_image_id'
   })
-  ogImage: string;
+  ogImageId: string;
+
+  @BelongsTo(() => StaticAssetModel, 'og_image_id')
+  ogImage: StaticAssetModel;
 
   @Column({
     type: DataType.JSONB,

@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { StaticAssetModel } from '@models/static-asset.model';
-import { CreateStaticAssetDto } from '@dto/static-assets/requests/create-static-asset.dto';
-import { UpdateStaticAssetDto } from '@dto/static-assets/requests/update-static-asset.dto';
-import { Transaction, Op } from 'sequelize';
+import { Op } from 'sequelize';
 import { S3Service } from '@shared/s3.service';
 import { StaticStorages } from '@interfaces/static-storages.enum';
+import { ListStaticAssetsInterface } from '@interfaces/list-static-assets.interface';
+import { CreateStaticAssetInterface } from '@interfaces/create-static-asset.interface';
+import { UpdateStaticAssetInterface } from '@interfaces/update-static-asset.interface';
+import { DeleteStaticAssetInterface } from '@interfaces/delete-static-asset.interface';
+import { UploadStaticAssetInterface } from '@interfaces/upload-static-asset.interface';
+import { UpdateStaticAssetWithFile } from '@interfaces/update-asset-with-file.interface';
 
 @Injectable()
 export class StaticAssetsService {
@@ -15,20 +19,8 @@ export class StaticAssetsService {
     private readonly s3Service: S3Service
   ) {}
 
-  async findAll(query?: {
-    search?: string;
-    page?: number;
-    pageSize?: number;
-    orderBy?: string;
-    order?: 'ASC' | 'DESC';
-  }) {
-    const {
-      search,
-      page = 0,
-      pageSize = 10,
-      orderBy = 'createdAt',
-      order = 'DESC'
-    } = query || {};
+  async findAll(query: ListStaticAssetsInterface) {
+    const { search, page, pageSize, orderBy, order, includePicture } = query;
 
     const offset = Number(page) * Number(pageSize);
     const limit = Number(pageSize);
@@ -40,6 +32,29 @@ export class StaticAssetsService {
         { name: { [Op.iLike]: `%${search.trim()}%` } },
         { description: { [Op.iLike]: `%${search.trim()}%` } }
       ];
+    }
+
+    const includePictureBool = includePicture === 'true';
+    // Filter out pictures if includePicture is false
+    if (includePictureBool) {
+      // Common image extensions
+      const imageExtensions = [
+        '.jpg',
+        '.jpeg',
+        '.png',
+        '.gif',
+        '.bmp',
+        '.webp',
+        '.svg',
+        '.ico'
+      ];
+      const imagePatterns = imageExtensions.map((ext) => `%${ext}`);
+
+      whereClause.s3Url = {
+        [Op.and]: imagePatterns.map((pattern) => ({
+          [Op.notILike]: pattern
+        }))
+      };
     }
 
     const { rows, count } = await this.staticAssetModel.findAndCountAll({
@@ -66,16 +81,19 @@ export class StaticAssetsService {
     return asset;
   }
 
-  async create(data: CreateStaticAssetDto, trx?: Transaction) {
+  async create(payload: CreateStaticAssetInterface) {
+    const { data, trx } = payload;
     return await this.staticAssetModel.create(data, { transaction: trx });
   }
 
-  async update(id: string, data: UpdateStaticAssetDto, trx?: Transaction) {
+  async update(payload: UpdateStaticAssetInterface) {
+    const { id, data, trx } = payload;
     const asset = await this.findById(id);
     return await asset.update(data, { transaction: trx });
   }
 
-  async delete(id: string, trx?: Transaction) {
+  async delete(payload: DeleteStaticAssetInterface) {
+    const { id, trx } = payload;
     const asset = await this.findById(id);
 
     // Extract filename from S3 URL
@@ -91,14 +109,11 @@ export class StaticAssetsService {
     return { message: 'Static asset deleted successfully' };
   }
 
-  async uploadBase64Image(
-    base64Image: string,
-    name: string,
-    description?: string,
-    trx?: Transaction
-  ) {
+  async uploadBase64Image(payload: UploadStaticAssetInterface) {
+    const { base64File, name, description, trx } = payload;
+
     const fileName = await this.s3Service.uploadBase64Image({
-      base64Image,
+      base64Image: base64File,
       folderName: StaticStorages.STATIC_ASSETS
     });
 
@@ -114,16 +129,13 @@ export class StaticAssetsService {
     );
   }
 
-  async uploadFileFromBase64(
-    base64File: string,
-    name: string,
-    description?: string,
-    trx?: Transaction
-  ) {
+  async uploadFileFromBase64(payload: UploadStaticAssetInterface) {
+    const { base64File, name, description, trx } = payload;
+
     // Determine if it's an image or other file type
     if (base64File.startsWith('data:image/')) {
       // Use the existing base64 image upload method
-      return await this.uploadBase64Image(base64File, name, description, trx);
+      return await this.uploadBase64Image({ base64File, name, description, trx });
     } else {
       // For non-image files, use a generic base64 file upload
       const fileName = await this.s3Service.uploadBase64File({
@@ -147,12 +159,9 @@ export class StaticAssetsService {
     }
   }
 
-  async updateFileFromBase64(
-    id: string,
-    base64File: string,
-    data: UpdateStaticAssetDto,
-    trx?: Transaction
-  ) {
+  async updateFileFromBase64(payload: UpdateStaticAssetWithFile) {
+    const { base64File, data, trx, id } = payload;
+
     const asset = await this.findById(id);
 
     // Delete old file if exists

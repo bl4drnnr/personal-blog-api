@@ -91,7 +91,14 @@
         "src/libs/interfaces/newsletters/*",
         "src/libs/interfaces/contact/*",
         "src/libs/interfaces/projects/*",
-        "src/libs/interfaces/pages/*"
+        "src/libs/interfaces/pages/*",
+        "src/libs/interfaces/static-assets/*",
+        "src/libs/interfaces/site-config/*",
+        "src/libs/interfaces/privacy/*",
+        "src/libs/interfaces/license/*",
+        "src/libs/interfaces/changelog/*",
+        "src/libs/interfaces/blog/*",
+        "src/libs/interfaces/about/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [

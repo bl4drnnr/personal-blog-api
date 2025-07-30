@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction } from 'sequelize';
 import { SiteConfigModel } from '@models/site-config.model';
 import { SiteConfigNotFoundException } from '@exceptions/site-config-not-found.exception';
-import { UpdateSiteConfigDto } from '@dto/update-site-config.dto';
+import { UpdateConfigInterface } from '@interfaces/update-config.interface';
 
 @Injectable()
 export class SiteConfigService {
@@ -37,7 +36,7 @@ export class SiteConfigService {
     };
   }
 
-  async updateConfig(payload: { data: UpdateSiteConfigDto; trx?: Transaction }) {
+  async updateConfig(payload: UpdateConfigInterface) {
     const { data, trx } = payload;
 
     let config = await this.siteConfigModel.findOne({ transaction: trx });

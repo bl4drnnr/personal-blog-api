@@ -33,14 +33,16 @@ export class StaticAssetsController {
     @Query('page') page?: string,
     @Query('pageSize') pageSize?: string,
     @Query('orderBy') orderBy?: string,
-    @Query('order') order?: 'ASC' | 'DESC'
+    @Query('order') order?: 'ASC' | 'DESC',
+    @Query('includePicture') includePicture?: string
   ) {
     return this.staticAssetsService.findAll({
       search,
-      page: page ? parseInt(page, 10) : undefined,
-      pageSize: pageSize ? parseInt(pageSize, 10) : undefined,
+      page,
+      pageSize,
       orderBy,
-      order
+      order,
+      includePicture
     });
   }
 
@@ -59,7 +61,7 @@ export class StaticAssetsController {
     @Body() data: CreateStaticAssetDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.staticAssetsService.create(data, trx);
+    return this.staticAssetsService.create({ data, trx });
   }
 
   @UseGuards(BasicAuthGuard)
@@ -71,14 +73,14 @@ export class StaticAssetsController {
     @Body() data: UpdateStaticAssetDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.staticAssetsService.update(id, data, trx);
+    return this.staticAssetsService.update({ id, data, trx });
   }
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Delete('admin/assets/delete')
   async deleteAsset(@Query('id') id: string, @TrxDecorator() trx: Transaction) {
-    return this.staticAssetsService.delete(id, trx);
+    return this.staticAssetsService.delete({ id, trx });
   }
 
   @UseGuards(BasicAuthGuard)
@@ -86,15 +88,15 @@ export class StaticAssetsController {
   @UsePipes(ValidationPipe)
   @Post('admin/assets/upload-file')
   async uploadFile(
-    @Body() uploadData: UploadFileDto,
+    @Body() { base64File, name, description }: UploadFileDto,
     @TrxDecorator() trx?: Transaction
   ) {
-    return this.staticAssetsService.uploadFileFromBase64(
-      uploadData.base64File,
-      uploadData.name,
-      uploadData.description,
+    return this.staticAssetsService.uploadFileFromBase64({
+      base64File,
+      name,
+      description,
       trx
-    );
+    });
   }
 
   @UseGuards(BasicAuthGuard)
@@ -102,15 +104,15 @@ export class StaticAssetsController {
   @UsePipes(ValidationPipe)
   @Post('admin/assets/upload-base64')
   async uploadBase64Image(
-    @Body() uploadData: UploadBase64Dto,
+    @Body() { base64Image, name, description }: UploadBase64Dto,
     @TrxDecorator() trx?: Transaction
   ) {
-    return this.staticAssetsService.uploadBase64Image(
-      uploadData.base64Image,
-      uploadData.name,
-      uploadData.description,
+    return this.staticAssetsService.uploadBase64Image({
+      base64File: base64Image,
+      name,
+      description,
       trx
-    );
+    });
   }
 
   @UseGuards(BasicAuthGuard)
@@ -123,14 +125,14 @@ export class StaticAssetsController {
     @TrxDecorator() trx: Transaction
   ) {
     if (data.base64File) {
-      return this.staticAssetsService.updateFileFromBase64(
+      return this.staticAssetsService.updateFileFromBase64({
         id,
-        data.base64File,
+        base64File: data.base64File,
         data,
         trx
-      );
+      });
     } else {
-      return this.staticAssetsService.update(id, data, trx);
+      return this.staticAssetsService.update({ id, data, trx });
     }
   }
 }

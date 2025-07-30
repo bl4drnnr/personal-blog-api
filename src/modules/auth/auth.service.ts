@@ -9,7 +9,6 @@ import { JwtService } from '@nestjs/jwt';
 import { CryptographicService } from '@shared/cryptographic.service';
 import { ApiConfigService } from '@shared/config.service';
 import { UsersService } from '@modules/users.service';
-import { EmailService } from '@shared/email.service';
 import { LoginInterface } from '@interfaces/login.interface';
 import { MfaNotSetDto } from '@dto/mfa-not-set.dto';
 import { GenerateTokensInterface } from '@interfaces/generate-tokens.interface';
@@ -33,8 +32,6 @@ export class AuthService {
     private readonly cryptographicService: CryptographicService,
     private readonly jwtService: JwtService,
     private readonly configService: ApiConfigService,
-    @Inject(forwardRef(() => EmailService))
-    private readonly emailService: EmailService,
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
     @InjectModel(Session)

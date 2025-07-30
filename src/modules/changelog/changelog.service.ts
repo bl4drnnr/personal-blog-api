@@ -1,8 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction } from 'sequelize';
 import { ChangelogPage } from '@models/changelog-page.model';
 import { ChangelogEntry } from '@models/changelog-entry.model';
+import { StaticAssetModel } from '@models/static-asset.model';
+import { CreateChangelogEntryInterface } from '@interfaces/create-changelog-entry.interface';
+import { UpdateChangelogEntryInterface } from '@interfaces/update-changelog-entry.interface';
+import { DeleteChangelogEntryInterface } from '@interfaces/delete-changelog-entry.interface';
+import { UpdateChangelogPageInterface } from '@interfaces/update-changelog-page.interface';
 
 @Injectable()
 export class ChangelogService {
@@ -13,7 +17,25 @@ export class ChangelogService {
 
   async getChangelogPageData() {
     const [changelogPage, entries] = await Promise.all([
-      this.changelogPageModel.findOne(),
+      this.changelogPageModel.findOne({
+        include: [
+          {
+            model: StaticAssetModel,
+            as: 'heroImageMain',
+            required: false
+          },
+          {
+            model: StaticAssetModel,
+            as: 'heroImageSecondary',
+            required: false
+          },
+          {
+            model: StaticAssetModel,
+            as: 'ogImage',
+            required: false
+          }
+        ]
+      }),
       this.changelogEntryModel.findAll({
         order: [
           ['sortOrder', 'ASC'],
@@ -33,8 +55,8 @@ export class ChangelogService {
       },
       layoutData: {
         footerText: changelogPage.footerText,
-        heroImageMain: changelogPage.heroImageMain,
-        heroImageSecondary: changelogPage.heroImageSecondary,
+        heroImageMain: changelogPage.heroImageMain?.s3Url || null,
+        heroImageSecondary: changelogPage.heroImageSecondary?.s3Url || null,
         heroImageMainAlt: changelogPage.heroImageMainAlt,
         heroImageSecondaryAlt: changelogPage.heroImageSecondaryAlt,
         logoText: changelogPage.logoText,
@@ -47,7 +69,7 @@ export class ChangelogService {
         metaKeywords: changelogPage.metaKeywords,
         ogTitle: changelogPage.ogTitle,
         ogDescription: changelogPage.ogDescription,
-        ogImage: changelogPage.ogImage,
+        ogImage: changelogPage.ogImage?.s3Url || null,
         structuredData: changelogPage.structuredData
       },
       entries
@@ -63,39 +85,11 @@ export class ChangelogService {
     });
   }
 
-  async createChangelogEntry({
-    data,
-    trx
-  }: {
-    data: {
-      version: string;
-      date: string;
-      title: string;
-      description: string;
-      changes: string[];
-      sortOrder?: number;
-    };
-    trx: Transaction;
-  }) {
+  async createChangelogEntry({ data, trx }: CreateChangelogEntryInterface) {
     return await this.changelogEntryModel.create(data, { transaction: trx });
   }
 
-  async updateChangelogEntry({
-    entryId,
-    data,
-    trx
-  }: {
-    entryId: string;
-    data: {
-      version?: string;
-      date?: string;
-      title?: string;
-      description?: string;
-      changes?: string[];
-      sortOrder?: number;
-    };
-    trx: Transaction;
-  }) {
+  async updateChangelogEntry({ entryId, data, trx }: UpdateChangelogEntryInterface) {
     const entry = await this.changelogEntryModel.findByPk(entryId);
 
     if (!entry) {
@@ -106,13 +100,7 @@ export class ChangelogService {
     return entry;
   }
 
-  async deleteChangelogEntry({
-    entryId,
-    trx
-  }: {
-    entryId: string;
-    trx: Transaction;
-  }) {
+  async deleteChangelogEntry({ entryId, trx }: DeleteChangelogEntryInterface) {
     const entry = await this.changelogEntryModel.findByPk(entryId);
 
     if (!entry) {
@@ -123,31 +111,7 @@ export class ChangelogService {
     return { message: 'Changelog entry deleted successfully' };
   }
 
-  async updateChangelogPage({
-    data,
-    trx
-  }: {
-    data: {
-      title?: string;
-      content?: string;
-      footerText?: string;
-      heroImageMain?: string;
-      heroImageSecondary?: string;
-      heroImageMainAlt?: string;
-      heroImageSecondaryAlt?: string;
-      logoText?: string;
-      breadcrumbText?: string;
-      heroTitle?: string;
-      metaTitle?: string;
-      metaDescription?: string;
-      metaKeywords?: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      ogImage?: string;
-      structuredData?: object;
-    };
-    trx: Transaction;
-  }) {
+  async updateChangelogPage({ data, trx }: UpdateChangelogPageInterface) {
     let changelogPage = await this.changelogPageModel.findOne();
 
     if (!changelogPage) {

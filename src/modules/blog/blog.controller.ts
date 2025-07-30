@@ -13,12 +13,10 @@ export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Get()
-  async getBlogPage(@Query() query: BlogQuery) {
-    const { page, limit, search, tag } = query;
-
+  async getBlogPage(@Query() { page, limit, search, tag }: BlogQuery) {
     return this.blogService.getBlogPageData({
-      page: page ? parseInt(page, 10) : 1,
-      limit: limit ? parseInt(limit, 10) : 10,
+      page,
+      limit,
       search,
       tag
     });

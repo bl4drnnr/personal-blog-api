@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsObject } from 'class-validator';
+import { IsString, IsOptional, IsObject, IsUUID } from 'class-validator';
 
 export class UpdateChangelogPageDto {
   @IsOptional()
@@ -14,12 +14,12 @@ export class UpdateChangelogPageDto {
   footerText?: string;
 
   @IsOptional()
-  @IsString()
-  heroImageMain?: string;
+  @IsUUID()
+  heroImageMainId?: string;
 
   @IsOptional()
-  @IsString()
-  heroImageSecondary?: string;
+  @IsUUID()
+  heroImageSecondaryId?: string;
 
   @IsOptional()
   @IsString()
@@ -62,8 +62,8 @@ export class UpdateChangelogPageDto {
   ogDescription?: string;
 
   @IsOptional()
-  @IsString()
-  ogImage?: string;
+  @IsUUID()
+  ogImageId?: string;
 
   @IsOptional()
   @IsObject()

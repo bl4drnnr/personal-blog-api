@@ -3,13 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { BlogPage } from '@models/blog-page.model';
 import { ArticleModel } from '@models/article.model';
-
-interface PaginationQuery {
-  page?: number;
-  limit?: number;
-  search?: string;
-  tag?: string;
-}
+import { GetBlogPageDataInterface } from '@interfaces/get-blog-page-data.interface';
 
 @Injectable()
 export class BlogService {
@@ -18,9 +12,12 @@ export class BlogService {
     @InjectModel(ArticleModel) private articleModel: typeof ArticleModel
   ) {}
 
-  async getBlogPageData(query: PaginationQuery = {}) {
-    const { page = 1, limit = 10, search, tag } = query;
-    const offset = (page - 1) * limit;
+  async getBlogPageData(query: GetBlogPageDataInterface) {
+    const { page, limit, search, tag } = query;
+    const parsedPage = Number(page);
+    const parsedLimit = Number(limit);
+
+    const offset = (parsedPage - 1) * parsedLimit;
 
     // Build where conditions
     const whereConditions: any = {
@@ -46,7 +43,7 @@ export class BlogService {
       this.articleModel.findAndCountAll({
         where: whereConditions,
         order: [['createdAt', 'DESC']],
-        limit,
+        limit: parsedLimit,
         offset,
         attributes: [
           'id',
@@ -67,8 +64,8 @@ export class BlogService {
     }
 
     const totalPages = Math.ceil(totalArticles / limit);
-    const hasNextPage = page < totalPages;
-    const hasPrevPage = page > 1;
+    const hasNextPage = parsedPage < totalPages;
+    const hasPrevPage = parsedPage > 1;
 
     return {
       pageContent: {
@@ -107,10 +104,10 @@ export class BlogService {
         updatedAt: article.updatedAt
       })),
       pagination: {
-        currentPage: page,
+        currentPage: parsedPage,
         totalPages,
         totalItems: totalArticles,
-        itemsPerPage: limit,
+        itemsPerPage: parsedLimit,
         hasNextPage,
         hasPrevPage
       }
@@ -128,8 +125,6 @@ export class BlogService {
       .filter((article) => article.tags && article.tags.length > 0)
       .flatMap((article) => article.tags);
 
-    const uniqueTags = [...new Set(allTags)].sort();
-
-    return uniqueTags;
+    return [...new Set(allTags)].sort();
   }
 }

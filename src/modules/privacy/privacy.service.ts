@@ -1,9 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction } from 'sequelize';
 import { PrivacyPage } from '@models/privacy-page.model';
 import { PrivacySection } from '@models/privacy-section.model';
 import { PrivacyContentItem } from '@models/privacy-content-item.model';
+import { UpdatePrivacyPage } from '@interfaces/update-privacy-page.interface';
+import { CreatePrivacySectionInterface } from '@interfaces/create-privacy-section.interface';
+import { UpdatePrivacySection } from '@interfaces/update-privacy-section.interface';
+import { DeletePrivacySectionInterface } from '@interfaces/delete-privacy-section.interface';
+import { CreatePrivacyContentItemInterface } from '@interfaces/create-privacy-content-item.interface';
+import { UpdatePrivacyContentItemInterface } from '@interfaces/update-privacy-content-item.interface';
+import { DeletePrivacyContentItemInterface } from '@interfaces/delete-privacy-content-item.interface';
 
 @Injectable()
 export class PrivacyService {
@@ -84,32 +90,7 @@ export class PrivacyService {
     };
   }
 
-  async updatePrivacyPage({
-    data,
-    trx
-  }: {
-    data: {
-      title?: string;
-      lastUpdated?: string;
-      cookiePolicyTitle?: string;
-      footerText?: string;
-      heroImageMain?: string;
-      heroImageSecondary?: string;
-      heroImageMainAlt?: string;
-      heroImageSecondaryAlt?: string;
-      logoText?: string;
-      breadcrumbText?: string;
-      heroTitle?: string;
-      metaTitle?: string;
-      metaDescription?: string;
-      metaKeywords?: string;
-      ogTitle?: string;
-      ogDescription?: string;
-      ogImage?: string;
-      structuredData?: object;
-    };
-    trx: Transaction;
-  }) {
+  async updatePrivacyPage({ data, trx }: UpdatePrivacyPage) {
     let privacyPage = await this.privacyPageModel.findOne();
 
     if (!privacyPage) {
@@ -121,33 +102,11 @@ export class PrivacyService {
     return privacyPage;
   }
 
-  async createPrivacySection({
-    data,
-    trx
-  }: {
-    data: {
-      title: string;
-      sortOrder?: number;
-      sectionType?: 'main' | 'cookie_policy';
-    };
-    trx: Transaction;
-  }) {
+  async createPrivacySection({ data, trx }: CreatePrivacySectionInterface) {
     return await this.privacySectionModel.create(data, { transaction: trx });
   }
 
-  async updatePrivacySection({
-    sectionId,
-    data,
-    trx
-  }: {
-    sectionId: string;
-    data: {
-      title?: string;
-      sortOrder?: number;
-      sectionType?: 'main' | 'cookie_policy';
-    };
-    trx: Transaction;
-  }) {
+  async updatePrivacySection({ sectionId, data, trx }: UpdatePrivacySection) {
     const section = await this.privacySectionModel.findByPk(sectionId);
 
     if (!section) {
@@ -158,13 +117,7 @@ export class PrivacyService {
     return section;
   }
 
-  async deletePrivacySection({
-    sectionId,
-    trx
-  }: {
-    sectionId: string;
-    trx: Transaction;
-  }) {
+  async deletePrivacySection({ sectionId, trx }: DeletePrivacySectionInterface) {
     const section = await this.privacySectionModel.findByPk(sectionId);
 
     if (!section) {
@@ -180,21 +133,7 @@ export class PrivacyService {
     return { message: 'Privacy section deleted successfully' };
   }
 
-  async createPrivacyContentItem({
-    data,
-    trx
-  }: {
-    data: {
-      privacySectionId: string;
-      type: string;
-      text?: string;
-      items?: string[];
-      linkText?: string;
-      linkUrl?: string;
-      sortOrder?: number;
-    };
-    trx: Transaction;
-  }) {
+  async createPrivacyContentItem({ data, trx }: CreatePrivacyContentItemInterface) {
     return await this.privacyContentItemModel.create(data, { transaction: trx });
   }
 
@@ -202,18 +141,7 @@ export class PrivacyService {
     itemId,
     data,
     trx
-  }: {
-    itemId: string;
-    data: {
-      type?: string;
-      text?: string;
-      items?: string[];
-      linkText?: string;
-      linkUrl?: string;
-      sortOrder?: number;
-    };
-    trx: Transaction;
-  }) {
+  }: UpdatePrivacyContentItemInterface) {
     const item = await this.privacyContentItemModel.findByPk(itemId);
 
     if (!item) {
@@ -227,10 +155,7 @@ export class PrivacyService {
   async deletePrivacyContentItem({
     itemId,
     trx
-  }: {
-    itemId: string;
-    trx: Transaction;
-  }) {
+  }: DeletePrivacyContentItemInterface) {
     const item = await this.privacyContentItemModel.findByPk(itemId);
 
     if (!item) {

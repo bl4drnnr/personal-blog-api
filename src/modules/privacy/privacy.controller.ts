@@ -5,7 +5,6 @@ import {
   Post,
   Put,
   Delete,
-  Param,
   UseGuards,
   UsePipes,
   Query
@@ -59,9 +58,9 @@ export class PrivacyController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/privacy/sections/:id')
+  @Put('admin/privacy/sections')
   async updatePrivacySection(
-    @Param('id') sectionId: string,
+    @Query('id') sectionId: string,
     @Body() data: UpdatePrivacySectionDto,
     @TrxDecorator() trx: Transaction
   ) {
@@ -93,9 +92,9 @@ export class PrivacyController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/privacy/content-items/:id')
+  @Put('admin/privacy/content-items')
   async updatePrivacyContentItem(
-    @Param('id') itemId: string,
+    @Query('id') itemId: string,
     @Body() data: UpdatePrivacyContentItemDto,
     @TrxDecorator() trx: Transaction
   ) {
