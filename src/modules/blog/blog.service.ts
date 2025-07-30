@@ -63,7 +63,7 @@ export class BlogService {
       throw new NotFoundException('Blog page content not found');
     }
 
-    const totalPages = Math.ceil(totalArticles / limit);
+    const totalPages = Math.ceil(totalArticles / parsedLimit);
     const hasNextPage = parsedPage < totalPages;
     const hasPrevPage = parsedPage > 1;
 

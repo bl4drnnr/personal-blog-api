@@ -20,7 +20,7 @@ export class SiteConfigController {
   // Admin endpoints
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Get('admin/site/config')
+  @Get('admin/site/get-config')
   async getAdminSiteConfig() {
     return await this.siteConfigService.getConfig();
   }
@@ -28,7 +28,7 @@ export class SiteConfigController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/site/config')
+  @Put('admin/site/update-config')
   async updateSiteConfig(
     @Body() data: UpdateSiteConfigDto,
     @TrxDecorator() trx: Transaction
