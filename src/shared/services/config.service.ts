@@ -61,7 +61,8 @@ export class ApiConfigService {
     return {
       accessKeyId: this.getString('AWS_ACCESS_KEY_ID'),
       secretAccessKey: this.getString('AWS_SECRET_ACCESS_KEY'),
-      bucketName: this.getString('AWS_S3_NAME')
+      bucketName: this.getString('AWS_S3_NAME'),
+      bucketUrl: this.getString('AWS_S3_BUCKET_URL')
     };
   }
 

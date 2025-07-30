@@ -47,6 +47,8 @@ import { BlogPage } from '@models/blog-page.model';
 import { ProjectsPage } from '@models/projects-page.model';
 import { Faq } from '@models/faq.model';
 import { WhysSection } from '@models/whys-section.model';
+import { StaticAssetsModule } from '@modules/static-assets/static-assets.module';
+import { StaticAssetModel } from '@models/static-asset.model';
 
 @Module({
   imports: [
@@ -93,7 +95,8 @@ import { WhysSection } from '@models/whys-section.model';
         BlogPage,
         ProjectsPage,
         Faq,
-        WhysSection
+        WhysSection,
+        StaticAssetModel
       ],
       autoLoadModels: true
     }),
@@ -113,7 +116,8 @@ import { WhysSection } from '@models/whys-section.model';
     LicenseModule,
     PrivacyModule,
     HomeModule,
-    BlogModule
+    BlogModule,
+    StaticAssetsModule
   ],
   providers: [
     {
