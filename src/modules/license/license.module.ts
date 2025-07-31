@@ -6,6 +6,7 @@ import { LicenseController } from './license.controller';
 import { LicenseService } from './license.service';
 import { ApiConfigService } from '@shared/config.service';
 import { JwtModule } from '@nestjs/jwt';
+import { StaticAssetsModule } from '@modules/static-assets/static-assets.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { JwtModule } from '@nestjs/jwt';
         secret: configService.jwtAuthConfig.secret
       }),
       inject: [ApiConfigService]
-    })
+    }),
+    StaticAssetsModule
   ],
   controllers: [LicenseController],
   providers: [LicenseService],

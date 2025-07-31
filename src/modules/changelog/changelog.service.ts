@@ -49,10 +49,6 @@ export class ChangelogService {
     }
 
     return {
-      pageContent: {
-        title: changelogPage.title,
-        content: changelogPage.content
-      },
       layoutData: {
         footerText: changelogPage.footerText,
         heroImageMain: changelogPage.heroImageMain?.s3Url || null,
@@ -73,6 +69,50 @@ export class ChangelogService {
         structuredData: changelogPage.structuredData
       },
       entries
+    };
+  }
+
+  async getChangelogPageAdmin() {
+    const changelogPage = await this.changelogPageModel.findOne({
+      include: [
+        {
+          model: StaticAssetModel,
+          as: 'heroImageMain',
+          required: false
+        },
+        {
+          model: StaticAssetModel,
+          as: 'heroImageSecondary',
+          required: false
+        },
+        {
+          model: StaticAssetModel,
+          as: 'ogImage',
+          required: false
+        }
+      ]
+    });
+
+    if (!changelogPage) {
+      throw new NotFoundException('Changelog page content not found');
+    }
+
+    return {
+      footerText: changelogPage.footerText,
+      heroTitle: changelogPage.heroTitle,
+      heroImageMainId: changelogPage.heroImageMainId,
+      heroImageSecondaryId: changelogPage.heroImageSecondaryId,
+      heroImageMainAlt: changelogPage.heroImageMainAlt,
+      heroImageSecondaryAlt: changelogPage.heroImageSecondaryAlt,
+      logoText: changelogPage.logoText,
+      breadcrumbText: changelogPage.breadcrumbText,
+      metaTitle: changelogPage.metaTitle,
+      metaDescription: changelogPage.metaDescription,
+      metaKeywords: changelogPage.metaKeywords,
+      ogTitle: changelogPage.ogTitle,
+      ogDescription: changelogPage.ogDescription,
+      ogImageId: changelogPage.ogImageId,
+      structuredData: changelogPage.structuredData
     };
   }
 

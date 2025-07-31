@@ -74,8 +74,15 @@ export class ChangelogController {
   // Admin endpoint for changelog page settings (layout, SEO, etc.)
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
+  @Get('admin/changelog/page')
+  async getChangelogPageAdmin() {
+    return await this.changelogService.getChangelogPageAdmin();
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/changelog/page')
+  @Put('admin/changelog/update-page')
   async updateChangelogPage(
     @Body() data: UpdateChangelogPageDto,
     @TrxDecorator() trx: Transaction

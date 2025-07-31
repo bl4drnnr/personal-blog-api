@@ -35,7 +35,7 @@ export class AboutController {
   // Admin endpoints for about page content
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Get('admin/about')
+  @Get('admin/get-about')
   async getAdminAboutPageData() {
     return await this.aboutService.getAboutPageDataAdmin();
   }
@@ -43,7 +43,7 @@ export class AboutController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Post('admin/about')
+  @Post('admin/post-about')
   async createAboutPage(
     @Body() data: CreateAboutPageDto,
     @TrxDecorator() trx: Transaction
@@ -54,7 +54,7 @@ export class AboutController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/about')
+  @Put('admin/put-about')
   async updateAboutPage(
     @Query('id') aboutPageId: string,
     @Body() data: UpdateAboutPageDto,
@@ -66,7 +66,7 @@ export class AboutController {
   // Admin endpoints for experiences
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Get('admin/experiences')
+  @Get('admin/get-experiences')
   async getExperiences() {
     return await this.aboutService.getExperiences();
   }
@@ -74,7 +74,7 @@ export class AboutController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Post('admin/experiences')
+  @Post('admin/post-experiences')
   async createExperience(
     @Body() data: CreateExperienceDto,
     @TrxDecorator() trx: Transaction
@@ -85,7 +85,7 @@ export class AboutController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/experiences')
+  @Put('admin/put-experiences')
   async updateExperience(
     @Query('id') experienceId: string,
     @Body() data: UpdateExperienceDto,
@@ -96,7 +96,7 @@ export class AboutController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/experiences')
+  @Delete('admin/delete-experiences')
   async deleteExperience(
     @Query('id') experienceId: string,
     @TrxDecorator() trx: Transaction
@@ -107,7 +107,7 @@ export class AboutController {
   // Admin endpoints for certificates
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Get('admin/certificates')
+  @Get('admin/get-certificates')
   async getCertificates() {
     return await this.aboutService.getCertificates();
   }
@@ -115,7 +115,7 @@ export class AboutController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Post('admin/certificates')
+  @Post('admin/post-certificates')
   async createCertificate(
     @Body() data: CreateCertificateDto,
     @TrxDecorator() trx: Transaction
@@ -126,7 +126,7 @@ export class AboutController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/certificates')
+  @Put('admin/put-certificates')
   async updateCertificate(
     @Query('id') certificateId: string,
     @Body() data: UpdateCertificateDto,
@@ -137,7 +137,7 @@ export class AboutController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/certificates')
+  @Delete('admin/delete-certificates')
   async deleteCertificate(
     @Query('id') certificateId: string,
     @TrxDecorator() trx: Transaction

@@ -13,8 +13,8 @@ interface AboutPageCreationAttributes {
   title: string;
   content: string;
   footerText?: string;
-  heroImageMain?: string;
-  heroImageSecondary?: string;
+  heroImageMainId?: string;
+  heroImageSecondaryId?: string;
   heroImageMainAlt?: string;
   heroImageSecondaryAlt?: string;
   logoText?: string;
@@ -26,7 +26,7 @@ interface AboutPageCreationAttributes {
   metaKeywords?: string;
   ogTitle?: string;
   ogDescription?: string;
-  ogImage?: string;
+  ogImageId?: string;
   structuredData?: object;
 }
 
@@ -61,16 +61,16 @@ export class AboutPage extends Model<AboutPage, AboutPageCreationAttributes> {
   @Column({
     type: DataType.STRING,
     allowNull: true,
-    field: 'hero_image_main'
+    field: 'hero_image_main_id'
   })
-  heroImageMain: string;
+  heroImageMainId: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: true,
-    field: 'hero_image_secondary'
+    field: 'hero_image_secondary_id'
   })
-  heroImageSecondary: string;
+  heroImageSecondaryId: string;
 
   @Column({
     type: DataType.STRING,
@@ -152,9 +152,9 @@ export class AboutPage extends Model<AboutPage, AboutPageCreationAttributes> {
   @Column({
     type: DataType.STRING,
     allowNull: true,
-    field: 'og_image'
+    field: 'og_image_id'
   })
-  ogImage: string;
+  ogImageId: string;
 
   @Column({
     type: DataType.JSONB,

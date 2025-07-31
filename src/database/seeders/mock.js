@@ -1034,10 +1034,8 @@ export default VulnerabilityReport;
           `,
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
-          hero_image_secondary:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
+          hero_image_secondary_id: '90000000-0000-0000-0000-000000000001',
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Abstract Gradient Art',
           logo_text: 'Luch',
@@ -1085,8 +1083,7 @@ export default VulnerabilityReport;
           og_title: 'About Me',
           og_description:
             'Passionate about web development, design, and sharing knowledge. Specializing in full-stack development with modern technologies.',
-          og_image:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          og_image_id: '90000000-0000-0000-0000-000000000001',
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Person',
@@ -1294,8 +1291,6 @@ export default VulnerabilityReport;
       await queryInterface.bulkInsert('changelog_page', [
         {
           id: '00000000-0000-0000-0000-000000000002',
-          title: 'Changelog',
-          content: 'Track the latest updates and improvements to our platform.',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: '90000000-0000-0000-0000-000000000001',
@@ -1391,10 +1386,8 @@ export default VulnerabilityReport;
           ]),
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
-          hero_image_secondary:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
+          hero_image_secondary_id: '90000000-0000-0000-0000-000000000001',
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Abstract Gradient Art',
           logo_text: 'Luch',
@@ -1408,8 +1401,7 @@ export default VulnerabilityReport;
           og_title: 'License Information - MIT License',
           og_description:
             'MIT License details for the LUCH Framework. Free to use, modify, and distribute under open source terms.',
-          og_image:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          og_image_id: '90000000-0000-0000-0000-000000000001',
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'CreativeWork',
@@ -1551,10 +1543,8 @@ export default VulnerabilityReport;
           cookie_policy_title: 'Cookie Policy',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
-          hero_image_secondary:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
+          hero_image_secondary_id: '90000000-0000-0000-0000-000000000001',
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Abstract Gradient Art',
           logo_text: 'Luch',
@@ -1568,8 +1558,7 @@ export default VulnerabilityReport;
           og_title: 'Privacy Policy - Data Protection',
           og_description:
             'Our privacy policy explains how we handle your personal data and protect your privacy when using our blog.',
-          og_image:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          og_image_id: '90000000-0000-0000-0000-000000000001',
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebPage',
@@ -1800,9 +1789,8 @@ export default VulnerabilityReport;
             'A fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main: 'assets/images/Contemplative-Astronaut-Woman.webp',
-          hero_image_secondary:
-            'assets/images/Astronaut-in-Space_1Astronaut in Space.webp',
+          hero_image_main_id: '90000000-0000-0000-0000-000000000004',
+          hero_image_secondary_id: '90000000-0000-0000-0000-000000000006',
           hero_image_main_alt: 'Contemplative Astronaut Woman',
           hero_image_secondary_alt: 'Astronaut in Space',
           logo_text: 'LUCH',
@@ -1822,7 +1810,7 @@ export default VulnerabilityReport;
           og_title: 'LUCH - Modern Creative Portfolio Template',
           og_description:
             'A fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          og_image: 'assets/images/Contemplative-Astronaut-Woman.webp',
+          og_image_id: '90000000-0000-0000-0000-000000000004',
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebSite',
@@ -1851,10 +1839,8 @@ export default VulnerabilityReport;
             'Explore my portfolio of projects showcasing innovative solutions and creative implementations.',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
-          hero_image_secondary:
-            'assets/images/Astronaut-Woman-in-Spacecraft_1Astronaut Woman in Spacecraft.avif',
+          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
+          hero_image_secondary_id: '90000000-0000-0000-0000-000000000006',
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Astronaut Woman in Spacecraft',
           logo_text: 'LUCH',
@@ -1868,8 +1854,7 @@ export default VulnerabilityReport;
           og_title: 'Projects Portfolio - Latest Work',
           og_description:
             'Browse through my latest projects showcasing cutting-edge technologies and creative solutions.',
-          og_image:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          og_image_id: '90000000-0000-0000-0000-000000000001',
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
@@ -1896,10 +1881,8 @@ export default VulnerabilityReport;
             'Dive into articles about web development, technology trends, and creative problem-solving.',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
-          hero_image_secondary:
-            'assets/images/Astronaut-Woman-in-Spacecraft_1Astronaut Woman in Spacecraft.avif',
+          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
+          hero_image_secondary_id: '90000000-0000-0000-0000-000000000006',
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Astronaut Woman in Spacecraft',
           logo_text: 'LUCH',
@@ -1913,8 +1896,7 @@ export default VulnerabilityReport;
           og_title: 'Blog - Latest Articles & Insights',
           og_description:
             'Discover articles about web development, technology trends, and programming insights from an experienced developer.',
-          og_image:
-            'assets/images/Abstract-Gradient-Art_1Abstract Gradient Art.avif',
+          og_image_id: '90000000-0000-0000-0000-000000000001',
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Blog',

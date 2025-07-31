@@ -6,12 +6,14 @@ import { CreateLicenseTileInterface } from '@interfaces/create-license-tile.inte
 import { UpdateLicenseTileInterface } from '@interfaces/update-license-tile.interface';
 import { DeleteLicenseTileInterface } from '@interfaces/delete-license-tile.interface';
 import { UpdateLicensePageInterface } from '@interfaces/update-license-page.interface';
+import { StaticAssetsService } from '../static-assets/static-assets.service';
 
 @Injectable()
 export class LicenseService {
   constructor(
     @InjectModel(LicensePage) private licensePageModel: typeof LicensePage,
-    @InjectModel(LicenseTile) private licenseTileModel: typeof LicenseTile
+    @InjectModel(LicenseTile) private licenseTileModel: typeof LicenseTile,
+    private readonly staticAssetsService: StaticAssetsService
   ) {}
 
   async getLicensePageData() {
@@ -29,6 +31,42 @@ export class LicenseService {
       throw new NotFoundException('License page content not found');
     }
 
+    // Fetch actual images using asset IDs
+    let heroImageMain = null;
+    let heroImageSecondary = null;
+    let ogImage = null;
+
+    try {
+      if (licensePage.heroImageMainId) {
+        heroImageMain = await this.staticAssetsService.findById(
+          licensePage.heroImageMainId
+        );
+      }
+    } catch (error) {
+      console.warn('Hero main image not found:', licensePage.heroImageMainId);
+    }
+
+    try {
+      if (licensePage.heroImageSecondaryId) {
+        heroImageSecondary = await this.staticAssetsService.findById(
+          licensePage.heroImageSecondaryId
+        );
+      }
+    } catch (error) {
+      console.warn(
+        'Hero secondary image not found:',
+        licensePage.heroImageSecondaryId
+      );
+    }
+
+    try {
+      if (licensePage.ogImageId) {
+        ogImage = await this.staticAssetsService.findById(licensePage.ogImageId);
+      }
+    } catch (error) {
+      console.warn('OG image not found:', licensePage.ogImageId);
+    }
+
     return {
       pageContent: {
         title: licensePage.title,
@@ -41,8 +79,8 @@ export class LicenseService {
       },
       layoutData: {
         footerText: licensePage.footerText,
-        heroImageMain: licensePage.heroImageMain,
-        heroImageSecondary: licensePage.heroImageSecondary,
+        heroImageMain: heroImageMain,
+        heroImageSecondary: heroImageSecondary,
         heroImageMainAlt: licensePage.heroImageMainAlt,
         heroImageSecondaryAlt: licensePage.heroImageSecondaryAlt,
         logoText: licensePage.logoText,
@@ -55,7 +93,7 @@ export class LicenseService {
         metaKeywords: licensePage.metaKeywords,
         ogTitle: licensePage.ogTitle,
         ogDescription: licensePage.ogDescription,
-        ogImage: licensePage.ogImage,
+        ogImage: ogImage,
         structuredData: licensePage.structuredData
       },
       licenseTiles
@@ -95,6 +133,39 @@ export class LicenseService {
 
     await tile.destroy({ transaction: trx });
     return { message: 'License tile deleted successfully' };
+  }
+
+  async getLicensePageDataAdmin() {
+    const licensePage = await this.licensePageModel.findOne();
+
+    if (!licensePage) {
+      throw new NotFoundException('License page content not found');
+    }
+
+    // Return data with IDs for admin endpoint
+    return {
+      id: licensePage.id,
+      title: licensePage.title,
+      licenseDate: licensePage.licenseDate,
+      paragraphs: licensePage.paragraphs,
+      additionalInfoTitle: licensePage.additionalInfoTitle,
+      additionalInfoParagraphs: licensePage.additionalInfoParagraphs,
+      footerText: licensePage.footerText,
+      heroImageMainId: licensePage.heroImageMainId,
+      heroImageSecondaryId: licensePage.heroImageSecondaryId,
+      heroImageMainAlt: licensePage.heroImageMainAlt,
+      heroImageSecondaryAlt: licensePage.heroImageSecondaryAlt,
+      logoText: licensePage.logoText,
+      breadcrumbText: licensePage.breadcrumbText,
+      heroTitle: licensePage.heroTitle,
+      metaTitle: licensePage.metaTitle,
+      metaDescription: licensePage.metaDescription,
+      metaKeywords: licensePage.metaKeywords,
+      ogTitle: licensePage.ogTitle,
+      ogDescription: licensePage.ogDescription,
+      ogImageId: licensePage.ogImageId,
+      structuredData: licensePage.structuredData
+    };
   }
 
   async updateLicensePage({ data, trx }: UpdateLicensePageInterface) {

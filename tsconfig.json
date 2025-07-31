@@ -75,7 +75,8 @@
         "src/modules/projects/*",
         "src/modules/site-config/*",
         "src/modules/control/*",
-        "src/modules/pages/*"
+        "src/modules/pages/*",
+        "src/modules/static-assets/*"
       ],
       "@interfaces/*": [
         "src/libs/enums/*",

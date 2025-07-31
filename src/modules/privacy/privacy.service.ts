@@ -10,6 +10,7 @@ import { DeletePrivacySectionInterface } from '@interfaces/delete-privacy-sectio
 import { CreatePrivacyContentItemInterface } from '@interfaces/create-privacy-content-item.interface';
 import { UpdatePrivacyContentItemInterface } from '@interfaces/update-privacy-content-item.interface';
 import { DeletePrivacyContentItemInterface } from '@interfaces/delete-privacy-content-item.interface';
+import { StaticAssetsService } from '../static-assets/static-assets.service';
 
 @Injectable()
 export class PrivacyService {
@@ -17,7 +18,8 @@ export class PrivacyService {
     @InjectModel(PrivacyPage) private privacyPageModel: typeof PrivacyPage,
     @InjectModel(PrivacySection) private privacySectionModel: typeof PrivacySection,
     @InjectModel(PrivacyContentItem)
-    private privacyContentItemModel: typeof PrivacyContentItem
+    private privacyContentItemModel: typeof PrivacyContentItem,
+    private readonly staticAssetsService: StaticAssetsService
   ) {}
 
   async getPrivacyPageData() {
@@ -70,8 +72,8 @@ export class PrivacyService {
       },
       layoutData: {
         footerText: privacyPage.footerText,
-        heroImageMain: privacyPage.heroImageMain,
-        heroImageSecondary: privacyPage.heroImageSecondary,
+        heroImageMain: await this.getStaticAsset(privacyPage.heroImageMainId),
+        heroImageSecondary: await this.getStaticAsset(privacyPage.heroImageSecondaryId),
         heroImageMainAlt: privacyPage.heroImageMainAlt,
         heroImageSecondaryAlt: privacyPage.heroImageSecondaryAlt,
         logoText: privacyPage.logoText,
@@ -84,9 +86,53 @@ export class PrivacyService {
         metaKeywords: privacyPage.metaKeywords,
         ogTitle: privacyPage.ogTitle,
         ogDescription: privacyPage.ogDescription,
-        ogImage: privacyPage.ogImage,
+        ogImage: await this.getStaticAsset(privacyPage.ogImageId),
         structuredData: privacyPage.structuredData
       }
+    };
+  }
+
+  private async getStaticAsset(assetId: string) {
+    if (!assetId) {
+      return null;
+    }
+
+    try {
+      return await this.staticAssetsService.findById(assetId);
+    } catch (error) {
+      console.warn('Static asset not found:', assetId);
+      return null;
+    }
+  }
+
+  async getPrivacyPageDataAdmin() {
+    const privacyPage = await this.privacyPageModel.findOne();
+
+    if (!privacyPage) {
+      throw new NotFoundException('Privacy page content not found');
+    }
+
+    // Return data with IDs for admin endpoint
+    return {
+      id: privacyPage.id,
+      title: privacyPage.title,
+      lastUpdated: privacyPage.lastUpdated,
+      cookiePolicyTitle: privacyPage.cookiePolicyTitle,
+      footerText: privacyPage.footerText,
+      heroImageMainId: privacyPage.heroImageMainId,
+      heroImageSecondaryId: privacyPage.heroImageSecondaryId,
+      heroImageMainAlt: privacyPage.heroImageMainAlt,
+      heroImageSecondaryAlt: privacyPage.heroImageSecondaryAlt,
+      logoText: privacyPage.logoText,
+      breadcrumbText: privacyPage.breadcrumbText,
+      heroTitle: privacyPage.heroTitle,
+      metaTitle: privacyPage.metaTitle,
+      metaDescription: privacyPage.metaDescription,
+      metaKeywords: privacyPage.metaKeywords,
+      ogTitle: privacyPage.ogTitle,
+      ogDescription: privacyPage.ogDescription,
+      ogImageId: privacyPage.ogImageId,
+      structuredData: privacyPage.structuredData
     };
   }
 

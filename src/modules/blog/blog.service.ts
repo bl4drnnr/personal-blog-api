@@ -4,12 +4,14 @@ import { Op } from 'sequelize';
 import { BlogPage } from '@models/blog-page.model';
 import { ArticleModel } from '@models/article.model';
 import { GetBlogPageDataInterface } from '@interfaces/get-blog-page-data.interface';
+import { StaticAssetsService } from '../static-assets/static-assets.service';
 
 @Injectable()
 export class BlogService {
   constructor(
     @InjectModel(BlogPage) private blogPageModel: typeof BlogPage,
-    @InjectModel(ArticleModel) private articleModel: typeof ArticleModel
+    @InjectModel(ArticleModel) private articleModel: typeof ArticleModel,
+    private readonly staticAssetsService: StaticAssetsService
   ) {}
 
   async getBlogPageData(query: GetBlogPageDataInterface) {
@@ -75,8 +77,8 @@ export class BlogService {
       },
       layoutData: {
         footerText: blogPage.footerText,
-        heroImageMain: blogPage.heroImageMain,
-        heroImageSecondary: blogPage.heroImageSecondary,
+        heroImageMain: await this.getStaticAsset(blogPage.heroImageMainId),
+        heroImageSecondary: await this.getStaticAsset(blogPage.heroImageSecondaryId),
         heroImageMainAlt: blogPage.heroImageMainAlt,
         heroImageSecondaryAlt: blogPage.heroImageSecondaryAlt,
         logoText: blogPage.logoText,
@@ -89,7 +91,7 @@ export class BlogService {
         metaKeywords: blogPage.metaKeywords,
         ogTitle: blogPage.ogTitle,
         ogDescription: blogPage.ogDescription,
-        ogImage: blogPage.ogImage,
+        ogImage: await this.getStaticAsset(blogPage.ogImageId),
         structuredData: blogPage.structuredData
       },
       articles: articles.map((article) => ({
@@ -126,5 +128,49 @@ export class BlogService {
       .flatMap((article) => article.tags);
 
     return [...new Set(allTags)].sort();
+  }
+
+  private async getStaticAsset(assetId: string) {
+    if (!assetId) {
+      return null;
+    }
+
+    try {
+      return await this.staticAssetsService.findById(assetId);
+    } catch (error) {
+      console.warn('Static asset not found:', assetId);
+      return null;
+    }
+  }
+
+  async getBlogPageDataAdmin() {
+    const blogPage = await this.blogPageModel.findOne();
+
+    if (!blogPage) {
+      throw new NotFoundException('Blog page content not found');
+    }
+
+    // Return data with IDs for admin endpoint
+    return {
+      id: blogPage.id,
+      title: blogPage.title,
+      subtitle: blogPage.subtitle,
+      description: blogPage.description,
+      footerText: blogPage.footerText,
+      heroImageMainId: blogPage.heroImageMainId,
+      heroImageSecondaryId: blogPage.heroImageSecondaryId,
+      heroImageMainAlt: blogPage.heroImageMainAlt,
+      heroImageSecondaryAlt: blogPage.heroImageSecondaryAlt,
+      logoText: blogPage.logoText,
+      breadcrumbText: blogPage.breadcrumbText,
+      heroTitle: blogPage.heroTitle,
+      metaTitle: blogPage.metaTitle,
+      metaDescription: blogPage.metaDescription,
+      metaKeywords: blogPage.metaKeywords,
+      ogTitle: blogPage.ogTitle,
+      ogDescription: blogPage.ogDescription,
+      ogImageId: blogPage.ogImageId,
+      structuredData: blogPage.structuredData
+    };
   }
 }

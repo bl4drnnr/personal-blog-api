@@ -8,6 +8,7 @@ import { AboutController } from './about.controller';
 import { AboutService } from './about.service';
 import { ApiConfigService } from '@shared/config.service';
 import { JwtModule } from '@nestjs/jwt';
+import { StaticAssetsModule } from '@modules/static-assets/static-assets.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { JwtModule } from '@nestjs/jwt';
         secret: configService.jwtAuthConfig.secret
       }),
       inject: [ApiConfigService]
-    })
+    }),
+    StaticAssetsModule
   ],
   controllers: [AboutController],
   providers: [AboutService],

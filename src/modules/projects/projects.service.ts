@@ -10,6 +10,7 @@ import { GetProjectsSlugsInterface } from '@interfaces/get-projects-slugs.interf
 import { UpdateProjectInterface } from '@interfaces/update-project.interface';
 import { DeleteProjectInterface } from '@interfaces/delete-project.interface';
 import { GetProjectsByUserInterface } from '@interfaces/get-projects-by-user.interface';
+import { StaticAssetsService } from '../static-assets/static-assets.service';
 
 interface PaginationQuery {
   page?: number;
@@ -23,7 +24,8 @@ export class ProjectsService {
     @InjectModel(ProjectModel)
     private readonly projectModel: typeof ProjectModel,
     @InjectModel(ProjectsPage)
-    private readonly projectsPageModel: typeof ProjectsPage
+    private readonly projectsPageModel: typeof ProjectsPage,
+    private readonly staticAssetsService: StaticAssetsService
   ) {}
 
   async create(payload: CreateProjectInterface) {
@@ -174,8 +176,10 @@ export class ProjectsService {
       },
       layoutData: {
         footerText: projectsPage.footerText,
-        heroImageMain: projectsPage.heroImageMain,
-        heroImageSecondary: projectsPage.heroImageSecondary,
+        heroImageMain: await this.getStaticAsset(projectsPage.heroImageMainId),
+        heroImageSecondary: await this.getStaticAsset(
+          projectsPage.heroImageSecondaryId
+        ),
         heroImageMainAlt: projectsPage.heroImageMainAlt,
         heroImageSecondaryAlt: projectsPage.heroImageSecondaryAlt,
         logoText: projectsPage.logoText,
@@ -188,7 +192,7 @@ export class ProjectsService {
         metaKeywords: projectsPage.metaKeywords,
         ogTitle: projectsPage.ogTitle,
         ogDescription: projectsPage.ogDescription,
-        ogImage: projectsPage.ogImage,
+        ogImage: await this.getStaticAsset(projectsPage.ogImageId),
         structuredData: projectsPage.structuredData
       },
       projects: projects.map((project) => ({
@@ -210,6 +214,50 @@ export class ProjectsService {
         hasNextPage,
         hasPrevPage
       }
+    };
+  }
+
+  private async getStaticAsset(assetId: string) {
+    if (!assetId) {
+      return null;
+    }
+
+    try {
+      return await this.staticAssetsService.findById(assetId);
+    } catch (error) {
+      console.warn('Static asset not found:', assetId);
+      return null;
+    }
+  }
+
+  async getProjectsPageDataAdmin() {
+    const projectsPage = await this.projectsPageModel.findOne();
+
+    if (!projectsPage) {
+      throw new NotFoundException('Projects page content not found');
+    }
+
+    // Return data with IDs for admin endpoint
+    return {
+      id: projectsPage.id,
+      title: projectsPage.title,
+      subtitle: projectsPage.subtitle,
+      description: projectsPage.description,
+      footerText: projectsPage.footerText,
+      heroImageMainId: projectsPage.heroImageMainId,
+      heroImageSecondaryId: projectsPage.heroImageSecondaryId,
+      heroImageMainAlt: projectsPage.heroImageMainAlt,
+      heroImageSecondaryAlt: projectsPage.heroImageSecondaryAlt,
+      logoText: projectsPage.logoText,
+      breadcrumbText: projectsPage.breadcrumbText,
+      heroTitle: projectsPage.heroTitle,
+      metaTitle: projectsPage.metaTitle,
+      metaDescription: projectsPage.metaDescription,
+      metaKeywords: projectsPage.metaKeywords,
+      ogTitle: projectsPage.ogTitle,
+      ogDescription: projectsPage.ogDescription,
+      ogImageId: projectsPage.ogImageId,
+      structuredData: projectsPage.structuredData
     };
   }
 }

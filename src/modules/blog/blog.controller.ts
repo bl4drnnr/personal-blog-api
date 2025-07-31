@@ -12,7 +12,7 @@ interface BlogQuery {
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
-  @Get()
+  @Get('articles')
   async getBlogPage(@Query() { page, limit, search, tag }: BlogQuery) {
     return this.blogService.getBlogPageData({
       page,

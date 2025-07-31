@@ -13,6 +13,7 @@ import { DeleteExperienceInterface } from '@interfaces/delete-experience.interfa
 import { CreateCertificateInterface } from '@interfaces/create-certificate.interface';
 import { UpdateCertificateInterface } from '@interfaces/update-certificate.interface';
 import { DeleteCertificateInterface } from '@interfaces/delete-certificate.interface';
+import { StaticAssetsService } from '@modules/static-assets.service';
 
 @Injectable()
 export class AboutService {
@@ -20,7 +21,8 @@ export class AboutService {
     @InjectModel(AboutPage) private aboutPageModel: typeof AboutPage,
     @InjectModel(Experience) private experienceModel: typeof Experience,
     @InjectModel(Position) private positionModel: typeof Position,
-    @InjectModel(Certificate) private certificateModel: typeof Certificate
+    @InjectModel(Certificate) private certificateModel: typeof Certificate,
+    private readonly staticAssetsService: StaticAssetsService
   ) {}
 
   async getAboutPageData() {
@@ -52,6 +54,42 @@ export class AboutService {
       throw new NotFoundException('About page content not found');
     }
 
+    // Fetch actual images using asset IDs
+    let heroImageMain = null;
+    let heroImageSecondary = null;
+    let ogImage = null;
+
+    try {
+      if (aboutPage.heroImageMainId) {
+        heroImageMain = await this.staticAssetsService.findById(
+          aboutPage.heroImageMainId
+        );
+      }
+    } catch (error) {
+      console.warn('Hero main image not found:', aboutPage.heroImageMainId);
+    }
+
+    try {
+      if (aboutPage.heroImageSecondaryId) {
+        heroImageSecondary = await this.staticAssetsService.findById(
+          aboutPage.heroImageSecondaryId
+        );
+      }
+    } catch (error) {
+      console.warn(
+        'Hero secondary image not found:',
+        aboutPage.heroImageSecondaryId
+      );
+    }
+
+    try {
+      if (aboutPage.ogImageId) {
+        ogImage = await this.staticAssetsService.findById(aboutPage.ogImageId);
+      }
+    } catch (error) {
+      console.warn('OG image not found:', aboutPage.ogImageId);
+    }
+
     return {
       pageContent: {
         title: aboutPage.title,
@@ -59,8 +97,8 @@ export class AboutService {
       },
       layoutData: {
         footerText: aboutPage.footerText,
-        heroImageMain: aboutPage.heroImageMain,
-        heroImageSecondary: aboutPage.heroImageSecondary,
+        heroImageMain: heroImageMain,
+        heroImageSecondary: heroImageSecondary,
         heroImageMainAlt: aboutPage.heroImageMainAlt,
         heroImageSecondaryAlt: aboutPage.heroImageSecondaryAlt,
         logoText: aboutPage.logoText,
@@ -74,7 +112,7 @@ export class AboutService {
         metaKeywords: aboutPage.metaKeywords,
         ogTitle: aboutPage.ogTitle,
         ogDescription: aboutPage.ogDescription,
-        ogImage: aboutPage.ogImage,
+        ogImage: ogImage,
         structuredData: aboutPage.structuredData
       },
       experiences,
@@ -83,7 +121,33 @@ export class AboutService {
   }
 
   async getAboutPageDataAdmin() {
-    return await this.getAboutPageData();
+    const aboutPage = await this.aboutPageModel.findOne();
+
+    if (!aboutPage) {
+      throw new NotFoundException('About page content not found');
+    }
+
+    // Return data matching the AboutPageData interface exactly
+    return {
+      id: aboutPage.id,
+      title: aboutPage.title,
+      content: aboutPage.content,
+      footerText: aboutPage.footerText,
+      heroImageMainId: aboutPage.heroImageMainId,
+      heroImageSecondaryId: aboutPage.heroImageSecondaryId,
+      heroImageMainAlt: aboutPage.heroImageMainAlt,
+      heroImageSecondaryAlt: aboutPage.heroImageSecondaryAlt,
+      logoText: aboutPage.logoText,
+      breadcrumbText: aboutPage.breadcrumbText,
+      heroTitle: aboutPage.heroTitle,
+      metaTitle: aboutPage.metaTitle,
+      metaDescription: aboutPage.metaDescription,
+      metaKeywords: aboutPage.metaKeywords,
+      ogTitle: aboutPage.ogTitle,
+      ogDescription: aboutPage.ogDescription,
+      ogImageId: aboutPage.ogImageId,
+      structuredData: aboutPage.structuredData
+    };
   }
 
   async createAboutPage({ data, trx }: CreateAboutPageInterface) {

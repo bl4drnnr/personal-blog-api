@@ -3,14 +3,6 @@ import { IsString, IsOptional, IsObject, IsUUID } from 'class-validator';
 export class UpdateChangelogPageDto {
   @IsOptional()
   @IsString()
-  title?: string;
-
-  @IsOptional()
-  @IsString()
-  content?: string;
-
-  @IsOptional()
-  @IsString()
   footerText?: string;
 
   @IsOptional()
