@@ -5,7 +5,6 @@ import {
   Post,
   Put,
   Delete,
-  Param,
   UseGuards,
   UsePipes,
   Query
@@ -41,7 +40,7 @@ export class LicenseController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Post('admin/license/tiles')
+  @Post('admin/license/create-tiles')
   async createLicenseTile(
     @Body() data: CreateLicenseTileDto,
     @TrxDecorator() trx: Transaction
@@ -52,9 +51,9 @@ export class LicenseController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/license/tiles/:id')
+  @Put('admin/license/update-tiles')
   async updateLicenseTile(
-    @Param('id') tileId: string,
+    @Query('id') tileId: string,
     @Body() data: UpdateLicenseTileDto,
     @TrxDecorator() trx: Transaction
   ) {
@@ -63,7 +62,7 @@ export class LicenseController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/license/tiles')
+  @Delete('admin/license/delete-tiles')
   async deleteLicenseTile(
     @Query('id') tileId: string,
     @TrxDecorator() trx: Transaction
@@ -71,11 +70,18 @@ export class LicenseController {
     return await this.licenseService.deleteLicenseTile({ tileId, trx });
   }
 
-  // Admin endpoint for license page settings (layout, SEO, etc.)
+  // Admin endpoints for license page settings (layout, SEO, etc.)
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Get('admin/license/get-page')
+  async getLicensePageDataAdmin() {
+    return await this.licenseService.getLicensePageDataAdmin();
+  }
+
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/license/page')
+  @Put('admin/license/update-page')
   async updateLicensePage(
     @Body() data: UpdateLicensePageDto,
     @TrxDecorator() trx: Transaction

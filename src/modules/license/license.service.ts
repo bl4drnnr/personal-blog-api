@@ -31,45 +31,6 @@ export class LicenseService {
       throw new NotFoundException('License page content not found');
     }
 
-    // Fetch actual images using asset IDs
-    let heroImageMain = null;
-    let heroImageSecondary = null;
-    let ogImage = null;
-
-    try {
-      if (licensePage.heroImageMainId) {
-        const asset = await this.staticAssetsService.findById(
-          licensePage.heroImageMainId
-        );
-        heroImageMain = asset.s3Url;
-      }
-    } catch (error) {
-      console.warn('Hero main image not found:', licensePage.heroImageMainId);
-    }
-
-    try {
-      if (licensePage.heroImageSecondaryId) {
-        const asset = await this.staticAssetsService.findById(
-          licensePage.heroImageSecondaryId
-        );
-        heroImageSecondary = asset.s3Url;
-      }
-    } catch (error) {
-      console.warn(
-        'Hero secondary image not found:',
-        licensePage.heroImageSecondaryId
-      );
-    }
-
-    try {
-      if (licensePage.ogImageId) {
-        const asset = await this.staticAssetsService.findById(licensePage.ogImageId);
-        ogImage = asset.s3Url;
-      }
-    } catch (error) {
-      console.warn('OG image not found:', licensePage.ogImageId);
-    }
-
     return {
       pageContent: {
         title: licensePage.title,
@@ -82,8 +43,10 @@ export class LicenseService {
       },
       layoutData: {
         footerText: licensePage.footerText,
-        heroImageMain: heroImageMain,
-        heroImageSecondary: heroImageSecondary,
+        heroImageMain: await this.getStaticAsset(licensePage.heroImageMainId),
+        heroImageSecondary: await this.getStaticAsset(
+          licensePage.heroImageSecondaryId
+        ),
         heroImageMainAlt: licensePage.heroImageMainAlt,
         heroImageSecondaryAlt: licensePage.heroImageSecondaryAlt,
         logoText: licensePage.logoText,
@@ -96,7 +59,7 @@ export class LicenseService {
         metaKeywords: licensePage.metaKeywords,
         ogTitle: licensePage.ogTitle,
         ogDescription: licensePage.ogDescription,
-        ogImage: ogImage,
+        ogImage: await this.getStaticAsset(licensePage.ogImageId),
         structuredData: licensePage.structuredData
       },
       licenseTiles
@@ -181,5 +144,19 @@ export class LicenseService {
     }
 
     return licensePage;
+  }
+
+  private async getStaticAsset(assetId: string) {
+    if (!assetId) {
+      return null;
+    }
+
+    try {
+      const asset = await this.staticAssetsService.findById(assetId);
+      return asset.s3Url;
+    } catch (error) {
+      console.warn('Static asset not found:', assetId);
+      return null;
+    }
   }
 }

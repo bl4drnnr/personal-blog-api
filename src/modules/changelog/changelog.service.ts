@@ -51,8 +51,8 @@ export class ChangelogService {
     return {
       layoutData: {
         footerText: changelogPage.footerText,
-        heroImageMain: changelogPage.heroImageMain?.s3Url || null,
-        heroImageSecondary: changelogPage.heroImageSecondary?.s3Url || null,
+        heroImageMain: changelogPage.heroImageMain.s3Url,
+        heroImageSecondary: changelogPage.heroImageSecondary.s3Url,
         heroImageMainAlt: changelogPage.heroImageMainAlt,
         heroImageSecondaryAlt: changelogPage.heroImageSecondaryAlt,
         logoText: changelogPage.logoText,
@@ -65,7 +65,7 @@ export class ChangelogService {
         metaKeywords: changelogPage.metaKeywords,
         ogTitle: changelogPage.ogTitle,
         ogDescription: changelogPage.ogDescription,
-        ogImage: changelogPage.ogImage?.s3Url || null,
+        ogImage: changelogPage.ogImage.s3Url,
         structuredData: changelogPage.structuredData
       },
       entries
