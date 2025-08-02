@@ -13,6 +13,9 @@ import { DeleteExperienceInterface } from '@interfaces/delete-experience.interfa
 import { CreateCertificateInterface } from '@interfaces/create-certificate.interface';
 import { UpdateCertificateInterface } from '@interfaces/update-certificate.interface';
 import { DeleteCertificateInterface } from '@interfaces/delete-certificate.interface';
+import { CreatePositionInterface } from '@interfaces/create-position.interface';
+import { UpdatePositionInterface } from '@interfaces/update-position.interface';
+import { DeletePositionInterface } from '@interfaces/delete-position.interface';
 import { StaticAssetsService } from '@modules/static-assets.service';
 
 @Injectable()
@@ -358,6 +361,43 @@ export class AboutService {
 
     await certificate.destroy({ transaction: trx });
     return { message: 'Certificate deleted successfully' };
+  }
+
+  async createPosition({ experienceId, data, trx }: CreatePositionInterface) {
+    const experience = await this.experienceModel.findByPk(experienceId);
+
+    if (!experience) {
+      throw new NotFoundException('Experience not found');
+    }
+
+    const position = await this.positionModel.create(
+      { ...data, experienceId },
+      { transaction: trx }
+    );
+
+    return position;
+  }
+
+  async updatePosition({ positionId, data, trx }: UpdatePositionInterface) {
+    const position = await this.positionModel.findByPk(positionId);
+
+    if (!position) {
+      throw new NotFoundException('Position not found');
+    }
+
+    await position.update(data, { transaction: trx });
+    return position;
+  }
+
+  async deletePosition({ positionId, trx }: DeletePositionInterface) {
+    const position = await this.positionModel.findByPk(positionId);
+
+    if (!position) {
+      throw new NotFoundException('Position not found');
+    }
+
+    await position.destroy({ transaction: trx });
+    return { message: 'Position deleted successfully' };
   }
 
   private async processCertificatesLogos(certificates: Certificate[]) {

@@ -20,6 +20,8 @@ import { CreateExperienceDto } from '@dto/create-experience.dto';
 import { UpdateExperienceDto } from '@dto/update-experience.dto';
 import { CreateCertificateDto } from '@dto/create-certificate.dto';
 import { UpdateCertificateDto } from '@dto/update-certificate.dto';
+import { CreatePositionDto } from '@dto/create-position.dto';
+import { UpdatePositionDto } from '@dto/update-position.dto';
 import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
 @Controller('about')
@@ -143,5 +145,40 @@ export class AboutController {
     @TrxDecorator() trx: Transaction
   ) {
     return await this.aboutService.deleteCertificate({ certificateId, trx });
+  }
+
+  // Admin endpoints for positions
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @UsePipes(ValidationPipe)
+  @Post('admin/post-positions')
+  async createPosition(
+    @Query('experienceId') experienceId: string,
+    @Body() data: CreatePositionDto,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return await this.aboutService.createPosition({ experienceId, data, trx });
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @UsePipes(ValidationPipe)
+  @Put('admin/put-positions')
+  async updatePosition(
+    @Query('id') positionId: string,
+    @Body() data: UpdatePositionDto,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return await this.aboutService.updatePosition({ positionId, data, trx });
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Delete('admin/delete-positions')
+  async deletePosition(
+    @Query('id') positionId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return await this.aboutService.deletePosition({ positionId, trx });
   }
 }
