@@ -1,19 +1,22 @@
 import {
+  BelongsTo,
   Column,
   CreatedAt,
   DataType,
   Default,
+  ForeignKey,
   Model,
   PrimaryKey,
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
+import { StaticAssetModel } from './static-asset.model';
 
 interface CertificateCreationAttributes {
   name: string;
   issuedDate: string;
   expirationDate?: string;
-  logo?: string;
+  logoId?: string;
   description?: string;
   order?: number;
 }
@@ -46,12 +49,16 @@ export class Certificate extends Model<Certificate, CertificateCreationAttribute
   })
   expirationDate: string;
 
+  @ForeignKey(() => StaticAssetModel)
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: true,
-    field: 'logo'
+    field: 'logo_id'
   })
-  logo: string;
+  logoId: string;
+
+  @BelongsTo(() => StaticAssetModel, 'logo_id')
+  logo: StaticAssetModel;
 
   @Column({
     type: DataType.TEXT,

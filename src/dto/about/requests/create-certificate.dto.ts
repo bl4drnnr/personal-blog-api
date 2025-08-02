@@ -13,7 +13,7 @@ export class CreateCertificateDto {
 
   @IsOptional()
   @IsString()
-  logo?: string;
+  logoId?: string;
 
   @IsOptional()
   @IsString()

@@ -10,7 +10,7 @@ import { GetProjectsSlugsInterface } from '@interfaces/get-projects-slugs.interf
 import { UpdateProjectInterface } from '@interfaces/update-project.interface';
 import { DeleteProjectInterface } from '@interfaces/delete-project.interface';
 import { GetProjectsByUserInterface } from '@interfaces/get-projects-by-user.interface';
-import { StaticAssetsService } from '../static-assets/static-assets.service';
+import { StaticAssetsService } from '@modules/static-assets.service';
 
 interface PaginationQuery {
   page?: number;
@@ -223,7 +223,8 @@ export class ProjectsService {
     }
 
     try {
-      return await this.staticAssetsService.findById(assetId);
+      const asset = await this.staticAssetsService.findById(assetId);
+      return asset.s3Url;
     } catch (error) {
       console.warn('Static asset not found:', assetId);
       return null;

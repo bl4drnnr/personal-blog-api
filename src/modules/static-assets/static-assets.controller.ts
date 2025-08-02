@@ -48,8 +48,8 @@ export class StaticAssetsController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Get('admin/assets/:id')
-  async getAssetById(@Param('id') id: string) {
+  @Get('admin/get-asset-by-id')
+  async getAssetById(@Query('id') id: string) {
     return this.staticAssetsService.findById(id);
   }
 

@@ -28,6 +28,22 @@ module.exports = {
         }
       ]);
 
+      // Portal
+      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/f451ebc8f5c47e1daf282998f15bfd50.svg
+      // Pose
+      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/ac810f7950e98ad1cf3a46e60fcd82c3.svg
+      // S
+      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/965c3cb2aa9bf6f812ef721f73fbac10.svg
+      // Shift
+      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/25cdd93bd820e36a5ef33820443eea52.svg
+      // Split
+      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/d1abe10b197577bc3a15ee9efb6f9e21.svg
+      // Sun
+      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/eb0327ca2154373f354ab43d5a1af9d3.svg
+      // Zag
+      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/08a78fdd5c643a25c217ad89bbf6460c.svg
+      // Wing
+      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/5941d31eb262701a3f1360406032dc7b.svg
       // Create static assets
       await queryInterface.bulkInsert('static_assets', [
         {
@@ -97,6 +113,79 @@ module.exports = {
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/pawel-czerwinski-tRm520JvK8Q-unsplash.jpg',
           description:
             'Data visualization and analytics dashboard screenshot for monitoring projects.',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        // SVG Icons for certificates
+        {
+          id: '90000000-0000-0000-0000-000000000008',
+          name: 'Portal.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/f451ebc8f5c47e1daf282998f15bfd50.svg',
+          description: 'Portal icon for certificate logos',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000009',
+          name: 'Pose.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/ac810f7950e98ad1cf3a46e60fcd82c3.svg',
+          description: 'Pose icon for certificate logos',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000010',
+          name: 'S.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/965c3cb2aa9bf6f812ef721f73fbac10.svg',
+          description: 'S icon for certificate logos',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000011',
+          name: 'Shift.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/25cdd93bd820e36a5ef33820443eea52.svg',
+          description: 'Shift icon for certificate logos',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000012',
+          name: 'Split.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/d1abe10b197577bc3a15ee9efb6f9e21.svg',
+          description: 'Split icon for certificate logos',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000013',
+          name: 'Sun.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/eb0327ca2154373f354ab43d5a1af9d3.svg',
+          description: 'Sun icon for certificate logos',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000014',
+          name: 'Zag.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/08a78fdd5c643a25c217ad89bbf6460c.svg',
+          description: 'Zag icon for certificate logos',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000015',
+          name: 'Wing.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/5941d31eb262701a3f1360406032dc7b.svg',
+          description: 'Wing icon for certificate logos',
           created_at: new Date(),
           updated_at: new Date()
         }
@@ -1118,7 +1207,7 @@ export default VulnerabilityReport;
         {
           id: experience1Id,
           company_name: 'Tech Company Inc.',
-          company_logo: 'assets/images/LUCH-Framework-Bigger.svg',
+          logo_id: '90000000-0000-0000-0000-000000000014', // References LUCH-Framework-Bigger.svg
           company_website: 'https://techcompany.com',
           order: 0,
           created_at: new Date(),
@@ -1127,7 +1216,7 @@ export default VulnerabilityReport;
         {
           id: experience2Id,
           company_name: 'StartUp Solutions',
-          company_logo: 'assets/images/S.svg',
+          logo_id: '90000000-0000-0000-0000-000000000015', // References S.svg
           company_website: 'https://startupsolutions.com',
           order: 1,
           created_at: new Date(),
@@ -1242,7 +1331,7 @@ export default VulnerabilityReport;
           name: 'AWS Certified Solutions Architect',
           issued_date: '2023-06-15',
           expiration_date: '2026-06-15',
-          logo: 'assets/images/Wave.svg',
+          logo_id: '90000000-0000-0000-0000-000000000008',
           description:
             'Validates expertise in designing distributed systems and applications on the Amazon Web Services platform with a focus on best practices for security, reliability, and cost optimization.',
           order: 0,
@@ -1254,7 +1343,7 @@ export default VulnerabilityReport;
           name: 'Google Cloud Professional Developer',
           issued_date: '2023-03-20',
           expiration_date: '2025-03-20',
-          logo: 'assets/images/Flow.svg',
+          logo_id: '90000000-0000-0000-0000-000000000009',
           description:
             'Demonstrates proficiency in developing scalable and highly available applications using Google Cloud Platform services and tools.',
           order: 1,
@@ -1266,7 +1355,7 @@ export default VulnerabilityReport;
           name: 'Microsoft Azure Fundamentals',
           issued_date: '2022-11-10',
           expiration_date: null,
-          logo: 'assets/images/Sun.svg',
+          logo_id: '90000000-0000-0000-0000-000000000010',
           description:
             'Foundational knowledge of cloud services and how those services are provided with Microsoft Azure, covering core Azure services, pricing, and support.',
           order: 2,
@@ -1278,7 +1367,7 @@ export default VulnerabilityReport;
           name: 'Kubernetes Administrator (CKA)',
           issued_date: '2023-08-05',
           expiration_date: '2024-08-05',
-          logo: 'assets/images/Grow.svg',
+          logo_id: '90000000-0000-0000-0000-000000000011',
           description:
             'Validates skills in deploying, managing, and troubleshooting Kubernetes clusters in production environments.',
           order: 3,

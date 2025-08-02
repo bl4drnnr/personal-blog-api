@@ -4,7 +4,7 @@ import { Op } from 'sequelize';
 import { BlogPage } from '@models/blog-page.model';
 import { ArticleModel } from '@models/article.model';
 import { GetBlogPageDataInterface } from '@interfaces/get-blog-page-data.interface';
-import { StaticAssetsService } from '../static-assets/static-assets.service';
+import { StaticAssetsService } from '@modules/static-assets.service';
 
 @Injectable()
 export class BlogService {
@@ -136,41 +136,11 @@ export class BlogService {
     }
 
     try {
-      return await this.staticAssetsService.findById(assetId);
+      const asset = await this.staticAssetsService.findById(assetId);
+      return asset.s3Url;
     } catch (error) {
       console.warn('Static asset not found:', assetId);
       return null;
     }
-  }
-
-  async getBlogPageDataAdmin() {
-    const blogPage = await this.blogPageModel.findOne();
-
-    if (!blogPage) {
-      throw new NotFoundException('Blog page content not found');
-    }
-
-    // Return data with IDs for admin endpoint
-    return {
-      id: blogPage.id,
-      title: blogPage.title,
-      subtitle: blogPage.subtitle,
-      description: blogPage.description,
-      footerText: blogPage.footerText,
-      heroImageMainId: blogPage.heroImageMainId,
-      heroImageSecondaryId: blogPage.heroImageSecondaryId,
-      heroImageMainAlt: blogPage.heroImageMainAlt,
-      heroImageSecondaryAlt: blogPage.heroImageSecondaryAlt,
-      logoText: blogPage.logoText,
-      breadcrumbText: blogPage.breadcrumbText,
-      heroTitle: blogPage.heroTitle,
-      metaTitle: blogPage.metaTitle,
-      metaDescription: blogPage.metaDescription,
-      metaKeywords: blogPage.metaKeywords,
-      ogTitle: blogPage.ogTitle,
-      ogDescription: blogPage.ogDescription,
-      ogImageId: blogPage.ogImageId,
-      structuredData: blogPage.structuredData
-    };
   }
 }

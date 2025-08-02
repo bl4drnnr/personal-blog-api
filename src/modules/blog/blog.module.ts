@@ -7,7 +7,10 @@ import { ArticleModel } from '@models/article.model';
 import { StaticAssetsModule } from '@modules/static-assets/static-assets.module';
 
 @Module({
-  imports: [SequelizeModule.forFeature([BlogPage, ArticleModel]), StaticAssetsModule],
+  imports: [
+    SequelizeModule.forFeature([BlogPage, ArticleModel]),
+    StaticAssetsModule
+  ],
   controllers: [BlogController],
   providers: [BlogService],
   exports: [BlogService]

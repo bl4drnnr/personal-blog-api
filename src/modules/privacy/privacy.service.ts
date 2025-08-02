@@ -10,7 +10,7 @@ import { DeletePrivacySectionInterface } from '@interfaces/delete-privacy-sectio
 import { CreatePrivacyContentItemInterface } from '@interfaces/create-privacy-content-item.interface';
 import { UpdatePrivacyContentItemInterface } from '@interfaces/update-privacy-content-item.interface';
 import { DeletePrivacyContentItemInterface } from '@interfaces/delete-privacy-content-item.interface';
-import { StaticAssetsService } from '../static-assets/static-assets.service';
+import { StaticAssetsService } from '@modules/static-assets.service';
 
 @Injectable()
 export class PrivacyService {
@@ -73,7 +73,9 @@ export class PrivacyService {
       layoutData: {
         footerText: privacyPage.footerText,
         heroImageMain: await this.getStaticAsset(privacyPage.heroImageMainId),
-        heroImageSecondary: await this.getStaticAsset(privacyPage.heroImageSecondaryId),
+        heroImageSecondary: await this.getStaticAsset(
+          privacyPage.heroImageSecondaryId
+        ),
         heroImageMainAlt: privacyPage.heroImageMainAlt,
         heroImageSecondaryAlt: privacyPage.heroImageSecondaryAlt,
         logoText: privacyPage.logoText,
@@ -98,7 +100,8 @@ export class PrivacyService {
     }
 
     try {
-      return await this.staticAssetsService.findById(assetId);
+      const asset = await this.staticAssetsService.findById(assetId);
+      return asset.s3Url;
     } catch (error) {
       console.warn('Static asset not found:', assetId);
       return null;

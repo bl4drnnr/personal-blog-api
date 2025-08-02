@@ -67,12 +67,14 @@ export class S3Service {
 
     // Validate image format
     const type = base64Image.split(';')[0].split('/')[1];
-    if (!['png', 'jpg', 'jpeg'].includes(type)) {
-      throw new Error('Invalid image format. Only PNG, JPG, and JPEG are allowed.');
+    if (!['png', 'jpg', 'jpeg', 'svg+xml'].includes(type)) {
+      throw new Error(
+        'Invalid image format. Only PNG, JPG, JPEG, and SVG are allowed.'
+      );
     }
 
     const base64Data = Buffer.from(
-      base64Image.replace(/^data:image\/\w+;base64,/, ''),
+      base64Image.replace(/^data:image\/[\w+\-]+;base64,/, ''),
       'base64'
     );
 
@@ -81,7 +83,8 @@ export class S3Service {
       algorithm: CryptoHashAlgorithm.MD5
     });
 
-    const fileName = `${imageHash}.${type}`;
+    const fileExtension = type === 'svg+xml' ? 'svg' : type;
+    const fileName = `${imageHash}.${fileExtension}`;
 
     const params = {
       Bucket: bucketName,
@@ -158,6 +161,7 @@ export class S3Service {
       'image/png': 'png',
       'image/gif': 'gif',
       'image/webp': 'webp',
+      'image/svg+xml': 'svg',
       'video/mp4': 'mp4',
       'video/webm': 'webm',
       'audio/mpeg': 'mp3',

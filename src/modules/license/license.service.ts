@@ -6,7 +6,7 @@ import { CreateLicenseTileInterface } from '@interfaces/create-license-tile.inte
 import { UpdateLicenseTileInterface } from '@interfaces/update-license-tile.interface';
 import { DeleteLicenseTileInterface } from '@interfaces/delete-license-tile.interface';
 import { UpdateLicensePageInterface } from '@interfaces/update-license-page.interface';
-import { StaticAssetsService } from '../static-assets/static-assets.service';
+import { StaticAssetsService } from '@modules/static-assets.service';
 
 @Injectable()
 export class LicenseService {
@@ -38,9 +38,10 @@ export class LicenseService {
 
     try {
       if (licensePage.heroImageMainId) {
-        heroImageMain = await this.staticAssetsService.findById(
+        const asset = await this.staticAssetsService.findById(
           licensePage.heroImageMainId
         );
+        heroImageMain = asset.s3Url;
       }
     } catch (error) {
       console.warn('Hero main image not found:', licensePage.heroImageMainId);
@@ -48,9 +49,10 @@ export class LicenseService {
 
     try {
       if (licensePage.heroImageSecondaryId) {
-        heroImageSecondary = await this.staticAssetsService.findById(
+        const asset = await this.staticAssetsService.findById(
           licensePage.heroImageSecondaryId
         );
+        heroImageSecondary = asset.s3Url;
       }
     } catch (error) {
       console.warn(
@@ -61,7 +63,8 @@ export class LicenseService {
 
     try {
       if (licensePage.ogImageId) {
-        ogImage = await this.staticAssetsService.findById(licensePage.ogImageId);
+        const asset = await this.staticAssetsService.findById(licensePage.ogImageId);
+        ogImage = asset.s3Url;
       }
     } catch (error) {
       console.warn('OG image not found:', licensePage.ogImageId);

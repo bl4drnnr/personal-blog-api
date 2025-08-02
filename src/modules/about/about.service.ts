@@ -61,9 +61,10 @@ export class AboutService {
 
     try {
       if (aboutPage.heroImageMainId) {
-        heroImageMain = await this.staticAssetsService.findById(
+        const asset = await this.staticAssetsService.findById(
           aboutPage.heroImageMainId
         );
+        heroImageMain = asset.s3Url;
       }
     } catch (error) {
       console.warn('Hero main image not found:', aboutPage.heroImageMainId);
@@ -71,9 +72,10 @@ export class AboutService {
 
     try {
       if (aboutPage.heroImageSecondaryId) {
-        heroImageSecondary = await this.staticAssetsService.findById(
+        const asset = await this.staticAssetsService.findById(
           aboutPage.heroImageSecondaryId
         );
+        heroImageSecondary = asset.s3Url;
       }
     } catch (error) {
       console.warn(
@@ -84,7 +86,8 @@ export class AboutService {
 
     try {
       if (aboutPage.ogImageId) {
-        ogImage = await this.staticAssetsService.findById(aboutPage.ogImageId);
+        const asset = await this.staticAssetsService.findById(aboutPage.ogImageId);
+        ogImage = asset.s3Url;
       }
     } catch (error) {
       console.warn('OG image not found:', aboutPage.ogImageId);
@@ -115,8 +118,8 @@ export class AboutService {
         ogImage: ogImage,
         structuredData: aboutPage.structuredData
       },
-      experiences,
-      certificates
+      experiences: await this.processExperiencesLogos(experiences),
+      certificates: await this.processCertificatesLogos(certificates)
     };
   }
 
@@ -166,7 +169,7 @@ export class AboutService {
   }
 
   async getExperiences() {
-    return await this.experienceModel.findAll({
+    const experiences = await this.experienceModel.findAll({
       include: [
         {
           model: Position,
@@ -180,6 +183,34 @@ export class AboutService {
       ],
       order: [['order', 'ASC']]
     });
+
+    // For admin API, return both logoId (for editing) and companyLogo (for display)
+    return await Promise.all(
+      experiences.map(async (experience) => {
+        let companyLogo = null;
+
+        if (experience.logoId) {
+          try {
+            const asset = await this.staticAssetsService.findById(experience.logoId);
+            companyLogo = asset.s3Url;
+          } catch (error) {
+            console.warn('Logo asset not found for experience:', experience.logoId);
+          }
+        }
+
+        return {
+          id: experience.id,
+          companyName: experience.companyName,
+          logoId: experience.logoId, // For editing forms
+          companyLogo: companyLogo, // For display
+          companyWebsite: experience.companyWebsite,
+          order: experience.order,
+          positions: experience.positions,
+          createdAt: experience.createdAt,
+          updatedAt: experience.updatedAt
+        };
+      })
+    );
   }
 
   async createExperience({ data, trx }: CreateExperienceInterface) {
@@ -261,12 +292,46 @@ export class AboutService {
   }
 
   async getCertificates() {
-    return await this.certificateModel.findAll({
+    const certificates = await this.certificateModel.findAll({
       order: [
         ['order', 'ASC'],
         ['issuedDate', 'DESC']
       ]
     });
+
+    // For admin API, return both logoId (for editing) and logo (for display)
+    return await Promise.all(
+      certificates.map(async (certificate) => {
+        let logo = null;
+
+        if (certificate.logoId) {
+          try {
+            const asset = await this.staticAssetsService.findById(
+              certificate.logoId
+            );
+            logo = asset.s3Url;
+          } catch (error) {
+            console.warn(
+              'Logo asset not found for certificate:',
+              certificate.logoId
+            );
+          }
+        }
+
+        return {
+          id: certificate.id,
+          name: certificate.name,
+          issuedDate: certificate.issuedDate,
+          expirationDate: certificate.expirationDate,
+          logoId: certificate.logoId, // For editing forms
+          logo: logo, // For display
+          description: certificate.description,
+          order: certificate.order,
+          createdAt: certificate.createdAt,
+          updatedAt: certificate.updatedAt
+        };
+      })
+    );
   }
 
   async createCertificate({ data, trx }: CreateCertificateInterface) {
@@ -293,5 +358,67 @@ export class AboutService {
 
     await certificate.destroy({ transaction: trx });
     return { message: 'Certificate deleted successfully' };
+  }
+
+  private async processCertificatesLogos(certificates: Certificate[]) {
+    return await Promise.all(
+      certificates.map(async (certificate) => {
+        let logo = null;
+
+        if (certificate.logoId) {
+          try {
+            const asset = await this.staticAssetsService.findById(
+              certificate.logoId
+            );
+            logo = asset.s3Url;
+          } catch (error) {
+            console.warn(
+              'Logo asset not found for certificate:',
+              certificate.logoId
+            );
+          }
+        }
+
+        return {
+          id: certificate.id,
+          name: certificate.name,
+          issuedDate: certificate.issuedDate,
+          expirationDate: certificate.expirationDate,
+          logo: logo,
+          description: certificate.description,
+          order: certificate.order,
+          createdAt: certificate.createdAt,
+          updatedAt: certificate.updatedAt
+        };
+      })
+    );
+  }
+
+  private async processExperiencesLogos(experiences: Experience[]) {
+    return await Promise.all(
+      experiences.map(async (experience) => {
+        let companyLogo = null;
+
+        if (experience.logoId) {
+          try {
+            const asset = await this.staticAssetsService.findById(experience.logoId);
+            companyLogo = asset.s3Url;
+          } catch (error) {
+            console.warn('Logo asset not found for experience:', experience.logoId);
+          }
+        }
+
+        return {
+          id: experience.id,
+          companyName: experience.companyName,
+          companyLogo: companyLogo,
+          companyWebsite: experience.companyWebsite,
+          order: experience.order,
+          positions: experience.positions,
+          createdAt: experience.createdAt,
+          updatedAt: experience.updatedAt
+        };
+      })
+    );
   }
 }

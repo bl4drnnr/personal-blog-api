@@ -14,7 +14,7 @@ export class CreateExperienceDto {
 
   @IsOptional()
   @IsString()
-  companyLogo?: string;
+  logoId?: string;
 
   @IsOptional()
   @IsString()

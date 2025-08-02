@@ -1,8 +1,10 @@
 import {
+  BelongsTo,
   Column,
   CreatedAt,
   DataType,
   Default,
+  ForeignKey,
   HasMany,
   Model,
   PrimaryKey,
@@ -10,10 +12,11 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { Position } from '@models/position.model';
+import { StaticAssetModel } from './static-asset.model';
 
 interface ExperienceCreationAttributes {
   companyName: string;
-  companyLogo?: string;
+  logoId?: string;
   companyWebsite?: string;
   order?: number;
 }
@@ -32,12 +35,16 @@ export class Experience extends Model<Experience, ExperienceCreationAttributes> 
   })
   companyName: string;
 
+  @ForeignKey(() => StaticAssetModel)
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: true,
-    field: 'company_logo'
+    field: 'logo_id'
   })
-  companyLogo: string;
+  logoId: string;
+
+  @BelongsTo(() => StaticAssetModel, 'logoId')
+  logo: StaticAssetModel;
 
   @Column({
     type: DataType.STRING,

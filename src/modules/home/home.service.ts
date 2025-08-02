@@ -5,7 +5,7 @@ import { ProjectModel } from '@models/project.model';
 import { ArticleModel } from '@models/article.model';
 import { Faq } from '@models/faq.model';
 import { WhysSection } from '@models/whys-section.model';
-import { StaticAssetsService } from '../static-assets/static-assets.service';
+import { StaticAssetsService } from '@modules/static-assets.service';
 
 @Injectable()
 export class HomeService {
@@ -119,47 +119,11 @@ export class HomeService {
     }
 
     try {
-      return await this.staticAssetsService.findById(assetId);
+      const asset = await this.staticAssetsService.findById(assetId);
+      return asset.s3Url;
     } catch (error) {
       console.warn('Static asset not found:', assetId);
       return null;
     }
-  }
-
-  async getHomePageDataAdmin() {
-    const homePage = await this.homePageModel.findOne();
-
-    if (!homePage) {
-      throw new NotFoundException('Home page content not found');
-    }
-
-    // Return data with IDs for admin endpoint
-    return {
-      id: homePage.id,
-      title: homePage.title,
-      subtitle: homePage.subtitle,
-      description: homePage.description,
-      footerText: homePage.footerText,
-      heroImageMainId: homePage.heroImageMainId,
-      heroImageSecondaryId: homePage.heroImageSecondaryId,
-      heroImageMainAlt: homePage.heroImageMainAlt,
-      heroImageSecondaryAlt: homePage.heroImageSecondaryAlt,
-      logoText: homePage.logoText,
-      breadcrumbText: homePage.breadcrumbText,
-      heroTitle: homePage.heroTitle,
-      marqueeLeftText: homePage.marqueeLeftText,
-      marqueeRightText: homePage.marqueeRightText,
-      latestProjectsTitle: homePage.latestProjectsTitle,
-      latestPostsTitle: homePage.latestPostsTitle,
-      whySectionTitle: homePage.whySectionTitle,
-      faqSectionTitle: homePage.faqSectionTitle,
-      metaTitle: homePage.metaTitle,
-      metaDescription: homePage.metaDescription,
-      metaKeywords: homePage.metaKeywords,
-      ogTitle: homePage.ogTitle,
-      ogDescription: homePage.ogDescription,
-      ogImageId: homePage.ogImageId,
-      structuredData: homePage.structuredData
-    };
   }
 }

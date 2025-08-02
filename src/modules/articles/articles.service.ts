@@ -59,18 +59,6 @@ export class ArticlesService {
     };
   }
 
-  async findBySlug({ slug }: GetArticleBySlugInterface) {
-    const article = await this.articleModel.findOne({
-      where: { slug }
-    });
-
-    if (!article) {
-      throw new ArticleNotFoundException();
-    }
-
-    return article;
-  }
-
   async getSlugs(): Promise<GetPostsSlugsInterface[]> {
     const posts = await this.articleModel.findAll({
       where: { published: true },
