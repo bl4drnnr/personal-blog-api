@@ -39,7 +39,6 @@ import { LicenseTile } from '@models/license-tile.model';
 import { PrivacyModule } from '@modules/privacy/privacy.module';
 import { PrivacyPage } from '@models/privacy-page.model';
 import { PrivacySection } from '@models/privacy-section.model';
-import { PrivacyContentItem } from '@models/privacy-content-item.model';
 import { HomePage } from '@models/home-page.model';
 import { HomeModule } from '@modules/home/home.module';
 import { BlogModule } from '@modules/blog/blog.module';
@@ -90,7 +89,6 @@ import { StaticAssetModel } from '@models/static-asset.model';
         LicenseTile,
         PrivacyPage,
         PrivacySection,
-        PrivacyContentItem,
         HomePage,
         BlogPage,
         ProjectsPage,

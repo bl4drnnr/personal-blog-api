@@ -11,10 +11,6 @@ export class UpdatePrivacyPageDto {
 
   @IsOptional()
   @IsString()
-  cookiePolicyTitle?: string;
-
-  @IsOptional()
-  @IsString()
   footerText?: string;
 
   @IsOptional()

@@ -1629,7 +1629,6 @@ export default VulnerabilityReport;
           id: '00000000-0000-0000-0000-000000000004',
           title: 'Privacy Policy',
           last_updated: 'Last updated: January 2025',
-          cookie_policy_title: 'Cookie Policy',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: '90000000-0000-0000-0000-000000000001',
@@ -1670,62 +1669,65 @@ export default VulnerabilityReport;
         {
           id: '60000000-0000-0000-0000-000000000001',
           title: '1. Information We Collect',
-          sort_order: 0,
-          section_type: 'main'
+          content:
+            '<p>We collect information you provide directly to us, such as when you create an account, subscribe to our newsletter, or contact us. This may include your name, email address, and any other information you choose to provide.</p>',
+          sort_order: 0
         },
         {
           id: '60000000-0000-0000-0000-000000000002',
           title: '2. How We Use Your Information',
-          sort_order: 1,
-          section_type: 'main'
+          content:
+            '<p>We use the information we collect to:</p><ul><li>Provide, maintain, and improve our services</li><li>Send you newsletters and updates (with your consent)</li><li>Respond to your comments and questions</li><li>Detect, investigate and prevent security incidents</li><li>Comply with legal obligations</li></ul>',
+          sort_order: 1
         },
         {
           id: '60000000-0000-0000-0000-000000000003',
           title: '3. Information Sharing',
-          sort_order: 2,
-          section_type: 'main'
+          content:
+            '<p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy or as required by law.</p>',
+          sort_order: 2
         },
         {
           id: '60000000-0000-0000-0000-000000000004',
           title: '4. Cookies and Tracking Technologies',
-          sort_order: 3,
-          section_type: 'main'
+          content:
+            '<p>We use cookies and similar tracking technologies to enhance your experience on our website. These technologies help us understand how you use our site and improve our services.</p><h4>Types of Cookies We Use:</h4><ul><li><strong>Essential Cookies:</strong> Required for the website to function properly</li><li><strong>Analytics Cookies:</strong> Help us understand how visitors interact with our website</li><li><strong>Preference Cookies:</strong> Remember your preferences and settings</li></ul><p>You can control and manage cookies through your browser settings. However, disabling certain cookies may affect the functionality of our website.</p>',
+          sort_order: 3
         },
         {
           id: '60000000-0000-0000-0000-000000000005',
           title: '5. Data Security',
-          sort_order: 4,
-          section_type: 'main'
+          content:
+            '<p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>',
+          sort_order: 4
         },
         {
           id: '60000000-0000-0000-0000-000000000006',
           title: '6. Your Rights',
-          sort_order: 5,
-          section_type: 'main'
+          content:
+            '<p>You have the right to:</p><ul><li>Access your personal information</li><li>Correct inaccurate data</li><li>Request deletion of your data</li><li>Object to or restrict processing</li><li>Data portability</li><li>Withdraw consent at any time</li></ul>',
+          sort_order: 5
         },
         {
           id: '60000000-0000-0000-0000-000000000007',
           title: "7. Children's Privacy",
-          sort_order: 6,
-          section_type: 'main'
+          content:
+            '<p>Our services are not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13.</p>',
+          sort_order: 6
         },
         {
           id: '60000000-0000-0000-0000-000000000008',
           title: '8. Changes to This Policy',
-          sort_order: 7,
-          section_type: 'main'
+          content:
+            '<p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.</p>',
+          sort_order: 7
         },
         {
           id: '60000000-0000-0000-0000-000000000009',
           title: '9. Contact Us',
-          sort_order: 8,
-          section_type: 'main'
-        },
-        {
-          id: '60000000-0000-0000-0000-000000000010',
-          title: 'Cookie Policy Content',
-          sort_order: 0,
-          section_type: 'cookie_policy'
+          content:
+            '<p>If you have any questions about this privacy policy, please contact us through our <a href="/contact">contact page</a>.</p>',
+          sort_order: 8
         }
       ];
 
@@ -1733,140 +1735,13 @@ export default VulnerabilityReport;
         'privacy_sections',
         privacySections.map((section) => ({
           ...section,
+          privacy_page_id: '00000000-0000-0000-0000-000000000004',
           created_at: new Date(),
           updated_at: new Date()
         }))
       );
 
-      // Create privacy content items
-      const privacyContentItems = [
-        // Section 1: Information We Collect
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000001',
-          type: 'paragraph',
-          text: 'We collect information you provide directly to us, such as when you create an account, subscribe to our newsletter, or contact us. This may include your name, email address, and any other information you choose to provide.',
-          sort_order: 0
-        },
-        // Section 2: How We Use Your Information
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000002',
-          type: 'paragraph',
-          text: 'We use the information we collect to:',
-          sort_order: 0
-        },
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000002',
-          type: 'list',
-          items: JSON.stringify([
-            'Provide, maintain, and improve our services',
-            'Send you technical notices, updates, and support messages',
-            'Respond to your comments and questions',
-            'Communicate with you about products, services, and events'
-          ]),
-          sort_order: 1
-        },
-        // Section 3: Information Sharing
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000003',
-          type: 'paragraph',
-          text: 'We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy or as required by law.',
-          sort_order: 0
-        },
-        // Section 4: Cookies and Tracking Technologies
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000004',
-          type: 'paragraph',
-          text: 'We use cookies and similar tracking technologies to enhance your experience on our website. These technologies help us understand how you use our site and improve our services.',
-          sort_order: 0
-        },
-        // Section 5: Data Security
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000005',
-          type: 'paragraph',
-          text: 'We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.',
-          sort_order: 0
-        },
-        // Section 6: Your Rights
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000006',
-          type: 'paragraph',
-          text: 'You have the right to:',
-          sort_order: 0
-        },
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000006',
-          type: 'list',
-          items: JSON.stringify([
-            'Access your personal information',
-            'Correct inaccurate information',
-            'Request deletion of your information',
-            'Opt-out of marketing communications'
-          ]),
-          sort_order: 1
-        },
-        // Section 7: Children's Privacy
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000007',
-          type: 'paragraph',
-          text: 'Our services are not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13.',
-          sort_order: 0
-        },
-        // Section 8: Changes to This Policy
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000008',
-          type: 'paragraph',
-          text: 'We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.',
-          sort_order: 0
-        },
-        // Section 9: Contact Us
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000009',
-          type: 'paragraph_with_link',
-          text: 'If you have any questions about this privacy policy, please contact us through our',
-          link_text: 'contact page',
-          link_url: '/contact',
-          sort_order: 0
-        },
-        // Cookie Policy Section
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000010',
-          type: 'paragraph',
-          text: 'This website uses cookies to enhance your browsing experience. By continuing to use this site, you consent to our use of cookies in accordance with our privacy policy.',
-          sort_order: 0
-        },
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000010',
-          type: 'subtitle',
-          text: 'Types of Cookies We Use:',
-          sort_order: 1
-        },
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000010',
-          type: 'list',
-          items: JSON.stringify([
-            '<strong>Essential Cookies:</strong> Required for the website to function properly',
-            '<strong>Analytics Cookies:</strong> Help us understand how visitors interact with our website',
-            '<strong>Functional Cookies:</strong> Remember your preferences and settings'
-          ]),
-          sort_order: 2
-        },
-        {
-          privacy_section_id: '60000000-0000-0000-0000-000000000010',
-          type: 'paragraph',
-          text: 'You can control and manage cookies through your browser settings. However, disabling certain cookies may affect the functionality of our website.',
-          sort_order: 3
-        }
-      ];
-
-      await queryInterface.bulkInsert(
-        'privacy_content_items',
-        privacyContentItems.map((item, index) => ({
-          id: `70000000-0000-0000-0000-${String(index + 1).padStart(12, '0')}`,
-          ...item,
-          created_at: new Date(),
-          updated_at: new Date()
-        }))
-      );
+      // Content items no longer needed - simplified to content field in sections
 
       // Create home page content
       await queryInterface.bulkInsert('home_page', [
@@ -2101,7 +1976,6 @@ export default VulnerabilityReport;
     await queryInterface.bulkDelete('blog_page', null, {});
     await queryInterface.bulkDelete('projects_page', null, {});
     await queryInterface.bulkDelete('home_page', null, {});
-    await queryInterface.bulkDelete('privacy_content_items', null, {});
     await queryInterface.bulkDelete('privacy_sections', null, {});
     await queryInterface.bulkDelete('privacy_page', null, {});
     await queryInterface.bulkDelete('license_tiles', null, {});

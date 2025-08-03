@@ -373,12 +373,9 @@ PUT /admin/license/page          # Update license page settings
 
 # Privacy Management
 PUT /admin/privacy/page          # Update privacy page settings
-POST /admin/privacy/sections     # Create privacy section
-PUT /admin/privacy/sections/:id  # Update privacy section
-DELETE /admin/privacy/sections/:id # Delete privacy section
-POST /admin/privacy/content-items # Create privacy content item
-PUT /admin/privacy/content-items/:id # Update privacy content item
-DELETE /admin/privacy/content-items/:id # Delete privacy content item
+POST /admin/privacy/create-sections     # Create privacy section
+PUT /admin/privacy/update-sections/:id  # Update privacy section
+DELETE /admin/privacy/delete-sections/:id # Delete privacy section
 ```
 
 #### Site Configuration

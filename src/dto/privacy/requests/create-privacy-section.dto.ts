@@ -1,14 +1,14 @@
-import { IsString, IsOptional, IsNumber, IsIn } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 
 export class CreatePrivacySectionDto {
   @IsString()
   title: string;
 
   @IsOptional()
-  @IsNumber()
-  sortOrder?: number;
+  @IsString()
+  content?: string;
 
   @IsOptional()
-  @IsIn(['main', 'cookie_policy'])
-  sectionType?: 'main' | 'cookie_policy';
+  @IsNumber()
+  sortOrder?: number;
 }

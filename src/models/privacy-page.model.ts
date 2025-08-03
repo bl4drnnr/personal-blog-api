@@ -14,7 +14,6 @@ import { PrivacySection } from './privacy-section.model';
 interface PrivacyPageCreationAttributes {
   title?: string;
   lastUpdated?: string;
-  cookiePolicyTitle?: string;
   footerText?: string;
   heroImageMainId?: string;
   heroImageSecondaryId?: string;
@@ -52,13 +51,6 @@ export class PrivacyPage extends Model<PrivacyPage, PrivacyPageCreationAttribute
     field: 'last_updated'
   })
   lastUpdated: string;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: true,
-    field: 'cookie_policy_title'
-  })
-  cookiePolicyTitle: string;
 
   @Column({
     type: DataType.TEXT,

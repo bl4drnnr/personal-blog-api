@@ -2,14 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { PrivacyPage } from '@models/privacy-page.model';
 import { PrivacySection } from '@models/privacy-section.model';
-import { PrivacyContentItem } from '@models/privacy-content-item.model';
 import { UpdatePrivacyPage } from '@interfaces/update-privacy-page.interface';
 import { CreatePrivacySectionInterface } from '@interfaces/create-privacy-section.interface';
 import { UpdatePrivacySection } from '@interfaces/update-privacy-section.interface';
 import { DeletePrivacySectionInterface } from '@interfaces/delete-privacy-section.interface';
-import { CreatePrivacyContentItemInterface } from '@interfaces/create-privacy-content-item.interface';
-import { UpdatePrivacyContentItemInterface } from '@interfaces/update-privacy-content-item.interface';
-import { DeletePrivacyContentItemInterface } from '@interfaces/delete-privacy-content-item.interface';
 import { StaticAssetsService } from '@modules/static-assets.service';
 
 @Injectable()
@@ -17,58 +13,40 @@ export class PrivacyService {
   constructor(
     @InjectModel(PrivacyPage) private privacyPageModel: typeof PrivacyPage,
     @InjectModel(PrivacySection) private privacySectionModel: typeof PrivacySection,
-    @InjectModel(PrivacyContentItem)
-    private privacyContentItemModel: typeof PrivacyContentItem,
     private readonly staticAssetsService: StaticAssetsService
   ) {}
 
   async getPrivacyPageData() {
-    const privacyPage = await this.privacyPageModel.findOne({
-      include: [
-        {
-          model: PrivacySection,
-          as: 'sections',
-          include: [
-            {
-              model: PrivacyContentItem,
-              as: 'content',
-              separate: true,
-              order: [['sortOrder', 'ASC']]
-            }
-          ],
-          separate: true,
-          order: [['sortOrder', 'ASC']]
-        }
-      ]
-    });
+    const privacyPage = await this.privacyPageModel.findOne();
+
+    console.log('privacyPage', privacyPage);
 
     if (!privacyPage) {
       throw new NotFoundException('Privacy page content not found');
     }
 
-    // Separate main sections from cookie policy sections
-    const mainSections = privacyPage.sections.filter(
-      (section) => section.sectionType === 'main'
-    );
-    const cookiePolicySections = privacyPage.sections.filter(
-      (section) => section.sectionType === 'cookie_policy'
-    );
+    // Fetch sections separately and properly associate them
+    const sections = await this.privacySectionModel.findAll({
+      where: {
+        privacyPageId: privacyPage.id
+      },
+      order: [
+        ['sortOrder', 'ASC'],
+        ['createdAt', 'ASC']
+      ]
+    });
+
+    console.log('sections', sections);
 
     return {
       pageContent: {
         title: privacyPage.title,
         lastUpdated: privacyPage.lastUpdated,
-        sections: mainSections.map((section) => ({
+        sections: sections.map((section) => ({
+          id: section.id,
           title: section.title,
-          content: section.content || []
-        })),
-        cookiePolicy: {
-          title: privacyPage.cookiePolicyTitle,
-          content:
-            cookiePolicySections.length > 0
-              ? cookiePolicySections[0].content || []
-              : []
-        }
+          content: section.content || ''
+        }))
       },
       layoutData: {
         footerText: privacyPage.footerText,
@@ -120,7 +98,6 @@ export class PrivacyService {
       id: privacyPage.id,
       title: privacyPage.title,
       lastUpdated: privacyPage.lastUpdated,
-      cookiePolicyTitle: privacyPage.cookiePolicyTitle,
       footerText: privacyPage.footerText,
       heroImageMainId: privacyPage.heroImageMainId,
       heroImageSecondaryId: privacyPage.heroImageSecondaryId,
@@ -137,6 +114,15 @@ export class PrivacyService {
       ogImageId: privacyPage.ogImageId,
       structuredData: privacyPage.structuredData
     };
+  }
+
+  async getPrivacySections() {
+    return await this.privacySectionModel.findAll({
+      order: [
+        ['sortOrder', 'ASC'],
+        ['createdAt', 'ASC']
+      ]
+    });
   }
 
   async updatePrivacyPage({ data, trx }: UpdatePrivacyPage) {
@@ -173,45 +159,7 @@ export class PrivacyService {
       throw new NotFoundException('Privacy section not found');
     }
 
-    await this.privacyContentItemModel.destroy({
-      where: { privacySectionId: sectionId },
-      transaction: trx
-    });
-
     await section.destroy({ transaction: trx });
     return { message: 'Privacy section deleted successfully' };
-  }
-
-  async createPrivacyContentItem({ data, trx }: CreatePrivacyContentItemInterface) {
-    return await this.privacyContentItemModel.create(data, { transaction: trx });
-  }
-
-  async updatePrivacyContentItem({
-    itemId,
-    data,
-    trx
-  }: UpdatePrivacyContentItemInterface) {
-    const item = await this.privacyContentItemModel.findByPk(itemId);
-
-    if (!item) {
-      throw new NotFoundException('Privacy content item not found');
-    }
-
-    await item.update(data, { transaction: trx });
-    return item;
-  }
-
-  async deletePrivacyContentItem({
-    itemId,
-    trx
-  }: DeletePrivacyContentItemInterface) {
-    const item = await this.privacyContentItemModel.findByPk(itemId);
-
-    if (!item) {
-      throw new NotFoundException('Privacy content item not found');
-    }
-
-    await item.destroy({ transaction: trx });
-    return { message: 'Privacy content item deleted successfully' };
   }
 }
