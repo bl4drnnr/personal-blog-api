@@ -1,11 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Transaction } from 'sequelize';
 import { HomePage } from '@models/home-page.model';
 import { ProjectModel } from '@models/project.model';
 import { ArticleModel } from '@models/article.model';
 import { Faq } from '@models/faq.model';
 import { WhysSection } from '@models/whys-section.model';
 import { StaticAssetsService } from '@modules/static-assets.service';
+import { CreateWhysSectionDto } from '@dto/whys-section/requests/create-whys-section.dto';
+import { UpdateWhysSectionDto } from '@dto/whys-section/requests/update-whys-section.dto';
 
 @Injectable()
 export class HomeService {
@@ -111,6 +114,63 @@ export class HomeService {
             features: []
           }
     };
+  }
+
+  // Admin methods for whys section management
+  async getWhysSections() {
+    return await this.whysSectionModel.findAll({
+      order: [['createdAt', 'DESC']]
+    });
+  }
+
+  async createWhysSection({
+    data,
+    trx
+  }: {
+    data: CreateWhysSectionDto;
+    trx: Transaction;
+  }) {
+    return await this.whysSectionModel.create(data, { transaction: trx });
+  }
+
+  async updateWhysSection({
+    whysSectionId,
+    data,
+    trx
+  }: {
+    whysSectionId: string;
+    data: UpdateWhysSectionDto;
+    trx: Transaction;
+  }) {
+    const whysSection = await this.whysSectionModel.findByPk(whysSectionId, {
+      transaction: trx
+    });
+
+    if (!whysSection) {
+      throw new NotFoundException('Whys section not found');
+    }
+
+    await whysSection.update(data, { transaction: trx });
+    return whysSection;
+  }
+
+  async deleteWhysSection({
+    whysSectionId,
+    trx
+  }: {
+    whysSectionId: string;
+    trx: Transaction;
+  }) {
+    const whysSection = await this.whysSectionModel.findByPk(whysSectionId, {
+      transaction: trx
+    });
+
+    if (!whysSection) {
+      throw new NotFoundException('Whys section not found');
+    }
+
+    await whysSection.destroy({ transaction: trx });
+    return { message: 'Whys section deleted successfully' };
   }
 
   private async getStaticAsset(assetId: string) {

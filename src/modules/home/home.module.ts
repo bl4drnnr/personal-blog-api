@@ -8,6 +8,8 @@ import { ArticleModel } from '@models/article.model';
 import { Faq } from '@models/faq.model';
 import { WhysSection } from '@models/whys-section.model';
 import { StaticAssetsModule } from '@modules/static-assets/static-assets.module';
+import { JwtModule } from '@nestjs/jwt';
+import { ApiConfigService } from '@shared/config.service';
 
 @Module({
   imports: [
@@ -18,6 +20,12 @@ import { StaticAssetsModule } from '@modules/static-assets/static-assets.module'
       Faq,
       WhysSection
     ]),
+    JwtModule.registerAsync({
+      useFactory: async (configService: ApiConfigService) => ({
+        secret: configService.jwtAuthConfig.secret
+      }),
+      inject: [ApiConfigService]
+    }),
     StaticAssetsModule
   ],
   controllers: [HomeController],
