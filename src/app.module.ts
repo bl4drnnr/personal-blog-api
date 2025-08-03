@@ -48,6 +48,7 @@ import { Faq } from '@models/faq.model';
 import { WhysSection } from '@models/whys-section.model';
 import { StaticAssetsModule } from '@modules/static-assets/static-assets.module';
 import { StaticAssetModel } from '@models/static-asset.model';
+import { FaqModule } from '@modules/faq/faq.module';
 
 @Module({
   imports: [
@@ -115,7 +116,8 @@ import { StaticAssetModel } from '@models/static-asset.model';
     PrivacyModule,
     HomeModule,
     BlogModule,
-    StaticAssetsModule
+    StaticAssetsModule,
+    FaqModule
   ],
   providers: [
     {
