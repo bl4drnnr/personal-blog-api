@@ -1,125 +1,139 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { PageModel } from '@models/page.model';
-import { PageNotFoundException } from '@exceptions/page-not-found.exception';
-import { CreatePageInterface } from '@interfaces/create-page.interface';
-import { UpdatePageInterface } from '@interfaces/update-page.interface';
-import { GetPageBySlugInterface } from '@interfaces/get-page-by-slug.interface';
-import { DeletePageInterface } from '@interfaces/delete-page.interface';
+import { HomePage } from '@models/home-page.model';
+import { ProjectModel } from '@models/project.model';
+import { ArticleModel } from '@models/article.model';
+import { Faq } from '@models/faq.model';
+import { WhysSection } from '@models/whys-section.model';
 
 @Injectable()
 export class PagesService {
   constructor(
-    @InjectModel(PageModel)
-    private readonly pageModel: typeof PageModel
+    @InjectModel(HomePage)
+    private homePageModel: typeof HomePage,
+    @InjectModel(ProjectModel)
+    private projectModel: typeof ProjectModel,
+    @InjectModel(ArticleModel)
+    private articleModel: typeof ArticleModel,
+    @InjectModel(Faq)
+    private faqModel: typeof Faq,
+    @InjectModel(WhysSection)
+    private whysSectionModel: typeof WhysSection
   ) {}
 
-  async create(payload: CreatePageInterface) {
-    const { data, userId, trx } = payload;
-
-    return await this.pageModel.create(
-      {
-        ...data,
-        userId
-      },
-      { transaction: trx }
+  // Home page management methods
+  async getHomePageDataAdmin() {
+    const [homePage, projects, posts, faqQuestions, whysSection] = await Promise.all(
+      [
+        this.homePageModel.findOne(),
+        this.projectModel.findAll({
+          where: { featured: true, published: true },
+          order: [['createdAt', 'DESC']],
+          limit: 3
+        }),
+        this.articleModel.findAll({
+          where: { featured: true, published: true },
+          order: [['createdAt', 'DESC']],
+          limit: 3
+        }),
+        this.faqModel.findAll({
+          where: { featured: true, isActive: true },
+          order: [
+            ['sortOrder', 'ASC'],
+            ['createdAt', 'ASC']
+          ]
+        }),
+        this.whysSectionModel.findOne({
+          where: { featured: true }
+        })
+      ]
     );
-  }
 
-  async findAll() {
-    return await this.pageModel.findAll({
-      where: { published: true },
-      order: [['createdAt', 'DESC']]
-    });
-  }
-
-  async findAllAdmin() {
-    return await this.pageModel.findAll({
-      order: [['createdAt', 'DESC']]
-    });
-  }
-
-  async getPageBySlug({ slug }: GetPageBySlugInterface) {
-    const page = await this.pageModel.findOne({
-      where: { slug, published: true }
-    });
-
-    if (!page) {
-      throw new PageNotFoundException();
+    if (!homePage) {
+      throw new NotFoundException('Home page content not found');
     }
 
     return {
-      slug: page.slug,
-      title: page.title,
-      content: page.content,
-      structuredData: page.structuredData,
-      metaTitle: page.metaTitle,
-      metaDescription: page.metaDescription,
-      metaKeywords: page.metaKeywords,
-      ogTitle: page.ogTitle,
-      ogDescription: page.ogDescription,
-      ogImage: page.ogImage,
-      published: page.published,
-      createdAt: page.createdAt,
-      updatedAt: page.updatedAt
+      pageContent: {
+        id: homePage.id,
+        title: homePage.title,
+        subtitle: homePage.subtitle,
+        description: homePage.description,
+        marqueeLeftText: homePage.marqueeLeftText,
+        marqueeRightText: homePage.marqueeRightText,
+        latestProjectsTitle: homePage.latestProjectsTitle,
+        latestPostsTitle: homePage.latestPostsTitle,
+        whySectionTitle: homePage.whySectionTitle,
+        faqSectionTitle: homePage.faqSectionTitle
+      },
+      layoutData: {
+        footerText: homePage.footerText,
+        heroImageMainId: homePage.heroImageMainId,
+        heroImageSecondaryId: homePage.heroImageSecondaryId,
+        heroImageMainAlt: homePage.heroImageMainAlt,
+        heroImageSecondaryAlt: homePage.heroImageSecondaryAlt,
+        logoText: homePage.logoText,
+        breadcrumbText: homePage.breadcrumbText,
+        heroTitle: homePage.heroTitle
+      },
+      seoData: {
+        metaTitle: homePage.metaTitle,
+        metaDescription: homePage.metaDescription,
+        metaKeywords: homePage.metaKeywords,
+        ogTitle: homePage.ogTitle,
+        ogDescription: homePage.ogDescription,
+        ogImageId: homePage.ogImageId,
+        structuredData: homePage.structuredData
+      },
+      projects: projects.map((project) => ({
+        id: project.id,
+        title: project.title,
+        description: project.description,
+        imageUrl: project.featuredImage,
+        slug: project.slug,
+        featured: project.featured
+      })),
+      posts: posts.map((post) => ({
+        id: post.id,
+        title: post.title,
+        description: post.description,
+        excerpt: post.excerpt,
+        imageUrl: post.featuredImage,
+        slug: post.slug,
+        tags: post.tags,
+        featured: post.featured
+      })),
+      faqQuestions: faqQuestions.map((faq) => ({
+        id: faq.id,
+        question: faq.question,
+        answer: faq.answer,
+        featured: faq.featured,
+        isActive: faq.isActive,
+        sortOrder: faq.sortOrder
+      })),
+      whysSection: whysSection
+        ? {
+            id: whysSection.id,
+            title: whysSection.title,
+            blocks: whysSection.whyBlocks || [],
+            featured: whysSection.featured
+          }
+        : null
     };
   }
 
-  async getPageBySlugAdmin({ slug }: GetPageBySlugInterface) {
-    const page = await this.pageModel.findOne({
-      where: { slug }
-    });
+  async updateHomePage({ data, trx }) {
+    const homePage = await this.homePageModel.findOne();
 
-    if (!page) {
-      throw new PageNotFoundException();
+    if (!homePage) {
+      throw new NotFoundException('Home page content not found');
     }
 
-    return page;
-  }
-
-  async update(payload: UpdatePageInterface) {
-    const { pageId, data, trx } = payload;
-
-    const [updatedRowsCount] = await this.pageModel.update(data, {
-      where: { id: pageId },
+    await this.homePageModel.update(data, {
+      where: { id: homePage.id },
       transaction: trx
     });
 
-    if (updatedRowsCount === 0) {
-      throw new PageNotFoundException();
-    }
-
-    return await this.pageModel.findByPk(pageId, { transaction: trx });
-  }
-
-  async delete(payload: DeletePageInterface) {
-    const { pageId, trx } = payload;
-
-    const deletedRowsCount = await this.pageModel.destroy({
-      where: { id: pageId },
-      transaction: trx
-    });
-
-    if (deletedRowsCount === 0) {
-      throw new PageNotFoundException();
-    }
-
-    return { message: 'Page deleted successfully' };
-  }
-
-  async getSlugs() {
-    const pages = await this.pageModel.findAll({
-      where: { published: true },
-      attributes: ['slug', 'title', 'metaTitle', 'metaDescription', 'createdAt'],
-      order: [['createdAt', 'DESC']]
-    });
-
-    return pages.map((page) => ({
-      slug: page.slug,
-      title: page.title,
-      metaTitle: page.metaTitle,
-      metaDescription: page.metaDescription,
-      date: page.createdAt
-    }));
+    return await this.homePageModel.findByPk(homePage.id, { transaction: trx });
   }
 }
