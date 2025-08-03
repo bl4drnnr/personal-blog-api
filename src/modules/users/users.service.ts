@@ -121,6 +121,103 @@ export class UsersService {
     });
   }
 
+  async getSecurityInfo({ userId, trx }: { userId: string; trx: any }) {
+    const user = await this.getUserById({
+      id: userId,
+      trx
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return {
+      userId: user.id,
+      email: user.email,
+      isMfaEnabled: user.isMfaSet,
+      lastPasswordChange: user.userSettings?.passwordChanged || null,
+      sessionInfo: {
+        currentSession: {
+          device: 'Web Browser',
+          location: 'Unknown',
+          lastActivity: new Date().toISOString(),
+          createdAt: new Date().toISOString()
+        }
+      },
+      accountInfo: {
+        accountType: 'Administrator',
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      }
+    };
+  }
+
+  async updateUserProfile({
+    userId,
+    payload,
+    trx
+  }: {
+    userId: string;
+    payload: { firstName?: string; lastName?: string; email?: string };
+    trx: any;
+  }) {
+    await this.updateUser({
+      userId,
+      payload,
+      trx
+    });
+
+    // Return updated user info
+    return this.getUserInfo({ userId, trx });
+  }
+
+  async changePassword({
+    userId,
+    payload,
+    trx
+  }: {
+    userId: string;
+    payload: { currentPassword: string; newPassword: string };
+    trx: any;
+  }) {
+    const user = await this.getUserById({ id: userId, trx });
+
+    if (!user || !user.password) {
+      throw new WrongCredentialsException();
+    }
+
+    // Verify current password
+    const passwordEquals = await this.cryptographicService.comparePasswords({
+      dataToCompare: payload.currentPassword,
+      hash: user.password
+    });
+
+    if (!passwordEquals) {
+      throw new WrongCredentialsException();
+    }
+
+    // Hash new password
+    const hashedNewPassword = await this.cryptographicService.hashPassword({
+      password: payload.newPassword
+    });
+
+    // Update password
+    await this.updateUser({
+      userId,
+      payload: { password: hashedNewPassword },
+      trx
+    });
+
+    // Update password changed timestamp
+    await this.updateUserSettings({
+      userId,
+      payload: { passwordChanged: new Date() },
+      trx
+    });
+
+    return { message: 'Password changed successfully' };
+  }
+
   private async createUserSettings({
     userId,
     trx: transaction
