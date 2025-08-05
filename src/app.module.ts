@@ -40,6 +40,8 @@ import { PrivacyModule } from '@modules/privacy/privacy.module';
 import { PrivacyPage } from '@models/privacy-page.model';
 import { PrivacySection } from '@models/privacy-section.model';
 import { HomePage } from '@models/home-page.model';
+import { ContactPage } from '@models/contact-page.model';
+import { ContactTile } from '@models/contact-tile.model';
 import { HomeModule } from '@modules/home/home.module';
 import { BlogModule } from '@modules/blog/blog.module';
 import { BlogPage } from '@models/blog-page.model';
@@ -91,6 +93,8 @@ import { FaqModule } from '@modules/faq/faq.module';
         PrivacyPage,
         PrivacySection,
         HomePage,
+        ContactPage,
+        ContactTile,
         BlogPage,
         ProjectsPage,
         Faq,

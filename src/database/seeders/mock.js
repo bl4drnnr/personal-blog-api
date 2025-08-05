@@ -28,22 +28,6 @@ module.exports = {
         }
       ]);
 
-      // Portal
-      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/f451ebc8f5c47e1daf282998f15bfd50.svg
-      // Pose
-      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/ac810f7950e98ad1cf3a46e60fcd82c3.svg
-      // S
-      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/965c3cb2aa9bf6f812ef721f73fbac10.svg
-      // Shift
-      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/25cdd93bd820e36a5ef33820443eea52.svg
-      // Split
-      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/d1abe10b197577bc3a15ee9efb6f9e21.svg
-      // Sun
-      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/eb0327ca2154373f354ab43d5a1af9d3.svg
-      // Zag
-      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/08a78fdd5c643a25c217ad89bbf6460c.svg
-      // Wing
-      // https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/5941d31eb262701a3f1360406032dc7b.svg
       // Create static assets
       await queryInterface.bulkInsert('static_assets', [
         {
@@ -186,6 +170,43 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/5941d31eb262701a3f1360406032dc7b.svg',
           description: 'Wing icon for certificate logos',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        // Contact Tile Icons
+        {
+          id: '90000000-0000-0000-0000-000000000016',
+          name: 'mail-send-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/fb17aa5686df3ba760d952bc154a7c6b.svg',
+          description: 'Email send icon for contact tiles',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000017',
+          name: 'phone-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/5ba7a221a68eb9f3c158122d585f971a.svg',
+          description: 'Phone icon for contact tiles',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000018',
+          name: 'message-2-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/d24fabcd3e01d765bd79e9e0d164a5db.svg',
+          description: 'Message icon for contact tiles',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '90000000-0000-0000-0000-000000000019',
+          name: 'map-2-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/289b442db531f5005720cb2ea84570d1.svg',
+          description: 'Map icon for contact tiles',
           created_at: new Date(),
           updated_at: new Date()
         }
@@ -1881,6 +1902,109 @@ export default VulnerabilityReport;
         }
       ]);
 
+      // Create contact page content
+      await queryInterface.bulkInsert('contact_page', [
+        {
+          id: '00000000-0000-0000-0000-000000000008',
+          title: 'Contact',
+          subtitle: 'Get in Touch',
+          description:
+            'Feel free to reach out for collaborations, inquiries or just to chat about design.',
+          footer_text:
+            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
+          hero_image_secondary_id: '90000000-0000-0000-0000-000000000006',
+          hero_image_main_alt: 'Abstract Gradient Art',
+          hero_image_secondary_alt: 'Astronaut Woman in Spacecraft',
+          logo_text: 'Luch',
+          breadcrumb_text: 'Contact',
+          hero_title: "Let's connect!",
+          hero_desc:
+            'Feel free to reach out for collaborations, inquiries or just to chat about design.',
+          carousel_words:
+            'Design, Development, Innovation, Creative, Modern, Fresh, Professional',
+          submit_button_text: 'Submit Now',
+          success_message:
+            "Thank you! Your submission has been received successfully. We'll get back to you shortly—stay tuned!",
+          error_message:
+            'Oops! Something went wrong while submitting the form. Please fill in all fields.',
+          meta_title: 'Contact Us | Personal Blog',
+          meta_description:
+            'Get in touch with us for collaborations, inquiries, or just to chat about design and development.',
+          meta_keywords: 'contact, collaboration, inquiry, design, development',
+          og_title: 'Contact Us | Personal Blog',
+          og_description:
+            'Get in touch with us for collaborations, inquiries, or just to chat about design and development.',
+          og_image_id: '90000000-0000-0000-0000-000000000001',
+          structured_data: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'ContactPage',
+            name: 'Contact Us',
+            description:
+              'Get in touch for collaborations, inquiries, or to chat about design and development',
+            mainEntity: {
+              '@type': 'Organization',
+              name: 'Personal Blog',
+              contactPoint: {
+                '@type': 'ContactPoint',
+                contactType: 'Customer Service',
+                email: 'hello@example.com'
+              }
+            }
+          }),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create contact tiles
+      await queryInterface.bulkInsert('contact_tiles', [
+        {
+          id: '70000000-0000-0000-0000-000000000001',
+          title: 'Email Us',
+          content: 'hello@luchcreative.com',
+          link: 'mailto:hello@luchcreative.com',
+          icon_asset_id: '90000000-0000-0000-0000-000000000016',
+          sort_order: 0,
+          contact_page_id: '00000000-0000-0000-0000-000000000008',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '70000000-0000-0000-0000-000000000002',
+          title: 'Call us',
+          content: '+1 (555) 123-4567',
+          link: 'tel:+15551234567',
+          icon_asset_id: '90000000-0000-0000-0000-000000000017',
+          sort_order: 1,
+          contact_page_id: '00000000-0000-0000-0000-000000000008',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '70000000-0000-0000-0000-000000000003',
+          title: "Let's chat",
+          content: '@LuchSupport',
+          link: 'https://t.me/LuchSupport',
+          icon_asset_id: '90000000-0000-0000-0000-000000000018',
+          sort_order: 2,
+          contact_page_id: '00000000-0000-0000-0000-000000000008',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: '70000000-0000-0000-0000-000000000004',
+          title: 'Visit us',
+          content: 'Dreamcity, USA',
+          link: 'https://goo.gl/maps/xyz',
+          icon_asset_id: '90000000-0000-0000-0000-000000000019',
+          sort_order: 3,
+          contact_page_id: '00000000-0000-0000-0000-000000000008',
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
       // Create whys section
       await queryInterface.bulkInsert('whys_sections', [
         {
@@ -1976,6 +2100,8 @@ export default VulnerabilityReport;
     await queryInterface.bulkDelete('blog_page', null, {});
     await queryInterface.bulkDelete('projects_page', null, {});
     await queryInterface.bulkDelete('home_page', null, {});
+    await queryInterface.bulkDelete('contact_tiles', null, {});
+    await queryInterface.bulkDelete('contact_page', null, {});
     await queryInterface.bulkDelete('privacy_sections', null, {});
     await queryInterface.bulkDelete('privacy_page', null, {});
     await queryInterface.bulkDelete('license_tiles', null, {});
