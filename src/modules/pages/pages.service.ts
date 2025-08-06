@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { HomePage } from '@models/home-page.model';
+import { BlogPage } from '@models/blog-page.model';
+import { ProjectsPage } from '@models/projects-page.model';
 import { ProjectModel } from '@models/project.model';
 import { ArticleModel } from '@models/article.model';
 import { Faq } from '@models/faq.model';
@@ -11,6 +13,10 @@ export class PagesService {
   constructor(
     @InjectModel(HomePage)
     private homePageModel: typeof HomePage,
+    @InjectModel(BlogPage)
+    private blogPageModel: typeof BlogPage,
+    @InjectModel(ProjectsPage)
+    private projectsPageModel: typeof ProjectsPage,
     @InjectModel(ProjectModel)
     private projectModel: typeof ProjectModel,
     @InjectModel(ArticleModel)
@@ -135,5 +141,111 @@ export class PagesService {
     });
 
     return await this.homePageModel.findByPk(homePage.id, { transaction: trx });
+  }
+
+  // Blog page management methods
+  async getBlogPageDataAdmin() {
+    const blogPage = await this.blogPageModel.findOne();
+
+    if (!blogPage) {
+      throw new NotFoundException('Blog page content not found');
+    }
+
+    return {
+      pageContent: {
+        id: blogPage.id,
+        title: blogPage.title,
+        subtitle: blogPage.subtitle,
+        description: blogPage.description
+      },
+      layoutData: {
+        footerText: blogPage.footerText,
+        heroImageMainId: blogPage.heroImageMainId,
+        heroImageSecondaryId: blogPage.heroImageSecondaryId,
+        heroImageMainAlt: blogPage.heroImageMainAlt,
+        heroImageSecondaryAlt: blogPage.heroImageSecondaryAlt,
+        logoText: blogPage.logoText,
+        breadcrumbText: blogPage.breadcrumbText,
+        heroTitle: blogPage.heroTitle
+      },
+      seoData: {
+        metaTitle: blogPage.metaTitle,
+        metaDescription: blogPage.metaDescription,
+        metaKeywords: blogPage.metaKeywords,
+        ogTitle: blogPage.ogTitle,
+        ogDescription: blogPage.ogDescription,
+        ogImageId: blogPage.ogImageId,
+        structuredData: blogPage.structuredData
+      }
+    };
+  }
+
+  async updateBlogPage({ data, trx }) {
+    const blogPage = await this.blogPageModel.findOne();
+
+    if (!blogPage) {
+      throw new NotFoundException('Blog page content not found');
+    }
+
+    await this.blogPageModel.update(data, {
+      where: { id: blogPage.id },
+      transaction: trx
+    });
+
+    return await this.blogPageModel.findByPk(blogPage.id, { transaction: trx });
+  }
+
+  // Projects page management methods
+  async getProjectsPageDataAdmin() {
+    const projectsPage = await this.projectsPageModel.findOne();
+
+    if (!projectsPage) {
+      throw new NotFoundException('Projects page content not found');
+    }
+
+    return {
+      pageContent: {
+        id: projectsPage.id,
+        title: projectsPage.title,
+        subtitle: projectsPage.subtitle,
+        description: projectsPage.description
+      },
+      layoutData: {
+        footerText: projectsPage.footerText,
+        heroImageMainId: projectsPage.heroImageMainId,
+        heroImageSecondaryId: projectsPage.heroImageSecondaryId,
+        heroImageMainAlt: projectsPage.heroImageMainAlt,
+        heroImageSecondaryAlt: projectsPage.heroImageSecondaryAlt,
+        logoText: projectsPage.logoText,
+        breadcrumbText: projectsPage.breadcrumbText,
+        heroTitle: projectsPage.heroTitle
+      },
+      seoData: {
+        metaTitle: projectsPage.metaTitle,
+        metaDescription: projectsPage.metaDescription,
+        metaKeywords: projectsPage.metaKeywords,
+        ogTitle: projectsPage.ogTitle,
+        ogDescription: projectsPage.ogDescription,
+        ogImageId: projectsPage.ogImageId,
+        structuredData: projectsPage.structuredData
+      }
+    };
+  }
+
+  async updateProjectsPage({ data, trx }) {
+    const projectsPage = await this.projectsPageModel.findOne();
+
+    if (!projectsPage) {
+      throw new NotFoundException('Projects page content not found');
+    }
+
+    await this.projectsPageModel.update(data, {
+      where: { id: projectsPage.id },
+      transaction: trx
+    });
+
+    return await this.projectsPageModel.findByPk(projectsPage.id, {
+      transaction: trx
+    });
   }
 }

@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { PageModel } from '@models/page.model';
 import { HomePage } from '@models/home-page.model';
+import { BlogPage } from '@models/blog-page.model';
+import { ProjectsPage } from '@models/projects-page.model';
 import { ProjectModel } from '@models/project.model';
 import { ArticleModel } from '@models/article.model';
 import { Faq } from '@models/faq.model';
@@ -20,6 +22,8 @@ import { CryptographicService } from '@shared/cryptographic.service';
     SequelizeModule.forFeature([
       PageModel,
       HomePage,
+      BlogPage,
+      ProjectsPage,
       ProjectModel,
       ArticleModel,
       Faq,
