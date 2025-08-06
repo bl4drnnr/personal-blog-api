@@ -151,45 +151,43 @@ export class NewslettersService {
     const subscribePage = await this.findSubscribePageOrFail();
 
     // Get static assets for images
-    const heroImageMain = subscribePage.heroImageMainId
-      ? await StaticAssetModel.findByPk(subscribePage.heroImageMainId)
-      : null;
-    const heroImageSecondary = subscribePage.heroImageSecondaryId
-      ? await StaticAssetModel.findByPk(subscribePage.heroImageSecondaryId)
-      : null;
-    const ogImage = subscribePage.ogImageId
-      ? await StaticAssetModel.findByPk(subscribePage.ogImageId)
-      : null;
+    const heroImageMain = await StaticAssetModel.findByPk(
+      subscribePage.heroImageMainId
+    );
+    const heroImageSecondary = await StaticAssetModel.findByPk(
+      subscribePage.heroImageSecondaryId
+    );
+    const ogImage = await StaticAssetModel.findByPk(subscribePage.ogImageId);
 
     return {
       pageContent: {
-        title: subscribePage.title || '',
-        subtitle: subscribePage.subtitle || '',
-        description: subscribePage.description || '',
-        submitButtonText: subscribePage.submitButtonText || 'Subscribe',
-        successMessage: subscribePage.successMessage || 'Successfully subscribed!',
-        errorMessage:
-          subscribePage.errorMessage || 'An error occurred. Please try again.',
-        emailPlaceholder: subscribePage.emailPlaceholder || 'Enter your email',
-        privacyText: subscribePage.privacyText || ''
+        title: subscribePage.title,
+        subtitle: subscribePage.subtitle,
+        description: subscribePage.description,
+        carouselWords: this.parseCarouselWords(subscribePage.carouselWords),
+        submitButtonText: subscribePage.submitButtonText,
+        successMessage: subscribePage.successMessage,
+        errorMessage: subscribePage.errorMessage,
+        emailPlaceholder: subscribePage.emailPlaceholder,
+        privacyText: subscribePage.privacyText
       },
       layoutData: {
-        footerText: subscribePage.footerText || '',
-        heroImageMain: heroImageMain?.s3Url || null,
-        heroImageSecondary: heroImageSecondary?.s3Url || null,
-        heroImageMainAlt: subscribePage.heroImageMainAlt || '',
-        heroImageSecondaryAlt: subscribePage.heroImageSecondaryAlt || '',
-        logoText: subscribePage.logoText || '',
-        breadcrumbText: subscribePage.breadcrumbText || '',
-        heroTitle: subscribePage.heroTitle || '',
-        heroDesc: subscribePage.heroDesc || ''
+        footerText: subscribePage.footerText,
+        heroImageMain: heroImageMain.s3Url,
+        heroImageSecondary: heroImageSecondary.s3Url,
+        heroImageMainAlt: subscribePage.heroImageMainAlt,
+        heroImageSecondaryAlt: subscribePage.heroImageSecondaryAlt,
+        logoText: subscribePage.logoText,
+        breadcrumbText: subscribePage.breadcrumbText,
+        heroTitle: subscribePage.heroTitle,
+        heroDesc: subscribePage.heroDesc
       },
       seoData: {
-        metaTitle: subscribePage.metaTitle || '',
-        metaDescription: subscribePage.metaDescription || '',
-        metaKeywords: subscribePage.metaKeywords || '',
-        ogTitle: subscribePage.ogTitle || '',
-        ogDescription: subscribePage.ogDescription || '',
+        metaTitle: subscribePage.metaTitle,
+        metaDescription: subscribePage.metaDescription,
+        metaKeywords: subscribePage.metaKeywords,
+        ogTitle: subscribePage.ogTitle,
+        ogDescription: subscribePage.ogDescription,
         ogImage: ogImage?.s3Url || null,
         structuredData: subscribePage.structuredData || {}
       }
@@ -201,30 +199,31 @@ export class NewslettersService {
 
     return {
       id: subscribePage.id,
-      title: subscribePage.title || '',
-      subtitle: subscribePage.subtitle || '',
-      description: subscribePage.description || '',
-      footerText: subscribePage.footerText || '',
-      heroImageMainId: subscribePage.heroImageMainId || '',
-      heroImageSecondaryId: subscribePage.heroImageSecondaryId || '',
-      heroImageMainAlt: subscribePage.heroImageMainAlt || '',
-      heroImageSecondaryAlt: subscribePage.heroImageSecondaryAlt || '',
-      logoText: subscribePage.logoText || '',
-      breadcrumbText: subscribePage.breadcrumbText || '',
-      heroTitle: subscribePage.heroTitle || '',
-      heroDesc: subscribePage.heroDesc || '',
-      submitButtonText: subscribePage.submitButtonText || '',
-      successMessage: subscribePage.successMessage || '',
-      errorMessage: subscribePage.errorMessage || '',
-      emailPlaceholder: subscribePage.emailPlaceholder || '',
-      privacyText: subscribePage.privacyText || '',
-      metaTitle: subscribePage.metaTitle || '',
-      metaDescription: subscribePage.metaDescription || '',
-      metaKeywords: subscribePage.metaKeywords || '',
-      ogTitle: subscribePage.ogTitle || '',
-      ogDescription: subscribePage.ogDescription || '',
-      ogImageId: subscribePage.ogImageId || '',
-      structuredData: subscribePage.structuredData || {}
+      title: subscribePage.title,
+      subtitle: subscribePage.subtitle,
+      description: subscribePage.description,
+      footerText: subscribePage.footerText,
+      heroImageMainId: subscribePage.heroImageMainId,
+      heroImageSecondaryId: subscribePage.heroImageSecondaryId,
+      heroImageMainAlt: subscribePage.heroImageMainAlt,
+      heroImageSecondaryAlt: subscribePage.heroImageSecondaryAlt,
+      logoText: subscribePage.logoText,
+      breadcrumbText: subscribePage.breadcrumbText,
+      heroTitle: subscribePage.heroTitle,
+      heroDesc: subscribePage.heroDesc,
+      carouselWords: subscribePage.carouselWords,
+      submitButtonText: subscribePage.submitButtonText,
+      successMessage: subscribePage.successMessage,
+      errorMessage: subscribePage.errorMessage,
+      emailPlaceholder: subscribePage.emailPlaceholder,
+      privacyText: subscribePage.privacyText,
+      metaTitle: subscribePage.metaTitle,
+      metaDescription: subscribePage.metaDescription,
+      metaKeywords: subscribePage.metaKeywords,
+      ogTitle: subscribePage.ogTitle,
+      ogDescription: subscribePage.ogDescription,
+      ogImageId: subscribePage.ogImageId,
+      structuredData: subscribePage.structuredData
     };
   }
 
@@ -234,5 +233,15 @@ export class NewslettersService {
     const subscribePage = await this.findSubscribePageOrFail();
     await subscribePage.update(data);
     return this.getSubscribePageAdmin();
+  }
+
+  private parseCarouselWords(carouselWords: string): string[] {
+    if (!carouselWords) {
+      return [];
+    }
+    return carouselWords
+      .split(',')
+      .map((word) => word.trim())
+      .filter((word) => word.length > 0);
   }
 }

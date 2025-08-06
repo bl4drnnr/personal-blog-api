@@ -22,6 +22,7 @@ interface SubscribePageCreationAttributes {
   breadcrumbText?: string;
   heroTitle?: string;
   heroDesc?: string;
+  carouselWords?: string;
   submitButtonText?: string;
   successMessage?: string;
   errorMessage?: string;
@@ -129,6 +130,13 @@ export class SubscribePage extends Model<
     field: 'hero_desc'
   })
   heroDesc: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+    field: 'carousel_words'
+  })
+  carouselWords: string;
 
   @Column({
     type: DataType.STRING,

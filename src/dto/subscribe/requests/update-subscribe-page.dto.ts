@@ -51,6 +51,10 @@ export class UpdateSubscribePageDto {
 
   @IsOptional()
   @IsString()
+  carouselWords?: string;
+
+  @IsOptional()
+  @IsString()
   submitButtonText?: string;
 
   @IsOptional()

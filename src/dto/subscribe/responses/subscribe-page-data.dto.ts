@@ -2,6 +2,7 @@ export class SubscribePageContentDto {
   title: string;
   subtitle: string;
   description: string;
+  carouselWords: string[];
   submitButtonText: string;
   successMessage: string;
   errorMessage: string;
@@ -51,6 +52,7 @@ export class SubscribePageAdminDto {
   breadcrumbText: string;
   heroTitle: string;
   heroDesc: string;
+  carouselWords: string;
   submitButtonText: string;
   successMessage: string;
   errorMessage: string;

@@ -2151,6 +2151,7 @@ export default VulnerabilityReport;
           og_description:
             'Join our community and stay updated with the latest articles, tutorials, and design insights.',
           og_image_id: staticAssetIds.asset1,
+          carousel_words: 'My,Test,Words',
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebPage',
