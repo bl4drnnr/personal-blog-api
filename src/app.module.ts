@@ -15,6 +15,7 @@ import { SecurityModule } from '@modules/security/security.module';
 import { ArticlesModule } from '@modules/articles/articles.module';
 import { ArticleModel } from '@models/article.model';
 import { Newsletter } from '@models/newsletters.model';
+import { SubscribePage } from '@models/subscribe-page.model';
 import { NewslettersModule } from '@modules/newsletters/newsletters.module';
 import { ContactModule } from '@modules/contact/contact.module';
 import { PagesContent } from '@models/pages-content.model';
@@ -79,6 +80,7 @@ import { FaqModule } from '@modules/faq/faq.module';
         ArticleModel,
         ProjectModel,
         Newsletter,
+        SubscribePage,
         PagesContent,
         SiteConfigModel,
         PageModel,

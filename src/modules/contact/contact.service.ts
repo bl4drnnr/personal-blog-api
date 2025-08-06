@@ -7,7 +7,6 @@ import { ContactPage } from '@models/contact-page.model';
 import { ContactTile } from '@models/contact-tile.model';
 import { StaticAssetsService } from '@modules/static-assets.service';
 import {
-  ContactPageDataDto,
   ContactPageAdminDto,
   ContactTileDto
 } from '@dto/contact/responses/contact-page-data.dto';
@@ -33,7 +32,7 @@ export class ContactService {
     return new ContactedDto();
   }
 
-  async getContactPageData(): Promise<ContactPageDataDto> {
+  async getContactPageData() {
     const contactPage = await this.findContactPageOrFail();
     const contactTiles = await this.findContactTiles(contactPage.id);
 

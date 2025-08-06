@@ -138,6 +138,10 @@ module.exports = {
         main: uuidv4()
       };
 
+      const subscribePageIds = {
+        main: uuidv4()
+      };
+
       const contactTileIds = {
         tile1: uuidv4(),
         tile2: uuidv4(),
@@ -174,7 +178,7 @@ module.exports = {
       await queryInterface.bulkInsert('users_settings', [
         {
           id: userSettingsIds.adminSettings,
-          two_fa_token: 'MNKFQUP6S77VONDE47A3B6VMFEPKVD5X',
+          two_fa_token: 'JM4DEN2IKBVXEKKSEMTCQ5JBO5MCI6BSGQ7CK2DWMQVCMW2IFAQQ',
           password_changed: null,
           user_id: userIds.admin,
           created_at: new Date(),
@@ -2103,6 +2107,64 @@ export default VulnerabilityReport;
                 '@type': 'ContactPoint',
                 contactType: 'Customer Service',
                 email: 'hello@example.com'
+              }
+            }
+          }),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create subscribe page content
+      await queryInterface.bulkInsert('subscribe_page', [
+        {
+          id: subscribePageIds.main,
+          title: 'Subscribe',
+          subtitle: 'Stay Updated',
+          description:
+            'Subscribe to our newsletter to receive the latest updates, insights, and exclusive content.',
+          footer_text:
+            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          hero_image_main_id: staticAssetIds.asset1,
+          hero_image_secondary_id: staticAssetIds.asset6,
+          hero_image_main_alt: 'Abstract Gradient Art',
+          hero_image_secondary_alt: 'Astronaut Woman in Spacecraft',
+          logo_text: 'Luch',
+          breadcrumb_text: 'Subscribe',
+          hero_title: 'Join our community!',
+          hero_desc:
+            'Stay in the loop with our latest articles, tutorials, and design insights.',
+          submit_button_text: 'Subscribe Now',
+          success_message:
+            "Thank you! You've been successfully subscribed to our newsletter. Check your email for confirmation.",
+          error_message:
+            'Oops! Something went wrong while subscribing. Please check your email and try again.',
+          email_placeholder: 'Enter your email address',
+          privacy_text:
+            'By subscribing, you agree to our privacy policy and terms of service. You can unsubscribe at any time.',
+          meta_title: 'Subscribe to Newsletter | Personal Blog',
+          meta_description:
+            'Subscribe to our newsletter for the latest updates, insights, and exclusive content about web development and design.',
+          meta_keywords:
+            'subscribe, newsletter, updates, web development, design, insights',
+          og_title: 'Subscribe to Our Newsletter | Personal Blog',
+          og_description:
+            'Join our community and stay updated with the latest articles, tutorials, and design insights.',
+          og_image_id: staticAssetIds.asset1,
+          structured_data: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: 'Newsletter Subscription',
+            description:
+              'Subscribe to receive latest updates, insights, and exclusive content',
+            mainEntity: {
+              '@type': 'Organization',
+              name: 'Personal Blog',
+              offers: {
+                '@type': 'Offer',
+                name: 'Newsletter Subscription',
+                price: '0',
+                priceCurrency: 'USD'
               }
             }
           }),

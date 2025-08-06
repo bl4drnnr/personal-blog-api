@@ -109,8 +109,7 @@ export class AboutService {
         heroImageSecondaryAlt: aboutPage.heroImageSecondaryAlt,
         logoText: aboutPage.logoText,
         breadcrumbText: aboutPage.breadcrumbText,
-        heroTitle: aboutPage.heroTitle,
-        contactTiles: aboutPage.contactTiles
+        heroTitle: aboutPage.heroTitle
       },
       seoData: {
         metaTitle: aboutPage.metaTitle,
@@ -370,12 +369,10 @@ export class AboutService {
       throw new NotFoundException('Experience not found');
     }
 
-    const position = await this.positionModel.create(
+    return await this.positionModel.create(
       { ...data, experienceId },
       { transaction: trx }
     );
-
-    return position;
   }
 
   async updatePosition({ positionId, data, trx }: UpdatePositionInterface) {
