@@ -19,6 +19,7 @@ import { Transaction } from 'sequelize';
 import { UpdateContactPageDto } from '@dto/contact/requests/update-contact-page.dto';
 import { CreateContactTileDto } from '@dto/contact/requests/create-contact-tile.dto';
 import { UpdateContactTileDto } from '@dto/contact/requests/update-contact-tile.dto';
+import { ReorderContactTilesDto } from '@dto/contact/requests/reorder-contact-tiles.dto';
 
 @Controller('contact')
 export class ContactController {
@@ -68,11 +69,8 @@ export class ContactController {
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/tiles/update-tile')
-  async updateContactTile(
-    @Query('id') tileId: string,
-    @Body() data: UpdateContactTileDto
-  ) {
-    return await this.contactService.updateContactTile(tileId, data);
+  async updateContactTile(@Body() data: UpdateContactTileDto) {
+    return await this.contactService.updateContactTile(data);
   }
 
   @UseGuards(BasicAuthGuard)
@@ -86,7 +84,7 @@ export class ContactController {
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
   @Put('admin/tiles/reorder')
-  async reorderContactTiles(@Body() tileIds: string[]) {
-    return await this.contactService.reorderContactTiles(tileIds);
+  async reorderContactTiles(@Body() data: ReorderContactTilesDto) {
+    return await this.contactService.reorderContactTiles(data.tileIds);
   }
 }

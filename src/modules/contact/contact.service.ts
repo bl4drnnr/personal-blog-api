@@ -144,11 +144,8 @@ export class ContactService {
     });
   }
 
-  async updateContactTile(
-    tileId: string,
-    data: UpdateContactTileDto
-  ): Promise<ContactTile> {
-    const contactTile = await this.contactTileModel.findByPk(tileId);
+  async updateContactTile(data: UpdateContactTileDto): Promise<ContactTile> {
+    const contactTile = await this.contactTileModel.findByPk(data.id);
 
     if (!contactTile) {
       throw new NotFoundException('Contact tile not found');
@@ -166,12 +163,6 @@ export class ContactService {
     }
 
     await contactTile.destroy();
-  }
-
-  async getContactTiles(): Promise<ContactTileDto[]> {
-    const contactPage = await this.findContactPageOrFail();
-    const contactTiles = await this.findContactTiles(contactPage.id);
-    return this.mapContactTiles(contactTiles);
   }
 
   async reorderContactTiles(tileIds: string[]): Promise<ContactTileDto[]> {

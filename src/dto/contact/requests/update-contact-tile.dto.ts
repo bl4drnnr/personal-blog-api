@@ -1,6 +1,9 @@
 import { IsString, IsOptional, IsNumber, IsUUID } from 'class-validator';
 
 export class UpdateContactTileDto {
+  @IsUUID()
+  id: string;
+
   @IsOptional()
   @IsString()
   title?: string;

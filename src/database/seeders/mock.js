@@ -1,11 +1,165 @@
+const { v4: uuidv4 } = require('uuid');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
     try {
+      // Generate UUIDs for entities to maintain relationships
+      const userIds = {
+        admin: uuidv4()
+      };
+
+      const userSettingsIds = {
+        adminSettings: uuidv4()
+      };
+
+      const staticAssetIds = {
+        asset1: uuidv4(),
+        asset2: uuidv4(),
+        asset3: uuidv4(),
+        asset4: uuidv4(),
+        asset5: uuidv4(),
+        asset6: uuidv4(),
+        asset7: uuidv4(),
+        asset8: uuidv4(),
+        asset9: uuidv4(),
+        asset10: uuidv4(),
+        asset11: uuidv4(),
+        asset12: uuidv4(),
+        asset13: uuidv4(),
+        asset14: uuidv4(),
+        asset15: uuidv4(),
+        asset16: uuidv4(),
+        asset17: uuidv4(),
+        asset18: uuidv4(),
+        asset19: uuidv4(),
+        asset20: uuidv4(),
+        asset21: uuidv4(),
+        asset22: uuidv4(),
+        asset23: uuidv4(),
+        asset24: uuidv4()
+      };
+
+      const siteConfigIds = {
+        main: uuidv4()
+      };
+
+      const articleIds = {
+        article1: uuidv4(),
+        article2: uuidv4(),
+        article3: uuidv4(),
+        article4: uuidv4()
+      };
+
+      const projectIds = {
+        project1: uuidv4(),
+        project2: uuidv4(),
+        project3: uuidv4()
+      };
+
+      const aboutPageIds = {
+        main: uuidv4()
+      };
+
+      const experienceIds = {
+        exp1: uuidv4(),
+        exp2: uuidv4(),
+        exp3: uuidv4()
+      };
+
+      const positionIds = {
+        pos1: uuidv4(),
+        pos2: uuidv4(),
+        pos3: uuidv4(),
+        pos4: uuidv4(),
+        pos5: uuidv4()
+      };
+
+      const certificateIds = {
+        cert1: uuidv4(),
+        cert2: uuidv4(),
+        cert3: uuidv4(),
+        cert4: uuidv4()
+      };
+
+      const changelogPageIds = {
+        main: uuidv4()
+      };
+
+      const changelogEntryIds = {
+        entry1: uuidv4(),
+        entry2: uuidv4(),
+        entry3: uuidv4()
+      };
+
+      const licensePageIds = {
+        main: uuidv4()
+      };
+
+      const licenseTileIds = {
+        tile1: uuidv4(),
+        tile2: uuidv4(),
+        tile3: uuidv4(),
+        tile4: uuidv4(),
+        tile5: uuidv4(),
+        tile6: uuidv4(),
+        tile7: uuidv4()
+      };
+
+      const privacyPageIds = {
+        main: uuidv4()
+      };
+
+      const privacySectionIds = {
+        section1: uuidv4(),
+        section2: uuidv4(),
+        section3: uuidv4(),
+        section4: uuidv4(),
+        section5: uuidv4(),
+        section6: uuidv4(),
+        section7: uuidv4(),
+        section8: uuidv4(),
+        section9: uuidv4()
+      };
+
+      const homePageIds = {
+        main: uuidv4()
+      };
+
+      const projectsPageIds = {
+        main: uuidv4()
+      };
+
+      const blogPageIds = {
+        main: uuidv4()
+      };
+
+      const contactPageIds = {
+        main: uuidv4()
+      };
+
+      const contactTileIds = {
+        tile1: uuidv4(),
+        tile2: uuidv4(),
+        tile3: uuidv4(),
+        tile4: uuidv4()
+      };
+
+      const whysSectionIds = {
+        section1: uuidv4()
+      };
+
+      const faqIds = {
+        faq1: uuidv4(),
+        faq2: uuidv4(),
+        faq3: uuidv4(),
+        faq4: uuidv4(),
+        faq5: uuidv4()
+      };
       // Create test user
       await queryInterface.bulkInsert('users', [
         {
-          id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          id: userIds.admin,
           email: 'admin@example.com',
           password: '$2a$10$1HvnaYFhmlKAT/kmpA2rDOu3jSXqzRoBsbeFUrHLQoqKQgl8lsUba',
           first_name: 'Admin',
@@ -19,10 +173,10 @@ module.exports = {
       // Create user settings for MFA
       await queryInterface.bulkInsert('users_settings', [
         {
-          id: 'da334f15-2ce1-4a00-b8cc-6ed9204860d2',
+          id: userSettingsIds.adminSettings,
           two_fa_token: 'MNKFQUP6S77VONDE47A3B6VMFEPKVD5X',
           password_changed: null,
-          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          user_id: userIds.admin,
           created_at: new Date(),
           updated_at: new Date()
         }
@@ -31,7 +185,7 @@ module.exports = {
       // Create static assets
       await queryInterface.bulkInsert('static_assets', [
         {
-          id: '90000000-0000-0000-0000-000000000001',
+          id: staticAssetIds.asset1,
           name: 'jonas-degener-tZT7eyJqkRA-unsplash.jpg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/jonas-degener-tZT7eyJqkRA-unsplash.jpg',
@@ -41,7 +195,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000002',
+          id: staticAssetIds.asset2,
           name: 'michiel-annaert-I1cx5LwM5pA-unsplash.jpg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/michiel-annaert-I1cx5LwM5pA-unsplash.jpg',
@@ -51,7 +205,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000003',
+          id: staticAssetIds.asset3,
           name: 'mike-hindle-BXvcjmM6dH8-unsplash.jpg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/mike-hindle-BXvcjmM6dH8-unsplash.jpg',
@@ -61,7 +215,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000004',
+          id: staticAssetIds.asset4,
           name: 'mike-hindle-f75bkyxq7mk-unsplash.jpg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/mike-hindle-f75bkyxq7mk-unsplash.jpg',
@@ -71,7 +225,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000005',
+          id: staticAssetIds.asset5,
           name: 'mike-yukhtenko-wfh8dDlNFOk-unsplash.jpg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/mike-yukhtenko-wfh8dDlNFOk-unsplash.jpg',
@@ -81,7 +235,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000006',
+          id: staticAssetIds.asset6,
           name: 'pawel-czerwinski-SOHqP5gmvFU-unsplash.jpg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/pawel-czerwinski-SOHqP5gmvFU-unsplash.jpg',
@@ -91,7 +245,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000007',
+          id: staticAssetIds.asset7,
           name: 'pawel-czerwinski-tRm520JvK8Q-unsplash.jpg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/pawel-czerwinski-tRm520JvK8Q-unsplash.jpg',
@@ -102,7 +256,7 @@ module.exports = {
         },
         // SVG Icons for certificates
         {
-          id: '90000000-0000-0000-0000-000000000008',
+          id: staticAssetIds.asset8,
           name: 'Portal.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/f451ebc8f5c47e1daf282998f15bfd50.svg',
@@ -111,7 +265,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000009',
+          id: staticAssetIds.asset9,
           name: 'Pose.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/ac810f7950e98ad1cf3a46e60fcd82c3.svg',
@@ -120,7 +274,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000010',
+          id: staticAssetIds.asset10,
           name: 'S.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/965c3cb2aa9bf6f812ef721f73fbac10.svg',
@@ -129,7 +283,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000011',
+          id: staticAssetIds.asset11,
           name: 'Shift.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/25cdd93bd820e36a5ef33820443eea52.svg',
@@ -138,7 +292,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000012',
+          id: staticAssetIds.asset12,
           name: 'Split.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/d1abe10b197577bc3a15ee9efb6f9e21.svg',
@@ -147,7 +301,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000013',
+          id: staticAssetIds.asset13,
           name: 'Sun.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/eb0327ca2154373f354ab43d5a1af9d3.svg',
@@ -156,7 +310,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000014',
+          id: staticAssetIds.asset14,
           name: 'Zag.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/08a78fdd5c643a25c217ad89bbf6460c.svg',
@@ -165,7 +319,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000015',
+          id: staticAssetIds.asset15,
           name: 'Wing.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/5941d31eb262701a3f1360406032dc7b.svg',
@@ -175,7 +329,7 @@ module.exports = {
         },
         // Contact Tile Icons
         {
-          id: '90000000-0000-0000-0000-000000000016',
+          id: staticAssetIds.asset16,
           name: 'mail-send-fill.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/fb17aa5686df3ba760d952bc154a7c6b.svg',
@@ -184,7 +338,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000017',
+          id: staticAssetIds.asset17,
           name: 'phone-fill.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/5ba7a221a68eb9f3c158122d585f971a.svg',
@@ -193,7 +347,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000018',
+          id: staticAssetIds.asset18,
           name: 'message-2-fill.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/d24fabcd3e01d765bd79e9e0d164a5db.svg',
@@ -202,7 +356,7 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          id: '90000000-0000-0000-0000-000000000019',
+          id: staticAssetIds.asset19,
           name: 'map-2-fill.svg',
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/289b442db531f5005720cb2ea84570d1.svg',
@@ -215,7 +369,7 @@ module.exports = {
       // Create site configuration
       await queryInterface.bulkInsert('site_config', [
         {
-          id: '550e8400-e29b-41d4-a716-446655440000',
+          id: siteConfigIds.main,
           site_name: 'Personal Security Blog',
           site_description:
             'A blog about cybersecurity, technology, and development',
@@ -240,7 +394,7 @@ module.exports = {
       // Create sample articles
       await queryInterface.bulkInsert('articles', [
         {
-          id: '11111111-1111-1111-1111-111111111111',
+          id: articleIds.article1,
           title: 'Introduction to Cybersecurity',
           slug: 'introduction-to-cybersecurity',
           description:
@@ -252,12 +406,12 @@ module.exports = {
             'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=630&fit=crop',
           tags: ['cybersecurity', 'security', 'fundamentals', 'risk-assessment'],
           published: true,
-          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          user_id: userIds.admin,
           created_at: new Date('2024-01-15'),
           updated_at: new Date('2024-01-15')
         },
         {
-          id: '22222222-2222-2222-2222-222222222222',
+          id: articleIds.article2,
           title: 'Modern Web Development Security',
           slug: 'modern-web-development-security',
           description:
@@ -357,12 +511,12 @@ def generate_session_token() -> str:
             'xss'
           ],
           published: true,
-          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          user_id: userIds.admin,
           created_at: new Date('2024-01-20'),
           updated_at: new Date('2024-01-20')
         },
         {
-          id: '33333333-3333-3333-3333-333333333333',
+          id: articleIds.article3,
           title: 'Understanding Cryptographic Hash Functions',
           slug: 'understanding-cryptographic-hash-functions',
           description:
@@ -481,12 +635,12 @@ console.log('Merkle Root:', merkleTree.getRoot());
             'blockchain'
           ],
           published: true,
-          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          user_id: userIds.admin,
           created_at: new Date('2024-01-25'),
           updated_at: new Date('2024-01-25')
         },
         {
-          id: '44444444-4444-4444-4444-444444444444',
+          id: articleIds.article4,
           title: 'Draft: Machine Learning in Cybersecurity',
           slug: 'draft-ml-cybersecurity',
           description:
@@ -513,7 +667,7 @@ console.log('Merkle Root:', merkleTree.getRoot());
             'threat-detection'
           ],
           published: false,
-          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          user_id: userIds.admin,
           created_at: new Date('2024-01-28'),
           updated_at: new Date('2024-01-28')
         }
@@ -522,7 +676,7 @@ console.log('Merkle Root:', merkleTree.getRoot());
       // Create sample projects
       await queryInterface.bulkInsert('projects', [
         {
-          id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+          id: projectIds.project1,
           title: 'Security Monitoring Dashboard',
           slug: 'security-monitoring-dashboard',
           description:
@@ -539,12 +693,12 @@ console.log('Merkle Root:', merkleTree.getRoot());
           ],
           featured: true,
           published: true,
-          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          user_id: userIds.admin,
           created_at: new Date('2024-01-10'),
           updated_at: new Date('2024-01-10')
         },
         {
-          id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+          id: projectIds.project2,
           title: 'Personal Blog Platform',
           slug: 'personal-blog-platform',
           description:
@@ -793,12 +947,12 @@ generateRoutes().catch(console.error);
           ],
           published: false,
           featured: true,
-          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          user_id: userIds.admin,
           created_at: new Date('2024-01-05'),
           updated_at: new Date('2024-01-05')
         },
         {
-          id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
+          id: projectIds.project3,
           title: 'Automated Vulnerability Scanner',
           slug: 'automated-vulnerability-scanner',
           description:
@@ -1098,7 +1252,7 @@ export default VulnerabilityReport;
           ],
           published: true,
           featured: false,
-          user_id: 'd6f9d716-008b-4d91-8ae7-072414e6738c',
+          user_id: userIds.admin,
           created_at: new Date('2024-01-01'),
           updated_at: new Date('2024-01-01')
         }
@@ -1107,7 +1261,7 @@ export default VulnerabilityReport;
       // Create about page content
       await queryInterface.bulkInsert('about_page', [
         {
-          id: '00000000-0000-0000-0000-000000000001',
+          id: aboutPageIds.main,
           title: "Hello, I'm Mikhail!",
           content: `
             <p>Welcome to my personal blog. I'm passionate about <strong>web development</strong>, <em>design</em>, and sharing knowledge with the world. Here you'll find my thoughts, projects, and more about my journey in tech and creativity.</p>
@@ -1144,8 +1298,8 @@ export default VulnerabilityReport;
           `,
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
-          hero_image_secondary_id: '90000000-0000-0000-0000-000000000001',
+          hero_image_main_id: staticAssetIds.asset1,
+          hero_image_secondary_id: staticAssetIds.asset1,
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Abstract Gradient Art',
           logo_text: 'Luch',
@@ -1193,7 +1347,7 @@ export default VulnerabilityReport;
           og_title: 'About Me',
           og_description:
             'Passionate about web development, design, and sharing knowledge. Specializing in full-stack development with modern technologies.',
-          og_image_id: '90000000-0000-0000-0000-000000000001',
+          og_image_id: staticAssetIds.asset1,
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Person',
@@ -1221,14 +1375,14 @@ export default VulnerabilityReport;
       ]);
 
       // Create experiences
-      const experience1Id = '10000000-0000-0000-0000-000000000001';
-      const experience2Id = '10000000-0000-0000-0000-000000000002';
+      const experience1Id = experienceIds.exp1;
+      const experience2Id = experienceIds.exp2;
 
       await queryInterface.bulkInsert('experiences', [
         {
           id: experience1Id,
           company_name: 'Tech Company Inc.',
-          logo_id: '90000000-0000-0000-0000-000000000014', // References LUCH-Framework-Bigger.svg
+          logo_id: staticAssetIds.asset14, // References LUCH-Framework-Bigger.svg
           company_website: 'https://techcompany.com',
           order: 0,
           created_at: new Date(),
@@ -1237,7 +1391,7 @@ export default VulnerabilityReport;
         {
           id: experience2Id,
           company_name: 'StartUp Solutions',
-          logo_id: '90000000-0000-0000-0000-000000000015', // References S.svg
+          logo_id: staticAssetIds.asset15, // References S.svg
           company_website: 'https://startupsolutions.com',
           order: 1,
           created_at: new Date(),
@@ -1248,7 +1402,7 @@ export default VulnerabilityReport;
       // Create positions
       await queryInterface.bulkInsert('positions', [
         {
-          id: '20000000-0000-0000-0000-000000000001',
+          id: experienceIds.exp1,
           title: 'Senior Software Engineer',
           start_date: '2023-01-01',
           end_date: null,
@@ -1280,7 +1434,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '20000000-0000-0000-0000-000000000002',
+          id: experienceIds.exp2,
           title: 'Software Engineer',
           start_date: '2021-06-01',
           end_date: '2022-12-31',
@@ -1311,7 +1465,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '20000000-0000-0000-0000-000000000003',
+          id: experienceIds.exp3,
           title: 'Full Stack Developer',
           start_date: '2020-01-01',
           end_date: '2021-05-31',
@@ -1348,11 +1502,11 @@ export default VulnerabilityReport;
       // Create certificates
       await queryInterface.bulkInsert('certificates', [
         {
-          id: '30000000-0000-0000-0000-000000000001',
+          id: certificateIds.cert1,
           name: 'AWS Certified Solutions Architect',
           issued_date: '2023-06-15',
           expiration_date: '2026-06-15',
-          logo_id: '90000000-0000-0000-0000-000000000008',
+          logo_id: staticAssetIds.asset8,
           description:
             'Validates expertise in designing distributed systems and applications on the Amazon Web Services platform with a focus on best practices for security, reliability, and cost optimization.',
           order: 0,
@@ -1360,11 +1514,11 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '30000000-0000-0000-0000-000000000002',
+          id: certificateIds.cert2,
           name: 'Google Cloud Professional Developer',
           issued_date: '2023-03-20',
           expiration_date: '2025-03-20',
-          logo_id: '90000000-0000-0000-0000-000000000009',
+          logo_id: staticAssetIds.asset9,
           description:
             'Demonstrates proficiency in developing scalable and highly available applications using Google Cloud Platform services and tools.',
           order: 1,
@@ -1372,11 +1526,11 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '30000000-0000-0000-0000-000000000003',
+          id: certificateIds.cert3,
           name: 'Microsoft Azure Fundamentals',
           issued_date: '2022-11-10',
           expiration_date: null,
-          logo_id: '90000000-0000-0000-0000-000000000010',
+          logo_id: staticAssetIds.asset10,
           description:
             'Foundational knowledge of cloud services and how those services are provided with Microsoft Azure, covering core Azure services, pricing, and support.',
           order: 2,
@@ -1384,11 +1538,11 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '30000000-0000-0000-0000-000000000004',
+          id: certificateIds.cert4,
           name: 'Kubernetes Administrator (CKA)',
           issued_date: '2023-08-05',
           expiration_date: '2024-08-05',
-          logo_id: '90000000-0000-0000-0000-000000000011',
+          logo_id: staticAssetIds.asset11,
           description:
             'Validates skills in deploying, managing, and troubleshooting Kubernetes clusters in production environments.',
           order: 3,
@@ -1400,11 +1554,11 @@ export default VulnerabilityReport;
       // Create changelog page content
       await queryInterface.bulkInsert('changelog_page', [
         {
-          id: '00000000-0000-0000-0000-000000000002',
+          id: changelogPageIds.main,
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
-          hero_image_secondary_id: '90000000-0000-0000-0000-000000000007',
+          hero_image_main_id: staticAssetIds.asset1,
+          hero_image_secondary_id: staticAssetIds.asset7,
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Data Visualization Charts',
           logo_text: 'Luch',
@@ -1417,7 +1571,7 @@ export default VulnerabilityReport;
           og_title: 'Changelog - Latest Updates',
           og_description:
             "Discover the latest features and improvements to our platform. Track our progress and see what's new.",
-          og_image_id: '90000000-0000-0000-0000-000000000005',
+          og_image_id: staticAssetIds.asset5,
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'TechArticle',
@@ -1439,8 +1593,8 @@ export default VulnerabilityReport;
       // Create changelog entries
       await queryInterface.bulkInsert('changelog_entries', [
         {
-          id: '40000000-0000-0000-0000-000000000001',
-          changelog_page_id: '00000000-0000-0000-0000-000000000002',
+          id: changelogEntryIds.entry1,
+          changelog_page_id: changelogPageIds.main,
           version: '1.1.0',
           date: 'February 2025',
           title: 'Enhanced User Experience',
@@ -1457,8 +1611,8 @@ export default VulnerabilityReport;
           updated_at: new Date('2025-02-01')
         },
         {
-          id: '40000000-0000-0000-0000-000000000002',
-          changelog_page_id: '00000000-0000-0000-0000-000000000002',
+          id: changelogEntryIds.entry2,
+          changelog_page_id: changelogPageIds.main,
           version: '1.0.0',
           date: 'January 2025',
           title: 'Initial Release',
@@ -1482,7 +1636,7 @@ export default VulnerabilityReport;
       // Create license page content
       await queryInterface.bulkInsert('license_page', [
         {
-          id: '00000000-0000-0000-0000-000000000003',
+          id: licensePageIds.main,
           title: 'MIT License',
           license_date: 'Copyright (c) 2025 LUCH Framework',
           paragraphs: JSON.stringify([
@@ -1496,8 +1650,8 @@ export default VulnerabilityReport;
           ]),
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
-          hero_image_secondary_id: '90000000-0000-0000-0000-000000000001',
+          hero_image_main_id: staticAssetIds.asset1,
+          hero_image_secondary_id: staticAssetIds.asset1,
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Abstract Gradient Art',
           logo_text: 'Luch',
@@ -1511,7 +1665,7 @@ export default VulnerabilityReport;
           og_title: 'License Information - MIT License',
           og_description:
             'MIT License details for the LUCH Framework. Free to use, modify, and distribute under open source terms.',
-          og_image_id: '90000000-0000-0000-0000-000000000001',
+          og_image_id: staticAssetIds.asset1,
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'CreativeWork',
@@ -1536,7 +1690,7 @@ export default VulnerabilityReport;
       // Create license tiles
       await queryInterface.bulkInsert('license_tiles', [
         {
-          id: '50000000-0000-0000-0000-000000000001',
+          id: licenseTileIds.tile1,
           title: 'Webflow: Template Licenses',
           description:
             'Not sure where and how often you can use your Webflow template? This licensing guide breaks down all the rules for you.',
@@ -1551,7 +1705,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '50000000-0000-0000-0000-000000000002',
+          id: licenseTileIds.tile2,
           title: 'Fonts: Roboto Font Family',
           description:
             'These are free fonts from Google Fonts, ready to enhance your website. Discover more typography options on the Google Fonts website.',
@@ -1566,7 +1720,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '50000000-0000-0000-0000-000000000003',
+          id: licenseTileIds.tile3,
           title: 'Images: Lummi Images',
           description:
             "Everything you need to know about using Lummi's images freely.",
@@ -1581,7 +1735,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '50000000-0000-0000-0000-000000000004',
+          id: licenseTileIds.tile4,
           title: 'Icons: Remix Icon',
           description:
             'RemixIcon is licensed based on the Apache License and all rights of products are reserved for RemixIcon.',
@@ -1596,7 +1750,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '50000000-0000-0000-0000-000000000005',
+          id: licenseTileIds.tile5,
           title: 'Open Logo - Free Logo Library',
           description: 'Open Logo is an open-source library of logos.',
           links: JSON.stringify([
@@ -1610,7 +1764,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '50000000-0000-0000-0000-000000000006',
+          id: licenseTileIds.tile6,
           title: 'Country Flags Icons Set',
           description: 'Free, Circular Country Flags Icons Set.',
           links: JSON.stringify([
@@ -1624,7 +1778,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '50000000-0000-0000-0000-000000000007',
+          id: licenseTileIds.tile7,
           title: 'Pexels Video & Images',
           description:
             'All photos and videos on Pexels can be downloaded and used for free.',
@@ -1647,13 +1801,13 @@ export default VulnerabilityReport;
       // Create privacy page content
       await queryInterface.bulkInsert('privacy_page', [
         {
-          id: '00000000-0000-0000-0000-000000000004',
+          id: privacyPageIds.main,
           title: 'Privacy Policy',
           last_updated: 'Last updated: January 2025',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
-          hero_image_secondary_id: '90000000-0000-0000-0000-000000000001',
+          hero_image_main_id: staticAssetIds.asset1,
+          hero_image_secondary_id: staticAssetIds.asset1,
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Abstract Gradient Art',
           logo_text: 'Luch',
@@ -1667,7 +1821,7 @@ export default VulnerabilityReport;
           og_title: 'Privacy Policy - Data Protection',
           og_description:
             'Our privacy policy explains how we handle your personal data and protect your privacy when using our blog.',
-          og_image_id: '90000000-0000-0000-0000-000000000001',
+          og_image_id: staticAssetIds.asset1,
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebPage',
@@ -1688,63 +1842,63 @@ export default VulnerabilityReport;
       // Create privacy sections
       const privacySections = [
         {
-          id: '60000000-0000-0000-0000-000000000001',
+          id: privacySectionIds.section1,
           title: '1. Information We Collect',
           content:
             '<p>We collect information you provide directly to us, such as when you create an account, subscribe to our newsletter, or contact us. This may include your name, email address, and any other information you choose to provide.</p>',
           sort_order: 0
         },
         {
-          id: '60000000-0000-0000-0000-000000000002',
+          id: privacySectionIds.section2,
           title: '2. How We Use Your Information',
           content:
             '<p>We use the information we collect to:</p><ul><li>Provide, maintain, and improve our services</li><li>Send you newsletters and updates (with your consent)</li><li>Respond to your comments and questions</li><li>Detect, investigate and prevent security incidents</li><li>Comply with legal obligations</li></ul>',
           sort_order: 1
         },
         {
-          id: '60000000-0000-0000-0000-000000000003',
+          id: privacySectionIds.section3,
           title: '3. Information Sharing',
           content:
             '<p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy or as required by law.</p>',
           sort_order: 2
         },
         {
-          id: '60000000-0000-0000-0000-000000000004',
+          id: privacySectionIds.section4,
           title: '4. Cookies and Tracking Technologies',
           content:
             '<p>We use cookies and similar tracking technologies to enhance your experience on our website. These technologies help us understand how you use our site and improve our services.</p><h4>Types of Cookies We Use:</h4><ul><li><strong>Essential Cookies:</strong> Required for the website to function properly</li><li><strong>Analytics Cookies:</strong> Help us understand how visitors interact with our website</li><li><strong>Preference Cookies:</strong> Remember your preferences and settings</li></ul><p>You can control and manage cookies through your browser settings. However, disabling certain cookies may affect the functionality of our website.</p>',
           sort_order: 3
         },
         {
-          id: '60000000-0000-0000-0000-000000000005',
+          id: privacySectionIds.section5,
           title: '5. Data Security',
           content:
             '<p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>',
           sort_order: 4
         },
         {
-          id: '60000000-0000-0000-0000-000000000006',
+          id: privacySectionIds.section6,
           title: '6. Your Rights',
           content:
             '<p>You have the right to:</p><ul><li>Access your personal information</li><li>Correct inaccurate data</li><li>Request deletion of your data</li><li>Object to or restrict processing</li><li>Data portability</li><li>Withdraw consent at any time</li></ul>',
           sort_order: 5
         },
         {
-          id: '60000000-0000-0000-0000-000000000007',
+          id: privacySectionIds.section7,
           title: "7. Children's Privacy",
           content:
             '<p>Our services are not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13.</p>',
           sort_order: 6
         },
         {
-          id: '60000000-0000-0000-0000-000000000008',
+          id: privacySectionIds.section8,
           title: '8. Changes to This Policy',
           content:
             '<p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.</p>',
           sort_order: 7
         },
         {
-          id: '60000000-0000-0000-0000-000000000009',
+          id: privacySectionIds.section9,
           title: '9. Contact Us',
           content:
             '<p>If you have any questions about this privacy policy, please contact us through our <a href="/contact">contact page</a>.</p>',
@@ -1756,7 +1910,7 @@ export default VulnerabilityReport;
         'privacy_sections',
         privacySections.map((section) => ({
           ...section,
-          privacy_page_id: '00000000-0000-0000-0000-000000000004',
+          privacy_page_id: privacyPageIds.main,
           created_at: new Date(),
           updated_at: new Date()
         }))
@@ -1767,15 +1921,15 @@ export default VulnerabilityReport;
       // Create home page content
       await queryInterface.bulkInsert('home_page', [
         {
-          id: '00000000-0000-0000-0000-000000000005',
+          id: homePageIds.main,
           title: 'Welcome to LUCH',
           subtitle: 'Modern Creative Portfolio Template',
           description:
             'A fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main_id: '90000000-0000-0000-0000-000000000004',
-          hero_image_secondary_id: '90000000-0000-0000-0000-000000000006',
+          hero_image_main_id: staticAssetIds.asset4,
+          hero_image_secondary_id: staticAssetIds.asset6,
           hero_image_main_alt: 'Contemplative Astronaut Woman',
           hero_image_secondary_alt: 'Astronaut in Space',
           logo_text: 'LUCH',
@@ -1795,7 +1949,7 @@ export default VulnerabilityReport;
           og_title: 'LUCH - Modern Creative Portfolio Template',
           og_description:
             'A fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          og_image_id: '90000000-0000-0000-0000-000000000004',
+          og_image_id: staticAssetIds.asset4,
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebSite',
@@ -1817,15 +1971,15 @@ export default VulnerabilityReport;
       // Create projects page content
       await queryInterface.bulkInsert('projects_page', [
         {
-          id: '00000000-0000-0000-0000-000000000006',
+          id: projectsPageIds.main,
           title: 'Projects',
           subtitle: 'Showcase of My Work',
           description:
             'Explore my portfolio of projects showcasing innovative solutions and creative implementations.',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
-          hero_image_secondary_id: '90000000-0000-0000-0000-000000000006',
+          hero_image_main_id: staticAssetIds.asset1,
+          hero_image_secondary_id: staticAssetIds.asset6,
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Astronaut Woman in Spacecraft',
           logo_text: 'LUCH',
@@ -1839,7 +1993,7 @@ export default VulnerabilityReport;
           og_title: 'Projects Portfolio - Latest Work',
           og_description:
             'Browse through my latest projects showcasing cutting-edge technologies and creative solutions.',
-          og_image_id: '90000000-0000-0000-0000-000000000001',
+          og_image_id: staticAssetIds.asset1,
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
@@ -1859,15 +2013,15 @@ export default VulnerabilityReport;
       // Create blog page content
       await queryInterface.bulkInsert('blog_page', [
         {
-          id: '00000000-0000-0000-0000-000000000007',
+          id: blogPageIds.main,
           title: 'Blog',
           subtitle: 'Thoughts & Insights',
           description:
             'Dive into articles about web development, technology trends, and creative problem-solving.',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
-          hero_image_secondary_id: '90000000-0000-0000-0000-000000000006',
+          hero_image_main_id: staticAssetIds.asset1,
+          hero_image_secondary_id: staticAssetIds.asset6,
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Astronaut Woman in Spacecraft',
           logo_text: 'LUCH',
@@ -1881,7 +2035,7 @@ export default VulnerabilityReport;
           og_title: 'Blog - Latest Articles & Insights',
           og_description:
             'Discover articles about web development, technology trends, and programming insights from an experienced developer.',
-          og_image_id: '90000000-0000-0000-0000-000000000001',
+          og_image_id: staticAssetIds.asset1,
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Blog',
@@ -1905,15 +2059,15 @@ export default VulnerabilityReport;
       // Create contact page content
       await queryInterface.bulkInsert('contact_page', [
         {
-          id: '00000000-0000-0000-0000-000000000008',
+          id: contactPageIds.main,
           title: 'Contact',
           subtitle: 'Get in Touch',
           description:
             'Feel free to reach out for collaborations, inquiries or just to chat about design.',
           footer_text:
             'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          hero_image_main_id: '90000000-0000-0000-0000-000000000001',
-          hero_image_secondary_id: '90000000-0000-0000-0000-000000000006',
+          hero_image_main_id: staticAssetIds.asset1,
+          hero_image_secondary_id: staticAssetIds.asset6,
           hero_image_main_alt: 'Abstract Gradient Art',
           hero_image_secondary_alt: 'Astronaut Woman in Spacecraft',
           logo_text: 'Luch',
@@ -1935,7 +2089,7 @@ export default VulnerabilityReport;
           og_title: 'Contact Us | Personal Blog',
           og_description:
             'Get in touch with us for collaborations, inquiries, or just to chat about design and development.',
-          og_image_id: '90000000-0000-0000-0000-000000000001',
+          og_image_id: staticAssetIds.asset1,
           structured_data: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'ContactPage',
@@ -1960,46 +2114,46 @@ export default VulnerabilityReport;
       // Create contact tiles
       await queryInterface.bulkInsert('contact_tiles', [
         {
-          id: '70000000-0000-0000-0000-000000000001',
+          id: contactTileIds.tile1,
           title: 'Email Us',
           content: 'hello@luchcreative.com',
           link: 'mailto:hello@luchcreative.com',
-          icon_asset_id: '90000000-0000-0000-0000-000000000016',
+          icon_asset_id: staticAssetIds.asset16,
           sort_order: 0,
-          contact_page_id: '00000000-0000-0000-0000-000000000008',
+          contact_page_id: contactPageIds.main,
           created_at: new Date(),
           updated_at: new Date()
         },
         {
-          id: '70000000-0000-0000-0000-000000000002',
+          id: contactTileIds.tile2,
           title: 'Call us',
           content: '+1 (555) 123-4567',
           link: 'tel:+15551234567',
-          icon_asset_id: '90000000-0000-0000-0000-000000000017',
+          icon_asset_id: staticAssetIds.asset17,
           sort_order: 1,
-          contact_page_id: '00000000-0000-0000-0000-000000000008',
+          contact_page_id: contactPageIds.main,
           created_at: new Date(),
           updated_at: new Date()
         },
         {
-          id: '70000000-0000-0000-0000-000000000003',
+          id: contactTileIds.tile3,
           title: "Let's chat",
           content: '@LuchSupport',
           link: 'https://t.me/LuchSupport',
-          icon_asset_id: '90000000-0000-0000-0000-000000000018',
+          icon_asset_id: staticAssetIds.asset18,
           sort_order: 2,
-          contact_page_id: '00000000-0000-0000-0000-000000000008',
+          contact_page_id: contactPageIds.main,
           created_at: new Date(),
           updated_at: new Date()
         },
         {
-          id: '70000000-0000-0000-0000-000000000004',
+          id: contactTileIds.tile4,
           title: 'Visit us',
           content: 'Dreamcity, USA',
           link: 'https://goo.gl/maps/xyz',
-          icon_asset_id: '90000000-0000-0000-0000-000000000019',
+          icon_asset_id: staticAssetIds.asset19,
           sort_order: 3,
-          contact_page_id: '00000000-0000-0000-0000-000000000008',
+          contact_page_id: contactPageIds.main,
           created_at: new Date(),
           updated_at: new Date()
         }
@@ -2008,7 +2162,7 @@ export default VulnerabilityReport;
       // Create whys section
       await queryInterface.bulkInsert('whys_sections', [
         {
-          id: '80000000-0000-0000-0000-000000000001',
+          id: whysSectionIds.section1,
           title: 'Why LUCH?',
           why_blocks: JSON.stringify([
             {
@@ -2033,7 +2187,7 @@ export default VulnerabilityReport;
       // Create FAQ questions
       await queryInterface.bulkInsert('faqs', [
         {
-          id: '83000000-0000-0000-0000-000000000001',
+          id: faqIds.faq1,
           question: 'What is LUCH Framework?',
           answer:
             'LUCH is a modern creative portfolio template designed for artists, bloggers, and creatives. It features a clean, responsive design with powerful customization options.',
@@ -2044,7 +2198,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '83000000-0000-0000-0000-000000000002',
+          id: faqIds.faq2,
           question: 'Is LUCH mobile-friendly?',
           answer:
             'Yes, LUCH is fully responsive and optimized for all devices including smartphones, tablets, and desktops. The template automatically adapts to different screen sizes.',
@@ -2055,7 +2209,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '83000000-0000-0000-0000-000000000003',
+          id: faqIds.faq3,
           question: 'Can I customize the design?',
           answer:
             'Absolutely! LUCH comes with extensive customization options. You can modify colors, fonts, layouts, and add your own content to match your brand and style.',
@@ -2066,7 +2220,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '83000000-0000-0000-0000-000000000004',
+          id: faqIds.faq4,
           question: 'Do I get support after purchase?',
           answer:
             'Yes, we provide comprehensive support including documentation, video tutorials, and direct assistance to help you get the most out of your LUCH template.',
@@ -2077,7 +2231,7 @@ export default VulnerabilityReport;
           updated_at: new Date()
         },
         {
-          id: '83000000-0000-0000-0000-000000000005',
+          id: faqIds.faq5,
           question: 'Is LUCH SEO optimized?',
           answer:
             'Yes, LUCH is built with SEO best practices in mind. It includes optimized markup, fast loading times, and clean code structure to help your site rank better in search engines.',
