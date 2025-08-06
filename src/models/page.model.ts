@@ -16,14 +16,14 @@ interface PageCreationAttributes {
   slug: string;
   title: string;
   content: string;
-  structuredData?: object;
-  metaTitle?: string;
-  metaDescription?: string;
-  metaKeywords?: string;
-  ogTitle?: string;
-  ogDescription?: string;
-  ogImage?: string;
-  published?: boolean;
+  structuredData: object;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeywords: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  published: boolean;
   userId: string;
 }
 
@@ -58,49 +58,49 @@ export class PageModel extends Model<PageModel, PageCreationAttributes> {
 
   @Column({
     type: DataType.JSONB,
-    allowNull: true,
+    allowNull: false,
     field: 'structured_data'
   })
   structuredData: object;
 
   @Column({
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
     field: 'meta_title'
   })
   metaTitle: string;
 
   @Column({
     type: DataType.TEXT,
-    allowNull: true,
+    allowNull: false,
     field: 'meta_description'
   })
   metaDescription: string;
 
   @Column({
     type: DataType.TEXT,
-    allowNull: true,
+    allowNull: false,
     field: 'meta_keywords'
   })
   metaKeywords: string;
 
   @Column({
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
     field: 'og_title'
   })
   ogTitle: string;
 
   @Column({
     type: DataType.TEXT,
-    allowNull: true,
+    allowNull: false,
     field: 'og_description'
   })
   ogDescription: string;
 
   @Column({
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
     field: 'og_image'
   })
   ogImage: string;

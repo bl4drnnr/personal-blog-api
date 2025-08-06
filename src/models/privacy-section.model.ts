@@ -13,10 +13,10 @@ import {
 import { PrivacyPage } from './privacy-page.model';
 
 interface PrivacySectionCreationAttributes {
-  privacyPageId?: string;
+  privacyPageId: string;
   title: string;
-  content?: string;
-  sortOrder?: number;
+  content: string;
+  sortOrder: number;
 }
 
 @Table({ tableName: 'privacy_sections' })
@@ -32,7 +32,7 @@ export class PrivacySection extends Model<
   @ForeignKey(() => PrivacyPage)
   @Column({
     type: DataType.UUID,
-    allowNull: true,
+    allowNull: false,
     field: 'privacy_page_id'
   })
   privacyPageId: string;
@@ -46,7 +46,7 @@ export class PrivacySection extends Model<
 
   @Column({
     type: DataType.TEXT,
-    allowNull: true,
+    allowNull: false,
     field: 'content'
   })
   content: string;

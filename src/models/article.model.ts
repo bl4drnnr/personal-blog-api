@@ -17,11 +17,11 @@ interface ArticleCreationAttributes {
   slug: string;
   description: string;
   content: string;
-  excerpt?: string;
-  featuredImage?: string;
-  tags?: Array<string>;
-  featured?: boolean;
-  published?: boolean;
+  excerpt: string;
+  featuredImage: string;
+  tags: Array<string>;
+  featured: boolean;
+  published: boolean;
   userId: string;
 }
 
@@ -63,21 +63,21 @@ export class ArticleModel extends Model<ArticleModel, ArticleCreationAttributes>
 
   @Column({
     type: DataType.TEXT,
-    allowNull: true,
+    allowNull: false,
     field: 'excerpt'
   })
   excerpt: string;
 
   @Column({
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
     field: 'featured_image'
   })
   featuredImage: string;
 
   @Column({
     type: DataType.ARRAY(DataType.STRING),
-    allowNull: true,
+    allowNull: false,
     field: 'tags'
   })
   tags: Array<string>;

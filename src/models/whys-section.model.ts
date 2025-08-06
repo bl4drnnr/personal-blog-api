@@ -13,7 +13,7 @@ interface WhysSectionCreationAttributes {
   title: string;
   whyBlocks: object;
   features: object;
-  featured?: boolean;
+  featured: boolean;
 }
 
 @Table({ tableName: 'whys_sections' })

@@ -1698,6 +1698,7 @@ export default VulnerabilityReport;
           title: 'Webflow: Template Licenses',
           description:
             'Not sure where and how often you can use your Webflow template? This licensing guide breaks down all the rules for you.',
+          license_page_id: licensePageIds.main,
           links: JSON.stringify([
             {
               label: 'Template Licenses',
@@ -1713,6 +1714,7 @@ export default VulnerabilityReport;
           title: 'Fonts: Roboto Font Family',
           description:
             'These are free fonts from Google Fonts, ready to enhance your website. Discover more typography options on the Google Fonts website.',
+          license_page_id: licensePageIds.main,
           links: JSON.stringify([
             {
               label: 'Google Fonts Licensing',
@@ -1728,6 +1730,7 @@ export default VulnerabilityReport;
           title: 'Images: Lummi Images',
           description:
             "Everything you need to know about using Lummi's images freely.",
+          license_page_id: licensePageIds.main,
           links: JSON.stringify([
             {
               label: 'Lummi License',
@@ -1743,6 +1746,7 @@ export default VulnerabilityReport;
           title: 'Icons: Remix Icon',
           description:
             'RemixIcon is licensed based on the Apache License and all rights of products are reserved for RemixIcon.',
+          license_page_id: licensePageIds.main,
           links: JSON.stringify([
             {
               label: 'Apache License',
@@ -1757,6 +1761,7 @@ export default VulnerabilityReport;
           id: licenseTileIds.tile5,
           title: 'Open Logo - Free Logo Library',
           description: 'Open Logo is an open-source library of logos.',
+          license_page_id: licensePageIds.main,
           links: JSON.stringify([
             {
               label: 'Licensed under CC BY 4.0',
@@ -1771,6 +1776,7 @@ export default VulnerabilityReport;
           id: licenseTileIds.tile6,
           title: 'Country Flags Icons Set',
           description: 'Free, Circular Country Flags Icons Set.',
+          license_page_id: licensePageIds.main,
           links: JSON.stringify([
             {
               label: 'Licensed under CC BY 4.0',
@@ -1786,6 +1792,7 @@ export default VulnerabilityReport;
           title: 'Pexels Video & Images',
           description:
             'All photos and videos on Pexels can be downloaded and used for free.',
+          license_page_id: licensePageIds.main,
           links: JSON.stringify([
             {
               label: 'Video by Google DeepMind',

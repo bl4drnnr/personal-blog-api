@@ -14,12 +14,12 @@ import { ContactPage } from './contact-page.model';
 import { StaticAssetModel } from '@models/static-asset.model';
 
 interface ContactTileCreationAttributes {
-  title?: string;
-  content?: string;
-  link?: string;
-  iconAssetId?: string;
-  sortOrder?: number;
-  contactPageId?: string;
+  title: string;
+  content: string;
+  link: string;
+  iconAssetId: string;
+  sortOrder: number;
+  contactPageId: string;
 }
 
 @Table({ tableName: 'contact_tiles' })
@@ -53,7 +53,7 @@ export class ContactTile extends Model<ContactTile, ContactTileCreationAttribute
   @ForeignKey(() => StaticAssetModel)
   @Column({
     type: DataType.UUID,
-    allowNull: true,
+    allowNull: false,
     field: 'icon_asset_id'
   })
   iconAssetId: string;

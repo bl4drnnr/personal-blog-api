@@ -76,7 +76,11 @@ export class LicenseService {
   }
 
   async createLicenseTile({ data, trx }: CreateLicenseTileInterface) {
-    return await this.licenseTileModel.create(data, { transaction: trx });
+    const licensePage = await this.licensePageModel.findOne();
+    return await this.licenseTileModel.create(
+      { ...data, licensePageId: licensePage.id },
+      { transaction: trx }
+    );
   }
 
   async updateLicenseTile({ tileId, data, trx }: UpdateLicenseTileInterface) {

@@ -16,9 +16,9 @@ import { StaticAssetModel } from './static-asset.model';
 
 interface ExperienceCreationAttributes {
   companyName: string;
-  logoId?: string;
-  companyWebsite?: string;
-  order?: number;
+  logoId: string;
+  companyWebsite: string;
+  order: number;
 }
 
 @Table({ tableName: 'experiences' })
@@ -38,7 +38,7 @@ export class Experience extends Model<Experience, ExperienceCreationAttributes> 
   @ForeignKey(() => StaticAssetModel)
   @Column({
     type: DataType.UUID,
-    allowNull: true,
+    allowNull: false,
     field: 'logo_id'
   })
   logoId: string;
@@ -48,7 +48,7 @@ export class Experience extends Model<Experience, ExperienceCreationAttributes> 
 
   @Column({
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
     field: 'company_website'
   })
   companyWebsite: string;

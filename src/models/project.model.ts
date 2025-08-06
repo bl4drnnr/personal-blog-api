@@ -17,10 +17,10 @@ interface ProjectCreationAttributes {
   slug: string;
   description: string;
   content: string;
-  featuredImage?: string;
-  tags?: Array<string>;
-  featured?: boolean;
-  published?: boolean;
+  featuredImage: string;
+  tags: Array<string>;
+  featured: boolean;
+  published: boolean;
   userId: string;
 }
 
@@ -62,14 +62,14 @@ export class ProjectModel extends Model<ProjectModel, ProjectCreationAttributes>
 
   @Column({
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
     field: 'featured_image'
   })
   featuredImage: string;
 
   @Column({
     type: DataType.ARRAY(DataType.STRING),
-    allowNull: true,
+    allowNull: false,
     field: 'tags'
   })
   tags: Array<string>;

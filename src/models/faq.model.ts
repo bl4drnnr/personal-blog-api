@@ -12,9 +12,9 @@ import {
 interface FaqCreationAttributes {
   question: string;
   answer: string;
-  sortOrder?: number;
-  isActive?: boolean;
-  featured?: boolean;
+  sortOrder: number;
+  isActive: boolean;
+  featured: boolean;
 }
 
 @Table({ tableName: 'faqs' })
@@ -40,7 +40,7 @@ export class Faq extends Model<Faq, FaqCreationAttributes> {
 
   @Column({
     type: DataType.INTEGER,
-    allowNull: true,
+    allowNull: false,
     defaultValue: 0,
     field: 'sort_order'
   })
@@ -48,7 +48,7 @@ export class Faq extends Model<Faq, FaqCreationAttributes> {
 
   @Column({
     type: DataType.BOOLEAN,
-    allowNull: true,
+    allowNull: false,
     defaultValue: true,
     field: 'is_active'
   })

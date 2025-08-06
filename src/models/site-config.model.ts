@@ -14,10 +14,10 @@ interface SiteConfigCreationAttributes {
   siteDescription: string;
   siteAuthor: string;
   siteUrl: string;
-  defaultImage?: string;
-  keywords?: string;
-  socialMedia?: object;
-  organization?: object;
+  defaultImage: string;
+  keywords: string;
+  socialMedia: object;
+  organization: object;
 }
 
 @Table({ tableName: 'site_config' })
@@ -60,28 +60,28 @@ export class SiteConfigModel extends Model<
 
   @Column({
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
     field: 'default_image'
   })
   defaultImage: string;
 
   @Column({
     type: DataType.TEXT,
-    allowNull: true,
+    allowNull: false,
     field: 'keywords'
   })
   keywords: string;
 
   @Column({
     type: DataType.JSONB,
-    allowNull: true,
+    allowNull: false,
     field: 'social_media'
   })
   socialMedia: object;
 
   @Column({
     type: DataType.JSONB,
-    allowNull: true,
+    allowNull: false,
     field: 'organization'
   })
   organization: object;

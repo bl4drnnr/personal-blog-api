@@ -13,14 +13,14 @@ import {
 import { LicensePage } from './license-page.model';
 
 interface LicenseTileCreationAttributes {
-  licensePageId?: string;
+  licensePageId: string;
   title: string;
   description: string;
   links: Array<{
     label: string;
     url: string;
   }>;
-  sortOrder?: number;
+  sortOrder: number;
 }
 
 @Table({ tableName: 'license_tiles' })
@@ -33,7 +33,7 @@ export class LicenseTile extends Model<LicenseTile, LicenseTileCreationAttribute
   @ForeignKey(() => LicensePage)
   @Column({
     type: DataType.UUID,
-    allowNull: true,
+    allowNull: false,
     field: 'license_page_id'
   })
   licensePageId: string;

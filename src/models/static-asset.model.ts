@@ -12,7 +12,7 @@ import {
 interface StaticAssetCreationAttributes {
   name: string;
   s3Url: string;
-  description?: string;
+  description: string;
 }
 
 @Table({ tableName: 'static_assets' })
@@ -41,7 +41,7 @@ export class StaticAssetModel extends Model<
 
   @Column({
     type: DataType.TEXT,
-    allowNull: true,
+    allowNull: false,
     field: 'description'
   })
   description: string;

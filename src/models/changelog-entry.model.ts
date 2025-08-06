@@ -13,13 +13,13 @@ import {
 import { ChangelogPage } from './changelog-page.model';
 
 interface ChangelogEntryCreationAttributes {
-  changelogPageId?: string;
+  changelogPageId: string;
   version: string;
   date: string;
   title: string;
   description: string;
   changes: string[];
-  sortOrder?: number;
+  sortOrder: number;
 }
 
 @Table({ tableName: 'changelog_entries' })
@@ -35,7 +35,7 @@ export class ChangelogEntry extends Model<
   @ForeignKey(() => ChangelogPage)
   @Column({
     type: DataType.UUID,
-    allowNull: true,
+    allowNull: false,
     field: 'changelog_page_id'
   })
   changelogPageId: string;
