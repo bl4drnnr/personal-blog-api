@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { ArticleModel } from '@models/article.model';
 import { ArticleNotFoundException } from '@exceptions/articles/article-not-found.exception';
 import { GetArticleBySlugInterface } from '@interfaces/get-article-by-slug.interface';
@@ -134,8 +135,75 @@ export class ArticlesService {
     return article;
   }
 
-  async getAdminPosts({ userId, published }: GetAdminPostsInterface) {
-    const isPublished = published !== undefined ? published === 'true' : undefined;
-    return this.findByUserId({ userId, published: isPublished });
+  async getAdminPosts({
+    userId,
+    published,
+    query,
+    page = 1,
+    pageSize = 10,
+    order = 'DESC',
+    orderBy = 'createdAt'
+  }: GetAdminPostsInterface) {
+    const isPublished =
+      published !== undefined && published !== '' ? published === 'true' : undefined;
+    console.log('isPublished', isPublished);
+    const whereClause: any = { userId };
+
+    if (isPublished !== undefined) {
+      whereClause.published = isPublished;
+    }
+
+    // Add search functionality
+    if (query) {
+      whereClause[Op.or] = [
+        { title: { [Op.iLike]: `%${query}%` } },
+        { description: { [Op.iLike]: `%${query}%` } },
+        { content: { [Op.iLike]: `%${query}%` } },
+        { slug: { [Op.iLike]: `%${query}%` } }
+      ];
+    }
+
+    // Calculate offset for pagination
+    const offset = (page - 1) * pageSize;
+
+    // Validate orderBy field
+    const allowedOrderFields = [
+      'createdAt',
+      'updatedAt',
+      'title',
+      'published',
+      'featured'
+    ];
+    const validOrderBy = allowedOrderFields.includes(orderBy)
+      ? orderBy
+      : 'createdAt';
+
+    const { count, rows: articles } = await this.articleModel.findAndCountAll({
+      where: whereClause,
+      order: [[validOrderBy, order]],
+      limit: pageSize,
+      offset: offset
+    });
+
+    return {
+      count,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: page,
+      pageSize,
+      rows: articles.map((article) => ({
+        id: article.id,
+        articleName: article.title,
+        articleSlug: article.slug,
+        articleDescription: article.description,
+        articleImage: article.featuredImage,
+        articleTags: article.tags,
+        articlePosted: article.published,
+        createdAt: article.createdAt,
+        updatedAt: article.updatedAt,
+        content: article.content,
+        excerpt: article.excerpt,
+        featured: article.featured
+      }))
+    };
   }
 }

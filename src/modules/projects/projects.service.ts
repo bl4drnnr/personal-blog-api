@@ -10,6 +10,8 @@ import { GetProjectsSlugsInterface } from '@interfaces/get-projects-slugs.interf
 import { UpdateProjectInterface } from '@interfaces/update-project.interface';
 import { DeleteProjectInterface } from '@interfaces/delete-project.interface';
 import { GetProjectsByUserInterface } from '@interfaces/get-projects-by-user.interface';
+import { GetAdminProjectsInterface } from '@interfaces/get-admin-projects.interface';
+import { TogglePublishProjectInterface } from '@interfaces/toggle-publish-project.interface';
 import { StaticAssetsService } from '@modules/static-assets.service';
 
 interface PaginationQuery {
@@ -259,6 +261,94 @@ export class ProjectsService {
       ogDescription: projectsPage.ogDescription,
       ogImageId: projectsPage.ogImageId,
       structuredData: projectsPage.structuredData
+    };
+  }
+
+  async togglePublished(payload: TogglePublishProjectInterface) {
+    const { projectId, trx } = payload;
+
+    const project = await this.projectModel.findByPk(projectId, {
+      transaction: trx
+    });
+
+    if (!project) {
+      throw new ProjectNotFoundException();
+    }
+
+    await project.update({ published: !project.published }, { transaction: trx });
+    await project.reload({ transaction: trx });
+
+    return project;
+  }
+
+  async getAdminProjects({
+    userId,
+    published,
+    query,
+    page = 1,
+    pageSize = 10,
+    order = 'DESC',
+    orderBy = 'createdAt'
+  }: GetAdminProjectsInterface) {
+    const isPublished =
+      published !== undefined && published !== '' ? published === 'true' : undefined;
+
+    const whereClause: any = { userId };
+
+    if (isPublished !== undefined) {
+      whereClause.published = isPublished;
+    }
+
+    // Add search functionality
+    if (query) {
+      whereClause[Op.or] = [
+        { title: { [Op.iLike]: `%${query}%` } },
+        { description: { [Op.iLike]: `%${query}%` } },
+        { content: { [Op.iLike]: `%${query}%` } },
+        { slug: { [Op.iLike]: `%${query}%` } }
+      ];
+    }
+
+    // Calculate offset for pagination
+    const offset = (page - 1) * pageSize;
+
+    // Validate orderBy field
+    const allowedOrderFields = [
+      'createdAt',
+      'updatedAt',
+      'title',
+      'published',
+      'featured'
+    ];
+    const validOrderBy = allowedOrderFields.includes(orderBy)
+      ? orderBy
+      : 'createdAt';
+
+    const { count, rows: projects } = await this.projectModel.findAndCountAll({
+      where: whereClause,
+      order: [[validOrderBy, order]],
+      limit: pageSize,
+      offset: offset
+    });
+
+    return {
+      count,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: page,
+      pageSize,
+      rows: projects.map((project) => ({
+        id: project.id,
+        projectName: project.title,
+        projectSlug: project.slug,
+        projectDescription: project.description,
+        projectImage: project.featuredImage,
+        projectTags: project.tags,
+        projectPosted: project.published,
+        createdAt: project.createdAt,
+        updatedAt: project.updatedAt,
+        content: project.content,
+        featured: project.featured
+      }))
     };
   }
 }

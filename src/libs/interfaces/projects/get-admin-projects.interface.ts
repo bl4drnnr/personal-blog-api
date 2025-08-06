@@ -1,4 +1,4 @@
-export interface GetAdminPostsInterface {
+export interface GetAdminProjectsInterface {
   userId: string;
   published?: string;
   query?: string;

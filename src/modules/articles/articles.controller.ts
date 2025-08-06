@@ -43,18 +43,31 @@ export class ArticlesController {
   // Admin endpoints
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Get('admin/posts')
+  @Get('admin/list-posts')
   async getAdminPosts(
     @UserId() userId: string,
-    @Query('published') published?: string
+    @Query('published') published?: string,
+    @Query('query') query?: string,
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
+    @Query('order') order?: 'ASC' | 'DESC',
+    @Query('orderBy') orderBy?: string
   ) {
-    return this.articlesService.getAdminPosts({ userId, published });
+    return await this.articlesService.getAdminPosts({
+      userId,
+      published,
+      query,
+      page: page ? parseInt(page + 1, 10) : undefined,
+      pageSize: pageSize ? parseInt(pageSize, 10) : undefined,
+      order,
+      orderBy
+    });
   }
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Post('admin/posts')
+  @Post('admin/create-post')
   async createPost(
     @Body() data: CreateArticleDto,
     @UserId() userId: string,
@@ -66,9 +79,9 @@ export class ArticlesController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/posts/:id')
+  @Put('admin/edit-post ')
   async updatePost(
-    @Param('id') articleId: string,
+    @Query('id') articleId: string,
     @Body() data: UpdateArticleDto,
     @TrxDecorator() trx: Transaction
   ) {
@@ -77,7 +90,7 @@ export class ArticlesController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/posts')
+  @Delete('admin/delete-post')
   async deletePost(
     @Query('id') articleId: string,
     @TrxDecorator() trx: Transaction
@@ -87,9 +100,9 @@ export class ArticlesController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Put('admin/posts/:id/publish')
+  @Put('admin/change-post-public-status')
   async togglePublishStatus(
-    @Param('id') articleId: string,
+    @Query('id') articleId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return this.articlesService.togglePublished({ articleId, trx });

@@ -59,15 +59,31 @@ export class ProjectsController {
   // Admin endpoints
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Get('admin/projects')
-  async getAdminProjects(@UserId() userId: string) {
-    return this.projectsService.findByUserId({ userId });
+  @Get('admin/list-projects')
+  async getAdminProjects(
+    @UserId() userId: string,
+    @Query('published') published?: string,
+    @Query('query') query?: string,
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
+    @Query('order') order?: 'ASC' | 'DESC',
+    @Query('orderBy') orderBy?: string
+  ) {
+    return await this.projectsService.getAdminProjects({
+      userId,
+      published,
+      query,
+      page: page ? parseInt(page + 1, 10) : undefined,
+      pageSize: pageSize ? parseInt(pageSize, 10) : undefined,
+      order,
+      orderBy
+    });
   }
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Post('admin/projects')
+  @Post('admin/create-project')
   async createProject(
     @Body() data: CreateProjectDto,
     @UserId() userId: string,
@@ -79,9 +95,9 @@ export class ProjectsController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/projects/:id')
+  @Put('admin/edit-project')
   async updateProject(
-    @Param('id') projectId: string,
+    @Query('id') projectId: string,
     @Body() data: Partial<CreateProjectDto>,
     @TrxDecorator() trx: Transaction
   ) {
@@ -90,11 +106,21 @@ export class ProjectsController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
-  @Delete('admin/projects')
+  @Delete('admin/delete-project')
   async deleteProject(
     @Query('id') projectId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return this.projectsService.delete({ projectId, trx });
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Put('admin/change-project-public-status')
+  async togglePublishStatus(
+    @Query('id') projectId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.projectsService.togglePublished({ projectId, trx });
   }
 }
