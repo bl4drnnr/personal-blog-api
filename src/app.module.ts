@@ -44,7 +44,6 @@ import { HomePage } from '@models/home-page.model';
 import { ContactPage } from '@models/contact-page.model';
 import { ContactTile } from '@models/contact-tile.model';
 import { HomeModule } from '@modules/home/home.module';
-import { BlogModule } from '@modules/blog/blog.module';
 import { BlogPage } from '@models/blog-page.model';
 import { ProjectsPage } from '@models/projects-page.model';
 import { Faq } from '@models/faq.model';
@@ -121,7 +120,6 @@ import { FaqModule } from '@modules/faq/faq.module';
     LicenseModule,
     PrivacyModule,
     HomeModule,
-    BlogModule,
     StaticAssetsModule,
     FaqModule
   ],

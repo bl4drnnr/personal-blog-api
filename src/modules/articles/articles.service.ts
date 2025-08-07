@@ -1,23 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { ArticleModel } from '@models/article.model';
+import { BlogPage } from '@models/blog-page.model';
 import { ArticleNotFoundException } from '@exceptions/articles/article-not-found.exception';
 import { GetArticleBySlugInterface } from '@interfaces/get-article-by-slug.interface';
 import { CreateArticleInterface } from '@interfaces/create-article.interface';
 import { GetPostsSlugsInterface } from '@interfaces/get-posts-slugs.interface';
-import { GetArticlesByUserInterface } from '@interfaces/get-articles-by-user.interface';
 import { UpdateArticleInterface } from '@interfaces/update-article.interface';
 import { DeleteArticleInterface } from '@interfaces/delete-article.interface';
 import { TogglePublishArticleInterface } from '@interfaces/toggle-publish-article.interface';
 import { GetAdminPostsInterface } from '@interfaces/get-admin-posts.interface';
 import { StaticAssetsService } from '@modules/static-assets/static-assets.service';
+import { GetBlogPageDataInterface } from '@interfaces/get-blog-page-data.interface';
 
 @Injectable()
 export class ArticlesService {
   constructor(
     @InjectModel(ArticleModel)
     private readonly articleModel: typeof ArticleModel,
+    @InjectModel(BlogPage)
+    private readonly blogPageModel: typeof BlogPage,
     private readonly staticAssetsService: StaticAssetsService
   ) {}
 
@@ -76,18 +79,6 @@ export class ArticlesService {
       publishDate: post.createdAt,
       tags: post.tags || []
     }));
-  }
-
-  async findByUserId({ userId, published }: GetArticlesByUserInterface) {
-    const whereClause: any = { userId };
-    if (published !== undefined) {
-      whereClause.published = published;
-    }
-
-    return await this.articleModel.findAll({
-      where: whereClause,
-      order: [['createdAt', 'DESC']]
-    });
   }
 
   async update(payload: UpdateArticleInterface) {
@@ -232,6 +223,118 @@ export class ArticlesService {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       userId: post.userId
+    };
+  }
+
+  async getBlogPageData(query: GetBlogPageDataInterface) {
+    const { page, limit, search, tag } = query;
+    const parsedPage = Number(page);
+    const parsedLimit = Number(limit);
+
+    const offset = (parsedPage - 1) * parsedLimit;
+
+    // Build where conditions
+    const whereConditions: any = {
+      published: true
+    };
+
+    if (search) {
+      whereConditions[Op.or] = [
+        { title: { [Op.iLike]: `%${search}%` } },
+        { description: { [Op.iLike]: `%${search}%` } },
+        { excerpt: { [Op.iLike]: `%${search}%` } }
+      ];
+    }
+
+    if (tag) {
+      whereConditions.tags = {
+        [Op.contains]: [tag]
+      };
+    }
+
+    const [blogPage, { rows: articles, count: totalArticles }] = await Promise.all([
+      this.blogPageModel.findOne(),
+      this.articleModel.findAndCountAll({
+        where: whereConditions,
+        order: [['createdAt', 'DESC']],
+        limit: parsedLimit,
+        offset,
+        attributes: [
+          'id',
+          'title',
+          'slug',
+          'description',
+          'excerpt',
+          'featuredImageId',
+          'tags',
+          'createdAt',
+          'updatedAt'
+        ]
+      })
+    ]);
+
+    if (!blogPage) {
+      throw new NotFoundException('Blog page content not found');
+    }
+
+    const totalPages = Math.ceil(totalArticles / parsedLimit);
+    const hasNextPage = parsedPage < totalPages;
+    const hasPrevPage = parsedPage > 1;
+
+    const [processedArticles, heroImageMain, heroImageSecondary, ogImage] =
+      await Promise.all([
+        Promise.all(
+          articles.map(async (article) => ({
+            id: article.id,
+            title: article.title,
+            slug: article.slug,
+            description: article.description,
+            excerpt: article.excerpt,
+            featuredImage: await this.getStaticAsset(article.featuredImageId),
+            tags: article.tags,
+            createdAt: article.createdAt,
+            updatedAt: article.updatedAt
+          }))
+        ),
+        this.getStaticAsset(blogPage.heroImageMainId),
+        this.getStaticAsset(blogPage.heroImageSecondaryId),
+        this.getStaticAsset(blogPage.ogImageId)
+      ]);
+
+    return {
+      pageContent: {
+        title: blogPage.title,
+        subtitle: blogPage.subtitle,
+        description: blogPage.description
+      },
+      layoutData: {
+        footerText: blogPage.footerText,
+        heroImageMain,
+        heroImageSecondary,
+        heroImageMainAlt: blogPage.heroImageMainAlt,
+        heroImageSecondaryAlt: blogPage.heroImageSecondaryAlt,
+        logoText: blogPage.logoText,
+        breadcrumbText: blogPage.breadcrumbText,
+        heroTitle: blogPage.heroTitle
+      },
+      seoData: {
+        metaTitle: blogPage.metaTitle,
+        metaDescription: blogPage.metaDescription,
+        metaKeywords: blogPage.metaKeywords,
+        ogTitle: blogPage.ogTitle,
+        ogDescription: blogPage.ogDescription,
+        ogImage,
+        structuredData: blogPage.structuredData
+      },
+      articles: processedArticles,
+      pagination: {
+        currentPage: parsedPage,
+        totalPages,
+        totalItems: totalArticles,
+        itemsPerPage: parsedLimit,
+        hasNextPage,
+        hasPrevPage
+      }
     };
   }
 

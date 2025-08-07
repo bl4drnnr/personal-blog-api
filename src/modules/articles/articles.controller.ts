@@ -40,6 +40,13 @@ export class ArticlesController {
     return this.articlesService.getPublishedPostBySlug({ slug });
   }
 
+  @Get('blog')
+  async getBlogPage(
+    @Query() query: { page?: string; limit?: string; search?: string }
+  ) {
+    return this.articlesService.getBlogPageData(query);
+  }
+
   // Admin endpoints
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
