@@ -12,6 +12,7 @@ import { DeleteProjectInterface } from '@interfaces/delete-project.interface';
 import { GetProjectsByUserInterface } from '@interfaces/get-projects-by-user.interface';
 import { GetAdminProjectsInterface } from '@interfaces/get-admin-projects.interface';
 import { TogglePublishProjectInterface } from '@interfaces/toggle-publish-project.interface';
+import { ToggleFeaturedProjectInterface } from '@interfaces/toggle-featured-project.interface';
 import { StaticAssetsService } from '@modules/static-assets.service';
 
 interface PaginationQuery {
@@ -61,6 +62,31 @@ export class ProjectsService {
       featuredImage: await this.getStaticAsset(project.featuredImageId),
       featured: project.featured,
       published: project.published
+    };
+  }
+
+  async getProjectBySlugForAdmin({ slug }: GetProjectBySlugInterface) {
+    const project = await this.projectModel.findOne({
+      where: { slug }
+    });
+
+    if (!project) {
+      throw new ProjectNotFoundException();
+    }
+
+    return {
+      id: project.id,
+      slug: project.slug,
+      title: project.title,
+      description: project.description,
+      content: project.content,
+      featuredImageId: project.featuredImageId,
+      tags: project.tags || [],
+      published: project.published,
+      featured: project.featured,
+      createdAt: project.createdAt,
+      updatedAt: project.updatedAt,
+      userId: project.userId
     };
   }
 
@@ -284,6 +310,23 @@ export class ProjectsService {
     }
 
     await project.update({ published: !project.published }, { transaction: trx });
+    await project.reload({ transaction: trx });
+
+    return project;
+  }
+
+  async toggleFeatured(payload: ToggleFeaturedProjectInterface) {
+    const { projectId, trx } = payload;
+
+    const project = await this.projectModel.findByPk(projectId, {
+      transaction: trx
+    });
+
+    if (!project) {
+      throw new ProjectNotFoundException();
+    }
+
+    await project.update({ featured: !project.featured }, { transaction: trx });
     await project.reload({ transaction: trx });
 
     return project;

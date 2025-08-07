@@ -116,11 +116,28 @@ export class ProjectsController {
 
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
+  @Get('admin/get-project')
+  async getProjectForAdmin(@Query('slug') slug: string) {
+    return this.projectsService.getProjectBySlugForAdmin({ slug });
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
   @Put('admin/change-project-public-status')
   async togglePublishStatus(
     @Query('id') projectId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return this.projectsService.togglePublished({ projectId, trx });
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Put('admin/change-project-featured-status')
+  async toggleFeaturedStatus(
+    @Query('id') projectId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.projectsService.toggleFeatured({ projectId, trx });
   }
 }

@@ -19,8 +19,6 @@ export class PrivacyService {
   async getPrivacyPageData() {
     const privacyPage = await this.privacyPageModel.findOne();
 
-    console.log('privacyPage', privacyPage);
-
     if (!privacyPage) {
       throw new NotFoundException('Privacy page content not found');
     }

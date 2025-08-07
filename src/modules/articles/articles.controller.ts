@@ -42,9 +42,11 @@ export class ArticlesController {
 
   @Get('blog')
   async getBlogPage(
-    @Query() query: { page?: string; limit?: string; search?: string }
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string
   ) {
-    return this.articlesService.getBlogPageData(query);
+    return this.articlesService.getBlogPageData({ search, page, limit });
   }
 
   // Admin endpoints
@@ -113,6 +115,16 @@ export class ArticlesController {
     @TrxDecorator() trx: Transaction
   ) {
     return this.articlesService.togglePublished({ articleId, trx });
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Put('admin/change-post-featured-status')
+  async toggleFeaturedStatus(
+    @Query('id') articleId: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return this.articlesService.toggleFeatured({ articleId, trx });
   }
 
   @UseGuards(BasicAuthGuard)

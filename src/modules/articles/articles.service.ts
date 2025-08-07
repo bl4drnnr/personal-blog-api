@@ -10,6 +10,7 @@ import { GetPostsSlugsInterface } from '@interfaces/get-posts-slugs.interface';
 import { UpdateArticleInterface } from '@interfaces/update-article.interface';
 import { DeleteArticleInterface } from '@interfaces/delete-article.interface';
 import { TogglePublishArticleInterface } from '@interfaces/toggle-publish-article.interface';
+import { ToggleFeaturedArticleInterface } from '@interfaces/toggle-featured-article.interface';
 import { GetAdminPostsInterface } from '@interfaces/get-admin-posts.interface';
 import { StaticAssetsService } from '@modules/static-assets/static-assets.service';
 import { GetBlogPageDataInterface } from '@interfaces/get-blog-page-data.interface';
@@ -128,6 +129,23 @@ export class ArticlesService {
     return article;
   }
 
+  async toggleFeatured(payload: ToggleFeaturedArticleInterface) {
+    const { articleId, trx } = payload;
+
+    const article = await this.articleModel.findByPk(articleId, {
+      transaction: trx
+    });
+
+    if (!article) {
+      throw new ArticleNotFoundException();
+    }
+
+    await article.update({ featured: !article.featured }, { transaction: trx });
+    await article.reload({ transaction: trx });
+
+    return article;
+  }
+
   async getAdminPosts({
     userId,
     published,
@@ -139,7 +157,6 @@ export class ArticlesService {
   }: GetAdminPostsInterface) {
     const isPublished =
       published !== undefined && published !== '' ? published === 'true' : undefined;
-    console.log('isPublished', isPublished);
     const whereClause: any = { userId };
 
     if (isPublished !== undefined) {
