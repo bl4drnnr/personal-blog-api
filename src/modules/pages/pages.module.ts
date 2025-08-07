@@ -16,6 +16,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { StaticAssetsService } from '@modules/static-assets/static-assets.service';
 import { S3Service } from '@shared/s3.service';
 import { CryptographicService } from '@shared/cryptographic.service';
+import { StaticAssetsModule } from '@modules/static-assets.module';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { CryptographicService } from '@shared/cryptographic.service';
         secret: configService.jwtAuthConfig.secret
       }),
       inject: [ApiConfigService]
-    })
+    }),
+    StaticAssetsModule
   ],
   controllers: [PagesController],
   providers: [

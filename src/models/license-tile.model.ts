@@ -33,7 +33,7 @@ export class LicenseTile extends Model<LicenseTile, LicenseTileCreationAttribute
   @ForeignKey(() => LicensePage)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'license_page_id'
   })
   licensePageId: string;

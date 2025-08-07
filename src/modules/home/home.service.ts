@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction } from 'sequelize';
 import { HomePage } from '@models/home-page.model';
 import { ProjectModel } from '@models/project.model';
 import { ArticleModel } from '@models/article.model';
 import { Faq } from '@models/faq.model';
 import { WhysSection } from '@models/whys-section.model';
 import { StaticAssetsService } from '@modules/static-assets.service';
-import { CreateWhysSectionDto } from '@dto/whys-section/requests/create-whys-section.dto';
-import { UpdateWhysSectionDto } from '@dto/whys-section/requests/update-whys-section.dto';
+import { CreateWhysSectionServiceInterface } from '../../libs/interfaces/home/create-whys-section-service.interface';
+import { UpdateWhysSectionServiceInterface } from '../../libs/interfaces/home/update-whys-section-service.interface';
+import { DeleteWhysSectionServiceInterface } from '../../libs/interfaces/home/delete-whys-section-service.interface';
 
 @Injectable()
 export class HomeService {
@@ -53,6 +53,36 @@ export class HomeService {
       throw new NotFoundException('Home page content not found');
     }
 
+    const [
+      processedProjects,
+      processedPosts,
+      heroImageMain,
+      heroImageSecondary,
+      ogImage
+    ] = await Promise.all([
+      Promise.all(
+        projects.map(async (project) => ({
+          title: project.title,
+          description: project.description,
+          imageUrl: await this.getStaticAsset(project.featuredImageId),
+          slug: project.slug
+        }))
+      ),
+      Promise.all(
+        posts.map(async (post) => ({
+          title: post.title,
+          description: post.description,
+          excerpt: post.excerpt,
+          imageUrl: await this.getStaticAsset(post.featuredImageId),
+          slug: post.slug,
+          tags: post.tags
+        }))
+      ),
+      this.getStaticAsset(homePage.heroImageMainId),
+      this.getStaticAsset(homePage.heroImageSecondaryId),
+      this.getStaticAsset(homePage.ogImageId)
+    ]);
+
     return {
       pageContent: {
         title: homePage.title,
@@ -67,8 +97,8 @@ export class HomeService {
       },
       layoutData: {
         footerText: homePage.footerText,
-        heroImageMain: await this.getStaticAsset(homePage.heroImageMainId),
-        heroImageSecondary: await this.getStaticAsset(homePage.heroImageSecondaryId),
+        heroImageMain,
+        heroImageSecondary,
         heroImageMainAlt: homePage.heroImageMainAlt,
         heroImageSecondaryAlt: homePage.heroImageSecondaryAlt,
         logoText: homePage.logoText,
@@ -81,23 +111,11 @@ export class HomeService {
         metaKeywords: homePage.metaKeywords,
         ogTitle: homePage.ogTitle,
         ogDescription: homePage.ogDescription,
-        ogImage: await this.getStaticAsset(homePage.ogImageId),
+        ogImage,
         structuredData: homePage.structuredData
       },
-      projects: projects.map((project) => ({
-        title: project.title,
-        description: project.description,
-        imageUrl: project.featuredImage,
-        slug: project.slug
-      })),
-      posts: posts.map((post) => ({
-        title: post.title,
-        description: post.description,
-        excerpt: post.excerpt,
-        imageUrl: post.featuredImage,
-        slug: post.slug,
-        tags: post.tags
-      })),
+      projects: processedProjects,
+      posts: processedPosts,
       faqQuestions: faqQuestions.map((faq) => ({
         question: faq.question,
         answer: faq.answer
@@ -123,13 +141,7 @@ export class HomeService {
     });
   }
 
-  async createWhysSection({
-    data,
-    trx
-  }: {
-    data: CreateWhysSectionDto;
-    trx: Transaction;
-  }) {
+  async createWhysSection({ data, trx }: CreateWhysSectionServiceInterface) {
     return await this.whysSectionModel.create(data, { transaction: trx });
   }
 
@@ -137,11 +149,7 @@ export class HomeService {
     whysSectionId,
     data,
     trx
-  }: {
-    whysSectionId: string;
-    data: UpdateWhysSectionDto;
-    trx: Transaction;
-  }) {
+  }: UpdateWhysSectionServiceInterface) {
     const whysSection = await this.whysSectionModel.findByPk(whysSectionId, {
       transaction: trx
     });
@@ -157,10 +165,7 @@ export class HomeService {
   async deleteWhysSection({
     whysSectionId,
     trx
-  }: {
-    whysSectionId: string;
-    trx: Transaction;
-  }) {
+  }: DeleteWhysSectionServiceInterface) {
     const whysSection = await this.whysSectionModel.findByPk(whysSectionId, {
       transaction: trx
     });

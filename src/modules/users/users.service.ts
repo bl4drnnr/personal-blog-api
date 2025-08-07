@@ -17,6 +17,9 @@ import { PasswordChangedException } from '@exceptions/password-changed.exception
 import { GetUserInfoInterface } from '@interfaces/get-user-info.interface';
 import { GetUserInfoResponseDto } from '@dto/get-user-info-response.dto';
 import { CreateUserSettingsInterface } from '@interfaces/create-user-settings.interface';
+import { GetSecurityInfoInterface } from '@interfaces/get-security-info.interface';
+import { UpdateUserProfileServiceInterface } from '@interfaces/update-user-profile-service.interface';
+import { ChangePasswordServiceInterface } from '@interfaces/change-password-service.interface';
 
 @Injectable()
 export class UsersService {
@@ -121,7 +124,7 @@ export class UsersService {
     });
   }
 
-  async getSecurityInfo({ userId, trx }: { userId: string; trx: any }) {
+  async getSecurityInfo({ userId, trx }: GetSecurityInfoInterface) {
     const user = await this.getUserById({
       id: userId,
       trx
@@ -156,11 +159,7 @@ export class UsersService {
     userId,
     payload,
     trx
-  }: {
-    userId: string;
-    payload: { firstName?: string; lastName?: string; email?: string };
-    trx: any;
-  }) {
+  }: UpdateUserProfileServiceInterface) {
     await this.updateUser({
       userId,
       payload,
@@ -171,15 +170,7 @@ export class UsersService {
     return this.getUserInfo({ userId, trx });
   }
 
-  async changePassword({
-    userId,
-    payload,
-    trx
-  }: {
-    userId: string;
-    payload: { currentPassword: string; newPassword: string };
-    trx: any;
-  }) {
+  async changePassword({ userId, payload, trx }: ChangePasswordServiceInterface) {
     const user = await this.getUserById({ id: userId, trx });
 
     if (!user || !user.password) {

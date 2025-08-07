@@ -406,8 +406,7 @@ module.exports = {
           content: `<h1>Introduction to Cybersecurity</h1>\n<img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=400&fit=crop" alt="Cybersecurity concept with digital locks" />\n<p>Cybersecurity is more important than ever in today's digital world. This article covers the fundamental concepts every professional should know.</p>`,
           excerpt:
             'Learn the fundamentals of cybersecurity including the CIA triad, risk assessment, and common attack vectors.',
-          featured_image:
-            'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=630&fit=crop',
+          featured_image_id: staticAssetIds.asset2,
           tags: ['cybersecurity', 'security', 'fundamentals', 'risk-assessment'],
           published: true,
           user_id: userIds.admin,
@@ -505,8 +504,7 @@ def generate_session_token() -> str:
 </ul>`,
           excerpt:
             'Essential security practices for modern web development including input validation, SQL injection prevention, and proper authentication.',
-          featured_image:
-            'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1200&h=630&fit=crop',
+          featured_image_id: staticAssetIds.asset3,
           tags: [
             'web development',
             'security',
@@ -629,8 +627,7 @@ console.log('Merkle Root:', merkleTree.getRoot());
 </blockquote>`,
           excerpt:
             'A comprehensive exploration of cryptographic hash functions, their mathematical properties, and real-world applications in security.',
-          featured_image:
-            'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&h=630&fit=crop',
+          featured_image_id: staticAssetIds.asset5,
           tags: [
             'cryptography',
             'hash functions',
@@ -661,8 +658,7 @@ console.log('Merkle Root:', merkleTree.getRoot());
 <p><em>Coming soon...</em></p>`,
           excerpt:
             'A work-in-progress article exploring how machine learning enhances cybersecurity threat detection.',
-          featured_image:
-            'https://images.unsplash.com/photo-1555255707-c07966088b7b?w=1200&h=630&fit=crop',
+          featured_image_id: staticAssetIds.asset4,
           tags: [
             'machine learning',
             'AI',
@@ -686,8 +682,7 @@ console.log('Merkle Root:', merkleTree.getRoot());
           description:
             'A real-time security monitoring dashboard built with React and Node.js for comprehensive threat detection.',
           content: `<h1>Security Monitoring Dashboard</h1>\n<img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop" alt="Security monitoring dashboard interface" />\n<p>This project provides real-time monitoring of security events and threats across enterprise infrastructure. Built with modern web technologies for scalability and performance.</p>`,
-          featured_image:
-            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop',
+          featured_image_id: staticAssetIds.asset6,
           tags: [
             'security',
             'monitoring',
@@ -939,8 +934,7 @@ generateRoutes().catch(console.error);
 <li><strong>Testing:</strong> Jest, Karma, Cypress</li>
 <li><strong>Build Tools:</strong> Angular CLI, Webpack</li>
 </ul>`,
-          featured_image:
-            'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&h=630&fit=crop',
+          featured_image_id: staticAssetIds.asset7,
           tags: [
             'web development',
             'blog',
@@ -1245,8 +1239,7 @@ export default VulnerabilityReport;
 <li><strong>Deployment:</strong> Docker, Kubernetes</li>
 <li><strong>API:</strong> FastAPI, OpenAPI documentation</li>
 </ul>`,
-          featured_image:
-            'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=630&fit=crop',
+          featured_image_id: staticAssetIds.asset1,
           tags: [
             'security',
             'automation',

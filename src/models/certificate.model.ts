@@ -62,7 +62,7 @@ export class Certificate extends Model<Certificate, CertificateCreationAttribute
 
   @Column({
     type: DataType.TEXT,
-    allowNull: true,
+    allowNull: false,
     field: 'description'
   })
   description: string;

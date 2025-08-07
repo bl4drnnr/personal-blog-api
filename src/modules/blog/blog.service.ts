@@ -14,6 +14,7 @@ export class BlogService {
     private readonly staticAssetsService: StaticAssetsService
   ) {}
 
+  // TODO FIX THIS ENDPOINT
   async getBlogPageData(query: GetBlogPageDataInterface) {
     const { page, limit, search, tag } = query;
     const parsedPage = Number(page);
@@ -69,6 +70,26 @@ export class BlogService {
     const hasNextPage = parsedPage < totalPages;
     const hasPrevPage = parsedPage > 1;
 
+    const [processedArticles, heroImageMain, heroImageSecondary, ogImage] =
+      await Promise.all([
+        Promise.all(
+          articles.map(async (article) => ({
+            id: article.id,
+            title: article.title,
+            slug: article.slug,
+            description: article.description,
+            excerpt: article.excerpt,
+            featuredImage: await this.getStaticAsset(article.featuredImageId),
+            tags: article.tags,
+            createdAt: article.createdAt,
+            updatedAt: article.updatedAt
+          }))
+        ),
+        this.getStaticAsset(blogPage.heroImageMainId),
+        this.getStaticAsset(blogPage.heroImageSecondaryId),
+        this.getStaticAsset(blogPage.ogImageId)
+      ]);
+
     return {
       pageContent: {
         title: blogPage.title,
@@ -77,8 +98,8 @@ export class BlogService {
       },
       layoutData: {
         footerText: blogPage.footerText,
-        heroImageMain: await this.getStaticAsset(blogPage.heroImageMainId),
-        heroImageSecondary: await this.getStaticAsset(blogPage.heroImageSecondaryId),
+        heroImageMain,
+        heroImageSecondary,
         heroImageMainAlt: blogPage.heroImageMainAlt,
         heroImageSecondaryAlt: blogPage.heroImageSecondaryAlt,
         logoText: blogPage.logoText,
@@ -91,20 +112,10 @@ export class BlogService {
         metaKeywords: blogPage.metaKeywords,
         ogTitle: blogPage.ogTitle,
         ogDescription: blogPage.ogDescription,
-        ogImage: await this.getStaticAsset(blogPage.ogImageId),
+        ogImage,
         structuredData: blogPage.structuredData
       },
-      articles: articles.map((article) => ({
-        id: article.id,
-        title: article.title,
-        slug: article.slug,
-        description: article.description,
-        excerpt: article.excerpt,
-        featuredImage: article.featuredImage,
-        tags: article.tags,
-        createdAt: article.createdAt,
-        updatedAt: article.updatedAt
-      })),
+      articles: processedArticles,
       pagination: {
         currentPage: parsedPage,
         totalPages,

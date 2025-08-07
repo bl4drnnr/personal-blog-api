@@ -11,12 +11,14 @@ import { UpdateArticleInterface } from '@interfaces/update-article.interface';
 import { DeleteArticleInterface } from '@interfaces/delete-article.interface';
 import { TogglePublishArticleInterface } from '@interfaces/toggle-publish-article.interface';
 import { GetAdminPostsInterface } from '@interfaces/get-admin-posts.interface';
+import { StaticAssetsService } from '@modules/static-assets/static-assets.service';
 
 @Injectable()
 export class ArticlesService {
   constructor(
     @InjectModel(ArticleModel)
-    private readonly articleModel: typeof ArticleModel
+    private readonly articleModel: typeof ArticleModel,
+    private readonly staticAssetsService: StaticAssetsService
   ) {}
 
   async create(payload: CreateArticleInterface) {
@@ -55,7 +57,7 @@ export class ArticlesService {
       publishDate: post.createdAt,
       updatedDate: post.updatedAt,
       tags: post.tags || [],
-      featuredImage: post.featuredImage,
+      featuredImage: await this.getStaticAsset(post.featuredImageId),
       excerpt: post.excerpt
     };
   }
@@ -195,7 +197,7 @@ export class ArticlesService {
         articleName: article.title,
         articleSlug: article.slug,
         articleDescription: article.description,
-        articleImage: article.featuredImage,
+        articleImage: article.featuredImageId,
         articleTags: article.tags,
         articlePosted: article.published,
         createdAt: article.createdAt,
@@ -205,5 +207,45 @@ export class ArticlesService {
         featured: article.featured
       }))
     };
+  }
+
+  async getPostBySlugForAdmin({ slug }: GetArticleBySlugInterface) {
+    const post = await this.articleModel.findOne({
+      where: { slug }
+    });
+
+    if (!post) {
+      throw new ArticleNotFoundException();
+    }
+
+    return {
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      description: post.description,
+      content: post.content,
+      excerpt: post.excerpt,
+      featuredImageId: post.featuredImageId,
+      tags: post.tags || [],
+      published: post.published,
+      featured: post.featured,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      userId: post.userId
+    };
+  }
+
+  private async getStaticAsset(assetId: string) {
+    if (!assetId) {
+      return null;
+    }
+
+    try {
+      const asset = await this.staticAssetsService.findById(assetId);
+      return asset.s3Url;
+    } catch (error) {
+      console.warn('Static asset not found:', assetId);
+      return null;
+    }
   }
 }

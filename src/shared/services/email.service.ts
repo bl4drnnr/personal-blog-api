@@ -6,6 +6,7 @@ import { ContactEmailInterface } from '@interfaces/contact-email.interface';
 import { Routes } from '@interfaces/routes.enum';
 import { GetConfirmLinkInterface } from '@interfaces/get-confirm-link.interface';
 import { SendEmailInterface } from '@interfaces/send-email.interface';
+import { SendSubscriptionConfirmationEmailInterface } from '@interfaces/send-subscription-confirmation-email.interface';
 
 @Injectable()
 export class EmailService {
@@ -19,10 +20,7 @@ export class EmailService {
   async sendSubscriptionConfirmationEmail({
     to,
     newslettersId
-  }: {
-    to: string;
-    newslettersId: string;
-  }) {
+  }: SendSubscriptionConfirmationEmailInterface) {
     const link = this.getConfirmationLink({
       route: `${Routes.NEWSLETTERS_CONFIRMATION}/confirmation`,
       hash: newslettersId

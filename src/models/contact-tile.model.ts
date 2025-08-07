@@ -53,7 +53,7 @@ export class ContactTile extends Model<ContactTile, ContactTileCreationAttribute
   @ForeignKey(() => StaticAssetModel)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'icon_asset_id'
   })
   iconAssetId: string;
@@ -72,7 +72,7 @@ export class ContactTile extends Model<ContactTile, ContactTileCreationAttribute
   @ForeignKey(() => ContactPage)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'contact_page_id'
   })
   contactPageId: string;

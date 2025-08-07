@@ -17,7 +17,7 @@ interface ProjectCreationAttributes {
   slug: string;
   description: string;
   content: string;
-  featuredImage: string;
+  featuredImageId: string;
   tags: Array<string>;
   featured: boolean;
   published: boolean;
@@ -61,11 +61,11 @@ export class ProjectModel extends Model<ProjectModel, ProjectCreationAttributes>
   content: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
-    field: 'featured_image'
+    field: 'featured_image_id'
   })
-  featuredImage: string;
+  featuredImageId: string;
 
   @Column({
     type: DataType.ARRAY(DataType.STRING),
@@ -91,7 +91,7 @@ export class ProjectModel extends Model<ProjectModel, ProjectCreationAttributes>
   published: boolean;
 
   @ForeignKey(() => User)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
+  @Column({ type: DataType.UUID, allowNull: true, field: 'user_id' })
   userId: string;
 
   @BelongsTo(() => User)

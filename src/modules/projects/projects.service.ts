@@ -58,7 +58,7 @@ export class ProjectsService {
       content: project.content,
       date: project.createdAt,
       tags: project.tags || [],
-      featuredImage: project.featuredImage,
+      featuredImage: await this.getStaticAsset(project.featuredImageId),
       featured: project.featured,
       published: project.published
     };
@@ -170,6 +170,26 @@ export class ProjectsService {
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
 
+    const [processedProjects, heroImageMain, heroImageSecondary, ogImage] =
+      await Promise.all([
+        Promise.all(
+          projects.map(async (project) => ({
+            id: project.id,
+            title: project.title,
+            slug: project.slug,
+            description: project.description,
+            featuredImage: await this.getStaticAsset(project.featuredImageId),
+            tags: project.tags,
+            featured: project.featured,
+            createdAt: project.createdAt,
+            updatedAt: project.updatedAt
+          }))
+        ),
+        this.getStaticAsset(projectsPage.heroImageMainId),
+        this.getStaticAsset(projectsPage.heroImageSecondaryId),
+        this.getStaticAsset(projectsPage.ogImageId)
+      ]);
+
     return {
       pageContent: {
         title: projectsPage.title,
@@ -178,10 +198,8 @@ export class ProjectsService {
       },
       layoutData: {
         footerText: projectsPage.footerText,
-        heroImageMain: await this.getStaticAsset(projectsPage.heroImageMainId),
-        heroImageSecondary: await this.getStaticAsset(
-          projectsPage.heroImageSecondaryId
-        ),
+        heroImageMain,
+        heroImageSecondary,
         heroImageMainAlt: projectsPage.heroImageMainAlt,
         heroImageSecondaryAlt: projectsPage.heroImageSecondaryAlt,
         logoText: projectsPage.logoText,
@@ -194,20 +212,10 @@ export class ProjectsService {
         metaKeywords: projectsPage.metaKeywords,
         ogTitle: projectsPage.ogTitle,
         ogDescription: projectsPage.ogDescription,
-        ogImage: await this.getStaticAsset(projectsPage.ogImageId),
+        ogImage,
         structuredData: projectsPage.structuredData
       },
-      projects: projects.map((project) => ({
-        id: project.id,
-        title: project.title,
-        slug: project.slug,
-        description: project.description,
-        featuredImage: project.featuredImage,
-        tags: project.tags,
-        featured: project.featured,
-        createdAt: project.createdAt,
-        updatedAt: project.updatedAt
-      })),
+      projects: processedProjects,
       pagination: {
         currentPage: page,
         totalPages,
@@ -341,7 +349,7 @@ export class ProjectsService {
         projectName: project.title,
         projectSlug: project.slug,
         projectDescription: project.description,
-        projectImage: project.featuredImage,
+        projectImage: project.featuredImageId,
         projectTags: project.tags,
         projectPosted: project.published,
         createdAt: project.createdAt,

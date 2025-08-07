@@ -6,6 +6,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ArticleModel } from '@models/article.model';
 import { JwtModule } from '@nestjs/jwt';
 import { ApiConfigService } from '@shared/config.service';
+import { StaticAssetsModule } from '@modules/static-assets.module';
 
 @Module({
   controllers: [ArticlesController],
@@ -18,7 +19,8 @@ import { ApiConfigService } from '@shared/config.service';
         secret: configService.jwtAuthConfig.secret
       }),
       inject: [ApiConfigService]
-    })
+    }),
+    StaticAssetsModule
   ]
 })
 export class ArticlesModule {}

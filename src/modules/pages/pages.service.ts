@@ -7,6 +7,7 @@ import { ProjectModel } from '@models/project.model';
 import { ArticleModel } from '@models/article.model';
 import { Faq } from '@models/faq.model';
 import { WhysSection } from '@models/whys-section.model';
+import { StaticAssetsService } from '@modules/static-assets.service';
 
 @Injectable()
 export class PagesService {
@@ -24,7 +25,8 @@ export class PagesService {
     @InjectModel(Faq)
     private faqModel: typeof Faq,
     @InjectModel(WhysSection)
-    private whysSectionModel: typeof WhysSection
+    private whysSectionModel: typeof WhysSection,
+    private readonly staticAssetsService: StaticAssetsService
   ) {}
 
   // Home page management methods
@@ -91,24 +93,28 @@ export class PagesService {
         ogImageId: homePage.ogImageId,
         structuredData: homePage.structuredData
       },
-      projects: projects.map((project) => ({
-        id: project.id,
-        title: project.title,
-        description: project.description,
-        imageUrl: project.featuredImage,
-        slug: project.slug,
-        featured: project.featured
-      })),
-      posts: posts.map((post) => ({
-        id: post.id,
-        title: post.title,
-        description: post.description,
-        excerpt: post.excerpt,
-        imageUrl: post.featuredImage,
-        slug: post.slug,
-        tags: post.tags,
-        featured: post.featured
-      })),
+      projects: await Promise.all(
+        projects.map(async (project) => ({
+          id: project.id,
+          title: project.title,
+          description: project.description,
+          imageUrl: await this.getStaticAsset(project.featuredImageId),
+          slug: project.slug,
+          featured: project.featured
+        }))
+      ),
+      posts: await Promise.all(
+        posts.map(async (post) => ({
+          id: post.id,
+          title: post.title,
+          description: post.description,
+          excerpt: post.excerpt,
+          imageUrl: await this.getStaticAsset(post.featuredImageId),
+          slug: post.slug,
+          tags: post.tags,
+          featured: post.featured
+        }))
+      ),
       faqQuestions: faqQuestions.map((faq) => ({
         id: faq.id,
         question: faq.question,
@@ -247,5 +253,19 @@ export class PagesService {
     return await this.projectsPageModel.findByPk(projectsPage.id, {
       transaction: trx
     });
+  }
+
+  private async getStaticAsset(assetId: string) {
+    if (!assetId) {
+      return null;
+    }
+
+    try {
+      const asset = await this.staticAssetsService.findById(assetId);
+      return asset.s3Url;
+    } catch (error) {
+      console.warn('Static asset not found:', assetId);
+      return null;
+    }
   }
 }

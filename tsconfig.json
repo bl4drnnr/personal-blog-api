@@ -99,7 +99,8 @@
         "src/libs/interfaces/license/*",
         "src/libs/interfaces/changelog/*",
         "src/libs/interfaces/blog/*",
-        "src/libs/interfaces/about/*"
+        "src/libs/interfaces/about/*",
+        "src/libs/interfaces/faq/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [

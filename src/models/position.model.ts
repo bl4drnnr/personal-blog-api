@@ -73,7 +73,7 @@ export class Position extends Model<Position, PositionCreationAttributes> {
   order: number;
 
   @ForeignKey(() => Experience)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'experience_id' })
+  @Column({ type: DataType.UUID, allowNull: true, field: 'experience_id' })
   experienceId: string;
 
   @BelongsTo(() => Experience)

@@ -38,7 +38,7 @@ export class Experience extends Model<Experience, ExperienceCreationAttributes> 
   @ForeignKey(() => StaticAssetModel)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'logo_id'
   })
   logoId: string;

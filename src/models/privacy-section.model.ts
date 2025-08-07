@@ -32,7 +32,7 @@ export class PrivacySection extends Model<
   @ForeignKey(() => PrivacyPage)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'privacy_page_id'
   })
   privacyPageId: string;

@@ -52,7 +52,7 @@ export class ChangelogPage extends Model<
   @ForeignKey(() => StaticAssetModel)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'hero_image_main_id'
   })
   heroImageMainId: string;
@@ -63,7 +63,7 @@ export class ChangelogPage extends Model<
   @ForeignKey(() => StaticAssetModel)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'hero_image_secondary_id'
   })
   heroImageSecondaryId: string;
@@ -144,7 +144,7 @@ export class ChangelogPage extends Model<
   @ForeignKey(() => StaticAssetModel)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'og_image_id'
   })
   ogImageId: string;

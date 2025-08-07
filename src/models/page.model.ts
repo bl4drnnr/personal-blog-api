@@ -114,7 +114,7 @@ export class PageModel extends Model<PageModel, PageCreationAttributes> {
   published: boolean;
 
   @ForeignKey(() => User)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
+  @Column({ type: DataType.UUID, allowNull: true, field: 'user_id' })
   userId: string;
 
   @BelongsTo(() => User)

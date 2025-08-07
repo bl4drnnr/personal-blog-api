@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { Faq } from '@models/faq.model';
-import { CreateFaqDto } from '@dto/faq/requests/create-faq.dto';
-import { UpdateFaqDto } from '@dto/faq/requests/update-faq.dto';
 import { GetFaqsDto } from '@dto/faq/requests/get-faqs.dto';
+import { CreateFaqServiceInterface } from '@interfaces/create-faq-service.interface';
+import { UpdateFaqServiceInterface } from '@interfaces/update-faq-service.interface';
 
 @Injectable()
 export class FaqService {
@@ -95,7 +95,7 @@ export class FaqService {
     };
   }
 
-  async create({ data, trx }: { data: CreateFaqDto; trx: any }) {
+  async create({ data, trx }: CreateFaqServiceInterface) {
     const faq = await this.faqModel.create(data, { transaction: trx });
 
     return {
@@ -110,7 +110,7 @@ export class FaqService {
     };
   }
 
-  async update({ id, data, trx }: { id: string; data: UpdateFaqDto; trx: any }) {
+  async update({ id, data, trx }: UpdateFaqServiceInterface) {
     const faq = await this.faqModel.findByPk(id);
 
     if (!faq) {

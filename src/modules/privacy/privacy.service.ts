@@ -36,8 +36,6 @@ export class PrivacyService {
       ]
     });
 
-    console.log('sections', sections);
-
     return {
       pageContent: {
         title: privacyPage.title,

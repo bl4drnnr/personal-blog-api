@@ -35,7 +35,7 @@ export class ChangelogEntry extends Model<
   @ForeignKey(() => ChangelogPage)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     field: 'changelog_page_id'
   })
   changelogPageId: string;

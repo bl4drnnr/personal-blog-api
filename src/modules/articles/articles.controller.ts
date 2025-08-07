@@ -79,7 +79,7 @@ export class ArticlesController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Put('admin/edit-post ')
+  @Put('admin/edit-post')
   async updatePost(
     @Query('id') articleId: string,
     @Body() data: UpdateArticleDto,
@@ -106,5 +106,12 @@ export class ArticlesController {
     @TrxDecorator() trx: Transaction
   ) {
     return this.articlesService.togglePublished({ articleId, trx });
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Get('admin/get-post')
+  async getPostForAdmin(@Query('slug') slug: string) {
+    return this.articlesService.getPostBySlugForAdmin({ slug });
   }
 }

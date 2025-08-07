@@ -43,7 +43,7 @@ export class UserSettings extends Model<
   passwordChanged: Date;
 
   @ForeignKey(() => User)
-  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
+  @Column({ type: DataType.UUID, allowNull: true, field: 'user_id' })
   userId: string;
 
   @BelongsTo(() => User)
