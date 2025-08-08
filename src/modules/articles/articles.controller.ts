@@ -90,11 +90,10 @@ export class ArticlesController {
   @UsePipes(ValidationPipe)
   @Put('admin/edit-post')
   async updatePost(
-    @Query('id') articleId: string,
     @Body() data: UpdateArticleDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.articlesService.update({ articleId, data, trx });
+    return this.articlesService.update({ data, trx });
   }
 
   @UseGuards(BasicAuthGuard)

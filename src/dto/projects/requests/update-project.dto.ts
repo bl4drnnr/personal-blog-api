@@ -1,0 +1,23 @@
+import { IsArray, IsString, IsUUID } from 'class-validator';
+
+export class UpdateProjectDto {
+  @IsString()
+  @IsUUID()
+  projectId: string;
+
+  @IsString()
+  projectTitle: string;
+
+  @IsString()
+  projectDescription: string;
+
+  @IsString()
+  projectContent: string;
+
+  @IsString()
+  @IsUUID()
+  projectFeaturedImageId: string;
+
+  @IsArray()
+  projectTags: Array<string>;
+}

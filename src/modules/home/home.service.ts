@@ -49,8 +49,6 @@ export class HomeService {
       ]
     );
 
-    console.log('posts', posts);
-
     if (!homePage) {
       throw new NotFoundException('Home page content not found');
     }

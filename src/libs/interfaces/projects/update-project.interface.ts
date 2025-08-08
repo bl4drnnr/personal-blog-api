@@ -1,8 +1,7 @@
-import { CreateProjectDto } from '@dto/create-project.dto';
 import { Transaction } from 'sequelize';
+import { UpdateProjectDto } from '@dto/update-project.dto';
 
 export interface UpdateProjectInterface {
-  projectId: string;
-  data: Partial<CreateProjectDto>;
+  data: UpdateProjectDto;
   trx: Transaction;
 }

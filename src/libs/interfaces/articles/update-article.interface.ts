@@ -1,8 +1,7 @@
-import { CreateArticleDto } from '@dto/create-article.dto';
 import { Transaction } from 'sequelize';
+import { UpdateArticleDto } from '@dto/update-article.dto';
 
 export interface UpdateArticleInterface {
-  articleId: string;
-  data: Partial<CreateArticleDto>;
+  data: UpdateArticleDto;
   trx: Transaction;
 }

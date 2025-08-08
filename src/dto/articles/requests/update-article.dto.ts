@@ -1,35 +1,23 @@
-import { IsString, IsOptional, IsArray, IsBoolean } from 'class-validator';
+import { IsString, IsArray, IsUUID } from 'class-validator';
 
 export class UpdateArticleDto {
-  @IsOptional()
   @IsString()
-  title?: string;
+  @IsUUID()
+  articleId: string;
 
-  @IsOptional()
   @IsString()
-  slug?: string;
+  articleName: string;
 
-  @IsOptional()
   @IsString()
-  description?: string;
+  articleDescription: string;
 
-  @IsOptional()
   @IsString()
-  content?: string;
+  articleContent: string;
 
-  @IsOptional()
-  @IsString()
-  excerpt?: string;
-
-  @IsOptional()
-  @IsString()
-  featuredImage?: string;
-
-  @IsOptional()
   @IsArray()
-  tags?: Array<string>;
+  articleTags: Array<string>;
 
-  @IsOptional()
-  @IsBoolean()
-  published?: boolean;
+  @IsString()
+  @IsUUID()
+  articlePictureId: string;
 }

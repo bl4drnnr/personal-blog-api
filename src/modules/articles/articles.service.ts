@@ -83,12 +83,22 @@ export class ArticlesService {
   }
 
   async update(payload: UpdateArticleInterface) {
-    const { articleId, data, trx } = payload;
+    const { data, trx } = payload;
+    const articleId = data.articleId;
 
-    const [updatedRowsCount] = await this.articleModel.update(data, {
-      where: { id: articleId },
-      transaction: trx
-    });
+    const [updatedRowsCount] = await this.articleModel.update(
+      {
+        title: data.articleName,
+        description: data.articleDescription,
+        content: data.articleContent,
+        tags: data.articleTags,
+        featuredImageId: data.articlePictureId
+      },
+      {
+        where: { id: articleId },
+        transaction: trx
+      }
+    );
 
     if (updatedRowsCount === 0) {
       throw new ArticleNotFoundException();

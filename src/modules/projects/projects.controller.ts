@@ -18,29 +18,13 @@ import { TrxDecorator } from '@decorators/transaction.decorator';
 import { UserId } from '@decorators/user-id.decorator';
 import { Transaction } from 'sequelize';
 import { BasicAuthGuard } from '@guards/basic-auth.guard';
-
-interface ProjectsQuery {
-  page?: string;
-  limit?: string;
-  search?: string;
-}
+import { UpdateProjectDto } from '@dto/update-project.dto';
 
 @Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   // Public endpoints for frontend
-  @Get('projects')
-  async getProjectsPage(@Query() query: ProjectsQuery) {
-    const { page, limit, search } = query;
-
-    return this.projectsService.getProjectsPageData({
-      page: page ? parseInt(page, 10) : 1,
-      limit: limit ? parseInt(limit, 10) : 12,
-      search
-    });
-  }
-
   @Get('projects/slugs')
   async getProjectsSlugs() {
     return this.projectsService.getSlugs();
@@ -51,9 +35,13 @@ export class ProjectsController {
     return this.projectsService.getProjectBySlug({ slug });
   }
 
-  @Get('projects/featured')
-  async getFeaturedProjects() {
-    return this.projectsService.findFeatured();
+  @Get('projects')
+  async getProjectsPage(
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string
+  ) {
+    return this.projectsService.getProjectsPageData({ page, limit, search });
   }
 
   // Admin endpoints
@@ -97,11 +85,10 @@ export class ProjectsController {
   @UsePipes(ValidationPipe)
   @Put('admin/edit-project')
   async updateProject(
-    @Query('id') projectId: string,
-    @Body() data: Partial<CreateProjectDto>,
+    @Body() data: UpdateProjectDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.projectsService.update({ projectId, data, trx });
+    return this.projectsService.update({ data, trx });
   }
 
   @UseGuards(BasicAuthGuard)

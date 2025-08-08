@@ -9,15 +9,14 @@ import { GetProjectBySlugInterface } from '@interfaces/get-project-by-slug.inter
 import { GetProjectsSlugsInterface } from '@interfaces/get-projects-slugs.interface';
 import { UpdateProjectInterface } from '@interfaces/update-project.interface';
 import { DeleteProjectInterface } from '@interfaces/delete-project.interface';
-import { GetProjectsByUserInterface } from '@interfaces/get-projects-by-user.interface';
 import { GetAdminProjectsInterface } from '@interfaces/get-admin-projects.interface';
 import { TogglePublishProjectInterface } from '@interfaces/toggle-publish-project.interface';
 import { ToggleFeaturedProjectInterface } from '@interfaces/toggle-featured-project.interface';
 import { StaticAssetsService } from '@modules/static-assets.service';
 
 interface PaginationQuery {
-  page?: number;
-  limit?: number;
+  page?: string;
+  limit?: string;
   search?: string;
 }
 
@@ -90,13 +89,6 @@ export class ProjectsService {
     };
   }
 
-  async findFeatured() {
-    return await this.projectModel.findAll({
-      where: { featured: true, published: true },
-      order: [['createdAt', 'DESC']]
-    });
-  }
-
   async getSlugs(): Promise<GetProjectsSlugsInterface[]> {
     const projects = await this.projectModel.findAll({
       where: { published: true },
@@ -114,12 +106,22 @@ export class ProjectsService {
   }
 
   async update(payload: UpdateProjectInterface) {
-    const { projectId, data, trx } = payload;
+    const { data, trx } = payload;
+    const projectId = data.projectId;
 
-    const [updatedRowsCount] = await this.projectModel.update(data, {
-      where: { id: projectId },
-      transaction: trx
-    });
+    const [updatedRowsCount] = await this.projectModel.update(
+      {
+        title: data.projectTitle,
+        description: data.projectDescription,
+        content: data.projectContent,
+        featuredImageId: data.projectFeaturedImageId,
+        tags: data.projectTags
+      },
+      {
+        where: { id: projectId },
+        transaction: trx
+      }
+    );
 
     if (updatedRowsCount === 0) {
       throw new ProjectNotFoundException();
@@ -143,16 +145,12 @@ export class ProjectsService {
     return { message: 'Project deleted successfully' };
   }
 
-  async findByUserId({ userId }: GetProjectsByUserInterface) {
-    return await this.projectModel.findAll({
-      where: { userId },
-      order: [['createdAt', 'DESC']]
-    });
-  }
+  async getProjectsPageData(query: PaginationQuery) {
+    const { page, limit, search } = query;
+    const parsedPage = Number(page);
+    const parsedLimit = Number(limit);
 
-  async getProjectsPageData(query: PaginationQuery = {}) {
-    const { page = 1, limit = 12, search } = query;
-    const offset = (page - 1) * limit;
+    const offset = (parsedPage - 1) * parsedLimit;
 
     // Build where conditions
     const whereConditions: any = {
@@ -172,14 +170,14 @@ export class ProjectsService {
         this.projectModel.findAndCountAll({
           where: whereConditions,
           order: [['createdAt', 'DESC']],
-          limit,
+          limit: parsedLimit,
           offset,
           attributes: [
             'id',
             'title',
             'slug',
             'description',
-            'featuredImage',
+            'featuredImageId',
             'tags',
             'featured',
             'createdAt',
@@ -192,9 +190,9 @@ export class ProjectsService {
       throw new NotFoundException('Projects page content not found');
     }
 
-    const totalPages = Math.ceil(totalProjects / limit);
-    const hasNextPage = page < totalPages;
-    const hasPrevPage = page > 1;
+    const totalPages = Math.ceil(totalProjects / parsedLimit);
+    const hasNextPage = parsedPage < totalPages;
+    const hasPrevPage = parsedPage > 1;
 
     const [processedProjects, heroImageMain, heroImageSecondary, ogImage] =
       await Promise.all([
@@ -243,10 +241,10 @@ export class ProjectsService {
       },
       projects: processedProjects,
       pagination: {
-        currentPage: page,
+        currentPage: parsedPage,
         totalPages,
         totalItems: totalProjects,
-        itemsPerPage: limit,
+        itemsPerPage: parsedLimit,
         hasNextPage,
         hasPrevPage
       }
@@ -265,37 +263,6 @@ export class ProjectsService {
       console.warn('Static asset not found:', assetId);
       return null;
     }
-  }
-
-  async getProjectsPageDataAdmin() {
-    const projectsPage = await this.projectsPageModel.findOne();
-
-    if (!projectsPage) {
-      throw new NotFoundException('Projects page content not found');
-    }
-
-    // Return data with IDs for admin endpoint
-    return {
-      id: projectsPage.id,
-      title: projectsPage.title,
-      subtitle: projectsPage.subtitle,
-      description: projectsPage.description,
-      footerText: projectsPage.footerText,
-      heroImageMainId: projectsPage.heroImageMainId,
-      heroImageSecondaryId: projectsPage.heroImageSecondaryId,
-      heroImageMainAlt: projectsPage.heroImageMainAlt,
-      heroImageSecondaryAlt: projectsPage.heroImageSecondaryAlt,
-      logoText: projectsPage.logoText,
-      breadcrumbText: projectsPage.breadcrumbText,
-      heroTitle: projectsPage.heroTitle,
-      metaTitle: projectsPage.metaTitle,
-      metaDescription: projectsPage.metaDescription,
-      metaKeywords: projectsPage.metaKeywords,
-      ogTitle: projectsPage.ogTitle,
-      ogDescription: projectsPage.ogDescription,
-      ogImageId: projectsPage.ogImageId,
-      structuredData: projectsPage.structuredData
-    };
   }
 
   async togglePublished(payload: TogglePublishProjectInterface) {
