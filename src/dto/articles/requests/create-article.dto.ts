@@ -1,31 +1,24 @@
-import { IsString, IsOptional, IsArray, IsBoolean } from 'class-validator';
+import { IsString, IsArray, IsBoolean, IsUUID } from 'class-validator';
 
 export class CreateArticleDto {
   @IsString()
-  title: string;
+  articleName: string;
 
   @IsString()
-  slug: string;
+  articleDescription: string;
 
   @IsString()
-  description: string;
+  articleContent: string;
 
   @IsString()
-  content: string;
+  articleExcerpt: string;
 
-  @IsOptional()
-  @IsString()
-  excerpt?: string;
+  @IsUUID()
+  articlePictureId: string;
 
-  @IsOptional()
-  @IsString()
-  featuredImage?: string;
-
-  @IsOptional()
   @IsArray()
-  tags?: Array<string>;
+  articleTags: Array<string>;
 
-  @IsOptional()
   @IsBoolean()
-  published?: boolean;
+  articlePublished: boolean;
 }

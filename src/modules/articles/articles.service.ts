@@ -14,6 +14,7 @@ import { ToggleFeaturedArticleInterface } from '@interfaces/toggle-featured-arti
 import { GetAdminPostsInterface } from '@interfaces/get-admin-posts.interface';
 import { StaticAssetsService } from '@modules/static-assets/static-assets.service';
 import { GetBlogPageDataInterface } from '@interfaces/get-blog-page-data.interface';
+import { SlugService } from '@shared/slug.service';
 
 @Injectable()
 export class ArticlesService {
@@ -22,15 +23,49 @@ export class ArticlesService {
     private readonly articleModel: typeof ArticleModel,
     @InjectModel(BlogPage)
     private readonly blogPageModel: typeof BlogPage,
-    private readonly staticAssetsService: StaticAssetsService
+    private readonly staticAssetsService: StaticAssetsService,
+    private readonly slugService: SlugService
   ) {}
 
   async create(payload: CreateArticleInterface) {
     const { data, userId, trx } = payload;
+    const {
+      articleName,
+      articleDescription,
+      articleContent,
+      articleExcerpt,
+      articlePictureId,
+      articleTags,
+      articlePublished
+    } = data;
+
+    // Generate slug from article title
+    const baseSlug = this.slugService.generateSlug(articleName);
+
+    // Check for existing slugs to ensure uniqueness
+    const existingArticles = await this.articleModel.findAll({
+      attributes: ['slug'],
+      where: {
+        slug: {
+          [Op.like]: `${baseSlug}%`
+        }
+      },
+      transaction: trx
+    });
+
+    const existingSlugs = existingArticles.map((article) => article.slug);
+    const uniqueSlug = this.slugService.generateUniqueSlug(baseSlug, existingSlugs);
 
     return await this.articleModel.create(
       {
-        ...data,
+        title: articleName,
+        slug: uniqueSlug,
+        description: articleDescription,
+        content: articleContent,
+        excerpt: articleExcerpt,
+        published: articlePublished,
+        tags: articleTags,
+        featuredImageId: articlePictureId,
         userId
       },
       { transaction: trx }

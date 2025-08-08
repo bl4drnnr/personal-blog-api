@@ -5,13 +5,15 @@ import { UsersModule } from '@modules/users.module';
 import { CryptographicService } from '@shared/cryptographic.service';
 import { TimeService } from '@shared/time.service';
 import { EmailTemplatesService } from '@shared/email-templates.service';
+import { SlugService } from '@shared/slug.service';
 
 const providers = [
   ApiConfigService,
   EmailService,
   CryptographicService,
   TimeService,
-  EmailTemplatesService
+  EmailTemplatesService,
+  SlugService
 ];
 
 @Global()
