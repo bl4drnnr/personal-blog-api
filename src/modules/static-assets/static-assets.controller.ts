@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Post,
   Put,
   Query,
@@ -14,7 +13,6 @@ import { StaticAssetsService } from './static-assets.service';
 import { AuthGuard } from '@guards/auth.guard';
 import { Transaction } from 'sequelize';
 import { TrxDecorator } from '@decorators/transaction.decorator';
-import { CreateStaticAssetDto } from '@dto/static-assets/requests/create-static-asset.dto';
 import { UpdateStaticAssetDto } from '@dto/static-assets/requests/update-static-asset.dto';
 import { UploadFileDto } from '@dto/static-assets/requests/upload-file.dto';
 import { UploadBase64Dto } from '@dto/static-assets/requests/upload-base64.dto';
@@ -56,24 +54,12 @@ export class StaticAssetsController {
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe)
-  @Post('admin/assets/create')
-  async createAsset(
-    @Body() data: CreateStaticAssetDto,
-    @TrxDecorator() trx: Transaction
-  ) {
-    return this.staticAssetsService.create({ data, trx });
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @UseGuards(AuthGuard)
-  @UsePipes(ValidationPipe)
-  @Put('admin/assets/:id/update')
+  @Put('admin/update-asset')
   async updateAsset(
-    @Param('id') id: string,
     @Body() data: UpdateStaticAssetDto,
     @TrxDecorator() trx: Transaction
   ) {
-    return this.staticAssetsService.update({ id, data, trx });
+    return this.staticAssetsService.update({ data, trx });
   }
 
   @UseGuards(BasicAuthGuard)
@@ -113,26 +99,5 @@ export class StaticAssetsController {
       description,
       trx
     });
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @UseGuards(AuthGuard)
-  @UsePipes(ValidationPipe)
-  @Put('admin/assets/:id/update-file')
-  async updateAssetWithFile(
-    @Param('id') id: string,
-    @Body() data: UpdateStaticAssetDto & { base64File?: string },
-    @TrxDecorator() trx: Transaction
-  ) {
-    if (data.base64File) {
-      return this.staticAssetsService.updateFileFromBase64({
-        id,
-        base64File: data.base64File,
-        data,
-        trx
-      });
-    } else {
-      return this.staticAssetsService.update({ id, data, trx });
-    }
   }
 }

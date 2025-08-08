@@ -1,6 +1,10 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsUUID, IsEnum } from 'class-validator';
 
 export class UpdateStaticAssetDto {
+  @IsString()
+  @IsUUID()
+  id: string;
+
   @IsOptional()
   @IsString()
   name?: string;
@@ -12,4 +16,8 @@ export class UpdateStaticAssetDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsOptional()
+  @IsEnum(['icon', 'projectPicture', 'articlePicture', 'staticAsset'])
+  assetType?: 'icon' | 'projectPicture' | 'articlePicture' | 'staticAsset';
 }

@@ -5,11 +5,9 @@ import { Op } from 'sequelize';
 import { S3Service } from '@shared/s3.service';
 import { StaticStorages } from '@interfaces/static-storages.enum';
 import { ListStaticAssetsInterface } from '@interfaces/list-static-assets.interface';
-import { CreateStaticAssetInterface } from '@interfaces/create-static-asset.interface';
 import { UpdateStaticAssetInterface } from '@interfaces/update-static-asset.interface';
 import { DeleteStaticAssetInterface } from '@interfaces/delete-static-asset.interface';
 import { UploadStaticAssetInterface } from '@interfaces/upload-static-asset.interface';
-import { UpdateStaticAssetWithFile } from '@interfaces/update-asset-with-file.interface';
 
 @Injectable()
 export class StaticAssetsService {
@@ -81,13 +79,9 @@ export class StaticAssetsService {
     return asset;
   }
 
-  async create(payload: CreateStaticAssetInterface) {
-    const { data, trx } = payload;
-    return await this.staticAssetModel.create(data, { transaction: trx });
-  }
-
   async update(payload: UpdateStaticAssetInterface) {
-    const { id, data, trx } = payload;
+    const { data, trx } = payload;
+    const id = data.id;
     const asset = await this.findById(id);
     return await asset.update(data, { transaction: trx });
   }
@@ -157,45 +151,5 @@ export class StaticAssetsService {
         { transaction: trx }
       );
     }
-  }
-
-  async updateFileFromBase64(payload: UpdateStaticAssetWithFile) {
-    const { base64File, data, trx, id } = payload;
-
-    const asset = await this.findById(id);
-
-    // Delete old file if exists
-    const oldFileName = asset.s3Url.split('/').pop();
-    if (oldFileName) {
-      await this.s3Service.deleteFile({
-        fileName: oldFileName,
-        folderName: StaticStorages.STATIC_ASSETS
-      });
-    }
-
-    let fileName: string;
-
-    // Determine if it's an image or other file type
-    if (base64File.startsWith('data:image/')) {
-      fileName = await this.s3Service.uploadBase64Image({
-        base64Image: base64File,
-        folderName: StaticStorages.STATIC_ASSETS
-      });
-    } else {
-      fileName = await this.s3Service.uploadBase64File({
-        base64File,
-        folderName: StaticStorages.STATIC_ASSETS
-      });
-    }
-
-    const s3Url = this.s3Service.getFileUrl(fileName, StaticStorages.STATIC_ASSETS);
-
-    return await asset.update(
-      {
-        ...data,
-        s3Url
-      },
-      { transaction: trx }
-    );
   }
 }

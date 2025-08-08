@@ -13,6 +13,7 @@ interface StaticAssetCreationAttributes {
   name: string;
   s3Url: string;
   description: string;
+  assetType: 'icon' | 'projectPicture' | 'articlePicture' | 'staticAsset';
 }
 
 @Table({ tableName: 'static_assets' })
@@ -45,6 +46,13 @@ export class StaticAssetModel extends Model<
     field: 'description'
   })
   description: string;
+
+  @Column({
+    type: DataType.ENUM('icon', 'projectPicture', 'articlePicture', 'staticAsset'),
+    allowNull: false,
+    field: 'asset_type'
+  })
+  assetType: 'icon' | 'projectPicture' | 'articlePicture' | 'staticAsset';
 
   @CreatedAt
   @Column({ field: 'created_at' })

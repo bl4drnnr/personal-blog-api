@@ -195,6 +195,7 @@ module.exports = {
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/jonas-degener-tZT7eyJqkRA-unsplash.jpg',
           description:
             'Abstract gradient background image used for hero sections and main banners.',
+          asset_type: 'staticAsset',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -205,6 +206,7 @@ module.exports = {
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/michiel-annaert-I1cx5LwM5pA-unsplash.jpg',
           description:
             'Technology-themed featured image for blog posts about programming and development.',
+          asset_type: 'articlePicture',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -215,6 +217,7 @@ module.exports = {
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/mike-hindle-BXvcjmM6dH8-unsplash.jpg',
           description:
             'Modern workspace mockup image for showcasing web development projects.',
+          asset_type: 'projectPicture',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -225,6 +228,7 @@ module.exports = {
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/mike-hindle-f75bkyxq7mk-unsplash.jpg',
           description:
             'Professional headshot placeholder for author bio sections and about pages.',
+          asset_type: 'staticAsset',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -235,6 +239,7 @@ module.exports = {
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/mike-yukhtenko-wfh8dDlNFOk-unsplash.jpg',
           description:
             'Cybersecurity-themed banner image with digital locks and security concepts.',
+          asset_type: 'articlePicture',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -245,6 +250,7 @@ module.exports = {
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/pawel-czerwinski-SOHqP5gmvFU-unsplash.jpg',
           description:
             'Clean developer workspace with multiple monitors and modern setup for project showcases.',
+          asset_type: 'projectPicture',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -255,6 +261,7 @@ module.exports = {
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/pawel-czerwinski-tRm520JvK8Q-unsplash.jpg',
           description:
             'Data visualization and analytics dashboard screenshot for monitoring projects.',
+          asset_type: 'projectPicture',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -265,6 +272,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/f451ebc8f5c47e1daf282998f15bfd50.svg',
           description: 'Portal icon for certificate logos',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -274,6 +282,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/ac810f7950e98ad1cf3a46e60fcd82c3.svg',
           description: 'Pose icon for certificate logos',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -283,6 +292,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/965c3cb2aa9bf6f812ef721f73fbac10.svg',
           description: 'S icon for certificate logos',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -292,6 +302,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/25cdd93bd820e36a5ef33820443eea52.svg',
           description: 'Shift icon for certificate logos',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -301,6 +312,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/d1abe10b197577bc3a15ee9efb6f9e21.svg',
           description: 'Split icon for certificate logos',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -310,6 +322,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/eb0327ca2154373f354ab43d5a1af9d3.svg',
           description: 'Sun icon for certificate logos',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -319,6 +332,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/08a78fdd5c643a25c217ad89bbf6460c.svg',
           description: 'Zag icon for certificate logos',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -328,6 +342,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/5941d31eb262701a3f1360406032dc7b.svg',
           description: 'Wing icon for certificate logos',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -338,6 +353,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/fb17aa5686df3ba760d952bc154a7c6b.svg',
           description: 'Email send icon for contact tiles',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -347,6 +363,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/5ba7a221a68eb9f3c158122d585f971a.svg',
           description: 'Phone icon for contact tiles',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -356,6 +373,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/d24fabcd3e01d765bd79e9e0d164a5db.svg',
           description: 'Message icon for contact tiles',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -365,6 +383,7 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/289b442db531f5005720cb2ea84570d1.svg',
           description: 'Map icon for contact tiles',
+          asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
         }
