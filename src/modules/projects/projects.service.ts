@@ -13,6 +13,7 @@ import { GetAdminProjectsInterface } from '@interfaces/get-admin-projects.interf
 import { TogglePublishProjectInterface } from '@interfaces/toggle-publish-project.interface';
 import { ToggleFeaturedProjectInterface } from '@interfaces/toggle-featured-project.interface';
 import { StaticAssetsService } from '@modules/static-assets.service';
+import { SlugService } from '@shared/slug.service';
 
 interface PaginationQuery {
   page?: string;
@@ -27,15 +28,47 @@ export class ProjectsService {
     private readonly projectModel: typeof ProjectModel,
     @InjectModel(ProjectsPage)
     private readonly projectsPageModel: typeof ProjectsPage,
-    private readonly staticAssetsService: StaticAssetsService
+    private readonly staticAssetsService: StaticAssetsService,
+    private readonly slugService: SlugService
   ) {}
 
   async create(payload: CreateProjectInterface) {
     const { data, userId, trx } = payload;
+    const {
+      projectTitle,
+      projectDescription,
+      projectContent,
+      projectFeaturedImageId,
+      projectTags,
+      projectPublished
+    } = data;
+
+    // Generate slug from project title
+    const baseSlug = this.slugService.generateSlug(projectTitle);
+
+    // Check for existing slugs to ensure uniqueness
+    const existingProjects = await this.projectModel.findAll({
+      attributes: ['slug'],
+      where: {
+        slug: {
+          [Op.like]: `${baseSlug}%`
+        }
+      },
+      transaction: trx
+    });
+
+    const existingSlugs = existingProjects.map((project) => project.slug);
+    const uniqueSlug = this.slugService.generateUniqueSlug(baseSlug, existingSlugs);
 
     return await this.projectModel.create(
       {
-        ...data,
+        title: projectTitle,
+        slug: uniqueSlug,
+        description: projectDescription,
+        content: projectContent,
+        published: projectPublished,
+        tags: projectTags,
+        featuredImageId: projectFeaturedImageId,
         userId
       },
       { transaction: trx }

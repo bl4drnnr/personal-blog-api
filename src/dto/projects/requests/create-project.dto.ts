@@ -1,31 +1,21 @@
-import { IsString, IsOptional, IsArray, IsBoolean } from 'class-validator';
+import { IsString, IsArray, IsBoolean } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
-  title: string;
+  projectTitle: string;
 
   @IsString()
-  slug: string;
+  projectDescription: string;
 
   @IsString()
-  description: string;
+  projectContent: string;
 
   @IsString()
-  content: string;
+  projectFeaturedImageId: string;
 
-  @IsOptional()
-  @IsString()
-  featuredImage?: string;
-
-  @IsOptional()
   @IsArray()
-  tags?: Array<string>;
+  projectTags: Array<string>;
 
-  @IsOptional()
   @IsBoolean()
-  featured?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  published?: boolean;
+  projectPublished: boolean;
 }
