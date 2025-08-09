@@ -22,7 +22,7 @@ export class EmailService {
     newslettersId
   }: SendSubscriptionConfirmationEmailInterface) {
     const link = this.getConfirmationLink({
-      route: `${Routes.NEWSLETTERS_CONFIRMATION}/confirmation`,
+      route: Routes.NEWSLETTERS_CONFIRMATION,
       hash: newslettersId
     });
 
