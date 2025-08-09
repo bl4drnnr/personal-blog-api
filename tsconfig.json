@@ -100,7 +100,8 @@
         "src/libs/interfaces/changelog/*",
         "src/libs/interfaces/blog/*",
         "src/libs/interfaces/about/*",
-        "src/libs/interfaces/faq/*"
+        "src/libs/interfaces/faq/*",
+        "src/libs/interfaces/templates/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [

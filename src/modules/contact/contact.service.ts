@@ -16,6 +16,7 @@ import { CreateContactTileDto } from '@dto/contact/requests/create-contact-tile.
 import { UpdateContactTileDto } from '@dto/contact/requests/update-contact-tile.dto';
 import { Op } from 'sequelize';
 import { GetContactMessagesInterface } from '@interfaces/get-contact-messages.interface';
+import { ReplyContactMessageInterface } from '@interfaces/reply-contact-message.interface';
 
 @Injectable()
 export class ContactService {
@@ -270,6 +271,36 @@ export class ContactService {
     }
 
     await contactMessage.destroy();
+  }
+
+  async replyToContactMessage({
+    payload
+  }: ReplyContactMessageInterface): Promise<void> {
+    const { subject, messageId, reply } = payload;
+
+    const contactMessage = await this.contactMessageModel.findByPk(messageId);
+
+    if (!contactMessage) {
+      throw new NotFoundException('Contact message not found');
+    }
+
+    // Send reply email to the user
+    await this.emailService.sendReplyToUser({
+      to: contactMessage.email,
+      userMessage: {
+        name: contactMessage.name,
+        email: contactMessage.email,
+        message: contactMessage.message,
+        createdAt: contactMessage.createdAt
+      },
+      reply,
+      subject
+    });
+
+    // Mark message as read
+    if (!contactMessage.isRead) {
+      await contactMessage.update({ isRead: true });
+    }
   }
 
   // Private helper methods

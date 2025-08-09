@@ -20,6 +20,7 @@ import { UpdateContactPageDto } from '@dto/contact/requests/update-contact-page.
 import { CreateContactTileDto } from '@dto/contact/requests/create-contact-tile.dto';
 import { UpdateContactTileDto } from '@dto/contact/requests/update-contact-tile.dto';
 import { ReorderContactTilesDto } from '@dto/contact/requests/reorder-contact-tiles.dto';
+import { ReplyContactMessageDto } from '@dto/contact/requests/reply-contact-message.dto';
 
 @Controller('contact')
 export class ContactController {
@@ -129,5 +130,13 @@ export class ContactController {
   @Delete('admin/messages/delete')
   async deleteContactMessage(@Query('id') messageId: string) {
     return await this.contactService.deleteContactMessage(messageId);
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @UsePipes(ValidationPipe)
+  @Post('admin/messages/reply')
+  async replyToContactMessage(@Body() payload: ReplyContactMessageDto) {
+    return await this.contactService.replyToContactMessage({ payload });
   }
 }

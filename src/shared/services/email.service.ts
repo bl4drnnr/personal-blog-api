@@ -2,11 +2,11 @@ import * as SendGrid from '@sendgrid/mail';
 import { ApiConfigService } from '@shared/config.service';
 import { EmailTemplatesService } from '@shared/email-templates.service';
 import { Injectable } from '@nestjs/common';
-import { ContactEmailInterface } from '@interfaces/contact-email.interface';
 import { Routes } from '@interfaces/routes.enum';
 import { GetConfirmLinkInterface } from '@interfaces/get-confirm-link.interface';
 import { SendEmailInterface } from '@interfaces/send-email.interface';
 import { SendSubscriptionConfirmationEmailInterface } from '@interfaces/send-subscription-confirmation-email.interface';
+import { SendReplyToUserInterface } from '@interfaces/send-reply-to-user.interface';
 
 @Injectable()
 export class EmailService {
@@ -33,17 +33,19 @@ export class EmailService {
     await this.sendEmail({ to, html, subject });
   }
 
-  async contact({ name, message, email }: ContactEmailInterface) {
-    const contactEmailAddress = this.configService.contactEmailAddress;
-
-    const { html, subject } = this.emailTemplatesService.contactEmailTemplate({
-      name,
-      message,
-      email
+  async sendReplyToUser({
+    to,
+    userMessage,
+    reply,
+    subject
+  }: SendReplyToUserInterface) {
+    const { html } = this.emailTemplatesService.contactReplyTemplate({
+      userMessage,
+      reply
     });
 
     await this.sendEmail({
-      to: contactEmailAddress,
+      to,
       html,
       subject
     });
