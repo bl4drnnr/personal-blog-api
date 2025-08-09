@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Newsletter } from '@models/newsletters.model';
+import { Op } from 'sequelize';
 import { SubscribePage } from '@models/subscribe-page.model';
 import { StaticAssetModel } from '@models/static-asset.model';
 import { SubscribedToNewslettersDto } from '@dto/subscribed-to-newsletters.dto';
@@ -243,5 +244,87 @@ export class NewslettersService {
       .split(',')
       .map((word) => word.trim())
       .filter((word) => word.length > 0);
+  }
+
+  // Admin subscription management endpoints
+  async listSubscriptions(params: {
+    page: string;
+    pageSize: string;
+    order: string;
+    orderBy: string;
+    query?: string;
+    status?: string;
+  }) {
+    const { page, pageSize, order, orderBy, query, status } = params;
+
+    const pageNum = parseInt(page, 10) || 1;
+    const pageSizeNum = parseInt(pageSize, 10) || 10;
+    const offset = (pageNum - 1) * pageSizeNum;
+
+    // Build where clause
+    const whereClause: any = {};
+
+    // Email search filter
+    if (query && query.trim()) {
+      whereClause.email = {
+        [Op.iLike]: `%${query.trim()}%`
+      };
+    }
+
+    // Status filter
+    if (status === 'confirmed') {
+      whereClause.isConfirmed = true;
+    } else if (status === 'unconfirmed') {
+      whereClause.isConfirmed = false;
+    }
+
+    // Build order clause
+    const orderClause: any = [];
+    const validOrderFields = ['email', 'isConfirmed', 'createdAt', 'updatedAt'];
+    const validOrderDirections = ['ASC', 'DESC'];
+
+    const orderField = validOrderFields.includes(orderBy) ? orderBy : 'createdAt';
+    const orderDirection = validOrderDirections.includes(order.toUpperCase())
+      ? order.toUpperCase()
+      : 'DESC';
+
+    orderClause.push([orderField, orderDirection]);
+
+    // Execute query
+    const { count, rows } = await this.newsletterRepository.findAndCountAll({
+      where: whereClause,
+      order: orderClause,
+      limit: pageSizeNum,
+      offset,
+      attributes: ['id', 'email', 'isConfirmed', 'createdAt', 'updatedAt']
+    });
+
+    return {
+      count,
+      rows: rows.map((subscription) => ({
+        id: subscription.id,
+        email: subscription.email,
+        isConfirmed: subscription.isConfirmed,
+        createdAt: subscription.createdAt.toISOString(),
+        updatedAt: subscription.updatedAt.toISOString()
+      }))
+    };
+  }
+
+  async deleteSubscription(id: string, trx?: any) {
+    const subscription = await this.newsletterRepository.findByPk(id, {
+      transaction: trx
+    });
+
+    if (!subscription) {
+      throw new NewslettersNotFoundException();
+    }
+
+    await this.newsletterRepository.destroy({
+      where: { id },
+      transaction: trx
+    });
+
+    return { success: true, message: 'Subscription deleted successfully' };
   }
 }

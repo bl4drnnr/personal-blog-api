@@ -94,18 +94,18 @@ export class ContactController {
   @UseGuards(AuthGuard)
   @Get('admin/messages/list')
   async getContactMessages(
-    @Query('page') page?: string,
-    @Query('pageSize') pageSize?: string,
+    @Query('page') page: string,
+    @Query('pageSize') pageSize: string,
+    @Query('order') order: string,
     @Query('orderBy') orderBy?: string,
-    @Query('order') order?: 'ASC' | 'DESC',
     @Query('query') query?: string,
     @Query('status') status?: string
   ) {
     return await this.contactService.getContactMessages({
-      page: page ? parseInt(page, 10) : 0,
-      pageSize: pageSize ? parseInt(pageSize, 10) : 10,
-      orderBy: orderBy || 'createdAt',
-      order: order || 'DESC',
+      page,
+      pageSize,
+      order,
+      orderBy,
       query,
       status
     });

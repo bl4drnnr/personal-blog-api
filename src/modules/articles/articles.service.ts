@@ -193,13 +193,18 @@ export class ArticlesService {
 
   async getAdminPosts({
     userId,
+    page,
+    pageSize,
+    order,
     published,
     query,
-    page = 1,
-    pageSize = 10,
-    order = 'DESC',
-    orderBy = 'createdAt'
+    orderBy
   }: GetAdminPostsInterface) {
+    // Parse string parameters to numbers
+    const pageNum = parseInt(page, 10) || 1;
+    const pageSizeNum = parseInt(pageSize, 10) || 10;
+    const validOrderBy = orderBy || 'createdAt';
+
     const isPublished =
       published !== undefined && published !== '' ? published === 'true' : undefined;
     const whereClause: any = { userId };
@@ -219,7 +224,7 @@ export class ArticlesService {
     }
 
     // Calculate offset for pagination
-    const offset = (page - 1) * pageSize;
+    const offset = (pageNum - 1) * pageSizeNum;
 
     // Validate orderBy field
     const allowedOrderFields = [
@@ -229,22 +234,22 @@ export class ArticlesService {
       'published',
       'featured'
     ];
-    const validOrderBy = allowedOrderFields.includes(orderBy)
-      ? orderBy
+    const finalOrderBy = allowedOrderFields.includes(validOrderBy)
+      ? validOrderBy
       : 'createdAt';
 
     const { count, rows: articles } = await this.articleModel.findAndCountAll({
       where: whereClause,
-      order: [[validOrderBy, order]],
-      limit: pageSize,
+      order: [[finalOrderBy, order || 'DESC']],
+      limit: pageSizeNum,
       offset: offset
     });
 
     return {
       count,
-      totalPages: Math.ceil(count / pageSize),
-      currentPage: page,
-      pageSize,
+      totalPages: Math.ceil(count / pageSizeNum),
+      currentPage: pageNum,
+      pageSize: pageSizeNum,
       rows: articles.map((article) => ({
         id: article.id,
         articleName: article.title,

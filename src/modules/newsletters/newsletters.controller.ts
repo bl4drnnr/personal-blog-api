@@ -6,7 +6,8 @@ import {
   UsePipes,
   Get,
   Put,
-  UseGuards
+  UseGuards,
+  Delete
 } from '@nestjs/common';
 import { NewslettersService } from '@modules/newsletters/newsletters.service';
 import { TrxDecorator } from '@decorators/transaction.decorator';
@@ -75,5 +76,36 @@ export class NewslettersController {
   @Put('admin/update-subscribe-page')
   async updateSubscribePage(@Body() data: UpdateSubscribePageDto) {
     return await this.newslettersService.updateSubscribePage(data);
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Get('admin/list-subscriptions')
+  async listSubscriptions(
+    @Query('page') page: string,
+    @Query('pageSize') pageSize: string,
+    @Query('order') order: string,
+    @Query('orderBy') orderBy?: string,
+    @Query('query') query?: string,
+    @Query('status') status?: string
+  ) {
+    return await this.newslettersService.listSubscriptions({
+      page,
+      pageSize,
+      order,
+      orderBy,
+      query,
+      status
+    });
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Delete('admin/delete-subscription')
+  async deleteSubscription(
+    @Query('id') id: string,
+    @TrxDecorator() trx: Transaction
+  ) {
+    return await this.newslettersService.deleteSubscription(id, trx);
   }
 }

@@ -1,8 +1,8 @@
 export interface GetContactMessagesInterface {
-  page?: number;
-  pageSize?: number;
+  page: string;
+  pageSize: string;
+  order: string;
   orderBy?: string;
-  order?: 'ASC' | 'DESC';
   query?: string;
   status?: string;
 }

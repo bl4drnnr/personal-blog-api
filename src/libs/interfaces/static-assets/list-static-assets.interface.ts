@@ -1,8 +1,8 @@
 export interface ListStaticAssetsInterface {
+  page: string;
+  pageSize: string;
+  order: string;
   search?: string;
-  page?: string;
-  pageSize?: string;
   orderBy?: string;
-  order?: 'ASC' | 'DESC';
   includePicture?: string;
 }

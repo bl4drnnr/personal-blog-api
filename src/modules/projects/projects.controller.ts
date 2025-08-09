@@ -37,9 +37,9 @@ export class ProjectsController {
 
   @Get('projects')
   async getProjectsPage(
-    @Query('search') search?: string,
-    @Query('page') page?: string,
-    @Query('limit') limit?: string
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('search') search?: string
   ) {
     return this.projectsService.getProjectsPageData({ page, limit, search });
   }
@@ -50,20 +50,20 @@ export class ProjectsController {
   @Get('admin/list-projects')
   async getAdminProjects(
     @UserId() userId: string,
+    @Query('page') page: string,
+    @Query('pageSize') pageSize: string,
+    @Query('order') order: string,
     @Query('published') published?: string,
     @Query('query') query?: string,
-    @Query('page') page?: string,
-    @Query('pageSize') pageSize?: string,
-    @Query('order') order?: 'ASC' | 'DESC',
     @Query('orderBy') orderBy?: string
   ) {
     return await this.projectsService.getAdminProjects({
       userId,
+      page,
+      pageSize,
+      order,
       published,
       query,
-      page: page ? parseInt(page + 1, 10) : undefined,
-      pageSize: pageSize ? parseInt(pageSize, 10) : undefined,
-      order,
       orderBy
     });
   }

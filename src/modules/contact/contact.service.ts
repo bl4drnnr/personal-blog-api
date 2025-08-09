@@ -191,13 +191,18 @@ export class ContactService {
 
   // Contact Messages Management
   async getContactMessages({
-    page = 0,
-    pageSize = 10,
-    orderBy = 'createdAt',
-    order = 'DESC',
+    page,
+    pageSize,
+    order,
+    orderBy,
     query,
     status
   }: GetContactMessagesInterface) {
+    // Parse string parameters to numbers
+    const pageNum = parseInt(page, 10) || 1;
+    const pageSizeNum = parseInt(pageSize, 10) || 10;
+    const validOrderBy = orderBy || 'createdAt';
+
     const whereClause: any = {};
 
     // Handle search query (search in name, email, or message)
@@ -218,28 +223,28 @@ export class ContactService {
       }
     }
 
-    // Calculate offset for pagination
-    const offset = page * pageSize;
+    // Calculate offset for pagination (convert to 0-based index)
+    const offset = (pageNum - 1) * pageSizeNum;
 
     // Validate orderBy field
     const allowedOrderFields = ['createdAt', 'updatedAt', 'name', 'email', 'isRead'];
-    const validOrderBy = allowedOrderFields.includes(orderBy)
-      ? orderBy
+    const finalOrderBy = allowedOrderFields.includes(validOrderBy)
+      ? validOrderBy
       : 'createdAt';
 
     const { count, rows } = await this.contactMessageModel.findAndCountAll({
       where: whereClause,
-      order: [[validOrderBy, order]],
-      limit: pageSize,
+      order: [[finalOrderBy, order || 'DESC']],
+      limit: pageSizeNum,
       offset: offset
     });
 
     return {
       rows,
       count,
-      totalPages: Math.ceil(count / pageSize),
-      currentPage: page,
-      pageSize
+      totalPages: Math.ceil(count / pageSizeNum),
+      currentPage: pageNum,
+      pageSize: pageSizeNum
     };
   }
 

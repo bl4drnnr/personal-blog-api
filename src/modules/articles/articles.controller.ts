@@ -42,9 +42,9 @@ export class ArticlesController {
 
   @Get('blog')
   async getBlogPage(
-    @Query('search') search?: string,
-    @Query('page') page?: string,
-    @Query('limit') limit?: string
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('search') search?: string
   ) {
     return this.articlesService.getBlogPageData({ search, page, limit });
   }
@@ -55,20 +55,20 @@ export class ArticlesController {
   @Get('admin/list-posts')
   async getAdminPosts(
     @UserId() userId: string,
+    @Query('page') page: string,
+    @Query('pageSize') pageSize: string,
+    @Query('order') order: string,
     @Query('published') published?: string,
     @Query('query') query?: string,
-    @Query('page') page?: string,
-    @Query('pageSize') pageSize?: string,
-    @Query('order') order?: 'ASC' | 'DESC',
     @Query('orderBy') orderBy?: string
   ) {
     return await this.articlesService.getAdminPosts({
       userId,
+      page,
+      pageSize,
+      order,
       published,
       query,
-      page: page ? parseInt(page + 1, 10) : undefined,
-      pageSize: pageSize ? parseInt(pageSize, 10) : undefined,
-      order,
       orderBy
     });
   }

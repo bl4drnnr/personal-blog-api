@@ -14,12 +14,7 @@ import { TogglePublishProjectInterface } from '@interfaces/toggle-publish-projec
 import { ToggleFeaturedProjectInterface } from '@interfaces/toggle-featured-project.interface';
 import { StaticAssetsService } from '@modules/static-assets.service';
 import { SlugService } from '@shared/slug.service';
-
-interface PaginationQuery {
-  page?: string;
-  limit?: string;
-  search?: string;
-}
+import { ListProjectsInterface } from '@interfaces/list-projects.interface';
 
 @Injectable()
 export class ProjectsService {
@@ -178,7 +173,7 @@ export class ProjectsService {
     return { message: 'Project deleted successfully' };
   }
 
-  async getProjectsPageData(query: PaginationQuery) {
+  async getProjectsPageData(query: ListProjectsInterface) {
     const { page, limit, search } = query;
     const parsedPage = Number(page);
     const parsedLimit = Number(limit);
@@ -334,13 +329,18 @@ export class ProjectsService {
 
   async getAdminProjects({
     userId,
+    page,
+    pageSize,
+    order,
     published,
     query,
-    page = 1,
-    pageSize = 10,
-    order = 'DESC',
-    orderBy = 'createdAt'
+    orderBy
   }: GetAdminProjectsInterface) {
+    // Parse string parameters to numbers
+    const pageNum = parseInt(page, 10) || 1;
+    const pageSizeNum = parseInt(pageSize, 10) || 10;
+    const validOrderBy = orderBy || 'createdAt';
+
     const isPublished =
       published !== undefined && published !== '' ? published === 'true' : undefined;
 
@@ -361,7 +361,7 @@ export class ProjectsService {
     }
 
     // Calculate offset for pagination
-    const offset = (page - 1) * pageSize;
+    const offset = (pageNum - 1) * pageSizeNum;
 
     // Validate orderBy field
     const allowedOrderFields = [
@@ -371,22 +371,22 @@ export class ProjectsService {
       'published',
       'featured'
     ];
-    const validOrderBy = allowedOrderFields.includes(orderBy)
-      ? orderBy
+    const finalOrderBy = allowedOrderFields.includes(validOrderBy)
+      ? validOrderBy
       : 'createdAt';
 
     const { count, rows: projects } = await this.projectModel.findAndCountAll({
       where: whereClause,
-      order: [[validOrderBy, order]],
-      limit: pageSize,
+      order: [[finalOrderBy, order || 'DESC']],
+      limit: pageSizeNum,
       offset: offset
     });
 
     return {
       count,
-      totalPages: Math.ceil(count / pageSize),
-      currentPage: page,
-      pageSize,
+      totalPages: Math.ceil(count / pageSizeNum),
+      currentPage: pageNum,
+      pageSize: pageSizeNum,
       rows: projects.map((project) => ({
         id: project.id,
         projectName: project.title,

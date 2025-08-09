@@ -27,19 +27,19 @@ export class StaticAssetsController {
   @UseGuards(AuthGuard)
   @Get('admin/assets')
   async getAllAssets(
+    @Query('page') page: string,
+    @Query('pageSize') pageSize: string,
+    @Query('order') order: string,
     @Query('search') search?: string,
-    @Query('page') page?: string,
-    @Query('pageSize') pageSize?: string,
     @Query('orderBy') orderBy?: string,
-    @Query('order') order?: 'ASC' | 'DESC',
     @Query('includePicture') includePicture?: string
   ) {
     return this.staticAssetsService.findAll({
-      search,
       page,
       pageSize,
-      orderBy,
       order,
+      search,
+      orderBy,
       includePicture
     });
   }
