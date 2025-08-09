@@ -5,6 +5,7 @@ import { EmailService } from '@shared/email.service';
 import { ContactedDto } from '@dto/contacted.dto';
 import { ContactPage } from '@models/contact-page.model';
 import { ContactTile } from '@models/contact-tile.model';
+import { ContactMessage } from '@models/contact-message.model';
 import { StaticAssetsService } from '@modules/static-assets.service';
 import {
   ContactPageAdminDto,
@@ -13,12 +14,15 @@ import {
 import { UpdateContactPageInterface } from '@interfaces/contact-page.interface';
 import { CreateContactTileDto } from '@dto/contact/requests/create-contact-tile.dto';
 import { UpdateContactTileDto } from '@dto/contact/requests/update-contact-tile.dto';
+import { Op } from 'sequelize';
+import { GetContactMessagesInterface } from '@interfaces/get-contact-messages.interface';
 
 @Injectable()
 export class ContactService {
   constructor(
     @InjectModel(ContactPage) private contactPageModel: typeof ContactPage,
     @InjectModel(ContactTile) private contactTileModel: typeof ContactTile,
+    @InjectModel(ContactMessage) private contactMessageModel: typeof ContactMessage,
     @Inject(forwardRef(() => EmailService))
     private readonly emailService: EmailService,
     private readonly staticAssetsService: StaticAssetsService
@@ -27,7 +31,11 @@ export class ContactService {
   async contact({ payload }: ContactInterface) {
     const { name, message, email } = payload;
 
-    await this.emailService.contact({ name, message, email });
+    await this.contactMessageModel.create({
+      name,
+      email,
+      message
+    });
 
     return new ContactedDto();
   }
@@ -178,6 +186,90 @@ export class ContactService {
     // Return updated tiles
     const updatedTiles = await this.findContactTiles(contactPage.id);
     return this.mapContactTiles(updatedTiles);
+  }
+
+  // Contact Messages Management
+  async getContactMessages({
+    page = 0,
+    pageSize = 10,
+    orderBy = 'createdAt',
+    order = 'DESC',
+    query,
+    status
+  }: GetContactMessagesInterface) {
+    const whereClause: any = {};
+
+    // Handle search query (search in name, email, or message)
+    if (query && query.trim()) {
+      whereClause[Op.or] = [
+        { name: { [Op.iLike]: `%${query}%` } },
+        { email: { [Op.iLike]: `%${query}%` } },
+        { message: { [Op.iLike]: `%${query}%` } }
+      ];
+    }
+
+    // Handle status filter
+    if (status && status !== '') {
+      if (status === 'read') {
+        whereClause.isRead = true;
+      } else if (status === 'unread') {
+        whereClause.isRead = false;
+      }
+    }
+
+    // Calculate offset for pagination
+    const offset = page * pageSize;
+
+    // Validate orderBy field
+    const allowedOrderFields = ['createdAt', 'updatedAt', 'name', 'email', 'isRead'];
+    const validOrderBy = allowedOrderFields.includes(orderBy)
+      ? orderBy
+      : 'createdAt';
+
+    const { count, rows } = await this.contactMessageModel.findAndCountAll({
+      where: whereClause,
+      order: [[validOrderBy, order]],
+      limit: pageSize,
+      offset: offset
+    });
+
+    return {
+      rows,
+      count,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: page,
+      pageSize
+    };
+  }
+
+  async markMessageAsRead(messageId: string): Promise<void> {
+    const contactMessage = await this.contactMessageModel.findByPk(messageId);
+
+    if (!contactMessage) {
+      throw new NotFoundException('Contact message not found');
+    }
+
+    await contactMessage.update({ isRead: true });
+  }
+
+  async markMessageAsUnread(messageId: string): Promise<void> {
+    const contactMessage = await this.contactMessageModel.findByPk(messageId);
+
+    if (!contactMessage) {
+      throw new NotFoundException('Contact message not found');
+    }
+
+    await contactMessage.update({ isRead: false });
+  }
+
+  async deleteContactMessage(messageId: string): Promise<void> {
+    const contactMessage = await this.contactMessageModel.findByPk(messageId);
+
+    if (!contactMessage) {
+      throw new NotFoundException('Contact message not found');
+    }
+
+    await contactMessage.destroy();
   }
 
   // Private helper methods

@@ -87,4 +87,47 @@ export class ContactController {
   async reorderContactTiles(@Body() data: ReorderContactTilesDto) {
     return await this.contactService.reorderContactTiles(data.tileIds);
   }
+
+  // Contact Messages Management
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Get('admin/messages/list')
+  async getContactMessages(
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
+    @Query('orderBy') orderBy?: string,
+    @Query('order') order?: 'ASC' | 'DESC',
+    @Query('query') query?: string,
+    @Query('status') status?: string
+  ) {
+    return await this.contactService.getContactMessages({
+      page: page ? parseInt(page, 10) : 0,
+      pageSize: pageSize ? parseInt(pageSize, 10) : 10,
+      orderBy: orderBy || 'createdAt',
+      order: order || 'DESC',
+      query,
+      status
+    });
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Put('admin/messages/mark-read')
+  async markMessageAsRead(@Query('id') messageId: string) {
+    return await this.contactService.markMessageAsRead(messageId);
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Put('admin/messages/mark-unread')
+  async markMessageAsUnread(@Query('id') messageId: string) {
+    return await this.contactService.markMessageAsUnread(messageId);
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @UseGuards(AuthGuard)
+  @Delete('admin/messages/delete')
+  async deleteContactMessage(@Query('id') messageId: string) {
+    return await this.contactService.deleteContactMessage(messageId);
+  }
 }
