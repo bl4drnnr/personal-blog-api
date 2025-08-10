@@ -51,6 +51,9 @@ import { WhysSection } from '@models/whys-section.model';
 import { StaticAssetsModule } from '@modules/static-assets/static-assets.module';
 import { StaticAssetModel } from '@models/static-asset.model';
 import { FaqModule } from '@modules/faq/faq.module';
+import { MenuPage } from '@models/menu-page.model';
+import { MenuTile } from '@models/menu-tile.model';
+import { MenuModule } from '@modules/menu/menu.module';
 
 @Module({
   imports: [
@@ -100,7 +103,9 @@ import { FaqModule } from '@modules/faq/faq.module';
         ProjectsPage,
         Faq,
         WhysSection,
-        StaticAssetModel
+        StaticAssetModel,
+        MenuPage,
+        MenuTile
       ],
       autoLoadModels: true
     }),
@@ -121,7 +126,8 @@ import { FaqModule } from '@modules/faq/faq.module';
     PrivacyModule,
     HomeModule,
     StaticAssetsModule,
-    FaqModule
+    FaqModule,
+    MenuModule
   ],
   providers: [
     {

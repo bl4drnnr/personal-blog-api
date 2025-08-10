@@ -152,4 +152,18 @@ export class StaticAssetsService {
       );
     }
   }
+
+  async getStaticAsset(assetId: string) {
+    if (!assetId) {
+      return null;
+    }
+
+    try {
+      const asset = await this.findById(assetId);
+      return asset.s3Url;
+    } catch (error) {
+      console.warn('Static asset not found:', assetId);
+      return null;
+    }
+  }
 }

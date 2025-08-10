@@ -37,7 +37,13 @@ module.exports = {
         asset21: uuidv4(),
         asset22: uuidv4(),
         asset23: uuidv4(),
-        asset24: uuidv4()
+        asset24: uuidv4(),
+        asset25: uuidv4(),
+        asset26: uuidv4(),
+        asset27: uuidv4(),
+        asset28: uuidv4(),
+        asset29: uuidv4(),
+        asset30: uuidv4()
       };
 
       const siteConfigIds = {
@@ -65,14 +71,6 @@ module.exports = {
         exp1: uuidv4(),
         exp2: uuidv4(),
         exp3: uuidv4()
-      };
-
-      const positionIds = {
-        pos1: uuidv4(),
-        pos2: uuidv4(),
-        pos3: uuidv4(),
-        pos4: uuidv4(),
-        pos5: uuidv4()
       };
 
       const certificateIds = {
@@ -140,6 +138,23 @@ module.exports = {
 
       const subscribePageIds = {
         main: uuidv4()
+      };
+
+      const menuPageIds = {
+        main: uuidv4()
+      };
+
+      const menuTileIds = {
+        tile1: uuidv4(),
+        tile2: uuidv4(),
+        tile3: uuidv4(),
+        tile4: uuidv4(),
+        tile5: uuidv4(),
+        tile6: uuidv4(),
+        tile7: uuidv4(),
+        tile8: uuidv4(),
+        tile9: uuidv4(),
+        tile10: uuidv4()
       };
 
       const contactTileIds = {
@@ -383,6 +398,107 @@ module.exports = {
           s3_url:
             'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/289b442db531f5005720cb2ea84570d1.svg',
           description: 'Map icon for contact tiles',
+          asset_type: 'icon',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        // Menu Icon Assets
+        {
+          id: staticAssetIds.asset20,
+          name: 'home-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/home-fill.svg',
+          description: 'Home icon for menu tiles',
+          asset_type: 'icon',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: staticAssetIds.asset21,
+          name: 'image-ai-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/image-ai-fill.svg',
+          description: 'Image AI icon for menu tiles',
+          asset_type: 'icon',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: staticAssetIds.asset22,
+          name: 'article-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/article-fill.svg',
+          description: 'Article icon for menu tiles',
+          asset_type: 'icon',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: staticAssetIds.asset23,
+          name: 'contacts-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/contacts-fill.svg',
+          description: 'Contacts icon for menu tiles',
+          asset_type: 'icon',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: staticAssetIds.asset24,
+          name: 'mail-add-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/mail-add-fill.svg',
+          description: 'Mail add icon for menu tiles',
+          asset_type: 'icon',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: staticAssetIds.asset25,
+          name: 'settings-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/settings-fill.svg',
+          description: 'Settings icon for menu tiles',
+          asset_type: 'icon',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: staticAssetIds.asset26,
+          name: 'file-info-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/file-info-fill.svg',
+          description: 'File info icon for menu tiles',
+          asset_type: 'icon',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: staticAssetIds.asset27,
+          name: 'lock-unlock-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/lock-unlock-fill.svg',
+          description: 'Lock unlock icon for menu tiles',
+          asset_type: 'icon',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: staticAssetIds.asset28,
+          name: 'sticky-note-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/sticky-note-fill.svg',
+          description: 'Sticky note icon for menu tiles',
+          asset_type: 'icon',
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: staticAssetIds.asset29,
+          name: 'layout-fill.svg',
+          s3_url:
+            'https://mikhail-bahdashych-personal-blog.s3.eu-central-1.amazonaws.com/static-assets/layout-fill.svg',
+          description: 'Layout icon for menu tiles',
           asset_type: 'icon',
           created_at: new Date(),
           updated_at: new Date()
@@ -2266,6 +2382,175 @@ export default VulnerabilityReport;
         }
       ]);
 
+      // Create menu page content
+      await queryInterface.bulkInsert('menu_page', [
+        {
+          id: menuPageIds.main,
+          footer_text:
+            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
+          hero_image_main_id: staticAssetIds.asset4,
+          hero_image_main_alt: 'Contemplative Astronaut Woman',
+          logo_text: 'Luch',
+          breadcrumb_text: 'Menu',
+          meta_title: 'Menu - Site Navigation | Personal Blog',
+          meta_description:
+            'Navigate through our site menu to explore all available sections including blog, projects, about, and more.',
+          meta_keywords: 'menu, navigation, sitemap, site structure, browse',
+          og_title: 'Site Menu - Navigation Hub',
+          og_description:
+            'Explore all sections of our website through this comprehensive menu and navigation hub.',
+          og_image_id: staticAssetIds.asset4,
+          structured_data: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'SiteNavigationElement',
+            name: 'Main Site Menu',
+            description: 'Navigation hub for accessing all website sections',
+            url: 'https://example.com/menu',
+            mainEntity: {
+              '@type': 'ItemList',
+              name: 'Navigation Links',
+              numberOfItems: 8
+            }
+          }),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create menu tiles
+      await queryInterface.bulkInsert('menu_tiles', [
+        {
+          id: menuTileIds.tile1,
+          title: 'Homepage',
+          link: '/',
+          icon_id: staticAssetIds.asset20,
+          icon_alt: 'Home',
+          image_id: staticAssetIds.asset4,
+          image_alt: 'Contemplative Astronaut Woman',
+          sort_order: 0,
+          menu_page_id: menuPageIds.main,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: menuTileIds.tile2,
+          title: 'Projects',
+          link: '/projects',
+          icon_id: staticAssetIds.asset21,
+          icon_alt: 'Image AI',
+          image_id: staticAssetIds.asset1,
+          image_alt: 'Abstract Gradient Art',
+          sort_order: 1,
+          menu_page_id: menuPageIds.main,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: menuTileIds.tile3,
+          title: 'Blog',
+          link: '/blog',
+          icon_id: staticAssetIds.asset22,
+          icon_alt: 'Article',
+          image_id: staticAssetIds.asset2,
+          image_alt: 'Futuristic Attire with Neon Green Highlights',
+          sort_order: 2,
+          menu_page_id: menuPageIds.main,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: menuTileIds.tile4,
+          title: 'Contact',
+          link: '/contact',
+          icon_id: staticAssetIds.asset23,
+          icon_alt: 'Contacts',
+          image_id: staticAssetIds.asset3,
+          image_alt: 'Astronaut in Space Suit',
+          sort_order: 3,
+          menu_page_id: menuPageIds.main,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: menuTileIds.tile5,
+          title: 'Subscribe',
+          link: '/subscribe',
+          icon_id: staticAssetIds.asset24,
+          icon_alt: 'Mail Add',
+          image_id: staticAssetIds.asset5,
+          image_alt: 'Satellite Orbiting Earth',
+          sort_order: 4,
+          menu_page_id: menuPageIds.main,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: menuTileIds.tile6,
+          title: 'About Me',
+          link: '/about-me',
+          icon_id: staticAssetIds.asset25,
+          icon_alt: 'Settings',
+          image_id: staticAssetIds.asset6,
+          image_alt: 'Confident Female Astronaut Inside Spacecraft',
+          sort_order: 5,
+          menu_page_id: menuPageIds.main,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: menuTileIds.tile7,
+          title: 'Licenses',
+          link: '/licenses',
+          icon_id: staticAssetIds.asset26,
+          icon_alt: 'File Info',
+          image_id: staticAssetIds.asset7,
+          image_alt: 'Vibrant Abstract Artwork',
+          sort_order: 6,
+          menu_page_id: menuPageIds.main,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: menuTileIds.tile8,
+          title: 'Privacy',
+          link: '/privacy',
+          icon_id: staticAssetIds.asset27,
+          icon_alt: 'Privacy',
+          image_id: staticAssetIds.asset1,
+          image_alt: 'Astronaut on Barren Landscape',
+          sort_order: 7,
+          menu_page_id: menuPageIds.main,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: menuTileIds.tile9,
+          title: 'Changelog',
+          link: '/changelog',
+          icon_id: staticAssetIds.asset28,
+          icon_alt: 'Sticky Note',
+          image_id: staticAssetIds.asset2,
+          image_alt: 'Abstract Wave Artwork',
+          sort_order: 8,
+          menu_page_id: menuPageIds.main,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: menuTileIds.tile10,
+          title: 'Menu',
+          link: '/menu',
+          icon_id: staticAssetIds.asset29,
+          icon_alt: 'Layout',
+          image_id: staticAssetIds.asset3,
+          image_alt: 'Futuristic Cabin Landscape',
+          sort_order: 9,
+          menu_page_id: menuPageIds.main,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
       // Create FAQ questions
       await queryInterface.bulkInsert('faqs', [
         {
@@ -2333,6 +2618,8 @@ export default VulnerabilityReport;
     await queryInterface.bulkDelete('static_assets', null, {});
     await queryInterface.bulkDelete('faqs', null, {});
     await queryInterface.bulkDelete('whys_sections', null, {});
+    await queryInterface.bulkDelete('menu_tiles', null, {});
+    await queryInterface.bulkDelete('menu_page', null, {});
     await queryInterface.bulkDelete('blog_page', null, {});
     await queryInterface.bulkDelete('projects_page', null, {});
     await queryInterface.bulkDelete('home_page', null, {});

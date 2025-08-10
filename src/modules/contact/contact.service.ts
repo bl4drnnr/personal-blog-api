@@ -46,9 +46,9 @@ export class ContactService {
     const contactTiles = await this.findContactTiles(contactPage.id);
 
     const [heroImageMain, heroImageSecondary, ogImage] = await Promise.all([
-      this.getStaticAsset(contactPage.heroImageMainId),
-      this.getStaticAsset(contactPage.heroImageSecondaryId),
-      this.getStaticAsset(contactPage.ogImageId)
+      this.staticAssetsService.getStaticAsset(contactPage.heroImageMainId),
+      this.staticAssetsService.getStaticAsset(contactPage.heroImageSecondaryId),
+      this.staticAssetsService.getStaticAsset(contactPage.ogImageId)
     ]);
 
     return {
@@ -356,19 +356,5 @@ export class ContactService {
       iconUrl: tile.iconAsset?.s3Url || null,
       sortOrder: tile.sortOrder
     }));
-  }
-
-  private async getStaticAsset(assetId: string): Promise<string | null> {
-    if (!assetId) {
-      return null;
-    }
-
-    try {
-      const asset = await this.staticAssetsService.findById(assetId);
-      return asset.s3Url;
-    } catch (error) {
-      console.warn(`Static asset not found: ${assetId}`, error);
-      return null;
-    }
   }
 }

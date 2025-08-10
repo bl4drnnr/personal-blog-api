@@ -86,7 +86,9 @@ export class ProjectsService {
       content: project.content,
       date: project.createdAt,
       tags: project.tags || [],
-      featuredImage: await this.getStaticAsset(project.featuredImageId),
+      featuredImage: await this.staticAssetsService.getStaticAsset(
+        project.featuredImageId
+      ),
       featured: project.featured,
       published: project.published
     };
@@ -230,16 +232,18 @@ export class ProjectsService {
             title: project.title,
             slug: project.slug,
             description: project.description,
-            featuredImage: await this.getStaticAsset(project.featuredImageId),
+            featuredImage: await this.staticAssetsService.getStaticAsset(
+              project.featuredImageId
+            ),
             tags: project.tags,
             featured: project.featured,
             createdAt: project.createdAt,
             updatedAt: project.updatedAt
           }))
         ),
-        this.getStaticAsset(projectsPage.heroImageMainId),
-        this.getStaticAsset(projectsPage.heroImageSecondaryId),
-        this.getStaticAsset(projectsPage.ogImageId)
+        this.staticAssetsService.getStaticAsset(projectsPage.heroImageMainId),
+        this.staticAssetsService.getStaticAsset(projectsPage.heroImageSecondaryId),
+        this.staticAssetsService.getStaticAsset(projectsPage.ogImageId)
       ]);
 
     return {
@@ -277,20 +281,6 @@ export class ProjectsService {
         hasPrevPage
       }
     };
-  }
-
-  private async getStaticAsset(assetId: string) {
-    if (!assetId) {
-      return null;
-    }
-
-    try {
-      const asset = await this.staticAssetsService.findById(assetId);
-      return asset.s3Url;
-    } catch (error) {
-      console.warn('Static asset not found:', assetId);
-      return null;
-    }
   }
 
   async togglePublished(payload: TogglePublishProjectInterface) {

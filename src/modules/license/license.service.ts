@@ -43,8 +43,10 @@ export class LicenseService {
       },
       layoutData: {
         footerText: licensePage.footerText,
-        heroImageMain: await this.getStaticAsset(licensePage.heroImageMainId),
-        heroImageSecondary: await this.getStaticAsset(
+        heroImageMain: await this.staticAssetsService.getStaticAsset(
+          licensePage.heroImageMainId
+        ),
+        heroImageSecondary: await this.staticAssetsService.getStaticAsset(
           licensePage.heroImageSecondaryId
         ),
         heroImageMainAlt: licensePage.heroImageMainAlt,
@@ -59,7 +61,9 @@ export class LicenseService {
         metaKeywords: licensePage.metaKeywords,
         ogTitle: licensePage.ogTitle,
         ogDescription: licensePage.ogDescription,
-        ogImage: await this.getStaticAsset(licensePage.ogImageId),
+        ogImage: await this.staticAssetsService.getStaticAsset(
+          licensePage.ogImageId
+        ),
         structuredData: licensePage.structuredData
       },
       licenseTiles
@@ -148,19 +152,5 @@ export class LicenseService {
     }
 
     return licensePage;
-  }
-
-  private async getStaticAsset(assetId: string) {
-    if (!assetId) {
-      return null;
-    }
-
-    try {
-      const asset = await this.staticAssetsService.findById(assetId);
-      return asset.s3Url;
-    } catch (error) {
-      console.warn('Static asset not found:', assetId);
-      return null;
-    }
   }
 }

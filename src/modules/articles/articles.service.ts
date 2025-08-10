@@ -96,7 +96,9 @@ export class ArticlesService {
       publishDate: post.createdAt,
       updatedDate: post.updatedAt,
       tags: post.tags || [],
-      featuredImage: await this.getStaticAsset(post.featuredImageId),
+      featuredImage: await this.staticAssetsService.getStaticAsset(
+        post.featuredImageId
+      ),
       excerpt: post.excerpt
     };
   }
@@ -357,15 +359,17 @@ export class ArticlesService {
             slug: article.slug,
             description: article.description,
             excerpt: article.excerpt,
-            featuredImage: await this.getStaticAsset(article.featuredImageId),
+            featuredImage: await this.staticAssetsService.getStaticAsset(
+              article.featuredImageId
+            ),
             tags: article.tags,
             createdAt: article.createdAt,
             updatedAt: article.updatedAt
           }))
         ),
-        this.getStaticAsset(blogPage.heroImageMainId),
-        this.getStaticAsset(blogPage.heroImageSecondaryId),
-        this.getStaticAsset(blogPage.ogImageId)
+        this.staticAssetsService.getStaticAsset(blogPage.heroImageMainId),
+        this.staticAssetsService.getStaticAsset(blogPage.heroImageSecondaryId),
+        this.staticAssetsService.getStaticAsset(blogPage.ogImageId)
       ]);
 
     return {
@@ -403,19 +407,5 @@ export class ArticlesService {
         hasPrevPage
       }
     };
-  }
-
-  private async getStaticAsset(assetId: string) {
-    if (!assetId) {
-      return null;
-    }
-
-    try {
-      const asset = await this.staticAssetsService.findById(assetId);
-      return asset.s3Url;
-    } catch (error) {
-      console.warn('Static asset not found:', assetId);
-      return null;
-    }
   }
 }

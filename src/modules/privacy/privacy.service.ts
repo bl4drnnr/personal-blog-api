@@ -46,8 +46,10 @@ export class PrivacyService {
       },
       layoutData: {
         footerText: privacyPage.footerText,
-        heroImageMain: await this.getStaticAsset(privacyPage.heroImageMainId),
-        heroImageSecondary: await this.getStaticAsset(
+        heroImageMain: await this.staticAssetsService.getStaticAsset(
+          privacyPage.heroImageMainId
+        ),
+        heroImageSecondary: await this.staticAssetsService.getStaticAsset(
           privacyPage.heroImageSecondaryId
         ),
         heroImageMainAlt: privacyPage.heroImageMainAlt,
@@ -62,24 +64,12 @@ export class PrivacyService {
         metaKeywords: privacyPage.metaKeywords,
         ogTitle: privacyPage.ogTitle,
         ogDescription: privacyPage.ogDescription,
-        ogImage: await this.getStaticAsset(privacyPage.ogImageId),
+        ogImage: await this.staticAssetsService.getStaticAsset(
+          privacyPage.ogImageId
+        ),
         structuredData: privacyPage.structuredData
       }
     };
-  }
-
-  private async getStaticAsset(assetId: string) {
-    if (!assetId) {
-      return null;
-    }
-
-    try {
-      const asset = await this.staticAssetsService.findById(assetId);
-      return asset.s3Url;
-    } catch (error) {
-      console.warn('Static asset not found:', assetId);
-      return null;
-    }
   }
 
   async getPrivacyPageDataAdmin() {

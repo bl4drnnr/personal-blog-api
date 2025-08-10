@@ -64,7 +64,9 @@ export class HomeService {
         projects.map(async (project) => ({
           title: project.title,
           description: project.description,
-          imageUrl: await this.getStaticAsset(project.featuredImageId),
+          featuredImage: await this.staticAssetsService.getStaticAsset(
+            project.featuredImageId
+          ),
           slug: project.slug
         }))
       ),
@@ -73,14 +75,16 @@ export class HomeService {
           title: post.title,
           description: post.description,
           excerpt: post.excerpt,
-          imageUrl: await this.getStaticAsset(post.featuredImageId),
+          featuredImage: await this.staticAssetsService.getStaticAsset(
+            post.featuredImageId
+          ),
           slug: post.slug,
           tags: post.tags
         }))
       ),
-      this.getStaticAsset(homePage.heroImageMainId),
-      this.getStaticAsset(homePage.heroImageSecondaryId),
-      this.getStaticAsset(homePage.ogImageId)
+      this.staticAssetsService.getStaticAsset(homePage.heroImageMainId),
+      this.staticAssetsService.getStaticAsset(homePage.heroImageSecondaryId),
+      this.staticAssetsService.getStaticAsset(homePage.ogImageId)
     ]);
 
     return {
@@ -176,19 +180,5 @@ export class HomeService {
 
     await whysSection.destroy({ transaction: trx });
     return { message: 'Whys section deleted successfully' };
-  }
-
-  private async getStaticAsset(assetId: string) {
-    if (!assetId) {
-      return null;
-    }
-
-    try {
-      const asset = await this.staticAssetsService.findById(assetId);
-      return asset.s3Url;
-    } catch (error) {
-      console.warn('Static asset not found:', assetId);
-      return null;
-    }
   }
 }

@@ -98,7 +98,9 @@ export class PagesService {
           id: project.id,
           title: project.title,
           description: project.description,
-          imageUrl: await this.getStaticAsset(project.featuredImageId),
+          imageUrl: await this.staticAssetsService.getStaticAsset(
+            project.featuredImageId
+          ),
           slug: project.slug,
           featured: project.featured
         }))
@@ -109,7 +111,9 @@ export class PagesService {
           title: post.title,
           description: post.description,
           excerpt: post.excerpt,
-          imageUrl: await this.getStaticAsset(post.featuredImageId),
+          imageUrl: await this.staticAssetsService.getStaticAsset(
+            post.featuredImageId
+          ),
           slug: post.slug,
           tags: post.tags,
           featured: post.featured
@@ -253,19 +257,5 @@ export class PagesService {
     return await this.projectsPageModel.findByPk(projectsPage.id, {
       transaction: trx
     });
-  }
-
-  private async getStaticAsset(assetId: string) {
-    if (!assetId) {
-      return null;
-    }
-
-    try {
-      const asset = await this.staticAssetsService.findById(assetId);
-      return asset.s3Url;
-    } catch (error) {
-      console.warn('Static asset not found:', assetId);
-      return null;
-    }
   }
 }
