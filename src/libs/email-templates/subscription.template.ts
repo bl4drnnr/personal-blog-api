@@ -1,6 +1,12 @@
 import { baseEmailTemplate } from './subscription/shared/base-template';
 
-export const subscriptionTemplate = ({ link }: { link: string }) => {
+export const subscriptionTemplate = ({
+  link,
+  unsubscribeLink
+}: {
+  link: string;
+  unsubscribeLink: string;
+}) => {
   const content = `
     <!-- Welcome Message -->
     <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
@@ -58,13 +64,28 @@ export const subscriptionTemplate = ({ link }: { link: string }) => {
     <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
         <tbody>
             <tr>
-                <td style="padding:18px 30px 30px 30px; line-height:20px; text-align:center; background-color:#fff;" height="100%" valign="top" bgcolor="#fff" role="module-content">
+                <td style="padding:18px 30px 18px 30px; line-height:20px; text-align:center; background-color:#fff;" height="100%" valign="top" bgcolor="#fff" role="module-content">
                     <div>
                         <div style="font-family: inherit; text-align: center">
                             <span style="color: #666; font-size: 13px">You can unsubscribe at any time by clicking the unsubscribe link in any of our emails.</span>
                         </div>
                         <div style="margin-top: 8px;">
                             <span style="color: #666; font-size: 13px">If you didn't sign up for this newsletter, please ignore this email.</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Unsubscribe Link -->
+    <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
+        <tbody>
+            <tr>
+                <td style="padding:18px 30px 30px 30px; line-height:18px; text-align:center; background-color:#f8f9fa;" height="100%" valign="top" bgcolor="#f8f9fa" role="module-content">
+                    <div>
+                        <div style="font-family: inherit; text-align: center">
+                            <a href="${unsubscribeLink}" style="color: #6c757d; font-size: 12px; text-decoration: underline;" target="_blank">Unsubscribe from this newsletter</a>
                         </div>
                     </div>
                 </td>

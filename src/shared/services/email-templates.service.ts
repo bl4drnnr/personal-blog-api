@@ -10,10 +10,11 @@ import { ContactReplyInterface } from '@interfaces/contact-reply.interface';
 @Injectable()
 export class EmailTemplatesService {
   subscriptionConfirmation({
-    link
+    link,
+    unsubscribeLink
   }: SubscriptionConfirmationInterface): EmailTemplateInterface {
     const subject = 'Personal Blog - Subscription Confirmation';
-    const html = subscriptionTemplate({ link });
+    const html = subscriptionTemplate({ link, unsubscribeLink });
     return { html, subject };
   }
 

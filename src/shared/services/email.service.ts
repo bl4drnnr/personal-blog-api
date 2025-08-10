@@ -26,8 +26,14 @@ export class EmailService {
       hash: newslettersId
     });
 
+    const unsubscribeLink = this.getConfirmationLink({
+      route: Routes.NEWSLETTERS_UNSUBSCRIBE,
+      hash: newslettersId
+    });
+
     const { html, subject } = this.emailTemplatesService.subscriptionConfirmation({
-      link
+      link,
+      unsubscribeLink
     });
 
     await this.sendEmail({ to, html, subject });
