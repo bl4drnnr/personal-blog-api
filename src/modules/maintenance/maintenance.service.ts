@@ -28,7 +28,8 @@ export class MaintenanceService {
       heroImage: heroImageUrl,
       heroTitle: maintenanceMode.heroTitle,
       footerText: maintenanceMode.footerText,
-      title: maintenanceMode.title
+      title: maintenanceMode.title,
+      metaTitle: maintenanceMode.metaTitle
     };
   }
 
@@ -48,7 +49,8 @@ export class MaintenanceService {
         heroImageId: randomAsset,
         heroTitle: 'Maintenance',
         footerText: 'Site is under maintenance',
-        title: 'Under Maintenance'
+        title: 'Under Maintenance',
+        metaTitle: 'Site Under Maintenance'
       });
     }
 
@@ -85,6 +87,9 @@ export class MaintenanceService {
     }
     if (data.title !== undefined) {
       updateData.title = data.title;
+    }
+    if (data.metaTitle !== undefined) {
+      updateData.metaTitle = data.metaTitle;
     }
 
     if (Object.keys(updateData).length > 0) {

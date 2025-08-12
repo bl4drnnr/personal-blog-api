@@ -32,4 +32,8 @@ export class UpdateMaintenanceModeDto {
   @IsOptional()
   @IsString()
   title?: string;
+
+  @IsOptional()
+  @IsString()
+  metaTitle?: string;
 }

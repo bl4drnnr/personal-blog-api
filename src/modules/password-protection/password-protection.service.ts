@@ -10,6 +10,7 @@ import { ApiConfigService } from '@shared/config.service';
 import { VerifyPasswordInterface } from '@interfaces/verify-password.interface';
 import { UpdatePasswordProtectionInterface } from '@interfaces/update-password-protection.interface';
 import { WrongCredentialsException } from '@exceptions/wrong-credentials.exception';
+import { PasswordProtectionDisabledException } from '@exceptions/password-protection-disabled.exception';
 
 @Injectable()
 export class PasswordProtectionService {
@@ -25,7 +26,7 @@ export class PasswordProtectionService {
 
   async getPasswordProtectionStatus() {
     const settings = await this.passwordProtectionRepository.findOne({
-      attributes: ['isActive', 'heroTitle', 'footerText'],
+      attributes: ['isActive', 'heroTitle', 'footerText', 'metaTitle'],
       include: [
         {
           model: StaticAssetModel,
@@ -40,7 +41,8 @@ export class PasswordProtectionService {
         isActive: false,
         heroTitle: 'Site Protected',
         footerText: 'Please contact administrator for access',
-        heroImage: null
+        heroImage: null,
+        metaTitle: 'Site Protected'
       };
     }
 
@@ -48,7 +50,8 @@ export class PasswordProtectionService {
       isActive: settings.isActive,
       heroTitle: settings.heroTitle,
       footerText: settings.footerText,
-      heroImage: settings.heroImage.s3Url
+      heroImage: settings.heroImage.s3Url,
+      metaTitle: settings.metaTitle
     };
   }
 
@@ -58,7 +61,7 @@ export class PasswordProtectionService {
     });
 
     if (!settings || !settings.isActive) {
-      throw new WrongCredentialsException();
+      throw new PasswordProtectionDisabledException();
     }
 
     const isPasswordValid = await this.cryptographicService.comparePasswords({
@@ -105,24 +108,25 @@ export class PasswordProtectionService {
       ]
     });
 
+    // TODO: DO THE SAME AS WITH MAINTENANCE MODE
     if (!settings) {
       return {
         isActive: false,
-        password: '',
         durationHours: 24,
         heroImageId: '',
         heroTitle: 'Site Protected',
-        footerText: 'Please contact administrator for access'
+        footerText: 'Please contact administrator for access',
+        metaTitle: 'Site Protected'
       };
     }
 
     return {
       isActive: settings.isActive,
-      password: '', // Never return the actual password
       durationHours: settings.durationHours,
       heroImageId: settings.heroImageId,
       heroTitle: settings.heroTitle,
-      footerText: settings.footerText
+      footerText: settings.footerText,
+      metaTitle: settings.metaTitle
     };
   }
 
@@ -131,8 +135,15 @@ export class PasswordProtectionService {
     userId,
     trx
   }: UpdatePasswordProtectionInterface) {
-    const { isActive, password, durationHours, heroImageId, heroTitle, footerText } =
-      data;
+    const {
+      isActive,
+      password,
+      durationHours,
+      heroImageId,
+      heroTitle,
+      footerText,
+      metaTitle
+    } = data;
 
     let hashedPassword = '';
     if (password) {
@@ -153,6 +164,7 @@ export class PasswordProtectionService {
           heroImageId,
           heroTitle,
           footerText,
+          metaTitle,
           userId
         },
         {
@@ -177,7 +189,8 @@ export class PasswordProtectionService {
           durationHours,
           heroImageId,
           heroTitle,
-          footerText
+          footerText,
+          metaTitle
         },
         { transaction: trx }
       );

@@ -40,7 +40,8 @@
         "src/exceptions/home/*",
         "src/exceptions/license/*",
         "src/exceptions/menu/*",
-        "src/exceptions/privacy/*"
+        "src/exceptions/privacy/*",
+        "src/exceptions/password-protection/*"
       ],
       "@dto/*": [
         "src/dto/*",

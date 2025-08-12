@@ -20,6 +20,7 @@ interface MaintenanceModeCreationAttributes {
   heroTitle: string;
   footerText: string;
   title: string;
+  metaTitle: string;
 }
 
 @Table({ tableName: 'maintenance_mode' })
@@ -97,4 +98,11 @@ export class MaintenanceMode extends Model<
     field: 'title'
   })
   title: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'meta_title'
+  })
+  metaTitle: string;
 }

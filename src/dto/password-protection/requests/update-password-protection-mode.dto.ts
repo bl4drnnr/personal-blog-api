@@ -33,4 +33,8 @@ export class UpdatePasswordProtectionModeDto {
   @IsOptional()
   @IsString()
   footerText?: string;
+
+  @IsOptional()
+  @IsString()
+  metaTitle?: string;
 }
