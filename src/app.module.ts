@@ -57,6 +57,8 @@ import { MenuModule } from '@modules/menu/menu.module';
 import { ContactMessage } from '@models/contact-message.model';
 import { MaintenanceMode } from '@models/maintenance-mode.model';
 import { MaintenanceModule } from '@modules/maintenance/maintenance.module';
+import { PasswordProtectionMode } from '@models/password-protection-mode.model';
+import { PasswordProtectionModule } from '@modules/password-protection/password-protection.module';
 
 @Module({
   imports: [
@@ -110,7 +112,8 @@ import { MaintenanceModule } from '@modules/maintenance/maintenance.module';
         MenuPage,
         MenuTile,
         ContactMessage,
-        MaintenanceMode
+        MaintenanceMode,
+        PasswordProtectionMode
       ],
       autoLoadModels: true
     }),
@@ -133,7 +136,8 @@ import { MaintenanceModule } from '@modules/maintenance/maintenance.module';
     StaticAssetsModule,
     FaqModule,
     MenuModule,
-    MaintenanceModule
+    MaintenanceModule,
+    PasswordProtectionModule
   ],
   providers: [
     {

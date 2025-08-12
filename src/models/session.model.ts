@@ -15,6 +15,7 @@ import { User } from '@models/user.model';
 interface SessionCreationAttributes {
   tokenId: string;
   userId: string;
+  tokenType?: string;
 }
 
 @Table({
@@ -39,6 +40,14 @@ export class Session extends Model<Session, SessionCreationAttributes> {
 
   @BelongsTo(() => User)
   user: User;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'token_type',
+    defaultValue: 'refresh'
+  })
+  tokenType: string;
 
   @CreatedAt
   @Column({ field: 'created_at' })
