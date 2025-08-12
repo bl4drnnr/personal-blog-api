@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { ChangelogPage } from '@models/changelog-page.model';
 import { ChangelogEntry } from '@models/changelog-entry.model';
@@ -7,6 +7,8 @@ import { CreateChangelogEntryInterface } from '@interfaces/create-changelog-entr
 import { UpdateChangelogEntryInterface } from '@interfaces/update-changelog-entry.interface';
 import { DeleteChangelogEntryInterface } from '@interfaces/delete-changelog-entry.interface';
 import { UpdateChangelogPageInterface } from '@interfaces/update-changelog-page.interface';
+import { ChangelogPageContentNotFoundException } from '@exceptions/changelog-page-content-not-found.exception';
+import { ChangelogEntryNotFoundException } from '@exceptions/changelog-entry-not-found.exception';
 
 @Injectable()
 export class ChangelogService {
@@ -45,7 +47,7 @@ export class ChangelogService {
     ]);
 
     if (!changelogPage) {
-      throw new NotFoundException('Changelog page content not found');
+      throw new ChangelogPageContentNotFoundException();
     }
 
     return {
@@ -94,7 +96,7 @@ export class ChangelogService {
     });
 
     if (!changelogPage) {
-      throw new NotFoundException('Changelog page content not found');
+      throw new ChangelogPageContentNotFoundException();
     }
 
     return {
@@ -133,7 +135,7 @@ export class ChangelogService {
     const entry = await this.changelogEntryModel.findByPk(entryId);
 
     if (!entry) {
-      throw new NotFoundException('Changelog entry not found');
+      throw new ChangelogEntryNotFoundException();
     }
 
     await entry.update(data, { transaction: trx });
@@ -144,7 +146,7 @@ export class ChangelogService {
     const entry = await this.changelogEntryModel.findByPk(entryId);
 
     if (!entry) {
-      throw new NotFoundException('Changelog entry not found');
+      throw new ChangelogEntryNotFoundException();
     }
 
     await entry.destroy({ transaction: trx });

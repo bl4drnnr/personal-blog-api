@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { HomePage } from '@models/home-page.model';
 import { ProjectModel } from '@models/project.model';
@@ -9,6 +9,8 @@ import { StaticAssetsService } from '@modules/static-assets.service';
 import { CreateWhysSectionServiceInterface } from '../../libs/interfaces/home/create-whys-section-service.interface';
 import { UpdateWhysSectionServiceInterface } from '../../libs/interfaces/home/update-whys-section-service.interface';
 import { DeleteWhysSectionServiceInterface } from '../../libs/interfaces/home/delete-whys-section-service.interface';
+import { HomeContentNotFoundException } from '@exceptions/home-content-not-found.exception';
+import { WhysSectionNotFoundException } from '@exceptions/whys-section-not-found.exception';
 
 @Injectable()
 export class HomeService {
@@ -50,7 +52,7 @@ export class HomeService {
     );
 
     if (!homePage) {
-      throw new NotFoundException('Home page content not found');
+      throw new HomeContentNotFoundException();
     }
 
     const [
@@ -159,7 +161,7 @@ export class HomeService {
     });
 
     if (!whysSection) {
-      throw new NotFoundException('Whys section not found');
+      throw new WhysSectionNotFoundException();
     }
 
     await whysSection.update(data, { transaction: trx });
@@ -175,7 +177,7 @@ export class HomeService {
     });
 
     if (!whysSection) {
-      throw new NotFoundException('Whys section not found');
+      throw new WhysSectionNotFoundException();
     }
 
     await whysSection.destroy({ transaction: trx });

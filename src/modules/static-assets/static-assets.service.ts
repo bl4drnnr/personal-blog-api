@@ -8,6 +8,7 @@ import { ListStaticAssetsInterface } from '@interfaces/list-static-assets.interf
 import { UpdateStaticAssetInterface } from '@interfaces/update-static-asset.interface';
 import { DeleteStaticAssetInterface } from '@interfaces/delete-static-asset.interface';
 import { UploadStaticAssetInterface } from '@interfaces/upload-static-asset.interface';
+import { AssetNotFoundException } from '@exceptions/asset-not-found.exception';
 
 @Injectable()
 export class StaticAssetsService {
@@ -74,7 +75,7 @@ export class StaticAssetsService {
   async findById(id: string) {
     const asset = await this.staticAssetModel.findByPk(id);
     if (!asset) {
-      throw new Error('Static asset not found');
+      throw new AssetNotFoundException();
     }
     return asset;
   }

@@ -20,6 +20,7 @@ import { CreateUserSettingsInterface } from '@interfaces/create-user-settings.in
 import { GetSecurityInfoInterface } from '@interfaces/get-security-info.interface';
 import { UpdateUserProfileServiceInterface } from '@interfaces/update-user-profile-service.interface';
 import { ChangePasswordServiceInterface } from '@interfaces/change-password-service.interface';
+import { UserNotFoundException } from '@exceptions/user-not-found.exception';
 
 @Injectable()
 export class UsersService {
@@ -131,7 +132,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new UserNotFoundException();
     }
 
     return {

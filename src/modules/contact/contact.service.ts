@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { ContactInterface } from '@interfaces/contact.interface';
 import { EmailService } from '@shared/email.service';
@@ -17,6 +17,9 @@ import { UpdateContactTileDto } from '@dto/contact/requests/update-contact-tile.
 import { Op } from 'sequelize';
 import { GetContactMessagesInterface } from '@interfaces/get-contact-messages.interface';
 import { ReplyContactMessageInterface } from '@interfaces/reply-contact-message.interface';
+import { ContactTileNotFoundException } from '@exceptions/contact-tile-not-found.exception';
+import { ContactMessageNotFoundException } from '@exceptions/contact-message-not-found.exception';
+import { ContactPageNotFoundException } from '@exceptions/contact-page-not-found.exception';
 
 @Injectable()
 export class ContactService {
@@ -156,7 +159,7 @@ export class ContactService {
     const contactTile = await this.contactTileModel.findByPk(data.id);
 
     if (!contactTile) {
-      throw new NotFoundException('Contact tile not found');
+      throw new ContactTileNotFoundException();
     }
 
     await contactTile.update(data);
@@ -167,7 +170,7 @@ export class ContactService {
     const contactTile = await this.contactTileModel.findByPk(tileId);
 
     if (!contactTile) {
-      throw new NotFoundException('Contact tile not found');
+      throw new ContactTileNotFoundException();
     }
 
     await contactTile.destroy();
@@ -252,7 +255,7 @@ export class ContactService {
     const contactMessage = await this.contactMessageModel.findByPk(messageId);
 
     if (!contactMessage) {
-      throw new NotFoundException('Contact message not found');
+      throw new ContactMessageNotFoundException();
     }
 
     await contactMessage.update({ isRead: true });
@@ -262,7 +265,7 @@ export class ContactService {
     const contactMessage = await this.contactMessageModel.findByPk(messageId);
 
     if (!contactMessage) {
-      throw new NotFoundException('Contact message not found');
+      throw new ContactMessageNotFoundException();
     }
 
     await contactMessage.update({ isRead: false });
@@ -272,7 +275,7 @@ export class ContactService {
     const contactMessage = await this.contactMessageModel.findByPk(messageId);
 
     if (!contactMessage) {
-      throw new NotFoundException('Contact message not found');
+      throw new ContactMessageNotFoundException();
     }
 
     await contactMessage.destroy();
@@ -286,7 +289,7 @@ export class ContactService {
     const contactMessage = await this.contactMessageModel.findByPk(messageId);
 
     if (!contactMessage) {
-      throw new NotFoundException('Contact message not found');
+      throw new ContactMessageNotFoundException();
     }
 
     // Send reply email to the user
@@ -313,7 +316,7 @@ export class ContactService {
     const contactPage = await this.contactPageModel.findOne();
 
     if (!contactPage) {
-      throw new NotFoundException('Contact page not found');
+      throw new ContactPageNotFoundException();
     }
 
     return contactPage;

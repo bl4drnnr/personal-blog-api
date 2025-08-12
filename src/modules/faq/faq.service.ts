@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { Faq } from '@models/faq.model';
 import { GetFaqsDto } from '@dto/faq/requests/get-faqs.dto';
 import { CreateFaqServiceInterface } from '@interfaces/create-faq-service.interface';
 import { UpdateFaqServiceInterface } from '@interfaces/update-faq-service.interface';
+import { FaqNotFoundException } from '@exceptions/faq-not-found.exception';
 
 @Injectable()
 export class FaqService {
@@ -80,7 +81,7 @@ export class FaqService {
     const faq = await this.faqModel.findByPk(id);
 
     if (!faq) {
-      throw new NotFoundException('FAQ not found');
+      throw new FaqNotFoundException();
     }
 
     return {
@@ -114,7 +115,7 @@ export class FaqService {
     const faq = await this.faqModel.findByPk(id);
 
     if (!faq) {
-      throw new NotFoundException('FAQ not found');
+      throw new FaqNotFoundException();
     }
 
     await this.faqModel.update(data, {
@@ -140,7 +141,7 @@ export class FaqService {
     const faq = await this.faqModel.findByPk(id);
 
     if (!faq) {
-      throw new NotFoundException('FAQ not found');
+      throw new FaqNotFoundException();
     }
 
     await this.faqModel.destroy({

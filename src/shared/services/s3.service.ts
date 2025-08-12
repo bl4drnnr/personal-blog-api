@@ -4,6 +4,7 @@ import { ApiConfigService } from './config.service';
 import { CryptographicService } from './cryptographic.service';
 import { CryptoHashAlgorithm } from '@interfaces/crypto-hash-algorithm.enum';
 import { StaticStorages } from '@interfaces/static-storages.enum';
+import { InvalidFormatException } from '@exceptions/invalid-format.exception';
 
 export interface UploadFileInterface {
   file: Express.Multer.File;
@@ -68,9 +69,7 @@ export class S3Service {
     // Validate image format
     const type = base64Image.split(';')[0].split('/')[1];
     if (!['png', 'jpg', 'jpeg', 'svg+xml'].includes(type)) {
-      throw new Error(
-        'Invalid image format. Only PNG, JPG, JPEG, and SVG are allowed.'
-      );
+      throw new InvalidFormatException();
     }
 
     const base64Data = Buffer.from(
@@ -118,7 +117,7 @@ export class S3Service {
     // Extract MIME type and data from base64 string
     const matches = base64File.match(/^data:([^;]+);base64,(.+)$/);
     if (!matches) {
-      throw new Error('Invalid base64 file format');
+      throw new InvalidFormatException();
     }
 
     const mimeType = matches[1];

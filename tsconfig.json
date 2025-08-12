@@ -31,7 +31,16 @@
         "src/exceptions/newsletters/*",
         "src/exceptions/projects/*",
         "src/exceptions/site-config/*",
-        "src/exceptions/pages/*"
+        "src/exceptions/pages/*",
+        "src/exceptions/static-assets/*",
+        "src/exceptions/about/*",
+        "src/exceptions/changelog/*",
+        "src/exceptions/contact/*",
+        "src/exceptions/faq/*",
+        "src/exceptions/home/*",
+        "src/exceptions/license/*",
+        "src/exceptions/menu/*",
+        "src/exceptions/privacy/*"
       ],
       "@dto/*": [
         "src/dto/*",

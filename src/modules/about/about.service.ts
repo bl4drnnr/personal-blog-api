@@ -17,6 +17,9 @@ import { CreatePositionInterface } from '@interfaces/create-position.interface';
 import { UpdatePositionInterface } from '@interfaces/update-position.interface';
 import { DeletePositionInterface } from '@interfaces/delete-position.interface';
 import { StaticAssetsService } from '@modules/static-assets.service';
+import { AboutPageNotFoundException } from '@exceptions/about-page-not-found.exception';
+import { ExperienceNotFoundException } from '@exceptions/experience-not-found.exception';
+import { CertNotFoundException } from '@exceptions/cert-not-found.exception';
 
 @Injectable()
 export class AboutService {
@@ -54,7 +57,7 @@ export class AboutService {
     ]);
 
     if (!aboutPage) {
-      throw new NotFoundException('About page content not found');
+      throw new AboutPageNotFoundException();
     }
 
     // Fetch actual images using asset IDs
@@ -129,7 +132,7 @@ export class AboutService {
     const aboutPage = await this.aboutPageModel.findOne();
 
     if (!aboutPage) {
-      throw new NotFoundException('About page content not found');
+      throw new AboutPageNotFoundException();
     }
 
     // Return data matching the AboutPageData interface exactly
@@ -163,7 +166,7 @@ export class AboutService {
     const aboutPage = await this.aboutPageModel.findByPk(aboutPageId);
 
     if (!aboutPage) {
-      throw new NotFoundException('About page not found');
+      throw new AboutPageNotFoundException();
     }
 
     await aboutPage.update(data, { transaction: trx });
@@ -244,7 +247,7 @@ export class AboutService {
     const experience = await this.experienceModel.findByPk(experienceId);
 
     if (!experience) {
-      throw new NotFoundException('Experience not found');
+      throw new ExperienceNotFoundException();
     }
 
     const { positions, ...experienceData } = data as CreateExperienceDto;
@@ -280,7 +283,7 @@ export class AboutService {
     const experience = await this.experienceModel.findByPk(experienceId);
 
     if (!experience) {
-      throw new NotFoundException('Experience not found');
+      throw new ExperienceNotFoundException();
     }
 
     await this.positionModel.destroy({
@@ -344,7 +347,7 @@ export class AboutService {
     const certificate = await this.certificateModel.findByPk(certificateId);
 
     if (!certificate) {
-      throw new NotFoundException('Certificate not found');
+      throw new CertNotFoundException();
     }
 
     await certificate.update(data, { transaction: trx });
@@ -355,7 +358,7 @@ export class AboutService {
     const certificate = await this.certificateModel.findByPk(certificateId);
 
     if (!certificate) {
-      throw new NotFoundException('Certificate not found');
+      throw new CertNotFoundException();
     }
 
     await certificate.destroy({ transaction: trx });
@@ -366,7 +369,7 @@ export class AboutService {
     const experience = await this.experienceModel.findByPk(experienceId);
 
     if (!experience) {
-      throw new NotFoundException('Experience not found');
+      throw new ExperienceNotFoundException();
     }
 
     return await this.positionModel.create(

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { PrivacyPage } from '@models/privacy-page.model';
 import { PrivacySection } from '@models/privacy-section.model';
@@ -7,6 +7,8 @@ import { CreatePrivacySectionInterface } from '@interfaces/create-privacy-sectio
 import { UpdatePrivacySection } from '@interfaces/update-privacy-section.interface';
 import { DeletePrivacySectionInterface } from '@interfaces/delete-privacy-section.interface';
 import { StaticAssetsService } from '@modules/static-assets.service';
+import { PrivacyPageContentNotFoundException } from '@exceptions/privacy-page-content-not-found.exception';
+import { PrivacySectionNotFoundException } from '@exceptions/privacy-section-not-found.exception';
 
 @Injectable()
 export class PrivacyService {
@@ -20,7 +22,7 @@ export class PrivacyService {
     const privacyPage = await this.privacyPageModel.findOne();
 
     if (!privacyPage) {
-      throw new NotFoundException('Privacy page content not found');
+      throw new PrivacyPageContentNotFoundException();
     }
 
     // Fetch sections separately and properly associate them
@@ -76,7 +78,7 @@ export class PrivacyService {
     const privacyPage = await this.privacyPageModel.findOne();
 
     if (!privacyPage) {
-      throw new NotFoundException('Privacy page content not found');
+      throw new PrivacyPageContentNotFoundException();
     }
 
     // Return data with IDs for admin endpoint
@@ -131,7 +133,7 @@ export class PrivacyService {
     const section = await this.privacySectionModel.findByPk(sectionId);
 
     if (!section) {
-      throw new NotFoundException('Privacy section not found');
+      throw new PrivacySectionNotFoundException();
     }
 
     await section.update(data, { transaction: trx });
@@ -142,7 +144,7 @@ export class PrivacyService {
     const section = await this.privacySectionModel.findByPk(sectionId);
 
     if (!section) {
-      throw new NotFoundException('Privacy section not found');
+      throw new PrivacySectionNotFoundException();
     }
 
     await section.destroy({ transaction: trx });

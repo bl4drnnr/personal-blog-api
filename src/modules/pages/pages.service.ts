@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { HomePage } from '@models/home-page.model';
 import { BlogPage } from '@models/blog-page.model';
@@ -8,6 +8,9 @@ import { ArticleModel } from '@models/article.model';
 import { Faq } from '@models/faq.model';
 import { WhysSection } from '@models/whys-section.model';
 import { StaticAssetsService } from '@modules/static-assets.service';
+import { HomeContentNotFoundException } from '@exceptions/home-content-not-found.exception';
+import { BlogPageContentNotFoundException } from '@exceptions/blog-page-content-not-found.exception';
+import { ProjectPageNotFoundException } from '@exceptions/project-page-not-found.exception';
 
 @Injectable()
 export class PagesService {
@@ -58,7 +61,7 @@ export class PagesService {
     );
 
     if (!homePage) {
-      throw new NotFoundException('Home page content not found');
+      throw new HomeContentNotFoundException();
     }
 
     return {
@@ -142,7 +145,7 @@ export class PagesService {
     const homePage = await this.homePageModel.findOne();
 
     if (!homePage) {
-      throw new NotFoundException('Home page content not found');
+      throw new HomeContentNotFoundException();
     }
 
     await this.homePageModel.update(data, {
@@ -158,7 +161,7 @@ export class PagesService {
     const blogPage = await this.blogPageModel.findOne();
 
     if (!blogPage) {
-      throw new NotFoundException('Blog page content not found');
+      throw new BlogPageContentNotFoundException();
     }
 
     return {
@@ -194,7 +197,7 @@ export class PagesService {
     const blogPage = await this.blogPageModel.findOne();
 
     if (!blogPage) {
-      throw new NotFoundException('Blog page content not found');
+      throw new BlogPageContentNotFoundException();
     }
 
     await this.blogPageModel.update(data, {
@@ -210,7 +213,7 @@ export class PagesService {
     const projectsPage = await this.projectsPageModel.findOne();
 
     if (!projectsPage) {
-      throw new NotFoundException('Projects page content not found');
+      throw new ProjectPageNotFoundException();
     }
 
     return {
@@ -246,7 +249,7 @@ export class PagesService {
     const projectsPage = await this.projectsPageModel.findOne();
 
     if (!projectsPage) {
-      throw new NotFoundException('Projects page content not found');
+      throw new ProjectPageNotFoundException();
     }
 
     await this.projectsPageModel.update(data, {

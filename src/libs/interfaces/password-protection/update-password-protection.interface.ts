@@ -3,5 +3,6 @@ import { Transaction } from 'sequelize';
 
 export interface UpdatePasswordProtectionInterface {
   data: UpdatePasswordProtectionModeDto;
+  userId: string;
   trx: Transaction;
 }

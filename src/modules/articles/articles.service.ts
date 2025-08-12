@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { ArticleModel } from '@models/article.model';
@@ -15,6 +15,7 @@ import { GetAdminPostsInterface } from '@interfaces/get-admin-posts.interface';
 import { StaticAssetsService } from '@modules/static-assets/static-assets.service';
 import { GetBlogPageDataInterface } from '@interfaces/get-blog-page-data.interface';
 import { SlugService } from '@shared/slug.service';
+import { BlogPageNotFoundException } from '@exceptions/blog-page-not-found.exception';
 
 @Injectable()
 export class ArticlesService {
@@ -343,7 +344,7 @@ export class ArticlesService {
     ]);
 
     if (!blogPage) {
-      throw new NotFoundException('Blog page content not found');
+      throw new BlogPageNotFoundException();
     }
 
     const totalPages = Math.ceil(totalArticles / parsedLimit);

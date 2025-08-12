@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { ProjectModel } from '@models/project.model';
@@ -217,7 +217,7 @@ export class ProjectsService {
       ]);
 
     if (!projectsPage) {
-      throw new NotFoundException('Projects page content not found');
+      throw new ProjectNotFoundException();
     }
 
     const totalPages = Math.ceil(totalProjects / parsedLimit);

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { LicensePage } from '@models/license-page.model';
 import { LicenseTile } from '@models/license-tile.model';
@@ -7,6 +7,8 @@ import { UpdateLicenseTileInterface } from '@interfaces/update-license-tile.inte
 import { DeleteLicenseTileInterface } from '@interfaces/delete-license-tile.interface';
 import { UpdateLicensePageInterface } from '@interfaces/update-license-page.interface';
 import { StaticAssetsService } from '@modules/static-assets.service';
+import { LicenseContentNotFoundException } from '@exceptions/license-content-not-found.exception';
+import { LicenseTileNotFoundException } from '@exceptions/license-tile-not-found.exception';
 
 @Injectable()
 export class LicenseService {
@@ -28,7 +30,7 @@ export class LicenseService {
     ]);
 
     if (!licensePage) {
-      throw new NotFoundException('License page content not found');
+      throw new LicenseContentNotFoundException();
     }
 
     return {
@@ -91,7 +93,7 @@ export class LicenseService {
     const tile = await this.licenseTileModel.findByPk(tileId);
 
     if (!tile) {
-      throw new NotFoundException('License tile not found');
+      throw new LicenseTileNotFoundException();
     }
 
     await tile.update(data, { transaction: trx });
@@ -102,7 +104,7 @@ export class LicenseService {
     const tile = await this.licenseTileModel.findByPk(tileId);
 
     if (!tile) {
-      throw new NotFoundException('License tile not found');
+      throw new LicenseTileNotFoundException();
     }
 
     await tile.destroy({ transaction: trx });
@@ -113,7 +115,7 @@ export class LicenseService {
     const licensePage = await this.licensePageModel.findOne();
 
     if (!licensePage) {
-      throw new NotFoundException('License page content not found');
+      throw new LicenseContentNotFoundException();
     }
 
     // Return data with IDs for admin endpoint

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Newsletter } from '@models/newsletters.model';
 import { Op } from 'sequelize';
@@ -22,6 +22,7 @@ import {
   SubscribePageDataDto,
   SubscribePageAdminDto
 } from '@dto/subscribe/responses/subscribe-page-data.dto';
+import { SubscribePageNotFoundException } from '@exceptions/subscribe-page-not-found.exception';
 
 @Injectable()
 export class NewslettersService {
@@ -143,7 +144,7 @@ export class NewslettersService {
   private async findSubscribePageOrFail(): Promise<SubscribePage> {
     const subscribePage = await this.subscribePageModel.findOne();
     if (!subscribePage) {
-      throw new NotFoundException('Subscribe page not found');
+      throw new SubscribePageNotFoundException();
     }
     return subscribePage;
   }

@@ -1,9 +1,11 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { MenuPage } from '@models/menu-page.model';
 import { MenuTile } from '@models/menu-tile.model';
 import { Transaction } from 'sequelize';
 import { StaticAssetsService } from '@modules/static-assets/static-assets.service';
+import { MenuPageNotFoundException } from '@exceptions/menu-page-not-found.exception';
+import { ExperienceNotFoundException } from '@exceptions/menu-page-already-exists.exception';
 
 @Injectable()
 export class MenuService {
@@ -27,7 +29,7 @@ export class MenuService {
     });
 
     if (!menuPage) {
-      throw new NotFoundException('Menu page not found');
+      throw new MenuPageNotFoundException();
     }
 
     // Get static asset URLs
@@ -86,7 +88,7 @@ export class MenuService {
     const menuPage = await this.menuPageModel.findOne();
 
     if (!menuPage) {
-      throw new NotFoundException('Menu page not found');
+      throw new MenuPageNotFoundException();
     }
 
     return menuPage;
@@ -106,7 +108,7 @@ export class MenuService {
     });
 
     if (!menuPage) {
-      throw new NotFoundException('Menu page not found');
+      throw new MenuPageNotFoundException();
     }
 
     await menuPage.update(data, { transaction: trx });
@@ -128,7 +130,7 @@ export class MenuService {
     const existingPage = await this.menuPageModel.findOne({ transaction: trx });
 
     if (existingPage) {
-      throw new BadRequestException('Menu page already exists. Use update instead.');
+      throw new ExperienceNotFoundException();
     }
 
     const menuPage = await this.menuPageModel.create(data, { transaction: trx });
@@ -157,7 +159,7 @@ export class MenuService {
     const menuPage = await this.menuPageModel.findOne({ transaction: trx });
 
     if (!menuPage) {
-      throw new NotFoundException('Menu page not found');
+      throw new MenuPageNotFoundException();
     }
 
     // Set the menu page ID

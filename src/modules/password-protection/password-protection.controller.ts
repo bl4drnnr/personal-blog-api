@@ -33,19 +33,15 @@ export class PasswordProtectionController {
     return new PasswordProtectionStatusDto(status);
   }
 
-  // TODO: FIX THIS ENDPOINT, NO NEED FOR THE GUARD, DO IT DIFFERENTLY
   // Public endpoint to verify password and get access token
   @Post('password-protection-verify')
   @UsePipes(ValidationPipe)
-  @UseGuards(AuthGuard)
   async verifyPassword(
     @Body() data: VerifyPasswordDto,
-    @UserId() userId: string,
     @TrxDecorator() trx: Transaction
   ): Promise<VerifyPasswordResponseDto> {
     const result = await this.passwordProtectionService.verifyPassword({
       password: data.password,
-      userId,
       trx
     });
     return new VerifyPasswordResponseDto(result);
@@ -66,10 +62,12 @@ export class PasswordProtectionController {
   @Put('admin/password-protection')
   async updatePasswordProtectionMode(
     @Body() data: UpdatePasswordProtectionModeDto,
+    @UserId() userId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return await this.passwordProtectionService.updatePasswordProtectionMode({
       data,
+      userId,
       trx
     });
   }

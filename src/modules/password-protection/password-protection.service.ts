@@ -9,6 +9,7 @@ import { CryptographicService } from '@shared/cryptographic.service';
 import { ApiConfigService } from '@shared/config.service';
 import { VerifyPasswordInterface } from '@interfaces/verify-password.interface';
 import { UpdatePasswordProtectionInterface } from '@interfaces/update-password-protection.interface';
+import { WrongCredentialsException } from '@exceptions/wrong-credentials.exception';
 
 @Injectable()
 export class PasswordProtectionService {
@@ -51,13 +52,13 @@ export class PasswordProtectionService {
     };
   }
 
-  async verifyPassword({ password, userId, trx }: VerifyPasswordInterface) {
+  async verifyPassword({ password, trx }: VerifyPasswordInterface) {
     const settings = await this.passwordProtectionRepository.findOne({
       transaction: trx
     });
 
     if (!settings || !settings.isActive) {
-      throw new Error('Password protection is not active');
+      throw new WrongCredentialsException();
     }
 
     const isPasswordValid = await this.cryptographicService.comparePasswords({
@@ -66,12 +67,13 @@ export class PasswordProtectionService {
     });
 
     if (!isPasswordValid) {
-      throw new Error('Invalid password');
+      throw new WrongCredentialsException();
     }
 
+    // WATCH OUT! UNSAFE HERE
     // Generate password protection access token
     const accessToken = this.generatePasswordProtectionToken({
-      userId,
+      userId: settings.userId,
       durationHours: settings.durationHours
     });
 
@@ -79,7 +81,7 @@ export class PasswordProtectionService {
     const tokenId = uuid.v4();
     await this.sessionRepository.create(
       {
-        userId,
+        userId: settings.userId,
         tokenId,
         tokenType: 'password-protection'
       },
@@ -126,6 +128,7 @@ export class PasswordProtectionService {
 
   async updatePasswordProtectionMode({
     data,
+    userId,
     trx
   }: UpdatePasswordProtectionInterface) {
     const { isActive, password, durationHours, heroImageId, heroTitle, footerText } =
@@ -149,7 +152,8 @@ export class PasswordProtectionService {
           durationHours,
           heroImageId,
           heroTitle,
-          footerText
+          footerText,
+          userId
         },
         {
           where: { id: existingSettings.id },

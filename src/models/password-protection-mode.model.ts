@@ -11,6 +11,7 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { StaticAssetModel } from './static-asset.model';
+import { User } from '@models/user.model';
 
 interface PasswordProtectionModeCreationAttributes {
   isActive: boolean;
@@ -19,6 +20,7 @@ interface PasswordProtectionModeCreationAttributes {
   heroImageId: string;
   heroTitle: string;
   footerText: string;
+  userId: string;
 }
 
 @Table({ tableName: 'password_protection_mode' })
@@ -69,6 +71,13 @@ export class PasswordProtectionMode extends Model<
     field: 'hero_image_id'
   })
   heroImageId: string;
+
+  @ForeignKey(() => User)
+  @Column({ type: DataType.UUID, allowNull: true, field: 'user_id' })
+  userId: string;
+
+  @BelongsTo(() => User)
+  user: User;
 
   @BelongsTo(() => StaticAssetModel, 'hero_image_id')
   heroImage: StaticAssetModel;
