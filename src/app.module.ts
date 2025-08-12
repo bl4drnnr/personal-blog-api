@@ -54,6 +54,9 @@ import { FaqModule } from '@modules/faq/faq.module';
 import { MenuPage } from '@models/menu-page.model';
 import { MenuTile } from '@models/menu-tile.model';
 import { MenuModule } from '@modules/menu/menu.module';
+import { ContactMessage } from '@models/contact-message.model';
+import { MaintenanceMode } from '@models/maintenance-mode.model';
+import { MaintenanceModule } from '@modules/maintenance/maintenance.module';
 
 @Module({
   imports: [
@@ -105,7 +108,9 @@ import { MenuModule } from '@modules/menu/menu.module';
         WhysSection,
         StaticAssetModel,
         MenuPage,
-        MenuTile
+        MenuTile,
+        ContactMessage,
+        MaintenanceMode
       ],
       autoLoadModels: true
     }),
@@ -127,7 +132,8 @@ import { MenuModule } from '@modules/menu/menu.module';
     HomeModule,
     StaticAssetsModule,
     FaqModule,
-    MenuModule
+    MenuModule,
+    MaintenanceModule
   ],
   providers: [
     {

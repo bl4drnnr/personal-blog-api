@@ -166,4 +166,9 @@ export class StaticAssetsService {
       return null;
     }
   }
+
+  async getRandomAssetId() {
+    const randomAsset = await this.staticAssetModel.findOne();
+    return randomAsset.id;
+  }
 }

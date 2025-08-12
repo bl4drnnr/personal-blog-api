@@ -101,7 +101,8 @@
         "src/libs/interfaces/blog/*",
         "src/libs/interfaces/about/*",
         "src/libs/interfaces/faq/*",
-        "src/libs/interfaces/templates/*"
+        "src/libs/interfaces/templates/*",
+        "src/libs/interfaces/maintenance/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [
