@@ -78,4 +78,12 @@ export class ApiConfigService {
   get contactEmailAddress() {
     return this.getString('CONTACT_EMAIL_ADDRESS');
   }
+
+  get deploymentCredentials() {
+    return {
+      sshUser: this.getString('DEPLOYMENT_SSH_USER'),
+      serverIp: this.getString('DEPLOYMENT_SERVER_IP'),
+      sshPrivateKey: this.getString('DEPLOYMENT_SSH_PRIVATE_KEY')
+    };
+  }
 }

@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ControlService } from '@modules/control/control.service';
+import { AuthGuard } from '@guards/auth.guard';
 
 @Controller('control')
 export class ControlController {
@@ -8,5 +9,11 @@ export class ControlController {
   @Get('health-check')
   getHealthCheck() {
     return this.controlService.getHealthCheck();
+  }
+
+  @Post('trigger-deployment')
+  @UseGuards(AuthGuard)
+  async triggerDeployment() {
+    return this.controlService.triggerDeployment();
   }
 }
