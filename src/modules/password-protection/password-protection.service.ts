@@ -11,6 +11,7 @@ import { VerifyPasswordInterface } from '@interfaces/verify-password.interface';
 import { UpdatePasswordProtectionInterface } from '@interfaces/update-password-protection.interface';
 import { WrongCredentialsException } from '@exceptions/wrong-credentials.exception';
 import { PasswordProtectionDisabledException } from '@exceptions/password-protection-disabled.exception';
+import { StaticAssetsService } from '@modules/static-assets.service';
 
 @Injectable()
 export class PasswordProtectionService {
@@ -21,7 +22,8 @@ export class PasswordProtectionService {
     private readonly sessionRepository: typeof Session,
     private readonly jwtService: JwtService,
     private readonly cryptographicService: CryptographicService,
-    private readonly configService: ApiConfigService
+    private readonly configService: ApiConfigService,
+    private readonly staticAssetsService: StaticAssetsService
   ) {}
 
   async getPasswordProtectionStatus() {
@@ -98,7 +100,7 @@ export class PasswordProtectionService {
   }
 
   async getPasswordProtectionModeAdmin() {
-    const settings = await this.passwordProtectionRepository.findOne({
+    let settings = await this.passwordProtectionRepository.findOne({
       include: [
         {
           model: StaticAssetModel,
@@ -108,16 +110,18 @@ export class PasswordProtectionService {
       ]
     });
 
-    // TODO: DO THE SAME AS WITH MAINTENANCE MODE
     if (!settings) {
-      return {
+      const randomAsset = await this.staticAssetsService.getRandomAssetId();
+
+      settings = await this.passwordProtectionRepository.create({
         isActive: false,
+        password: '',
         durationHours: 24,
-        heroImageId: '',
+        heroImageId: randomAsset,
         heroTitle: 'Site Protected',
         footerText: 'Please contact administrator for access',
         metaTitle: 'Site Protected'
-      };
+      });
     }
 
     return {

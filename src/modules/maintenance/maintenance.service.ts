@@ -58,44 +58,57 @@ export class MaintenanceService {
   }
 
   async updateMaintenanceMode({ data, trx }: UpdateMaintenanceModeInterface) {
+    const {
+      isActive,
+      message,
+      fromDate,
+      toDate,
+      heroImageId,
+      heroTitle,
+      footerText,
+      title,
+      metaTitle
+    } = data;
+
     const maintenanceMode = await this.maintenanceModeModel.findOne({
       transaction: trx
     });
 
-    const updateData: any = {};
+    if (maintenanceMode) {
+      await this.maintenanceModeModel.update(
+        {
+          isActive,
+          message,
+          fromDate: new Date(fromDate),
+          toDate: new Date(toDate),
+          heroImageId,
+          heroTitle,
+          footerText,
+          title,
+          metaTitle
+        },
+        {
+          where: { id: maintenanceMode.id },
+          transaction: trx
+        }
+      );
+    } else {
+      await this.maintenanceModeModel.create(
+        {
+          isActive,
+          message,
+          fromDate: new Date(fromDate),
+          toDate: new Date(toDate),
+          heroImageId,
+          heroTitle,
+          footerText,
+          title,
+          metaTitle
+        },
+        { transaction: trx }
+      );
+    }
 
-    if (data.isActive !== undefined) {
-      updateData.isActive = data.isActive;
-    }
-    if (data.message !== undefined) {
-      updateData.message = data.message;
-    }
-    if (data.fromDate !== undefined) {
-      updateData.fromDate = new Date(data.fromDate);
-    }
-    if (data.toDate !== undefined) {
-      updateData.toDate = new Date(data.toDate);
-    }
-    if (data.heroImageId !== undefined) {
-      updateData.heroImageId = data.heroImageId;
-    }
-    if (data.heroTitle !== undefined) {
-      updateData.heroTitle = data.heroTitle;
-    }
-    if (data.footerText !== undefined) {
-      updateData.footerText = data.footerText;
-    }
-    if (data.title !== undefined) {
-      updateData.title = data.title;
-    }
-    if (data.metaTitle !== undefined) {
-      updateData.metaTitle = data.metaTitle;
-    }
-
-    if (Object.keys(updateData).length > 0) {
-      await maintenanceMode.update(updateData, { transaction: trx });
-    }
-
-    return maintenanceMode;
+    return { success: true };
   }
 }

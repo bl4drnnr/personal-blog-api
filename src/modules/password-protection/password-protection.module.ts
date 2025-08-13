@@ -7,10 +7,12 @@ import { PasswordProtectionMode } from '@models/password-protection-mode.model';
 import { Session } from '@models/session.model';
 import { CryptographicService } from '@shared/cryptographic.service';
 import { ApiConfigService } from '@shared/config.service';
+import { StaticAssetsModule } from '@modules/static-assets.module';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([PasswordProtectionMode, Session]),
+    StaticAssetsModule,
     JwtModule.registerAsync({
       useFactory: async (configService: ApiConfigService) => ({
         secret: configService.jwtAuthConfig.secret
