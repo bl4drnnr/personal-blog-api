@@ -7,8 +7,7 @@ import {
   Get,
   Put,
   UseGuards,
-  Delete,
-  Param
+  Delete
 } from '@nestjs/common';
 import { NewslettersService } from '@modules/newsletters/newsletters.service';
 import { TrxDecorator } from '@decorators/transaction.decorator';
@@ -35,9 +34,9 @@ export class NewslettersController {
     });
   }
 
-  @Post('confirm-newsletters-subscription/:newslettersId')
+  @Post('confirm-newsletters-subscription')
   confirmNewslettersSubscription(
-    @Param('newslettersId') newslettersId: string,
+    @Query('id') newslettersId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return this.newslettersService.confirmNewslettersSubscription({
@@ -46,9 +45,9 @@ export class NewslettersController {
     });
   }
 
-  @Post('unsubscribe-from-newsletters/:newslettersId')
+  @Post('unsubscribe-from-newsletters')
   unsubscribeFromNewsletters(
-    @Param('newslettersId') newslettersId: string,
+    @Query('id') newslettersId: string,
     @TrxDecorator() trx: Transaction
   ) {
     return this.newslettersService.unsubscribeFromNewsletters({
