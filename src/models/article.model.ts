@@ -20,6 +20,7 @@ interface ArticleCreationAttributes {
   excerpt: string;
   featuredImageId: string;
   tags: Array<string>;
+  metaKeywords: string;
   featured: boolean;
   published: boolean;
   userId: string;
@@ -81,6 +82,13 @@ export class ArticleModel extends Model<ArticleModel, ArticleCreationAttributes>
     field: 'tags'
   })
   tags: Array<string>;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+    field: 'meta_keywords'
+  })
+  metaKeywords: string;
 
   @Default(false)
   @Column({

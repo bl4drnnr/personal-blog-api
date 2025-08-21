@@ -551,6 +551,8 @@ module.exports = {
             'Learn the fundamentals of cybersecurity including the CIA triad, risk assessment, and common attack vectors.',
           featured_image_id: staticAssetIds.asset2,
           tags: ['cybersecurity', 'security', 'fundamentals', 'risk-assessment'],
+          meta_keywords:
+            'cybersecurity, information security, digital security, risk assessment, cyber threats, security fundamentals, data protection',
           published: true,
           user_id: userIds.admin,
           created_at: new Date('2024-01-15'),
@@ -655,6 +657,8 @@ def generate_session_token() -> str:
             'authentication',
             'xss'
           ],
+          meta_keywords:
+            'web development security, application security, javascript security, node.js security, secure coding, web vulnerabilities, XSS prevention, SQL injection',
           published: true,
           user_id: userIds.admin,
           created_at: new Date('2024-01-20'),
@@ -778,6 +782,8 @@ console.log('Merkle Root:', merkleTree.getRoot());
             'mathematics',
             'blockchain'
           ],
+          meta_keywords:
+            'cryptographic hash functions, cryptography, hash algorithms, SHA-256, MD5, blockchain security, data integrity, digital signatures',
           published: true,
           user_id: userIds.admin,
           created_at: new Date('2024-01-25'),
@@ -809,6 +815,8 @@ console.log('Merkle Root:', merkleTree.getRoot());
             'draft',
             'threat-detection'
           ],
+          meta_keywords:
+            'machine learning cybersecurity, AI security, threat detection algorithms, anomaly detection, behavioral analysis, neural networks malware',
           published: false,
           user_id: userIds.admin,
           created_at: new Date('2024-01-28'),

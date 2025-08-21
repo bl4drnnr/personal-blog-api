@@ -1,4 +1,4 @@
-import { IsString, IsArray, IsBoolean, IsUUID } from 'class-validator';
+import { IsString, IsArray, IsBoolean, IsUUID, IsNotEmpty } from 'class-validator';
 
 export class CreateArticleDto {
   @IsString()
@@ -18,6 +18,10 @@ export class CreateArticleDto {
 
   @IsArray()
   articleTags: Array<string>;
+
+  @IsString()
+  @IsNotEmpty()
+  articleMetaKeywords: string;
 
   @IsBoolean()
   articlePublished: boolean;

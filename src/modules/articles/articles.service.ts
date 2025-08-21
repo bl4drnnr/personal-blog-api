@@ -97,6 +97,7 @@ export class ArticlesService {
       publishDate: post.createdAt,
       updatedDate: post.updatedAt,
       tags: post.tags || [],
+      metaKeywords: post.metaKeywords,
       featuredImage: await this.staticAssetsService.getStaticAsset(
         post.featuredImageId
       ),
@@ -130,6 +131,7 @@ export class ArticlesService {
         description: data.articleDescription,
         content: data.articleContent,
         tags: data.articleTags,
+        metaKeywords: data.articleMetaKeywords,
         featuredImageId: data.articlePictureId
       },
       {
@@ -288,6 +290,7 @@ export class ArticlesService {
       excerpt: post.excerpt,
       featuredImageId: post.featuredImageId,
       tags: post.tags || [],
+      metaKeywords: post.metaKeywords,
       published: post.published,
       featured: post.featured,
       createdAt: post.createdAt,
