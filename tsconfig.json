@@ -116,7 +116,8 @@
         "src/libs/interfaces/faq/*",
         "src/libs/interfaces/templates/*",
         "src/libs/interfaces/maintenance/*",
-        "src/libs/interfaces/password-protection/*"
+        "src/libs/interfaces/password-protection/*",
+        "src/libs/interfaces/not-found/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [

@@ -59,6 +59,8 @@ import { MaintenanceMode } from '@models/maintenance-mode.model';
 import { MaintenanceModule } from '@modules/maintenance/maintenance.module';
 import { PasswordProtectionMode } from '@models/password-protection-mode.model';
 import { PasswordProtectionModule } from '@modules/password-protection/password-protection.module';
+import { NotFoundPage } from '@models/not-found-page.model';
+import { NotFoundModule } from '@modules/not-found/not-found.module';
 
 @Module({
   imports: [
@@ -113,7 +115,8 @@ import { PasswordProtectionModule } from '@modules/password-protection/password-
         MenuTile,
         ContactMessage,
         MaintenanceMode,
-        PasswordProtectionMode
+        PasswordProtectionMode,
+        NotFoundPage
       ],
       autoLoadModels: true
     }),
@@ -137,7 +140,8 @@ import { PasswordProtectionModule } from '@modules/password-protection/password-
     FaqModule,
     MenuModule,
     MaintenanceModule,
-    PasswordProtectionModule
+    PasswordProtectionModule,
+    NotFoundModule
   ],
   providers: [
     {

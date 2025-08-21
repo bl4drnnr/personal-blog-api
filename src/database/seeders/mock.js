@@ -175,6 +175,14 @@ module.exports = {
         faq4: uuidv4(),
         faq5: uuidv4()
       };
+
+      const notFoundPageIds = {
+        main: uuidv4()
+      };
+
+      const maintenanceModeIds = {
+        main: uuidv4()
+      };
       // Create test user
       await queryInterface.bulkInsert('users', [
         {
@@ -2057,6 +2065,25 @@ export default VulnerabilityReport;
 
       // Content items no longer needed - simplified to content field in sections
 
+      // Create maintenance mode record (inactive by default)
+      await queryInterface.bulkInsert('maintenance_mode', [
+        {
+          id: maintenanceModeIds.main,
+          is_active: false,
+          message:
+            'We are currently performing maintenance to improve your experience. Please check back shortly.',
+          from_date: new Date(),
+          to_date: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
+          hero_image_id: staticAssetIds.asset1,
+          hero_title: 'Site Under Maintenance',
+          footer_text: 'Thank you for your patience while we improve our services.',
+          title: 'Maintenance Mode',
+          meta_title: 'Site Under Maintenance - Please Check Back Soon',
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
       // Create home page content
       await queryInterface.bulkInsert('home_page', [
         {
@@ -2551,6 +2578,20 @@ export default VulnerabilityReport;
         }
       ]);
 
+      // Create not found page content
+      await queryInterface.bulkInsert('not_found_page', [
+        {
+          id: notFoundPageIds.main,
+          title: '404',
+          content: 'Page not found',
+          hero_image_main_id: staticAssetIds.asset8,
+          hero_image_main_alt: '404 Not Found',
+          hero_title: '404',
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
       // Create FAQ questions
       await queryInterface.bulkInsert('faqs', [
         {
@@ -2617,12 +2658,14 @@ export default VulnerabilityReport;
   async down(queryInterface, sequelize) {
     await queryInterface.bulkDelete('static_assets', null, {});
     await queryInterface.bulkDelete('faqs', null, {});
+    await queryInterface.bulkDelete('not_found_page', null, {});
     await queryInterface.bulkDelete('whys_sections', null, {});
     await queryInterface.bulkDelete('menu_tiles', null, {});
     await queryInterface.bulkDelete('menu_page', null, {});
     await queryInterface.bulkDelete('blog_page', null, {});
     await queryInterface.bulkDelete('projects_page', null, {});
     await queryInterface.bulkDelete('home_page', null, {});
+    await queryInterface.bulkDelete('maintenance_mode', null, {});
     await queryInterface.bulkDelete('contact_tiles', null, {});
     await queryInterface.bulkDelete('contact_page', null, {});
     await queryInterface.bulkDelete('privacy_sections', null, {});
