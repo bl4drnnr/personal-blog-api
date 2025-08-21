@@ -1,4 +1,4 @@
-import { IsArray, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsString, IsUUID, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class UpdateProjectDto {
   @IsString()
@@ -20,4 +20,9 @@ export class UpdateProjectDto {
 
   @IsArray()
   projectTags: Array<string>;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  projectMetaKeywords: string;
 }

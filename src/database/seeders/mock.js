@@ -841,6 +841,8 @@ console.log('Merkle Root:', merkleTree.getRoot());
             'real-time',
             'threat-detection'
           ],
+          meta_keywords:
+            'security monitoring, threat detection dashboard, real-time security, cybersecurity dashboard, security analytics, incident response',
           featured: true,
           published: true,
           user_id: userIds.admin,
@@ -1094,6 +1096,8 @@ generateRoutes().catch(console.error);
             'NestJS',
             'SEO'
           ],
+          meta_keywords:
+            'blog platform, full-stack development, Angular SSR, NestJS API, SEO optimization, content management system, web development',
           published: false,
           featured: true,
           user_id: userIds.admin,
@@ -1398,6 +1402,8 @@ export default VulnerabilityReport;
             'machine learning',
             'python'
           ],
+          meta_keywords:
+            'vulnerability scanner, automated security testing, machine learning security, penetration testing tools, web application security, Python security',
           published: true,
           featured: false,
           user_id: userIds.admin,

@@ -1,4 +1,4 @@
-import { IsString, IsArray, IsBoolean } from 'class-validator';
+import { IsString, IsArray, IsBoolean, IsNotEmpty } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
@@ -15,6 +15,10 @@ export class CreateProjectDto {
 
   @IsArray()
   projectTags: Array<string>;
+
+  @IsString()
+  @IsNotEmpty()
+  projectMetaKeywords: string;
 
   @IsBoolean()
   projectPublished: boolean;

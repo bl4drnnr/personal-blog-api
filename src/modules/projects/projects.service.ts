@@ -35,6 +35,7 @@ export class ProjectsService {
       projectContent,
       projectFeaturedImageId,
       projectTags,
+      projectMetaKeywords,
       projectPublished
     } = data;
 
@@ -63,6 +64,7 @@ export class ProjectsService {
         content: projectContent,
         published: projectPublished,
         tags: projectTags,
+        metaKeywords: projectMetaKeywords,
         featuredImageId: projectFeaturedImageId,
         userId
       },
@@ -86,6 +88,7 @@ export class ProjectsService {
       content: project.content,
       date: project.createdAt,
       tags: project.tags || [],
+      metaKeywords: project.metaKeywords,
       featuredImage: await this.staticAssetsService.getStaticAsset(
         project.featuredImageId
       ),
@@ -111,6 +114,7 @@ export class ProjectsService {
       content: project.content,
       featuredImageId: project.featuredImageId,
       tags: project.tags || [],
+      metaKeywords: project.metaKeywords,
       published: project.published,
       featured: project.featured,
       createdAt: project.createdAt,
@@ -145,7 +149,8 @@ export class ProjectsService {
         description: data.projectDescription,
         content: data.projectContent,
         featuredImageId: data.projectFeaturedImageId,
-        tags: data.projectTags
+        tags: data.projectTags,
+        metaKeywords: data.projectMetaKeywords
       },
       {
         where: { id: projectId },

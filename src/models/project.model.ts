@@ -19,6 +19,7 @@ interface ProjectCreationAttributes {
   content: string;
   featuredImageId: string;
   tags: Array<string>;
+  metaKeywords: string;
   featured: boolean;
   published: boolean;
   userId: string;
@@ -73,6 +74,13 @@ export class ProjectModel extends Model<ProjectModel, ProjectCreationAttributes>
     field: 'tags'
   })
   tags: Array<string>;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+    field: 'meta_keywords'
+  })
+  metaKeywords: string;
 
   @Default(false)
   @Column({
