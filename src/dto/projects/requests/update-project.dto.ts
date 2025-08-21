@@ -1,4 +1,4 @@
-import { IsArray, IsString, IsUUID, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsArray, IsString, IsUUID, IsNotEmpty } from 'class-validator';
 
 export class UpdateProjectDto {
   @IsString()
@@ -23,6 +23,5 @@ export class UpdateProjectDto {
 
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
   projectMetaKeywords: string;
 }
