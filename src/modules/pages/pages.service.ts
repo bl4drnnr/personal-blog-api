@@ -78,7 +78,6 @@ export class PagesService {
         faqSectionTitle: homePage.faqSectionTitle
       },
       layoutData: {
-        footerText: homePage.footerText,
         heroImageMainId: homePage.heroImageMainId,
         heroImageSecondaryId: homePage.heroImageSecondaryId,
         heroImageMainAlt: homePage.heroImageMainAlt,
@@ -172,7 +171,6 @@ export class PagesService {
         description: blogPage.description
       },
       layoutData: {
-        footerText: blogPage.footerText,
         heroImageMainId: blogPage.heroImageMainId,
         heroImageSecondaryId: blogPage.heroImageSecondaryId,
         heroImageMainAlt: blogPage.heroImageMainAlt,
@@ -224,7 +222,6 @@ export class PagesService {
         description: projectsPage.description
       },
       layoutData: {
-        footerText: projectsPage.footerText,
         heroImageMainId: projectsPage.heroImageMainId,
         heroImageSecondaryId: projectsPage.heroImageSecondaryId,
         heroImageMainAlt: projectsPage.heroImageMainAlt,

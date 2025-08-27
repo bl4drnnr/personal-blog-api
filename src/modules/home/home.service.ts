@@ -102,7 +102,6 @@ export class HomeService {
         faqSectionTitle: homePage.faqSectionTitle
       },
       layoutData: {
-        footerText: homePage.footerText,
         heroImageMain,
         heroImageSecondary,
         heroImageMainAlt: homePage.heroImageMainAlt,

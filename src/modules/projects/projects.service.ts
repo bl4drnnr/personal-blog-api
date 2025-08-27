@@ -258,7 +258,6 @@ export class ProjectsService {
         description: projectsPage.description
       },
       layoutData: {
-        footerText: projectsPage.footerText,
         heroImageMain,
         heroImageSecondary,
         heroImageMainAlt: projectsPage.heroImageMainAlt,

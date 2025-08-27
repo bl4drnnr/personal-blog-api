@@ -15,8 +15,6 @@ export class UpdateBlogPageDto {
 
   @IsOptional()
   @IsString()
-  footerText?: string;
-
   @IsOptional()
   @IsString()
   heroImageMainId?: string;

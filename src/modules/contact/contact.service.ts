@@ -65,7 +65,6 @@ export class ContactService {
         errorMessage: contactPage.errorMessage
       },
       layoutData: {
-        footerText: contactPage.footerText,
         heroImageMain,
         heroImageSecondary,
         heroImageMainAlt: contactPage.heroImageMainAlt,
@@ -97,7 +96,6 @@ export class ContactService {
       title: contactPage.title,
       subtitle: contactPage.subtitle,
       description: contactPage.description,
-      footerText: contactPage.footerText,
       heroImageMainId: contactPage.heroImageMainId,
       heroImageSecondaryId: contactPage.heroImageSecondaryId,
       heroImageMainAlt: contactPage.heroImageMainAlt,

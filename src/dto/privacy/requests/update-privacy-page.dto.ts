@@ -11,8 +11,6 @@ export class UpdatePrivacyPageDto {
 
   @IsOptional()
   @IsString()
-  footerText?: string;
-
   @IsOptional()
   @IsString()
   heroImageMain?: string;

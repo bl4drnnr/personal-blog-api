@@ -27,8 +27,6 @@ export class UpdateMaintenanceModeDto {
 
   @IsOptional()
   @IsString()
-  footerText?: string;
-
   @IsOptional()
   @IsString()
   title?: string;

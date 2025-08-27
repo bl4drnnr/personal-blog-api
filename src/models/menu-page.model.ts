@@ -12,7 +12,6 @@ import {
 import { MenuTile } from './menu-tile.model';
 
 interface MenuPageCreationAttributes {
-  footerText: string;
   heroImageMainId: string;
   heroImageMainAlt: string;
   logoText: string;
@@ -32,13 +31,6 @@ export class MenuPage extends Model<MenuPage, MenuPageCreationAttributes> {
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    field: 'footer_text'
-  })
-  footerText: string;
 
   @Column({
     type: DataType.STRING,

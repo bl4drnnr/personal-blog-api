@@ -63,6 +63,8 @@ import { NotFoundPage } from '@models/not-found-page.model';
 import { NotFoundModule } from '@modules/not-found/not-found.module';
 import { SocialLinkModel } from '@models/social-link.model';
 import { SocialLinksModule } from '@modules/social-links/social-links.module';
+import { Copyright } from '@models/copyright.model';
+import { CopyrightModule } from '@modules/copyright.module';
 
 @Module({
   imports: [
@@ -119,7 +121,8 @@ import { SocialLinksModule } from '@modules/social-links/social-links.module';
         MaintenanceMode,
         PasswordProtectionMode,
         NotFoundPage,
-        SocialLinkModel
+        SocialLinkModel,
+        Copyright
       ],
       autoLoadModels: true
     }),
@@ -145,7 +148,8 @@ import { SocialLinksModule } from '@modules/social-links/social-links.module';
     MaintenanceModule,
     PasswordProtectionModule,
     NotFoundModule,
-    SocialLinksModule
+    SocialLinksModule,
+    CopyrightModule
   ],
   providers: [
     {

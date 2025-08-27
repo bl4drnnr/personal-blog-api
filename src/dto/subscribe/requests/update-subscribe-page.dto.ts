@@ -15,8 +15,6 @@ export class UpdateSubscribePageDto {
 
   @IsOptional()
   @IsString()
-  footerText?: string;
-
   @IsOptional()
   @IsUUID()
   heroImageMainId?: string;

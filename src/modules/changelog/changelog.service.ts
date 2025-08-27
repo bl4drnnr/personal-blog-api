@@ -52,7 +52,6 @@ export class ChangelogService {
 
     return {
       layoutData: {
-        footerText: changelogPage.footerText,
         heroImageMain: changelogPage.heroImageMain.s3Url,
         heroImageSecondary: changelogPage.heroImageSecondary.s3Url,
         heroImageMainAlt: changelogPage.heroImageMainAlt,
@@ -100,7 +99,6 @@ export class ChangelogService {
     }
 
     return {
-      footerText: changelogPage.footerText,
       heroTitle: changelogPage.heroTitle,
       heroImageMainId: changelogPage.heroImageMainId,
       heroImageSecondaryId: changelogPage.heroImageSecondaryId,

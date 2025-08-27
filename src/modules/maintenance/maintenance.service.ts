@@ -27,7 +27,6 @@ export class MaintenanceService {
       toDate: maintenanceMode.toDate,
       heroImage: heroImageUrl,
       heroTitle: maintenanceMode.heroTitle,
-      footerText: maintenanceMode.footerText,
       title: maintenanceMode.title,
       metaTitle: maintenanceMode.metaTitle
     };
@@ -48,7 +47,6 @@ export class MaintenanceService {
         toDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
         heroImageId: randomAsset,
         heroTitle: 'Maintenance',
-        footerText: 'Site is under maintenance',
         title: 'Under Maintenance',
         metaTitle: 'Site Under Maintenance'
       });
@@ -65,7 +63,6 @@ export class MaintenanceService {
       toDate,
       heroImageId,
       heroTitle,
-      footerText,
       title,
       metaTitle
     } = data;
@@ -83,7 +80,6 @@ export class MaintenanceService {
           toDate: new Date(toDate),
           heroImageId,
           heroTitle,
-          footerText,
           title,
           metaTitle
         },
@@ -101,7 +97,6 @@ export class MaintenanceService {
           toDate: new Date(toDate),
           heroImageId,
           heroTitle,
-          footerText,
           title,
           metaTitle
         },

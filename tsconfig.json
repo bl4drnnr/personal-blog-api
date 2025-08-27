@@ -73,7 +73,9 @@
         "src/dto/deployment/requests/*",
         "src/dto/deployment/responses/*",
         "src/dto/social-links/requests/*",
-        "src/dto/social-links/responses/*"
+        "src/dto/social-links/responses/*",
+        "src/dto/copyright/requests/*",
+        "src/dto/copyright/responses/*"
       ],
       "@events/*": ["src/events/*"],
       "@guards/*": ["src/guards/*"],
@@ -91,7 +93,9 @@
         "src/modules/site-config/*",
         "src/modules/control/*",
         "src/modules/pages/*",
-        "src/modules/static-assets/*"
+        "src/modules/static-assets/*",
+        "src/modules/copyright/*",
+        "src/modules/social-links/*"
       ],
       "@interfaces/*": [
         "src/libs/enums/*",
@@ -120,7 +124,8 @@
         "src/libs/interfaces/maintenance/*",
         "src/libs/interfaces/password-protection/*",
         "src/libs/interfaces/not-found/*",
-        "src/libs/interfaces/social-links/*"
+        "src/libs/interfaces/social-links/*",
+        "src/libs/interfaces/copyright/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [

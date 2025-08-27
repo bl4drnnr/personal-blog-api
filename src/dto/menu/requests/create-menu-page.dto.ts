@@ -2,8 +2,6 @@ import { IsString, IsOptional, IsObject } from 'class-validator';
 
 export class CreateMenuPageDto {
   @IsString()
-  footerText: string;
-
   @IsString()
   heroImageMainId: string;
 

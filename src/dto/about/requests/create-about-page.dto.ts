@@ -9,10 +9,6 @@ export class CreateAboutPageDto {
 
   @IsOptional()
   @IsString()
-  footerText?: string;
-
-  @IsOptional()
-  @IsString()
   heroImageMain?: string;
 
   @IsOptional()

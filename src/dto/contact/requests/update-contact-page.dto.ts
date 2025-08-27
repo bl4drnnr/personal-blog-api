@@ -14,10 +14,6 @@ export class UpdateContactPageDto {
   description?: string;
 
   @IsOptional()
-  @IsString()
-  footerText?: string;
-
-  @IsOptional()
   @IsUUID()
   heroImageMainId?: string;
 

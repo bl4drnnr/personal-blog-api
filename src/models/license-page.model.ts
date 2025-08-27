@@ -17,7 +17,6 @@ interface LicensePageCreationAttributes {
   paragraphs: string[];
   additionalInfoTitle: string;
   additionalInfoParagraphs: string[];
-  footerText: string;
   heroImageMainId: string;
   heroImageSecondaryId: string;
   heroImageMainAlt: string;
@@ -75,13 +74,6 @@ export class LicensePage extends Model<LicensePage, LicensePageCreationAttribute
     field: 'additional_info_paragraphs'
   })
   additionalInfoParagraphs: string[];
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    field: 'footer_text'
-  })
-  footerText: string;
 
   @Column({
     type: DataType.UUID,
