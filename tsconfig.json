@@ -71,7 +71,9 @@
         "src/dto/license/requests/*",
         "src/dto/license/responses/*",
         "src/dto/deployment/requests/*",
-        "src/dto/deployment/responses/*"
+        "src/dto/deployment/responses/*",
+        "src/dto/social-links/requests/*",
+        "src/dto/social-links/responses/*"
       ],
       "@events/*": ["src/events/*"],
       "@guards/*": ["src/guards/*"],
@@ -117,7 +119,8 @@
         "src/libs/interfaces/templates/*",
         "src/libs/interfaces/maintenance/*",
         "src/libs/interfaces/password-protection/*",
-        "src/libs/interfaces/not-found/*"
+        "src/libs/interfaces/not-found/*",
+        "src/libs/interfaces/social-links/*"
       ],
       "@docs/*": ["src/libs/docs/*"],
       "@email-templates/*": [

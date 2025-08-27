@@ -61,6 +61,8 @@ import { PasswordProtectionMode } from '@models/password-protection-mode.model';
 import { PasswordProtectionModule } from '@modules/password-protection/password-protection.module';
 import { NotFoundPage } from '@models/not-found-page.model';
 import { NotFoundModule } from '@modules/not-found/not-found.module';
+import { SocialLinkModel } from '@models/social-link.model';
+import { SocialLinksModule } from '@modules/social-links/social-links.module';
 
 @Module({
   imports: [
@@ -116,7 +118,8 @@ import { NotFoundModule } from '@modules/not-found/not-found.module';
         ContactMessage,
         MaintenanceMode,
         PasswordProtectionMode,
-        NotFoundPage
+        NotFoundPage,
+        SocialLinkModel
       ],
       autoLoadModels: true
     }),
@@ -141,7 +144,8 @@ import { NotFoundModule } from '@modules/not-found/not-found.module';
     MenuModule,
     MaintenanceModule,
     PasswordProtectionModule,
-    NotFoundModule
+    NotFoundModule,
+    SocialLinksModule
   ],
   providers: [
     {

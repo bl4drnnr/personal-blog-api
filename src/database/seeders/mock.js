@@ -183,6 +183,13 @@ module.exports = {
       const maintenanceModeIds = {
         main: uuidv4()
       };
+
+      const socialLinkIds = {
+        github: uuidv4(),
+        linkedin: uuidv4(),
+        twitter: uuidv4()
+      };
+
       // Create test user
       await queryInterface.bulkInsert('users', [
         {
@@ -2664,12 +2671,41 @@ export default VulnerabilityReport;
           updated_at: new Date()
         }
       ]);
+
+      // Create social links
+      await queryInterface.bulkInsert('social_links', [
+        {
+          id: socialLinkIds.github,
+          url: 'https://github.com',
+          alt: 'GitHub Profile',
+          icon_id: staticAssetIds.asset1,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: socialLinkIds.linkedin,
+          url: 'https://linkedin.com/in/example',
+          alt: 'LinkedIn Profile',
+          icon_id: staticAssetIds.asset2,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: socialLinkIds.twitter,
+          url: 'https://twitter.com/example',
+          alt: 'Twitter Profile',
+          icon_id: staticAssetIds.asset3,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
     } catch (e) {
       console.log('Error while creating seeders: ', e);
     }
   },
 
   async down(queryInterface, sequelize) {
+    await queryInterface.bulkDelete('social_links', null, {});
     await queryInterface.bulkDelete('static_assets', null, {});
     await queryInterface.bulkDelete('faqs', null, {});
     await queryInterface.bulkDelete('not_found_page', null, {});
