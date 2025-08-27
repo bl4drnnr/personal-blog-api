@@ -14,11 +14,6 @@ export class CopyrightController {
     return await this.copyrightService.getCopyrightData();
   }
 
-  @Get('get-copyright-links')
-  async getCopyrightLinks() {
-    return await this.copyrightService.getCopyrightLinks();
-  }
-
   @UseGuards(BasicAuthGuard)
   @UseGuards(AuthGuard)
   @Get('admin/get-copyright-data')

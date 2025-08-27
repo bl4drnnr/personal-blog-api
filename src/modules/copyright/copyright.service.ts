@@ -12,14 +12,7 @@ export class CopyrightService {
 
     return {
       copyrightEmail: copyright.copyrightEmail,
-      copyrightText: copyright.copyrightText
-    };
-  }
-
-  async getCopyrightLinks() {
-    const copyright = await this.findCopyrightOrFail();
-
-    return {
+      copyrightText: copyright.copyrightText,
       copyrightLinks: copyright.copyrightLinks
     };
   }
