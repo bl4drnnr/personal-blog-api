@@ -14,7 +14,6 @@ import { PrivacySection } from './privacy-section.model';
 interface PrivacyPageCreationAttributes {
   title: string;
   lastUpdated: string;
-  footerText: string;
   heroImageMainId: string;
   heroImageSecondaryId: string;
   heroImageMainAlt: string;
@@ -51,13 +50,6 @@ export class PrivacyPage extends Model<PrivacyPage, PrivacyPageCreationAttribute
     field: 'last_updated'
   })
   lastUpdated: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    field: 'footer_text'
-  })
-  footerText: string;
 
   @Column({
     type: DataType.UUID,

@@ -25,8 +25,6 @@ export class UpdateLicensePageDto {
 
   @IsOptional()
   @IsString()
-  footerText?: string;
-
   @IsOptional()
   @IsString()
   heroImageMain?: string;

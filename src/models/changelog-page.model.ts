@@ -15,7 +15,6 @@ import { ChangelogEntry } from './changelog-entry.model';
 import { StaticAssetModel } from './static-asset.model';
 
 interface ChangelogPageCreationAttributes {
-  footerText: string;
   heroImageMainId: string;
   heroImageSecondaryId: string;
   heroImageMainAlt: string;
@@ -41,13 +40,6 @@ export class ChangelogPage extends Model<
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    field: 'footer_text'
-  })
-  footerText: string;
 
   @ForeignKey(() => StaticAssetModel)
   @Column({

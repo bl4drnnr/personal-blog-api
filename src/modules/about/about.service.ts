@@ -105,7 +105,6 @@ export class AboutService {
         content: aboutPage.content
       },
       layoutData: {
-        footerText: aboutPage.footerText,
         heroImageMain: heroImageMain,
         heroImageSecondary: heroImageSecondary,
         heroImageMainAlt: aboutPage.heroImageMainAlt,
@@ -140,7 +139,6 @@ export class AboutService {
       id: aboutPage.id,
       title: aboutPage.title,
       content: aboutPage.content,
-      footerText: aboutPage.footerText,
       heroImageMainId: aboutPage.heroImageMainId,
       heroImageSecondaryId: aboutPage.heroImageSecondaryId,
       heroImageMainAlt: aboutPage.heroImageMainAlt,

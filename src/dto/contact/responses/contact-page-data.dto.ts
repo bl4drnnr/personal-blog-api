@@ -19,7 +19,6 @@ export class ContactPageContentDto {
 }
 
 export class ContactPageLayoutDto {
-  footerText: string;
   heroImageMain: string | null;
   heroImageSecondary: string | null;
   heroImageMainAlt: string;
@@ -52,7 +51,6 @@ export class ContactPageAdminDto {
   title: string;
   subtitle: string;
   description: string;
-  footerText: string;
   heroImageMainId: string;
   heroImageSecondaryId: string;
   heroImageMainAlt: string;

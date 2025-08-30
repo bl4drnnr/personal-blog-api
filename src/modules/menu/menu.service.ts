@@ -58,7 +58,6 @@ export class MenuService {
 
     return {
       pageContent: {
-        footerText: menuPage.footerText,
         heroImageMain: heroImageMain,
         heroImageMainAlt: menuPage.heroImageMainAlt,
         logoText: menuPage.logoText,
@@ -66,7 +65,6 @@ export class MenuService {
         menuTiles: processedMenuTiles
       },
       layoutData: {
-        footerText: menuPage.footerText,
         heroImageMain: heroImageMain,
         heroImageMainAlt: menuPage.heroImageMainAlt,
         logoText: menuPage.logoText,

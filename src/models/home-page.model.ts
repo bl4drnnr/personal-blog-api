@@ -13,7 +13,6 @@ interface HomePageCreationAttributes {
   title: string;
   subtitle: string;
   description: string;
-  footerText: string;
   heroImageMainId: string;
   heroImageSecondaryId: string;
   heroImageMainAlt: string;
@@ -63,13 +62,6 @@ export class HomePage extends Model<HomePage, HomePageCreationAttributes> {
     field: 'description'
   })
   description: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    field: 'footer_text'
-  })
-  footerText: string;
 
   @Column({
     type: DataType.UUID,

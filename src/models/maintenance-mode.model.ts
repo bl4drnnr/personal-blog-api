@@ -18,7 +18,6 @@ interface MaintenanceModeCreationAttributes {
   toDate: Date;
   heroImageId: string;
   heroTitle: string;
-  footerText: string;
   title: string;
   metaTitle: string;
 }
@@ -84,13 +83,6 @@ export class MaintenanceMode extends Model<
     field: 'hero_title'
   })
   heroTitle: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    field: 'footer_text'
-  })
-  footerText: string;
 
   @Column({
     type: DataType.STRING,

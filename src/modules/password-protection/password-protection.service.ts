@@ -28,7 +28,6 @@ export class PasswordProtectionService {
 
   async getPasswordProtectionStatus() {
     const settings = await this.passwordProtectionRepository.findOne({
-      attributes: ['isActive', 'heroTitle', 'footerText', 'metaTitle'],
       include: [
         {
           model: StaticAssetModel,
@@ -42,7 +41,6 @@ export class PasswordProtectionService {
       return {
         isActive: false,
         heroTitle: 'Site Protected',
-        footerText: 'Please contact administrator for access',
         heroImage: null,
         metaTitle: 'Site Protected'
       };
@@ -51,7 +49,6 @@ export class PasswordProtectionService {
     return {
       isActive: settings.isActive,
       heroTitle: settings.heroTitle,
-      footerText: settings.footerText,
       heroImage: settings.heroImage.s3Url,
       metaTitle: settings.metaTitle
     };
@@ -119,7 +116,6 @@ export class PasswordProtectionService {
         durationHours: 24,
         heroImageId: randomAsset,
         heroTitle: 'Site Protected',
-        footerText: 'Please contact administrator for access',
         metaTitle: 'Site Protected'
       });
     }
@@ -129,7 +125,6 @@ export class PasswordProtectionService {
       durationHours: settings.durationHours,
       heroImageId: settings.heroImageId,
       heroTitle: settings.heroTitle,
-      footerText: settings.footerText,
       metaTitle: settings.metaTitle
     };
   }
@@ -139,15 +134,8 @@ export class PasswordProtectionService {
     userId,
     trx
   }: UpdatePasswordProtectionInterface) {
-    const {
-      isActive,
-      password,
-      durationHours,
-      heroImageId,
-      heroTitle,
-      footerText,
-      metaTitle
-    } = data;
+    const { isActive, password, durationHours, heroImageId, heroTitle, metaTitle } =
+      data;
 
     let hashedPassword = '';
     if (password) {
@@ -167,7 +155,6 @@ export class PasswordProtectionService {
           durationHours,
           heroImageId,
           heroTitle,
-          footerText,
           metaTitle,
           userId
         },
@@ -193,7 +180,6 @@ export class PasswordProtectionService {
           durationHours,
           heroImageId,
           heroTitle,
-          footerText,
           metaTitle
         },
         { transaction: trx }

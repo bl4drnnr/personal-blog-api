@@ -15,8 +15,6 @@ export class UpdateHomePageDto {
 
   @IsOptional()
   @IsString()
-  footerText?: string;
-
   @IsOptional()
   @IsString()
   heroImageMainId?: string;

@@ -383,7 +383,6 @@ export class ArticlesService {
         description: blogPage.description
       },
       layoutData: {
-        footerText: blogPage.footerText,
         heroImageMain,
         heroImageSecondary,
         heroImageMainAlt: blogPage.heroImageMainAlt,

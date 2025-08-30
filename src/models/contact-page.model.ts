@@ -13,7 +13,6 @@ interface ContactPageCreationAttributes {
   title: string;
   subtitle: string;
   description: string;
-  footerText: string;
   heroImageMainId: string;
   heroImageSecondaryId: string;
   heroImageMainAlt: string;
@@ -62,13 +61,6 @@ export class ContactPage extends Model<ContactPage, ContactPageCreationAttribute
     field: 'description'
   })
   description: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    field: 'footer_text'
-  })
-  footerText: string;
 
   @Column({
     type: DataType.UUID,

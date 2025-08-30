@@ -47,7 +47,6 @@ export class PrivacyService {
         }))
       },
       layoutData: {
-        footerText: privacyPage.footerText,
         heroImageMain: await this.staticAssetsService.getStaticAsset(
           privacyPage.heroImageMainId
         ),
@@ -86,7 +85,6 @@ export class PrivacyService {
       id: privacyPage.id,
       title: privacyPage.title,
       lastUpdated: privacyPage.lastUpdated,
-      footerText: privacyPage.footerText,
       heroImageMainId: privacyPage.heroImageMainId,
       heroImageSecondaryId: privacyPage.heroImageSecondaryId,
       heroImageMainAlt: privacyPage.heroImageMainAlt,

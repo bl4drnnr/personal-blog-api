@@ -13,7 +13,6 @@ interface BlogPageCreationAttributes {
   title: string;
   subtitle: string;
   description: string;
-  footerText: string;
   heroImageMainId: string;
   heroImageSecondaryId: string;
   heroImageMainAlt: string;
@@ -57,13 +56,6 @@ export class BlogPage extends Model<BlogPage, BlogPageCreationAttributes> {
     field: 'description'
   })
   description: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    field: 'footer_text'
-  })
-  footerText: string;
 
   @Column({
     type: DataType.UUID,

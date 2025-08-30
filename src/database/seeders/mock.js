@@ -183,6 +183,17 @@ module.exports = {
       const maintenanceModeIds = {
         main: uuidv4()
       };
+
+      const socialLinkIds = {
+        github: uuidv4(),
+        linkedin: uuidv4(),
+        twitter: uuidv4()
+      };
+
+      const copyrightIds = {
+        main: uuidv4()
+      };
+
       // Create test user
       await queryInterface.bulkInsert('users', [
         {
@@ -1450,8 +1461,6 @@ export default VulnerabilityReport;
             
             <p><small>Last updated: January 2024</small></p>
           `,
-          footer_text:
-            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: staticAssetIds.asset1,
           hero_image_secondary_id: staticAssetIds.asset1,
           hero_image_main_alt: 'Abstract Gradient Art',
@@ -1709,8 +1718,6 @@ export default VulnerabilityReport;
       await queryInterface.bulkInsert('changelog_page', [
         {
           id: changelogPageIds.main,
-          footer_text:
-            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: staticAssetIds.asset1,
           hero_image_secondary_id: staticAssetIds.asset7,
           hero_image_main_alt: 'Abstract Gradient Art',
@@ -1802,8 +1809,6 @@ export default VulnerabilityReport;
           additional_info_paragraphs: JSON.stringify([
             'This template is built using Angular and follows modern web development practices. The design and components are created with accessibility and performance in mind.'
           ]),
-          footer_text:
-            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: staticAssetIds.asset1,
           hero_image_secondary_id: staticAssetIds.asset1,
           hero_image_main_alt: 'Abstract Gradient Art',
@@ -1965,8 +1970,6 @@ export default VulnerabilityReport;
           id: privacyPageIds.main,
           title: 'Privacy Policy',
           last_updated: 'Last updated: January 2025',
-          footer_text:
-            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: staticAssetIds.asset1,
           hero_image_secondary_id: staticAssetIds.asset1,
           hero_image_main_alt: 'Abstract Gradient Art',
@@ -2090,7 +2093,6 @@ export default VulnerabilityReport;
           to_date: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
           hero_image_id: staticAssetIds.asset1,
           hero_title: 'Site Under Maintenance',
-          footer_text: 'Thank you for your patience while we improve our services.',
           title: 'Maintenance Mode',
           meta_title: 'Site Under Maintenance - Please Check Back Soon',
           created_at: new Date(),
@@ -2106,8 +2108,6 @@ export default VulnerabilityReport;
           subtitle: 'Modern Creative Portfolio Template',
           description:
             'A fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
-          footer_text:
-            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: staticAssetIds.asset4,
           hero_image_secondary_id: staticAssetIds.asset6,
           hero_image_main_alt: 'Contemplative Astronaut Woman',
@@ -2156,8 +2156,6 @@ export default VulnerabilityReport;
           subtitle: 'Showcase of My Work',
           description:
             'Explore my portfolio of projects showcasing innovative solutions and creative implementations.',
-          footer_text:
-            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: staticAssetIds.asset1,
           hero_image_secondary_id: staticAssetIds.asset6,
           hero_image_main_alt: 'Abstract Gradient Art',
@@ -2198,8 +2196,6 @@ export default VulnerabilityReport;
           subtitle: 'Thoughts & Insights',
           description:
             'Dive into articles about web development, technology trends, and creative problem-solving.',
-          footer_text:
-            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: staticAssetIds.asset1,
           hero_image_secondary_id: staticAssetIds.asset6,
           hero_image_main_alt: 'Abstract Gradient Art',
@@ -2244,8 +2240,6 @@ export default VulnerabilityReport;
           subtitle: 'Get in Touch',
           description:
             'Feel free to reach out for collaborations, inquiries or just to chat about design.',
-          footer_text:
-            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: staticAssetIds.asset1,
           hero_image_secondary_id: staticAssetIds.asset6,
           hero_image_main_alt: 'Abstract Gradient Art',
@@ -2299,8 +2293,6 @@ export default VulnerabilityReport;
           subtitle: 'Stay Updated',
           description:
             'Subscribe to our newsletter to receive the latest updates, insights, and exclusive content.',
-          footer_text:
-            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: staticAssetIds.asset1,
           hero_image_secondary_id: staticAssetIds.asset6,
           hero_image_main_alt: 'Abstract Gradient Art',
@@ -2427,8 +2419,6 @@ export default VulnerabilityReport;
       await queryInterface.bulkInsert('menu_page', [
         {
           id: menuPageIds.main,
-          footer_text:
-            'LUCH is a fresh and innovative CMS template ideal for creating a portfolio or personal blog.',
           hero_image_main_id: staticAssetIds.asset4,
           hero_image_main_alt: 'Contemplative Astronaut Woman',
           logo_text: 'Luch',
@@ -2664,12 +2654,68 @@ export default VulnerabilityReport;
           updated_at: new Date()
         }
       ]);
+
+      // Create copyright data
+      await queryInterface.bulkInsert('copyright', [
+        {
+          id: copyrightIds.main,
+          copyright_email: 'admin@example.com',
+          copyright_text:
+            '© 2024 LUCH. All rights reserved. Built with passion and dedication.',
+          copyright_links: JSON.stringify([
+            {
+              title: 'Privacy Policy',
+              link: '/privacy'
+            },
+            {
+              title: 'Terms of Service',
+              link: '/terms'
+            },
+            {
+              title: 'Contact',
+              link: '/contact'
+            }
+          ]),
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
+
+      // Create social links
+      await queryInterface.bulkInsert('social_links', [
+        {
+          id: socialLinkIds.github,
+          url: 'https://github.com',
+          alt: 'GitHub Profile',
+          icon_id: staticAssetIds.asset1,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: socialLinkIds.linkedin,
+          url: 'https://linkedin.com/in/example',
+          alt: 'LinkedIn Profile',
+          icon_id: staticAssetIds.asset2,
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+        {
+          id: socialLinkIds.twitter,
+          url: 'https://twitter.com/example',
+          alt: 'Twitter Profile',
+          icon_id: staticAssetIds.asset3,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ]);
     } catch (e) {
       console.log('Error while creating seeders: ', e);
     }
   },
 
   async down(queryInterface, sequelize) {
+    await queryInterface.bulkDelete('social_links', null, {});
+    await queryInterface.bulkDelete('copyright', null, {});
     await queryInterface.bulkDelete('static_assets', null, {});
     await queryInterface.bulkDelete('faqs', null, {});
     await queryInterface.bulkDelete('not_found_page', null, {});

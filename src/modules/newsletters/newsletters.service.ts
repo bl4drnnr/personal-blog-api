@@ -174,7 +174,6 @@ export class NewslettersService {
         privacyText: subscribePage.privacyText
       },
       layoutData: {
-        footerText: subscribePage.footerText,
         heroImageMain: heroImageMain.s3Url,
         heroImageSecondary: heroImageSecondary.s3Url,
         heroImageMainAlt: subscribePage.heroImageMainAlt,
@@ -204,7 +203,6 @@ export class NewslettersService {
       title: subscribePage.title,
       subtitle: subscribePage.subtitle,
       description: subscribePage.description,
-      footerText: subscribePage.footerText,
       heroImageMainId: subscribePage.heroImageMainId,
       heroImageSecondaryId: subscribePage.heroImageSecondaryId,
       heroImageMainAlt: subscribePage.heroImageMainAlt,

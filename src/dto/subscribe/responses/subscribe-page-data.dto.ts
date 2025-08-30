@@ -11,7 +11,6 @@ export class SubscribePageContentDto {
 }
 
 export class SubscribePageLayoutDto {
-  footerText: string;
   heroImageMain: string | null;
   heroImageSecondary: string | null;
   heroImageMainAlt: string;
@@ -43,7 +42,6 @@ export class SubscribePageAdminDto {
   title: string;
   subtitle: string;
   description: string;
-  footerText: string;
   heroImageMainId: string;
   heroImageSecondaryId: string;
   heroImageMainAlt: string;

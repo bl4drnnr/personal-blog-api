@@ -19,7 +19,6 @@ interface PasswordProtectionModeCreationAttributes {
   durationHours: number;
   heroImageId: string;
   heroTitle: string;
-  footerText: string;
   metaTitle: string;
   userId: string;
 }
@@ -89,13 +88,6 @@ export class PasswordProtectionMode extends Model<
     field: 'hero_title'
   })
   heroTitle: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    field: 'footer_text'
-  })
-  footerText: string;
 
   @Column({
     type: DataType.STRING,

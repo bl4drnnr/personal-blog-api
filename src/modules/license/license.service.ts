@@ -44,7 +44,6 @@ export class LicenseService {
         }
       },
       layoutData: {
-        footerText: licensePage.footerText,
         heroImageMain: await this.staticAssetsService.getStaticAsset(
           licensePage.heroImageMainId
         ),
@@ -126,7 +125,6 @@ export class LicenseService {
       paragraphs: licensePage.paragraphs,
       additionalInfoTitle: licensePage.additionalInfoTitle,
       additionalInfoParagraphs: licensePage.additionalInfoParagraphs,
-      footerText: licensePage.footerText,
       heroImageMainId: licensePage.heroImageMainId,
       heroImageSecondaryId: licensePage.heroImageSecondaryId,
       heroImageMainAlt: licensePage.heroImageMainAlt,
