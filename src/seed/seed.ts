@@ -56,7 +56,7 @@ async function main() {
     id: 1,
     fullName: 'Mikhail Bahdashych',
     profileMd:
-      "Hi, I'm Mikhail. Security engineer focused on detection engineering and cloud security. I like systems that fail loudly, rules an on-call engineer can explain in one sentence, and deleting more code than I write.",
+      "Security engineer focused on detection engineering and cloud security. I like systems that fail loudly, rules an on-call engineer can explain in one sentence, and deleting more code than I write.",
     location: 'Kraków, Poland',
     contactEmail: 'mikhail.bahdashych@gmail.com',
     seoTitle: 'About — Mikhail Bahdashych',
