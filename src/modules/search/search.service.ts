@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { sql, SQL } from 'drizzle-orm';
-import { Database, DRIZZLE } from '../../db/db.module';
+import { Database, DRIZZLE } from '@db/db.module';
 
 export interface SearchResultItem {
   slug: string;

@@ -1,10 +1,10 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { and, desc, eq, ilike, sql, SQL } from 'drizzle-orm';
-import { markdownToPlainText, readingTimeMin } from '../../common/content';
-import { Database, DRIZZLE } from '../../db/db.module';
-import { assets, posts } from '../../db/schema';
-import { RevalidateService } from '../revalidate/revalidate.service';
+import { markdownToPlainText, readingTimeMin } from '@common/content';
+import { Database, DRIZZLE } from '@db/db.module';
+import { assets, posts } from '@db/schema';
+import { RevalidateService } from '@modules/revalidate/revalidate.service';
 import {
   AdminListPostsQueryDto,
   CreatePostDto,

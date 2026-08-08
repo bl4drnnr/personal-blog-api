@@ -35,6 +35,33 @@ Admin (`Authorization: Bearer <access token>`): CRUD under `/api/admin/posts`,
 `/api/admin/assets` (multipart), `/api/admin/positions|education|certifications`,
 `PUT /api/admin/about|config|password`. Auth flow under `/api/auth/*`.
 
+### Interactive docs (OpenAPI / Swagger)
+
+Every endpoint is documented with OpenAPI. With the API running:
+
+- **Swagger UI** — [`/api/docs`](http://localhost:4201/api/docs) (click **Authorize** to
+  paste a Bearer access token and try admin routes)
+- **Raw OpenAPI JSON** — `/api/docs-json`
+
+Set `SWAGGER_ENABLED=false` to disable the docs (e.g. to hide the API surface in
+production).
+
+## Project layout
+
+Feature modules live under `src/modules/*`; shared infrastructure under
+`src/db` (schema, connection) and `src/common` (guards, decorators, helpers).
+Cross-directory imports use TypeScript path aliases for readability:
+
+| Alias | Resolves to |
+| --- | --- |
+| `@db/*` | `src/db/*` |
+| `@common/*` | `src/common/*` |
+| `@modules/*` | `src/modules/*` |
+
+Aliases resolve everywhere: `tsc-alias` rewrites them in the production build,
+`ts-node` + `tsconfig-paths` in dev, `moduleNameMapper` in Jest, and `tsx`
+natively for the seed/migrate scripts.
+
 ## Development
 
 ```bash

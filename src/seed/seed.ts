@@ -6,9 +6,9 @@ import { hashSync } from 'bcryptjs';
 import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { markdownToPlainText, readingTimeMin } from '../common/content';
-import { requireEnv } from '../common/env';
-import * as schema from '../db/schema';
+import { markdownToPlainText, readingTimeMin } from '@common/content';
+import { requireEnv } from '@common/env';
+import * as schema from '@db/schema';
 
 const md = (name: string) => readFileSync(join(__dirname, 'content', name), 'utf8');
 
@@ -56,7 +56,7 @@ async function main() {
     id: 1,
     fullName: 'Mikhail Bahdashych',
     profileMd:
-      "Security engineer focused on detection engineering and cloud security. I like systems that fail loudly, rules an on-call engineer can explain in one sentence, and deleting more code than I write.",
+      'Security engineer focused on detection engineering and cloud security. I like systems that fail loudly, rules an on-call engineer can explain in one sentence, and deleting more code than I write.',
     location: 'Kraków, Poland',
     contactEmail: 'mikhail.bahdashych@gmail.com',
     seoTitle: 'About — Mikhail Bahdashych',

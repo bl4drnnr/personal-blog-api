@@ -2,7 +2,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/app.setup';
-import { Database, DRIZZLE } from '../src/db/db.module';
+import { Database, DRIZZLE } from '@db/db.module';
 
 export interface TestApp {
   app: NestExpressApplication;
