@@ -71,12 +71,15 @@ jobs:
           # an ephemeral runner has no TOFU history, so accept-new would trust
           # any host that answers.
           echo "${{ secrets.EC2_SSH_HOST_KEY }}" > ~/.ssh/known_hosts
+          # /opt/blog is a checkout of this repo; git pull picks up any compose
+          # or nginx changes, then we roll the api service to the new image.
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
             "${{ secrets.EC2_SSH_USER }}@${{ secrets.EC2_HOST }}" \
             'cd /opt/blog \
-             && docker compose pull api \
-             && docker compose up -d api \
-             && docker compose exec -T api node dist/db/migrate.js \
+             && git pull --ff-only \
+             && docker compose -f docker-compose.prod.yml pull api \
+             && docker compose -f docker-compose.prod.yml up -d api \
+             && docker compose -f docker-compose.prod.yml exec -T api node dist/db/migrate.js \
              && docker image prune -f'
 
       - name: Revoke SSH access

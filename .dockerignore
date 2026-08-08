@@ -9,5 +9,5 @@ coverage
 !.env.example
 *.md
 test
-docker-compose.dev.yml
+docker-compose*.yml
 deploy
