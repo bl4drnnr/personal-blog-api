@@ -67,7 +67,11 @@ jobs:
           install -m 700 -d ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+          # Pinned host key (EC2_SSH_HOST_KEY = `ssh-keyscan -t ed25519 <host>` output):
+          # an ephemeral runner has no TOFU history, so accept-new would trust
+          # any host that answers.
+          echo "${{ secrets.EC2_SSH_HOST_KEY }}" > ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
             "${{ secrets.EC2_SSH_USER }}@${{ secrets.EC2_HOST }}" \
             'cd /opt/blog \
              && docker compose pull api \

@@ -20,8 +20,9 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 # RDS TLS: trust the AWS RDS CA bundle so DATABASE_SSL=true verifies properly
-# (no rejectUnauthorized:false anywhere).
-ADD --chmod=444 https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem /etc/ssl/rds-global-bundle.pem
+# (no rejectUnauthorized:false anywhere). Vendored in-repo (certs/) rather than
+# downloaded at build time, so builds are reproducible and integrity-checked by git.
+COPY --chmod=444 certs/rds-global-bundle.pem /etc/ssl/rds-global-bundle.pem
 ENV NODE_EXTRA_CA_CERTS=/etc/ssl/rds-global-bundle.pem
 
 COPY --from=build /app/node_modules ./node_modules

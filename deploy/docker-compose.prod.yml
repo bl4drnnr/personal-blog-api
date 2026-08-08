@@ -3,7 +3,8 @@
 # Env files (.env.api, .env.front) live next to this file and are NOT in git.
 services:
   nginx:
-    image: nginx:1.27-alpine
+    # nginx:1.27-alpine, pinned by digest
+    image: nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
     restart: unless-stopped
     ports:
       - '80:80'
@@ -18,13 +19,17 @@ services:
       - admin
 
   certbot:
-    image: certbot/certbot
+    # certbot/certbot:v4.2.0, pinned by digest
+    image: certbot/certbot@sha256:9626d72120577cf72da4fc7948806e9993598981720a4cbe04340a502468d67b
     restart: unless-stopped
     entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done'
     volumes:
       - letsencrypt:/etc/letsencrypt
       - certbot-webroot:/var/www/certbot
 
+  # App images track :latest deliberately: the same trusted pipeline builds and
+  # deploys them, and every push is also tagged with the commit SHA — pin a
+  # specific ghcr.io/...:<sha> here to roll back.
   front:
     image: ghcr.io/mikhailbahdashych/personal-blog-front:latest
     restart: unless-stopped

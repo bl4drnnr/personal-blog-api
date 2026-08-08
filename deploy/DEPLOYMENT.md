@@ -102,6 +102,7 @@ start the stack from `/opt/blog` with `docker compose -p blog up -d`, or adjust.
 | `EC2_HOST` | instance public IP/DNS |
 | `EC2_SSH_USER` | `deployer` |
 | `EC2_SSH_KEY` | private key for that user |
+| `EC2_SSH_HOST_KEY` | output of `ssh-keyscan -t ed25519 <EC2_HOST>` — pins the host key so deploys refuse to talk to an impostor host |
 
 ## 5. Cutover
 
