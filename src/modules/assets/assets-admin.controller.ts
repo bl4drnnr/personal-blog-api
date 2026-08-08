@@ -14,10 +14,18 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
-import { AccessTokenGuard } from '../../common/guards/access-token.guard';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { AccessTokenGuard } from '@common/guards/access-token.guard';
 import { AssetsService } from './assets.service';
+import { ListAssetsQueryDto, UploadAssetDto } from './dto/assets.dto';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ALLOWED_MIME = new Set([
@@ -30,31 +38,9 @@ const ALLOWED_MIME = new Set([
   'image/x-icon',
 ]);
 
-class ListAssetsQueryDto {
-  @IsOptional()
-  @IsString()
-  @MaxLength(200)
-  search?: string;
-
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  page: number = 1;
-
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(100)
-  per: number = 50;
-}
-
-class UploadAssetDto {
-  @IsOptional()
-  @IsString()
-  @MaxLength(300)
-  alt?: string;
-}
-
+@ApiTags('Assets')
+@ApiBearerAuth('access-token')
+@ApiUnauthorizedResponse({ description: 'Missing or invalid access token.' })
 @Controller('admin/assets')
 @UseGuards(AccessTokenGuard)
 export class AssetsAdminController {
@@ -62,6 +48,19 @@ export class AssetsAdminController {
 
   @Post()
   @UseInterceptors(FileInterceptor('file', { limits: { fileSize: MAX_FILE_SIZE } }))
+  @ApiOperation({ summary: '[admin] Upload an image (10MB max)' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['file'],
+      properties: {
+        file: { type: 'string', format: 'binary' },
+        alt: { type: 'string' },
+      },
+    },
+  })
+  @ApiCreatedResponse({ description: 'The stored asset, including its public URL.' })
   upload(@UploadedFile() file: Express.Multer.File | undefined, @Body() dto: UploadAssetDto) {
     if (!file) {
       throw new BadRequestException('Missing file field');
@@ -73,12 +72,14 @@ export class AssetsAdminController {
   }
 
   @Get()
+  @ApiOperation({ summary: '[admin] List assets (paginated)' })
   list(@Query() query: ListAssetsQueryDto) {
     return this.assets.list(query.search, query.page, query.per);
   }
 
   @Delete(':id')
   @HttpCode(204)
+  @ApiOperation({ summary: '[admin] Delete an asset (removes the S3 object too)' })
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     await this.assets.remove(id);
   }

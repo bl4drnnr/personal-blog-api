@@ -6,9 +6,9 @@ import { hashSync } from 'bcryptjs';
 import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { markdownToPlainText, readingTimeMin } from '../common/content';
-import { requireEnv } from '../common/env';
-import * as schema from '../db/schema';
+import { markdownToPlainText, readingTimeMin } from '@common/content';
+import { requireEnv } from '@common/env';
+import * as schema from '@db/schema';
 
 const md = (name: string) => readFileSync(join(__dirname, 'content', name), 'utf8');
 
@@ -42,7 +42,7 @@ async function main() {
     heroIntroMd:
       'I build detection pipelines and break cloud things to understand how they fail. This is where the notes end up: longer write-ups on the blog, smaller tools under projects.',
     socialLinks: [
-      { label: 'github', url: 'https://github.com/bl4drnnr' },
+      { label: 'github', url: 'https://github.com/mikhailbahdashych' },
       { label: 'linkedin', url: 'https://www.linkedin.com/in/mikhailbahdashych/' },
     ],
     seoDefaultTitle: 'Mikhail Bahdashych — Security Engineer',
@@ -56,7 +56,7 @@ async function main() {
     id: 1,
     fullName: 'Mikhail Bahdashych',
     profileMd:
-      "Hi, I'm Mikhail. Security engineer focused on detection engineering and cloud security. I like systems that fail loudly, rules an on-call engineer can explain in one sentence, and deleting more code than I write.",
+      'Security engineer focused on detection engineering and cloud security. I like systems that fail loudly, rules an on-call engineer can explain in one sentence, and deleting more code than I write.',
     location: 'Kraków, Poland',
     contactEmail: 'mikhail.bahdashych@gmail.com',
     seoTitle: 'About — Mikhail Bahdashych',
@@ -201,7 +201,7 @@ async function main() {
     featured: true,
     published: true,
     publishedAt: new Date('2026-05-10T09:00:00Z'),
-    repoUrl: 'https://github.com/bl4drnnr/sigil',
+    repoUrl: 'https://github.com/mikhailbahdashych/sigil',
   });
 
   await insertPost({
@@ -216,7 +216,7 @@ async function main() {
     featured: true,
     published: true,
     publishedAt: new Date('2026-04-20T09:00:00Z'),
-    repoUrl: 'https://github.com/bl4drnnr/hardened-lab',
+    repoUrl: 'https://github.com/mikhailbahdashych/hardened-lab',
   });
 
   await insertPost({
@@ -231,7 +231,7 @@ async function main() {
     featured: false,
     published: true,
     publishedAt: new Date('2026-03-15T09:00:00Z'),
-    repoUrl: 'https://github.com/bl4drnnr/ttp-notes',
+    repoUrl: 'https://github.com/mikhailbahdashych/ttp-notes',
   });
 
   await pool.end();

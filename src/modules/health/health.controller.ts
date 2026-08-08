@@ -1,14 +1,16 @@
-import { Controller, Get, Inject } from '@nestjs/common';
-import { sql } from 'drizzle-orm';
-import { Database, DRIZZLE } from '../../db/db.module';
+import { Controller, Get } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { HealthService } from './health.service';
 
+@ApiTags('Health')
 @Controller('health')
 export class HealthController {
-  constructor(@Inject(DRIZZLE) private readonly db: Database) {}
+  constructor(private readonly health: HealthService) {}
 
   @Get()
-  async check() {
-    await this.db.execute(sql`select 1`);
-    return { status: 'ok' };
+  @ApiOperation({ summary: 'Liveness probe (also pings the database)' })
+  @ApiOkResponse({ schema: { example: { status: 'ok' } } })
+  check() {
+    return this.health.check();
   }
 }

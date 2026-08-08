@@ -35,6 +35,33 @@ Admin (`Authorization: Bearer <access token>`): CRUD under `/api/admin/posts`,
 `/api/admin/assets` (multipart), `/api/admin/positions|education|certifications`,
 `PUT /api/admin/about|config|password`. Auth flow under `/api/auth/*`.
 
+### Interactive docs (OpenAPI / Swagger)
+
+Every endpoint is documented with OpenAPI. With the API running:
+
+- **Swagger UI** — [`/api/docs`](http://localhost:4201/api/docs) (click **Authorize** to
+  paste a Bearer access token and try admin routes)
+- **Raw OpenAPI JSON** — `/api/docs-json`
+
+Set `SWAGGER_ENABLED=false` to disable the docs (e.g. to hide the API surface in
+production).
+
+## Project layout
+
+Feature modules live under `src/modules/*`; shared infrastructure under
+`src/db` (schema, connection) and `src/common` (guards, decorators, helpers).
+Cross-directory imports use TypeScript path aliases for readability:
+
+| Alias | Resolves to |
+| --- | --- |
+| `@db/*` | `src/db/*` |
+| `@common/*` | `src/common/*` |
+| `@modules/*` | `src/modules/*` |
+
+Aliases resolve everywhere: `tsc-alias` rewrites them in the production build,
+`ts-node` + `tsconfig-paths` in dev, `moduleNameMapper` in Jest, and `tsx`
+natively for the seed/migrate scripts.
+
 ## Development
 
 ```bash
@@ -58,7 +85,89 @@ search, assets/about/config.
 
 ## Deployment
 
-Docker image (multi-stage, distroless-ish `node:22-slim`, RDS CA bundle baked
-in) built by `.github/workflows/deploy.yml` → GHCR → SSH deploy to the EC2
-compose stack. Full runbook, including the legacy-system inventory and cutover
-steps: [`deploy/DEPLOYMENT.md`](deploy/DEPLOYMENT.md).
+This repo is the **deployment hub** for all three apps. One EC2 instance runs a
+Docker Compose stack — nginx (TLS) in front of the Next.js frontend, this API,
+and the static admin — talking to RDS PostgreSQL and S3.
+
+```
+                    ┌──────────────────────── EC2 ────────────────────────┐
+Internet ──443──▶ nginx ──▶ front (Next SSR :3000)   ──▶ api (:4201) ──▶ RDS
+                    │  ├──▶ api   (NestJS  :4201)     ◀── revalidate ──┘
+                    │  └──▶ admin (static  :80)               │
+                    └── certbot (auto-renew)                  └──▶ S3 (assets)
+```
+
+- `mikhailbahdashych.me` → front, `api.` → api, `admin.` → admin
+- App images are built by each repo's GitHub Actions and pushed to GHCR
+- `docker-compose.prod.yml` (repo root) orchestrates everything;
+  `deploy/nginx/blog.conf` holds the vhosts
+
+### Prerequisites
+
+- An EC2 instance with Docker + the compose plugin, ports 80/443 open
+- RDS PostgreSQL with a `personal_blog` database
+- An S3 bucket and an IAM user scoped to `s3:{Put,Get,Delete}Object` on it
+- DNS A records for the apex + `api.` + `admin.` pointing at the instance
+
+### One-time host setup
+
+```bash
+# Clone this repo to /opt/blog (the compose file + nginx config live here)
+sudo git clone https://github.com/mikhailbahdashych/personal-blog-api.git /opt/blog
+sudo chown -R "$USER" /opt/blog && cd /opt/blog
+
+# Fill in production secrets
+cp .env.prod.example .env.prod && "$EDITOR" .env.prod
+
+# GHCR images are private — log in with a PAT that has read:packages
+docker login ghcr.io -u mikhailbahdashych
+```
+
+**Issue TLS certificates once** (nginx can't start on 443 without them):
+
+```bash
+docker run --rm -p 80:80 -v personal-blog-api_letsencrypt:/etc/letsencrypt \
+  certbot/certbot certonly --standalone \
+  -d mikhailbahdashych.me -d api.mikhailbahdashych.me -d admin.mikhailbahdashych.me \
+  --email you@example.com --agree-tos --no-eff-email
+```
+
+**Start the stack** (the certbot container renews automatically afterwards):
+
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
+
+Migrations apply automatically on every deploy; the first boot creates the whole
+schema (singleton rows come from migration `0001`). Create the first admin user
+once — MFA enrolls on first login:
+
+```bash
+docker compose -f docker-compose.prod.yml exec api node -e "
+  const { hashSync } = require('bcryptjs');
+  const { Pool } = require('pg');
+  const [email, password] = process.argv.slice(1);
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: true } });
+  pool.query('INSERT INTO users (email, password_hash) VALUES (\$1, \$2)', [email, hashSync(password, 12)])
+    .then(() => console.log('Created admin:', email)).then(() => pool.end());
+" you@example.com 'a-long-unique-password'
+```
+
+### Continuous deployment
+
+A push to `master` builds a fresh image, pushes it to GHCR, then SSHes to the
+host and rolls the service — opening port 22 **only to the runner's IP** and
+revoking it afterwards (`.github/workflows/deploy.yml`). Required repository
+secrets:
+
+| Secret | Value |
+| --- | --- |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | IAM user allowed only `ec2:AuthorizeSecurityGroupIngress` / `RevokeSecurityGroupIngress` on the SG below |
+| `AWS_REGION` | e.g. `eu-central-1` |
+| `EC2_SG_ID` | the instance's security group |
+| `EC2_HOST` | instance public IP/DNS |
+| `EC2_SSH_USER` / `EC2_SSH_KEY` | deploy user + its private key |
+| `EC2_SSH_HOST_KEY` | `ssh-keyscan -t ed25519 <EC2_HOST>` output — pins the host key so deploys refuse an impostor host |
+
+To roll back, pin a specific image in `docker-compose.prod.yml`
+(`ghcr.io/…/personal-blog-api:<sha>`) and `docker compose -f docker-compose.prod.yml up -d api`.

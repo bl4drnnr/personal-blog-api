@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { hashSync } from 'bcryptjs';
 import { authenticator } from 'otplib';
 import request from 'supertest';
-import { users } from '../src/db/schema';
+import { users } from '@db/schema';
 import { createTestApp, TestApp } from './app.harness';
 
 const EMAIL = 'e2e-auth@test.local';

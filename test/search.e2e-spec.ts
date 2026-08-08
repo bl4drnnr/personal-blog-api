@@ -1,7 +1,7 @@
 import { inArray } from 'drizzle-orm';
 import request from 'supertest';
-import { markdownToPlainText } from '../src/common/content';
-import { posts } from '../src/db/schema';
+import { markdownToPlainText } from '@common/content';
+import { posts } from '@db/schema';
 import { createTestApp, TestApp } from './app.harness';
 
 const SLUGS = ['e2e-search-quokka', 'e2e-search-wombat', 'e2e-search-draft'];

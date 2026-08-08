@@ -61,7 +61,9 @@ Provider audit logs lag. A `sts:AssumeRoleWithWebIdentity` event can take minute
 
 Sessions minted through CI federation are predictable: same role, same session-name prefix, same source ASN, and a narrow set of API calls. Model that baseline and alert on divergence. A simple scoring function over the first $n$ API calls of a session works well in practice:
 
-$$S(session) = \sum_{i=1}^{n} w_i \cdot \mathbb{1}[call_i \notin B]$$
+$$
+S(session) = \sum_{i=1}^{n} w_i \cdot \mathbb{1}[call_i \notin B]
+$$
 
 where $B$ is the baseline call set for the role and $w_i$ weights calls by sensitivity ( `iam:*` and `sts:*` near the top). Anything above a small threshold pages a human.
 

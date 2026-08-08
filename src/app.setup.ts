@@ -2,7 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import { requireEnv } from './common/env';
+import { requireEnv } from '@common/env';
 
 /** Shared between main.ts and the e2e test harness so both run the same app. */
 export function configureApp(app: NestExpressApplication): void {

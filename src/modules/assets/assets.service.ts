@@ -1,8 +1,8 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { desc, eq, ilike, sql } from 'drizzle-orm';
-import { Database, DRIZZLE } from '../../db/db.module';
-import { assets } from '../../db/schema';
+import { Database, DRIZZLE } from '@db/db.module';
+import { assets } from '@db/schema';
 import { S3Service } from './s3.service';
 
 @Injectable()
