@@ -15,6 +15,7 @@
     "dev:infra:down": "docker compose -f docker-compose.dev.yml down",
     "migration:generate": "drizzle-kit generate",
     "migrate": "tsx src/db/migrate.ts",
+    "migrate:prod": "node dist/db/migrate.js",
     "seed": "tsx src/seed/seed.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\"",
