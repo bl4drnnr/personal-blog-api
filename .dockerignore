@@ -1,0 +1,13 @@
+node_modules
+dist
+coverage
+.git
+.github
+.claude
+.env
+.env.*
+!.env.example
+*.md
+test
+docker-compose.dev.yml
+deploy
