@@ -1,33 +1,30 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
-import { json, urlencoded } from 'express';
+import { requireEnv } from './common/env';
 
-(async () => {
-  const whitelist = [
-    'http://localhost:4200', // Admin panel
-    'http://localhost:4202', // Blog front
-    'http://localhost:8080', // Blog front
-    'http://127.0.0.1:8080', // Blog front
-    'http://localhost:4000', // Blog production front
-    'https://mikhailbahdashych.me',
-    'https://admin.mikhailbahdashych.me'
-  ];
+async function bootstrap() {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    rawBody: false,
+  });
 
-  const app = await NestFactory.create(AppModule);
-  const port = process.env.API_PORT || 4201;
-
-  app.setGlobalPrefix('/api');
-  app.use(json({ limit: '50mb' }));
-  app.use(urlencoded({ extended: true, limit: '50mb' }));
-
+  app.setGlobalPrefix('api');
+  app.use(helmet());
+  app.use(cookieParser());
+  app.useBodyParser('json', { limit: '2mb' });
   app.enableCors({
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Access-Token'],
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
-    origin: whitelist,
-    credentials: true
+    origin: requireEnv('CORS_ORIGINS').split(','),
+    credentials: true,
   });
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: false }),
+  );
+  app.disable('x-powered-by');
 
-  await app.listen(port, () => {
-    console.log(`Personal blog server started on port ${port}`);
-  });
-})();
+  await app.listen(Number(requireEnv('API_PORT')));
+}
+
+void bootstrap();
