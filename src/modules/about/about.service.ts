@@ -7,9 +7,9 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { asc, desc, eq } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
-import { Database, DRIZZLE } from '../../db/db.module';
-import { about, assets, certifications, education, positions } from '../../db/schema';
-import { RevalidateService } from '../revalidate/revalidate.service';
+import { Database, DRIZZLE } from '@db/db.module';
+import { about, assets, certifications, education, positions } from '@db/schema';
+import { RevalidateService } from '@modules/revalidate/revalidate.service';
 import { CertificationDto, EducationDto, PositionDto, UpdateAboutDto } from './dto/about.dto';
 
 type CvTable = typeof positions | typeof education | typeof certifications;
@@ -72,7 +72,8 @@ export class AboutService {
       items: T[],
     ) =>
       items.map(({ row, logoKey }) => {
-        const { logoAssetId: _logoAssetId, ...rest } = row;
+        // Drop the internal asset id; expose the resolved URL instead.
+        const { logoAssetId, ...rest } = row;
         return { ...rest, logoUrl: this.url(logoKey) };
       });
 

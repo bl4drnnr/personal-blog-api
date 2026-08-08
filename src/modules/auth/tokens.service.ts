@@ -4,9 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { eq } from 'drizzle-orm';
 import { Response } from 'express';
-import { durationToMs } from '../../common/duration';
-import { Database, DRIZZLE } from '../../db/db.module';
-import { sessions } from '../../db/schema';
+import { durationToMs } from '@common/duration';
+import { Database, DRIZZLE } from '@db/db.module';
+import { sessions } from '@db/schema';
 
 export const REFRESH_COOKIE = '_rt';
 const REFRESH_COOKIE_PATH = '/api/auth';

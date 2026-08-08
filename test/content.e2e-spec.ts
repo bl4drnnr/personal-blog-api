@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import request from 'supertest';
-import { certifications, positions } from '../src/db/schema';
+import { certifications, positions } from '@db/schema';
 import { createTestApp, TestApp } from './app.harness';
 import { createAuthedUser, deleteUser } from './auth-helper';
 

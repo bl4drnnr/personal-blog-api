@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Pool } from 'pg';
-import { requireEnv } from '../common/env';
+import { requireEnv } from '@common/env';
 
 async function main() {
   const pool = new Pool({

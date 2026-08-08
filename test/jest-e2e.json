@@ -6,6 +6,11 @@
   "transform": {
     "^.+\\.ts$": ["ts-jest", { "tsconfig": "tsconfig.json" }]
   },
+  "moduleNameMapper": {
+    "^@db/(.*)$": "<rootDir>/src/db/$1",
+    "^@common/(.*)$": "<rootDir>/src/common/$1",
+    "^@modules/(.*)$": "<rootDir>/src/modules/$1"
+  },
   "setupFiles": ["dotenv/config"],
   "testTimeout": 30000
 }

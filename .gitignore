@@ -3,10 +3,10 @@
 /node_modules
 /coverage
 
-# environment — never commit real values
+# environment — never commit real values, but keep *.example templates
 .env
 .env.*
-!.env.example
+!*.example
 
 # local tooling
 .claude/

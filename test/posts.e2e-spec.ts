@@ -1,6 +1,6 @@
 import { inArray } from 'drizzle-orm';
 import request from 'supertest';
-import { posts } from '../src/db/schema';
+import { posts } from '@db/schema';
 import { createTestApp, TestApp } from './app.harness';
 import { createAuthedUser, deleteUser } from './auth-helper';
 
