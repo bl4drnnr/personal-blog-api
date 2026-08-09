@@ -26,6 +26,22 @@ Part of a three-repo system:
 - **Revalidation**: every admin mutation fires a webhook to the frontend, which
   invalidates the affected ISR cache tags.
 
+## Security posture
+
+Decisions worth knowing before changing this code:
+
+| Control | Where | Note |
+| --- | --- | --- |
+| Per-client rate limiting | `app.setup.ts` | `trust proxy = 1` makes `req.ip` the address nginx appends. Removing it makes every request look like it came from the nginx container, so the whole internet shares one bucket — 5 login attempts/min globally, i.e. a trivial lockout. |
+| Token separation | guards + `tokens.service.ts` | Access, refresh and temp-MFA tokens share a secret but carry a `type` claim every guard checks, so none can stand in for another. Refresh tokens rotate; replaying a rotated-out one revokes the session. |
+| Constant-time login | `auth.service.ts` | An unknown email is still compared against a dummy hash. Skipping it returns ~7ms vs ~240ms and enumerates accounts. |
+| Password change | `auth.service.ts` | Re-issues the session, which invalidates every refresh token handed out earlier. Access tokens already issued stay valid until they expire (15m). |
+| Search output | `search.service.ts` | `ts_headline` does not escape; it marks hits with control characters, the string is escaped, then only those become `<mark>`. |
+| Upload validation | `assets/mime.ts` | Content type must be on the allowlist *and* match the file's signature. The stored extension comes from the type, never the filename. SVG is stored `Content-Disposition: attachment` so it cannot run as a document. |
+| Markdown | front/admin `lib/markdown.ts` | Raw HTML is dropped by remark-rehype; `rehypeSafeUrls` additionally restricts link/image URLs to http/https/mailto/tel, which is what stops `[x](javascript:…)`. |
+| CSP | `deploy/nginx/blog.conf` | Set per vhost for the blog and admin. The API sets its own via helmet, so nginx adds none there. |
+| Swagger | `SWAGGER_ENABLED` | Off in production — it publishes the full admin surface. |
+
 ## Endpoints
 
 Public: `GET /api/posts`, `GET /api/posts/slugs`, `GET /api/posts/:slug`,

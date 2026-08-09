@@ -22,7 +22,7 @@ export class AssetsService {
   }
 
   async upload(file: Express.Multer.File, alt: string | undefined) {
-    const key = await this.s3.upload(file.buffer, file.mimetype, file.originalname);
+    const key = await this.s3.upload(file.buffer, file.mimetype);
 
     const [existing] = await this.db.select().from(assets).where(eq(assets.s3Key, key));
     if (existing) {

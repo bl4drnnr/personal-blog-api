@@ -26,17 +26,9 @@ import {
 import { AccessTokenGuard } from '@common/guards/access-token.guard';
 import { AssetsService } from './assets.service';
 import { ListAssetsQueryDto, UploadAssetDto } from './dto/assets.dto';
+import { EXTENSION_BY_MIME, matchesDeclaredType } from './mime';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
-const ALLOWED_MIME = new Set([
-  'image/png',
-  'image/jpeg',
-  'image/webp',
-  'image/gif',
-  'image/avif',
-  'image/svg+xml',
-  'image/x-icon',
-]);
 
 @ApiTags('Assets')
 @ApiBearerAuth('access-token')
@@ -65,8 +57,11 @@ export class AssetsAdminController {
     if (!file) {
       throw new BadRequestException('Missing file field');
     }
-    if (!ALLOWED_MIME.has(file.mimetype)) {
+    if (!EXTENSION_BY_MIME[file.mimetype]) {
       throw new BadRequestException(`Unsupported content type: ${file.mimetype}`);
+    }
+    if (!matchesDeclaredType(file.buffer, file.mimetype)) {
+      throw new BadRequestException(`File contents are not a valid ${file.mimetype}`);
     }
     return this.assets.upload(file, dto.alt);
   }
