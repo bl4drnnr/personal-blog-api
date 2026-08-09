@@ -83,7 +83,9 @@ export class AssetsService {
       .select()
       .from(assets)
       .where(where)
-      .orderBy(desc(assets.createdAt))
+      // Same reasoning as the post listings: a bulk upload shares a timestamp,
+      // and without a total order paging over it can drop rows.
+      .orderBy(desc(assets.createdAt), desc(assets.id))
       .limit(per)
       .offset((page - 1) * per);
 

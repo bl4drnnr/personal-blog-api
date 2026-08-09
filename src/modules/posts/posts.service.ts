@@ -58,7 +58,10 @@ export class PostsService {
       .from(posts)
       .leftJoin(assets, eq(posts.heroAssetId, assets.id))
       .where(where)
-      .orderBy(desc(posts.publishedAt))
+      // publishedAt alone is not a total order: publish two posts in the same
+      // instant and LIMIT/OFFSET can show one twice and another not at all.
+      // The unique id breaks every tie deterministically.
+      .orderBy(desc(posts.publishedAt), desc(posts.id))
       .limit(query.per)
       .offset((query.page - 1) * query.per);
 
@@ -103,7 +106,7 @@ export class PostsService {
       .select({ slug: posts.slug, type: posts.type, updatedAt: posts.updatedAt })
       .from(posts)
       .where(eq(posts.published, true))
-      .orderBy(desc(posts.publishedAt));
+      .orderBy(desc(posts.publishedAt), desc(posts.id));
   }
 
   // --- admin ----------------------------------------------------------------
@@ -136,7 +139,7 @@ export class PostsService {
       })
       .from(posts)
       .where(where)
-      .orderBy(desc(posts.updatedAt))
+      .orderBy(desc(posts.updatedAt), desc(posts.id))
       .limit(query.per)
       .offset((query.page - 1) * query.per);
 
