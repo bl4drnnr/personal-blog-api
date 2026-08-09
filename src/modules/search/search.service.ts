@@ -7,7 +7,7 @@ export interface SearchResultItem {
   type: 'article' | 'project';
   tags: string[];
   publishedAt: string;
-  /** Title with matches wrapped in <mark> — only that tag, produced by ts_headline. */
+  /** Title with matches wrapped in <mark>. Everything else is HTML-escaped. */
   titleHtml: string;
   snippetHtml: string;
 }
@@ -21,8 +21,28 @@ type SearchRow = {
   snippet_html: string;
 };
 
-const HEADLINE_TITLE = 'StartSel=<mark>,StopSel=</mark>,HighlightAll=true';
-const HEADLINE_SNIPPET = 'StartSel=<mark>,StopSel=</mark>,MaxWords=22,MinWords=10,MaxFragments=1';
+/**
+ * ts_headline does not escape the text it highlights, so asking it for literal
+ * <mark> tags would make the column a passthrough for any markup sitting in a
+ * title or body. Instead it marks hits with two control characters that cannot
+ * occur in real content, the whole string is HTML-escaped, and only then do the
+ * sentinels become tags — so <mark> is the only markup that can ever come out.
+ */
+const MARK_START = '\u0002';
+const MARK_STOP = '\u0003';
+const HEADLINE_TITLE = `StartSel=${MARK_START},StopSel=${MARK_STOP},HighlightAll=true`;
+const HEADLINE_SNIPPET = `StartSel=${MARK_START},StopSel=${MARK_STOP},MaxWords=22,MinWords=10,MaxFragments=1`;
+
+function toMarkedHtml(headline: string): string {
+  return headline
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replaceAll(MARK_START, '<mark>')
+    .replaceAll(MARK_STOP, '</mark>');
+}
 
 @Injectable()
 export class SearchService {
@@ -77,8 +97,8 @@ export class SearchService {
       type: row.type,
       tags: row.tags,
       publishedAt: row.published_at,
-      titleHtml: row.title_html,
-      snippetHtml: row.snippet_html,
+      titleHtml: toMarkedHtml(row.title_html),
+      snippetHtml: toMarkedHtml(row.snippet_html),
     }));
 
     return { items, total, page, per };

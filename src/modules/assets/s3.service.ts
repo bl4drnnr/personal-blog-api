@@ -1,8 +1,8 @@
 import { createHash } from 'crypto';
-import { extname } from 'path';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { EXTENSION_BY_MIME, SVG_MIME } from './mime';
 
 @Injectable()
 export class S3Service {
@@ -24,12 +24,12 @@ export class S3Service {
     });
   }
 
-  async upload(buffer: Buffer, contentType: string, originalName: string): Promise<string> {
+  async upload(buffer: Buffer, contentType: string): Promise<string> {
     const now = new Date();
     const year = now.getUTCFullYear();
     const month = String(now.getUTCMonth() + 1).padStart(2, '0');
     const hash = createHash('sha256').update(buffer).digest('hex').slice(0, 16);
-    const key = `uploads/${year}/${month}/${hash}${extname(originalName).toLowerCase()}`;
+    const key = `uploads/${year}/${month}/${hash}${EXTENSION_BY_MIME[contentType]}`;
 
     await this.client.send(
       new PutObjectCommand({
@@ -38,6 +38,10 @@ export class S3Service {
         Body: buffer,
         ContentType: contentType,
         CacheControl: 'public, max-age=31536000, immutable',
+        // An SVG opened as a top-level document runs its own scripts against the
+        // bucket's origin. <img>/<image> rendering ignores this header, so
+        // forcing a download costs nothing and removes that path.
+        ...(contentType === SVG_MIME ? { ContentDisposition: 'attachment' } : {}),
       }),
     );
     return key;

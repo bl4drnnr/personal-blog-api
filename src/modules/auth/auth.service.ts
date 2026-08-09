@@ -18,6 +18,14 @@ import { TokensService } from './tokens.service';
 const TEMP_TOKEN_TTL_SECONDS = 300;
 const PASSWORD_HASH_ROUNDS = 12;
 
+/**
+ * A real bcrypt hash (of a value nothing can match) compared against whenever
+ * the email is unknown. Without it, an unknown email returns in ~7ms while a
+ * known one costs a full bcrypt verification (~240ms) — a timing oracle that
+ * enumerates valid accounts.
+ */
+const DUMMY_PASSWORD_HASH = '$2b$12$C6UzMDM.H6dfI/f/IKcEe.4qKWkgKMTaLfR8ZuMv0mBGgIjJqTuKS';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -29,7 +37,10 @@ export class AuthService {
 
   async login(email: string, password: string) {
     const [user] = await this.db.select().from(users).where(eq(users.email, email));
-    if (!user || !(await compare(password, user.passwordHash))) {
+    // Always spend the same bcrypt work, so response time reveals nothing about
+    // whether the email exists.
+    const passwordMatches = await compare(password, user?.passwordHash ?? DUMMY_PASSWORD_HASH);
+    if (!user || !passwordMatches) {
       throw new UnauthorizedException();
     }
 
@@ -106,7 +117,18 @@ export class AuthService {
     await this.tokens.revokeSession(userId, response);
   }
 
-  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+  /**
+   * Changing the password re-issues the session. Because a user has exactly one
+   * session row and issuing overwrites its refresh jti, every refresh token
+   * handed out before the change stops working: the tab that made the change
+   * stays signed in, anyone else holding the old credentials is cut off.
+   */
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+    response: Response,
+  ) {
     const user = await this.getUser(userId);
     if (!(await compare(currentPassword, user.passwordHash))) {
       throw new UnauthorizedException('Current password is incorrect');
@@ -116,6 +138,8 @@ export class AuthService {
       .update(users)
       .set({ passwordHash: await hash(newPassword, PASSWORD_HASH_ROUNDS), updatedAt: new Date() })
       .where(eq(users.id, userId));
+
+    return this.tokens.issueTokens(userId, response);
   }
 
   private async getUser(userId: string) {

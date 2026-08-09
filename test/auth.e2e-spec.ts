@@ -115,11 +115,23 @@ describe('Auth (e2e)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ currentPassword: 'not the password', newPassword: NEW_PASSWORD })
       .expect(401);
-    await request(server)
+
+    const staleCookie = refreshCookie;
+    const changed = await request(server)
       .put('/api/admin/password')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ currentPassword: PASSWORD, newPassword: NEW_PASSWORD })
-      .expect(204);
+      .expect(200);
+
+    // The caller is handed a fresh session so the tab that made the change
+    // stays signed in.
+    expect(typeof changed.body.accessToken).toBe('string');
+    accessToken = changed.body.accessToken;
+    refreshCookie = extractRefreshCookie(changed);
+    expect(refreshCookie).not.toEqual(staleCookie);
+
+    // Anyone still holding the pre-change refresh token is locked out.
+    await request(server).post('/api/auth/refresh').set('Cookie', staleCookie).expect(401);
   });
 
   it('logs in with the new password and an MFA challenge', async () => {
