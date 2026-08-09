@@ -47,6 +47,10 @@ export const sessions = pgTable('sessions', {
 export const assets = pgTable('assets', {
   id: uuid('id').primaryKey().defaultRandom(),
   s3Key: text('s3_key').notNull().unique(),
+  // The name the file was uploaded under. Kept for display and search only —
+  // the object key is derived from the content hash and MIME type, never from
+  // this, so a hostile filename cannot steer where the object lands.
+  filename: text('filename').notNull().default(''),
   contentType: text('content_type').notNull(),
   sizeBytes: integer('size_bytes').notNull(),
   alt: text('alt'),
