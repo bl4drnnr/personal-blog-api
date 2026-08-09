@@ -13,6 +13,11 @@ const PNG = Buffer.from(
   'base64',
 );
 
+// Objects land under the environment's own prefix, so the expected key shape is
+// derived from the same setting the service reads rather than hardcoded.
+const KEY_PREFIX = process.env.S3_KEY_PREFIX!.replace(/^\/+|\/+$/g, '');
+const KEY_PATTERN = `${KEY_PREFIX}\\/\\d{4}\\/\\d{2}\\/[0-9a-f]{16}\\.png$`;
+
 describe('Assets, About, Config (e2e)', () => {
   let ctx: TestApp;
   let server: ReturnType<TestApp['app']['getHttpServer']>;
@@ -42,7 +47,7 @@ describe('Assets, About, Config (e2e)', () => {
         .attach('file', PNG, { filename: 'pixel.png', contentType: 'image/png' })
         .expect(201);
       assetId = res.body.id;
-      expect(res.body.url).toMatch(/^http.*\/uploads\/\d{4}\/\d{2}\/[0-9a-f]{16}\.png$/);
+      expect(res.body.url).toMatch(new RegExp(`^http.*\\/${KEY_PATTERN}`));
       expect(res.body.alt).toBe('A test pixel');
 
       // The object must actually be retrievable from storage.
@@ -75,7 +80,7 @@ describe('Assets, About, Config (e2e)', () => {
 
       // Path stripped, UTF-8 preserved, extension still derived from the type.
       expect(res.body.filename).toBe('Ünicode Name.png');
-      expect(res.body.s3Key).toMatch(/^uploads\/\d{4}\/\d{2}\/[0-9a-f]{16}\.png$/);
+      expect(res.body.s3Key).toMatch(new RegExp(`^${KEY_PATTERN}`));
 
       // ILIKE is a plain substring match, so search an ASCII run of the name —
       // 'Ünicode' lowercases to 'ünicode' and would not match 'unicode'.

@@ -109,8 +109,14 @@ export class AuthService {
     if (!refreshToken) {
       throw new UnauthorizedException();
     }
-    const userId = await this.tokens.verifyRefreshToken(refreshToken);
-    return this.tokens.issueTokens(userId, response);
+    const outcome = await this.tokens.verifyRefreshToken(refreshToken);
+    if (outcome.withinGrace) {
+      // Another tab already rotated this one. Hand back an access token and
+      // leave the session alone: the cookie jar this request came from already
+      // holds the winner's refresh token, so there is nothing to re-issue.
+      return { accessToken: await this.tokens.signAccessToken(outcome.userId) };
+    }
+    return this.tokens.rotateTokens(outcome.userId, response);
   }
 
   async logout(userId: string, response: Response) {

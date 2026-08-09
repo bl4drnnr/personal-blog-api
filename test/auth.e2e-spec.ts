@@ -59,7 +59,7 @@ describe('Auth (e2e)', () => {
     tempToken = res.body.tempToken;
   });
 
-  it('serves an enrollment QR and otpauth URL', async () => {
+  it('serves an enrollment QR, otpauth URL and the key as text', async () => {
     const res = await request(server)
       .get('/api/auth/mfa/setup')
       .set('Authorization', `Bearer ${tempToken}`)
@@ -70,6 +70,9 @@ describe('Auth (e2e)', () => {
     if (!secret) {
       throw new Error('otpauth URL has no secret');
     }
+    // Password managers enrol from the text key, so it has to be the same
+    // credential the QR encodes — not a second one.
+    expect(res.body.secret).toBe(secret);
     totpSecret = secret;
   });
 
@@ -150,20 +153,49 @@ describe('Auth (e2e)', () => {
     refreshCookie = extractRefreshCookie(verify);
   });
 
-  it('rotates refresh tokens and kills the session on replay', async () => {
-    const oldCookie = refreshCookie;
+  it('survives two tabs refreshing with the same cookie at once', async () => {
+    const shared = refreshCookie;
 
-    const first = await request(server)
+    // Browser tabs share one cookie jar, so this is what a second tab opening
+    // looks like: the same refresh token presented twice, concurrently.
+    const [a, b] = await Promise.all([
+      request(server).post('/api/auth/refresh').set('Cookie', shared),
+      request(server).post('/api/auth/refresh').set('Cookie', shared),
+    ]);
+
+    expect([a.status, b.status]).toEqual([200, 200]);
+    expect(a.body.accessToken).toBeDefined();
+    expect(b.body.accessToken).toBeDefined();
+
+    // Exactly one of them rotates. The other is served from the grace slot and
+    // must not re-issue a cookie, or it would clobber the winner's.
+    const rotations = [a, b].filter((res) => res.get('Set-Cookie')?.some((c) => c.startsWith('_rt=')));
+    expect(rotations).toHaveLength(1);
+
+    // The session is still usable afterwards — the whole point. That call
+    // rotates again, so carry its cookie forward rather than the one it retired.
+    const stillAlive = await request(server)
       .post('/api/auth/refresh')
-      .set('Cookie', oldCookie)
+      .set('Cookie', extractRefreshCookie(rotations[0]))
       .expect(200);
-    expect(first.body.accessToken).toBeDefined();
-    const rotatedCookie = extractRefreshCookie(first);
+    refreshCookie = extractRefreshCookie(stillAlive);
+  });
 
-    // Replaying the rotated-out token must fail and revoke the whole session…
-    await request(server).post('/api/auth/refresh').set('Cookie', oldCookie).expect(401);
-    // …so even the newest token is now dead.
-    await request(server).post('/api/auth/refresh').set('Cookie', rotatedCookie).expect(401);
+  it('kills the session when a token older than the grace slot is replayed', async () => {
+    const stale = refreshCookie;
+
+    // Two rotations, so `stale` is neither the current token nor the one the
+    // grace slot holds. At that point it can only be a replay.
+    const first = await request(server).post('/api/auth/refresh').set('Cookie', stale).expect(200);
+    const second = await request(server)
+      .post('/api/auth/refresh')
+      .set('Cookie', extractRefreshCookie(first))
+      .expect(200);
+    const newest = extractRefreshCookie(second);
+
+    await request(server).post('/api/auth/refresh').set('Cookie', stale).expect(401);
+    // Revocation is total: even the newest token dies with the session.
+    await request(server).post('/api/auth/refresh').set('Cookie', newest).expect(401);
   });
 
   it('logout revokes the session', async () => {

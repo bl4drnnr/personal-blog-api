@@ -37,8 +37,8 @@ export class AuthController {
   @Get('mfa/setup')
   @UseGuards(TempTokenGuard)
   @ApiBearerAuth('access-token')
-  @ApiOperation({ summary: 'Get the TOTP enrollment QR (temp token required)' })
-  @ApiOkResponse({ description: '{ otpauthUrl, qrDataUrl }.' })
+  @ApiOperation({ summary: 'Get the TOTP enrollment secret and QR (temp token required)' })
+  @ApiOkResponse({ description: '{ secret, otpauthUrl, qrDataUrl }.' })
   mfaSetup(@Req() req: TempTokenRequest) {
     return this.auth.startMfaEnrollment(req.userId, req.tokenPurpose);
   }
