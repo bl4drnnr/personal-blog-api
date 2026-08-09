@@ -39,6 +39,12 @@ export const sessions = pgTable('sessions', {
     .unique()
     .references(() => users.id, { onDelete: 'cascade' }),
   refreshJtiHash: text('refresh_jti_hash').notNull(),
+  // The jti this one replaced, honoured for a few seconds after rotation. Two
+  // browser tabs share one cookie, so they can present the same refresh token
+  // at the same moment; without this the loser looks exactly like a replay and
+  // the whole session gets revoked. See tokens.service.ts.
+  previousJtiHash: text('previous_jti_hash'),
+  previousExpiresAt: timestamp('previous_expires_at', { withTimezone: true }),
   expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),

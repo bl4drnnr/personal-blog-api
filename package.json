@@ -17,6 +17,7 @@
     "migrate": "tsx src/db/migrate.ts",
     "migrate:prod": "node dist/db/migrate.js",
     "seed": "tsx src/seed/seed.ts",
+    "seed:dev": "tsx src/seed/dev-seed.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\"",
     "test:e2e": "jest --config test/jest-e2e.json --runInBand"
