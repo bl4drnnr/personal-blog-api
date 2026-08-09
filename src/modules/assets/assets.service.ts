@@ -1,9 +1,28 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { desc, eq, ilike, sql } from 'drizzle-orm';
+import { desc, eq, ilike, or, sql, SQL } from 'drizzle-orm';
 import { Database, DRIZZLE } from '@db/db.module';
 import { assets } from '@db/schema';
 import { S3Service } from './s3.service';
+
+/**
+ * Display-only, so this just has to be sane text: no control characters, no
+ * path, bounded length.
+ *
+ * Multipart filenames arrive latin1-decoded, which turns a UTF-8 name like
+ * 'ünïcode.png' into 'Ã¼nÃ¯code.png'. Reading those bytes back as UTF-8 undoes
+ * it; a name that was genuinely latin1 decodes to U+FFFD, so keep the original.
+ */
+function sanitizeFilename(originalName: string): string {
+  const reinterpreted = Buffer.from(originalName, 'latin1').toString('utf8');
+  const decoded = reinterpreted.includes('�') ? originalName : reinterpreted;
+  const base = decoded.split(/[/\\]/).pop() ?? '';
+  return Array.from(base)
+    .filter((char) => char.codePointAt(0)! > 0x1f)
+    .join('')
+    .trim()
+    .slice(0, 200);
+}
 
 @Injectable()
 export class AssetsService {
@@ -34,6 +53,7 @@ export class AssetsService {
       .insert(assets)
       .values({
         s3Key: key,
+        filename: sanitizeFilename(file.originalname),
         contentType: file.mimetype,
         sizeBytes: file.size,
         alt: alt ?? null,
@@ -43,7 +63,16 @@ export class AssetsService {
   }
 
   async list(search: string | undefined, page: number, per: number) {
-    const where = search ? ilike(assets.s3Key, `%${search}%`) : undefined;
+    // Match what the admin actually shows: the upload name and alt text. The
+    // key is a content hash, so searching it alone was never useful.
+    const term = search?.trim();
+    const where: SQL | undefined = term
+      ? or(
+          ilike(assets.filename, `%${term}%`),
+          ilike(assets.alt, `%${term}%`),
+          ilike(assets.s3Key, `%${term}%`),
+        )
+      : undefined;
 
     const [{ total }] = await this.db
       .select({ total: sql<number>`count(*)::int` })

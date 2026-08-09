@@ -62,6 +62,52 @@ describe('Assets, About, Config (e2e)', () => {
         .expect(400);
     });
 
+    it('keeps the upload name for display, without letting it steer the key', async () => {
+      const res = await request(server)
+        .post('/api/admin/assets')
+        .set('Authorization', `Bearer ${token}`)
+        .field('alt', 'traversal probe')
+        .attach('file', Buffer.concat([PNG, Buffer.from([1])]), {
+          filename: '../../etc/Ünicode Name.png',
+          contentType: 'image/png',
+        })
+        .expect(201);
+
+      // Path stripped, UTF-8 preserved, extension still derived from the type.
+      expect(res.body.filename).toBe('Ünicode Name.png');
+      expect(res.body.s3Key).toMatch(/^uploads\/\d{4}\/\d{2}\/[0-9a-f]{16}\.png$/);
+
+      // ILIKE is a plain substring match, so search an ASCII run of the name —
+      // 'Ünicode' lowercases to 'ünicode' and would not match 'unicode'.
+      const byName = await request(server)
+        .get('/api/admin/assets')
+        .query({ search: 'nicode Name' })
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+      expect(byName.body.items.map((a: { id: string }) => a.id)).toContain(res.body.id);
+
+      const byAlt = await request(server)
+        .get('/api/admin/assets')
+        .query({ search: 'traversal' })
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+      expect(byAlt.body.items.map((a: { id: string }) => a.id)).toContain(res.body.id);
+
+      const page = await request(server)
+        .get('/api/admin/assets')
+        .query({ page: 1, per: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+      expect(page.body.items).toHaveLength(1);
+      expect(page.body.per).toBe(1);
+      expect(page.body.total).toBeGreaterThan(1);
+
+      await request(server)
+        .delete(`/api/admin/assets/${res.body.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(204);
+    });
+
     it('lists and deletes assets', async () => {
       const list = await request(server)
         .get('/api/admin/assets')
