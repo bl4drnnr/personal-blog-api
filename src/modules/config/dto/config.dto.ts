@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsString, IsUrl, MaxLength, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsString, IsUrl, MaxLength, ValidateNested } from 'class-validator';
+
+export class UpdateMaintenanceDto {
+  @ApiProperty({ description: 'true sends the public site to /maintenance' })
+  @IsBoolean()
+  enabled: boolean;
+}
 
 export class SocialLinkDto {
   @ApiProperty({ example: 'github' })

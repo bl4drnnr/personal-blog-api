@@ -113,6 +113,8 @@ export const siteConfig = pgTable(
     seoDefaultTitle: text('seo_default_title').notNull().default(''),
     seoDefaultDescription: text('seo_default_description').notNull().default(''),
     footerText: text('footer_text').notNull().default(''),
+    // Deploy-time switch, not content: served via /maintenance, never /config.
+    maintenance: boolean('maintenance').notNull().default(false),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [check('site_config_singleton', sql`${t.id} = 1`)],

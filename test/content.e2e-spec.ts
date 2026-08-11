@@ -202,6 +202,24 @@ describe('Assets, About, Config (e2e)', () => {
   });
 
   describe('site config', () => {
+    // The suite runs against the dev database; put whatever config was there
+    // back so a test run never leaves "E2E hero title" on the real site.
+    let original: Record<string, unknown>;
+
+    beforeAll(async () => {
+      const res = await request(server).get('/api/config').expect(200);
+      const { id: _id, updatedAt: _updatedAt, ...rest } = res.body;
+      original = rest;
+    });
+
+    afterAll(async () => {
+      await request(server)
+        .put('/api/admin/config')
+        .set('Authorization', `Bearer ${token}`)
+        .send(original)
+        .expect(200);
+    });
+
     it('round-trips config through admin and public endpoints', async () => {
       const payload = {
         heroTitle: 'E2E hero title',
@@ -234,6 +252,50 @@ describe('Assets, About, Config (e2e)', () => {
           seoDefaultDescription: '',
           footerText: '',
         })
+        .expect(400);
+    });
+  });
+
+  describe('maintenance mode', () => {
+    afterAll(async () => {
+      // Never leave the site in maintenance because a test run died mid-way.
+      await request(server)
+        .put('/api/admin/maintenance')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ enabled: false })
+        .expect(200);
+    });
+
+    it('toggles through the admin endpoint and reads back publicly', async () => {
+      const on = await request(server)
+        .put('/api/admin/maintenance')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ enabled: true })
+        .expect(200);
+      expect(on.body).toEqual({ enabled: true });
+
+      const pub = await request(server).get('/api/maintenance').expect(200);
+      expect(pub.body).toEqual({ enabled: true });
+
+      const off = await request(server)
+        .put('/api/admin/maintenance')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ enabled: false })
+        .expect(200);
+      expect(off.body).toEqual({ enabled: false });
+    });
+
+    it('never leaks the flag into the public config payload', async () => {
+      const pub = await request(server).get('/api/config').expect(200);
+      expect(pub.body).not.toHaveProperty('maintenance');
+    });
+
+    it('requires auth and a boolean', async () => {
+      await request(server).put('/api/admin/maintenance').send({ enabled: true }).expect(401);
+      await request(server)
+        .put('/api/admin/maintenance')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ enabled: 'yes' })
         .expect(400);
     });
   });
