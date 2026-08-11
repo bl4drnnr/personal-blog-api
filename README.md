@@ -183,7 +183,7 @@ with that run's short-lived `GITHUB_TOKEN` and logs out afterwards.
 **Issue TLS certificates once** (nginx can't start on 443 without them):
 
 ```bash
-docker run --rm -p 80:80 -v personal-blog-api_letsencrypt:/etc/letsencrypt \
+docker run --rm -p 80:80 -v blog_letsencrypt:/etc/letsencrypt \
   certbot/certbot certonly --standalone \
   -d mikhailbahdashych.me -d api.mikhailbahdashych.me -d admin.mikhailbahdashych.me \
   --email you@example.com --agree-tos --no-eff-email
