@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { AccessTokenGuard } from '@common/guards/access-token.guard';
 import { SiteConfigService } from './config.service';
-import { UpdateSiteConfigDto } from './dto/config.dto';
+import { UpdateMaintenanceDto, UpdateSiteConfigDto } from './dto/config.dto';
 
 @ApiTags('Config')
 @Controller()
@@ -20,6 +20,22 @@ export class SiteConfigController {
   @ApiOkResponse({ description: 'Hero, intro, social links, SEO defaults, footer.' })
   get() {
     return this.config.get();
+  }
+
+  @Get('maintenance')
+  @ApiOperation({ summary: 'Maintenance-mode flag, read by the frontend middleware' })
+  @ApiOkResponse({ description: '{ enabled: boolean }' })
+  getMaintenance() {
+    return this.config.getMaintenance();
+  }
+
+  @Put('admin/maintenance')
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: '[admin] Toggle maintenance mode' })
+  @ApiUnauthorizedResponse({ description: 'Missing or invalid access token.' })
+  setMaintenance(@Body() dto: UpdateMaintenanceDto) {
+    return this.config.setMaintenance(dto.enabled);
   }
 
   @Put('admin/config')

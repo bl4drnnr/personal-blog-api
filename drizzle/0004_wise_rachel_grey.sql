@@ -1,0 +1,1 @@
+ALTER TABLE "site_config" ADD COLUMN "maintenance" boolean DEFAULT false NOT NULL;
