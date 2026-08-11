@@ -172,9 +172,13 @@ sudo chown -R "$USER" /opt/blog && cd /opt/blog
 # Fill in production secrets
 cp .env.prod.example .env.prod && "$EDITOR" .env.prod
 
-# GHCR images are private — log in with a PAT that has read:packages
-docker login ghcr.io -u mikhailbahdashych
+# Restrict the admin vhost to your own address (gitignored on purpose)
+cp deploy/nginx/admin-allowlist.conf.example deploy/nginx/admin-allowlist.conf \
+  && "$EDITOR" deploy/nginx/admin-allowlist.conf
 ```
+
+GHCR needs no standing credentials on the host: every deploy authenticates
+with that run's short-lived `GITHUB_TOKEN` and logs out afterwards.
 
 **Issue TLS certificates once** (nginx can't start on 443 without them):
 
