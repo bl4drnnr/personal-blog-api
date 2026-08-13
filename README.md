@@ -1,4 +1,4 @@
-# personal-blog-api
+# Personal Blog API
 
 API for [mikhailbahdashych.me](https://mikhailbahdashych.me) — NestJS 11 + Drizzle ORM + PostgreSQL.
 
