@@ -8,9 +8,6 @@
 .env.*
 !*.example
 
-# host-only nginx allowlist (holds a real IP address)
-deploy/nginx/admin-allowlist.conf
-
 # local tooling
 .claude/
 CLAUDE.md
