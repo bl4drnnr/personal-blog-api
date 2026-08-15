@@ -40,7 +40,7 @@ Decisions worth knowing before changing this code:
 | Search output | `search.service.ts` | `ts_headline` does not escape; it marks hits with control characters, the string is escaped, then only those become `<mark>`. |
 | Upload validation | `assets/mime.ts` | Content type must be on the allowlist *and* match the file's signature. The stored extension comes from the type, never the filename. SVG is stored `Content-Disposition: attachment` so it cannot run as a document. |
 | Markdown | front/admin `lib/markdown.ts` | Raw HTML is dropped by remark-rehype; `rehypeSafeUrls` additionally restricts link/image URLs to http/https/mailto/tel, which is what stops `[x](javascript:…)`. |
-| CSP | `deploy/nginx/blog.conf` | Set per vhost for the blog and admin. The API sets its own via helmet, so nginx adds none there. |
+| CSP | infra repo `deploy/nginx/blog.conf` | Set per vhost for the blog and admin. The API sets its own via helmet, so nginx adds none there. |
 | Swagger | `SWAGGER_ENABLED` | Off in production — it publishes the full admin surface. |
 
 ## Endpoints
@@ -138,84 +138,22 @@ reproduces the same rows and the same object keys.
 
 ## Deployment
 
-This repo is the **deployment hub** for all three apps. One EC2 instance runs a
-Docker Compose stack — nginx (TLS) in front of the Next.js frontend, this API,
-and the static admin — talking to RDS PostgreSQL and S3.
+Infrastructure and deployment configuration live in
+[personal-blog-infrastructure](https://github.com/mikhailbahdashych/personal-blog-infrastructure):
+Terraform for the AWS footprint (EC2 + Elastic IP, private RDS, security
+groups, IAM), the production Docker Compose stack, the nginx vhosts, and the
+bootstrap/runbook docs. The host runs the stack from a checkout of that repo
+at `/opt/blog`.
 
-```
-                    ┌──────────────────────── EC2 ────────────────────────┐
-Internet ──443──▶ nginx ──▶ front (Next SSR :3000)   ──▶ api (:4201) ──▶ RDS
-                    │  ├──▶ api   (NestJS  :4201)     ◀── revalidate ──┘
-                    │  └──▶ admin (static  :80)               │
-                    └── certbot (auto-renew)                  └──▶ S3 (assets)
-```
+This repo's pipeline (`.github/workflows/deploy.yml`) owns exactly one thing:
+on every push to `master` it builds the API image, pushes it to GHCR, then
+SSHes to the host — opening port 22 **only to the runner's IP** and revoking
+it afterwards — rolls the `api` service and applies database migrations
+(`node dist/db/migrate.js`). GHCR pulls authenticate with that run's
+short-lived `GITHUB_TOKEN`; the host stores no registry credentials.
 
-- `mikhailbahdashych.me` → front, `api.` → api, `admin.` → admin
-- App images are built by each repo's GitHub Actions and pushed to GHCR
-- `docker-compose.prod.yml` (repo root) orchestrates everything;
-  `deploy/nginx/blog.conf` holds the vhosts
-
-### Prerequisites
-
-- An EC2 instance with Docker + the compose plugin, ports 80/443 open
-- RDS PostgreSQL with a `personal_blog` database
-- An S3 bucket and an IAM user scoped to `s3:{Put,Get,Delete}Object` on it
-- DNS A records for the apex + `api.` + `admin.` pointing at the instance
-
-### One-time host setup
-
-```bash
-# Clone this repo to /opt/blog (the compose file + nginx config live here)
-sudo git clone https://github.com/mikhailbahdashych/personal-blog-api.git /opt/blog
-sudo chown -R "$USER" /opt/blog && cd /opt/blog
-
-# Fill in production secrets
-cp .env.prod.example .env.prod && "$EDITOR" .env.prod
-
-# Restrict the admin vhost to your own address (gitignored on purpose)
-cp deploy/nginx/admin-allowlist.conf.example deploy/nginx/admin-allowlist.conf \
-  && "$EDITOR" deploy/nginx/admin-allowlist.conf
-```
-
-GHCR needs no standing credentials on the host: every deploy authenticates
-with that run's short-lived `GITHUB_TOKEN` and logs out afterwards.
-
-**Issue TLS certificates once** (nginx can't start on 443 without them):
-
-```bash
-docker run --rm -p 80:80 -v blog_letsencrypt:/etc/letsencrypt \
-  certbot/certbot certonly --standalone \
-  -d mikhailbahdashych.me -d api.mikhailbahdashych.me -d admin.mikhailbahdashych.me \
-  --email you@example.com --agree-tos --no-eff-email
-```
-
-**Start the stack** (the certbot container renews automatically afterwards):
-
-```bash
-docker compose -f docker-compose.prod.yml up -d
-```
-
-Migrations apply automatically on every deploy; the first boot creates the whole
-schema (singleton rows come from migration `0001`). Create the first admin user
-once — MFA enrolls on first login:
-
-```bash
-docker compose -f docker-compose.prod.yml exec api node -e "
-  const { hashSync } = require('bcryptjs');
-  const { Pool } = require('pg');
-  const [email, password] = process.argv.slice(1);
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: true } });
-  pool.query('INSERT INTO users (email, password_hash) VALUES (\$1, \$2)', [email, hashSync(password, 12)])
-    .then(() => console.log('Created admin:', email)).then(() => pool.end());
-" you@example.com 'a-long-unique-password'
-```
-
-### Continuous deployment
-
-A push to `master` builds a fresh image, pushes it to GHCR, then SSHes to the
-host and rolls the service — opening port 22 **only to the runner's IP** and
-revoking it afterwards (`.github/workflows/deploy.yml`). Required repository
-secrets:
+Required repository secrets (kept in sync by the infrastructure repo's
+`scripts/sync-github-secrets.sh`):
 
 | Secret | Value |
 | --- | --- |
@@ -226,5 +164,5 @@ secrets:
 | `EC2_SSH_USER` / `EC2_SSH_KEY` | deploy user + its private key |
 | `EC2_SSH_HOST_KEY` | `ssh-keyscan -t ed25519 <EC2_HOST>` output — pins the host key so deploys refuse an impostor host |
 
-To roll back, pin a specific image in `docker-compose.prod.yml`
-(`ghcr.io/…/personal-blog-api:<sha>`) and `docker compose -f docker-compose.prod.yml up -d api`.
+To roll back, pin a specific image (`ghcr.io/…/personal-blog-api:<sha>`) in
+the infrastructure repo's `docker-compose.prod.yml` and push.

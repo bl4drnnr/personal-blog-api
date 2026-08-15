@@ -71,15 +71,15 @@ jobs:
           # an ephemeral runner has no TOFU history, so accept-new would trust
           # any host that answers.
           echo "${{ secrets.EC2_SSH_HOST_KEY }}" > ~/.ssh/known_hosts
-          # /opt/blog is a checkout of this repo; git pull picks up any compose
-          # or nginx changes, then we roll the api service to the new image.
+          # /opt/blog is a checkout of personal-blog-infrastructure (which owns
+          # the compose stack and nginx config); this pipeline only rolls the
+          # api service to the freshly built image.
           # GHCR auth: this run's short-lived GITHUB_TOKEN piped over stdin, so
           # the host never stores a static PAT.
           echo "${{ secrets.GITHUB_TOKEN }}" | ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
             "${{ secrets.EC2_SSH_USER }}@${{ secrets.EC2_HOST }}" \
             'docker login ghcr.io -u ${{ github.actor }} --password-stdin \
              && cd /opt/blog \
-             && git pull --ff-only \
              && docker compose -f docker-compose.prod.yml pull api \
              && docker compose -f docker-compose.prod.yml up -d api \
              && docker compose -f docker-compose.prod.yml exec -T api node dist/db/migrate.js \
